@@ -16,17 +16,39 @@
 
 teka = {};
 
-teka.PuzzleApplet = function()
+teka.Defaults = {
+    WIDTH: 500,
+    HEIGHT: 350,
+    BORDER: '1px solid black',
+    TARGET: 'applet',
+    BACKGROUND: '#eeeeee'
+};
+
+teka.PuzzleApplet = function(options)
 {
+    this.values_ = {};
+    for (var k in teka.Defaults) {
+        this.values_[k] = teka.Defaults[k];
+    }
+
+    if (options !== undefined) {
+        for (var k in options) {
+            if (this.values_[k] !== undefined) {
+                this.values_[k] = options[k];
+            }
+        }
+    }
+
     this.canvas = document.createElement('canvas');
-    this.canvas.width = '500';
-    this.canvas.height = '350';
+    this.canvas.width = this.values_.WIDTH;
+    this.canvas.height = this.values_.HEIGHT;
     this.canvas.style.width = this.canvas.width+'px';
     this.canvas.style.height = this.canvas.height+'px';
-    this.canvas.style.border = '1px solid black';
-    document.getElementById('applet').appendChild(this.canvas);
+    this.canvas.style.border = this.values_.BORDER;
+    document.getElementById(this.values_.TARGET).appendChild(this.canvas);
     
     this.image = this.canvas.getContext('2d');
-    this.image.fillStyle = '#f00';
-    this.image.fillRect(0,0,500,350);
-}
+    
+    this.image.fillStyle = this.values_.BACKGROUND;
+    this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
+};
