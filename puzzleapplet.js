@@ -36,6 +36,8 @@ teka.PuzzleApplet = function(options)
     this.image = this.canvas.getContext('2d');
 
     this.paintLogo();
+    
+    setTimeout(this.init.bind(this),1000);
 };
 
 teka.PuzzleApplet.prototype.setDefaults = function()
@@ -71,4 +73,8 @@ teka.PuzzleApplet.prototype.paintLogo = function()
 {
     this.image.fillStyle = this.values_.BACKGROUND;
     this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
+};
+
+teka.PuzzleApplet.prototype.init = function()
+{
 };
