@@ -90,7 +90,15 @@ teka.PuzzleApplet.prototype.loadFile = function(filename)
     res.responseType = 'text';
     res.onreadystatechange = function() {
         if (this.readyState!=4) return;
-        console.log(this.responseText);
+        
+        var psdata = new teka.PSData(this.responseText);
+        if (psdata.failed()) return null;
+        
+        var type = psdata.get('type');
+        if (type.length<2) return null;
+        type = type.substring(1,type.length-1).toLowerCase();
+        
+        console.log(type);
     };
     res.send();
 };
