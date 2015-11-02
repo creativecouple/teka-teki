@@ -26,29 +26,49 @@ teka.Defaults = {
 
 teka.PuzzleApplet = function(options)
 {
+    this.setDefaults();
+
+    if (options !== undefined) {
+        this.setOptions(options);
+    }
+    
+    this.canvas = this.addCanvas();
+    this.image = this.canvas.getContext('2d');
+
+    this.paintLogo();
+};
+
+teka.PuzzleApplet.prototype.setDefaults = function()
+{
     this.values_ = {};
     for (var k in teka.Defaults) {
         this.values_[k] = teka.Defaults[k];
     }
+};
 
-    if (options !== undefined) {
-        for (var k in options) {
-            if (this.values_[k] !== undefined) {
-                this.values_[k] = options[k];
-            }
+teka.PuzzleApplet.prototype.setOptions = function(options)
+{
+    for (var k in options) {
+        if (this.values_[k] !== undefined) {
+            this.values_[k] = options[k];
         }
     }
+};
 
-    this.canvas = document.createElement('canvas');
-    this.canvas.width = this.values_.WIDTH;
-    this.canvas.height = this.values_.HEIGHT;
-    this.canvas.style.width = this.canvas.width+'px';
-    this.canvas.style.height = this.canvas.height+'px';
-    this.canvas.style.border = this.values_.BORDER;
-    document.getElementById(this.values_.TARGET).appendChild(this.canvas);
-    
-    this.image = this.canvas.getContext('2d');
-    
+teka.PuzzleApplet.prototype.addCanvas = function()
+{
+    var canvas = document.createElement('canvas');
+    canvas.width = this.values_.WIDTH;
+    canvas.height = this.values_.HEIGHT;
+    canvas.style.width = canvas.width+'px';
+    canvas.style.height = canvas.height+'px';
+    canvas.style.border = this.values_.BORDER;
+    document.getElementById(this.values_.TARGET).appendChild(canvas);
+    return canvas;
+};
+
+teka.PuzzleApplet.prototype.paintLogo = function()
+{
     this.image.fillStyle = this.values_.BACKGROUND;
     this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
 };
