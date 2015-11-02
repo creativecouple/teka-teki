@@ -21,7 +21,8 @@ teka.Defaults = {
     HEIGHT: 350,
     BORDER: '1px solid black',
     TARGET: 'applet',
-    BACKGROUND: '#eeeeee'
+    BACKGROUND: '#eeeeee',
+    FILE: false
 };
 
 teka.PuzzleApplet = function(options)
@@ -77,4 +78,19 @@ teka.PuzzleApplet.prototype.paintLogo = function()
 
 teka.PuzzleApplet.prototype.init = function()
 {
+    if (this.values_.FILE===false) return;
+    
+    this.loadFile(this.values_.FILE);
+};
+
+teka.PuzzleApplet.prototype.loadFile = function(filename)
+{
+    var res = new XMLHttpRequest();
+    res.open('GET',filename);
+    res.responseType = 'text';
+    res.onreadystatechange = function() {
+        if (this.readyState!=4) return;
+        console.log(this.responseText);
+    };
+    res.send();
 };
