@@ -111,8 +111,9 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
     x = x-this.canvas.offsetLeft-20;
     y = y-this.canvas.offsetTop-20;
     
-    if (this.pv.processMouseMovedEvent(x,y))
+    if (this.pv.processMouseMovedEvent(x,y)) {
         this.paint();
+    }
 };
 
 teka.PuzzleApplet.prototype.mousePressedListener = function(e)
@@ -130,14 +131,16 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
     x = x-this.canvas.offsetLeft-20;
     y = y-this.canvas.offsetTop-20;
     
-    if (this.pv.processMousePressedEvent(x,y))
+    if (this.pv.processMousePressedEvent(x,y)) {
         this.paint();
+    }
 };
 
 teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 {
-    if (this.pv.processKeyEvent(e.keyCode,e.charCode))
+    if (this.pv.processKeyEvent(e.keyCode,e.charCode)) {
         this.paint();
+    }
 };
 
 teka.PuzzleApplet.prototype.paint = function()
@@ -158,13 +161,13 @@ teka.PuzzleApplet.prototype.loadFile = function(filename, callback, setter)
     res.open('GET',filename);
     res.responseType = 'text';
     res.onreadystatechange = function() {
-        if (this.readyState!=4) return;
+        if (this.readyState!=4) { return; }
         
         var psdata = new teka.PSData(this.responseText);
-        if (psdata.failed()) return null;
+        if (psdata.failed()) { return null; }
         
         var type = psdata.get('type');
-        if (type.length<2) return null;
+        if (type.length<2) { return null; }
         type = type.substring(1,type.length-1).toLowerCase();
 
         me.psdata = psdata;

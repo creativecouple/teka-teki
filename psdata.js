@@ -22,17 +22,16 @@ teka.PSData = function(psdata)
     var p1 = psdata.indexOf("<<");
     var p2 = psdata.indexOf(">>");
         
-    if (p1==-1 || p2==-1 || p2<p1) return;
+    if (p1==-1 || p2==-1 || p2<p1) { return; }
         
     var d = psdata.substring(p1+2,p2).trim().split("/");
     
     var d_length = d.length;
-    for (var i=0;i<d_length;i++)
-        {
-            var p = d[i].indexOf(" ");
-            if (p==-1) continue;
-            this.values_[d[i].substring(0,p).trim()] = d[i].substring(p+1).trim();
-        }
+    for (var i=0;i<d_length;i++) {
+        var p = d[i].indexOf(" ");
+        if (p==-1) { continue; }
+        this.values_[d[i].substring(0,p).trim()] = d[i].substring(p+1).trim();
+    }
        
     this.failed_ = false;
 }
@@ -44,6 +43,6 @@ teka.PSData.prototype.failed = function()
 
 teka.PSData.prototype.get = function(key)
 {
-    if (this.values_[key]===undefined) return false;
+    if (this.values_[key]===undefined) { return false; }
     return this.values_[key];
 }
