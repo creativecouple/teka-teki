@@ -14,6 +14,14 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+teka.viewer.kropki = {};
+
+teka.viewer.kropki.Defaults = {
+    NONE: 0,
+    EMPTY: 1,
+    FULL: 2
+};
+
 teka.KropkiViewer = function(data)
 {
     this.x = 0;
@@ -70,11 +78,11 @@ teka.KropkiViewer.prototype.asciiToData = function(ascii)
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.X;j++) {
             if (c[2*i+2][2*j+1].charCodeAt(0)=='O'.charCodeAt(0)) {
-                this.lrdots[i][j] = 1; //EMPTY
+                this.lrdots[i][j] = teka.viewer.kropki.Defaults.EMPTY;
             } else if (c[2*i+2][2*j+1].charCodeAt(0)=='*'.charCodeAt(0)) {
-                this.lrdots[i][j] = 2; //FULL
+                this.lrdots[i][j] = teka.viewer.kropki.Defaults.FULL;
             } else {
-                this.lrdots[i][j] = 0; //NONE
+                this.lrdots[i][j] = teka.viewer.kropki.Defaults.NONE;
             }
         }
     }
@@ -87,11 +95,11 @@ teka.KropkiViewer.prototype.asciiToData = function(ascii)
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X-1;j++) {
             if (c[2*i+1][2*j+2].charCodeAt(0)=='O'.charCodeAt(0)) {
-                this.uddots[i][j] = 1; //EMPTY
+                this.uddots[i][j] = teka.viewer.kropki.Defaults.EMPTY;
             } else if (c[2*i+1][2*j+2].charCodeAt(0)=='*'.charCodeAt(0)) {
-                this.uddots[i][j] = 2; //FULL
+                this.uddots[i][j] = teka.viewer.kropki.Defaults.FULL;
             } else {
-                this.uddots[i][j] = 0; //NONE
+                this.uddots[i][j] = teka.viewer.kropki.Defaults.NONE;
             }
         }
     }
@@ -105,8 +113,6 @@ teka.KropkiViewer.prototype.setMetrics = function(width, height)
     
     this.left = Math.round((width-this.width)/2)+0.5;
     this.top = Math.round((height-this.height)/2)+0.5;
-    
-//    console.log(this.scale+" "+this.width+" "+this.height+" "+this.left+" "+this.top);
 };
 
 teka.KropkiViewer.prototype.paintImage = function(g) 
@@ -137,7 +143,7 @@ teka.KropkiViewer.prototype.paintImage = function(g)
     
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {
-            if (this.lrdots[i][j]==1) { // EMPTY
+            if (this.lrdots[i][j]==teka.viewer.kropki.Defaults.EMPTY) {
                 g.fillStyle='#ffffff';
                 g.beginPath();
                 g.arc((i+1)*S+1,j*S+S/2+1,S/8,S/8,0,2*Math.PI);
@@ -146,7 +152,7 @@ teka.KropkiViewer.prototype.paintImage = function(g)
                 g.beginPath();
                 g.arc((i+1)*S+1,j*S+S/2+1,S/8,S/8,0,2*Math.PI);
                 g.stroke();
-            } else if (this.lrdots[i][j]==2) { // FULL
+            } else if (this.lrdots[i][j]==teka.viewer.kropki.Defaults.FULL) {
                 g.fillStyle='#000000';
                 g.beginPath();
                 g.arc((i+1)*S+1,j*S+S/2+1,S/8,S/8,0,2*Math.PI);
@@ -157,7 +163,7 @@ teka.KropkiViewer.prototype.paintImage = function(g)
     
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
-            if (this.uddots[i][j]==1) { // EMPTY
+            if (this.uddots[i][j]==teka.viewer.kropki.Defaults.EMPTY) {
                 g.fillStyle='#ffffff';
                 g.beginPath();
                 g.arc(i*S+S/2+1,(j+1)*S+1,S/8,S/8,0,2*Math.PI);
@@ -166,7 +172,7 @@ teka.KropkiViewer.prototype.paintImage = function(g)
                 g.beginPath();
                 g.arc(i*S+S/2+1,(j+1)*S+1,S/8,S/8,0,2*Math.PI);
                 g.stroke();
-            } else if (this.uddots[i][j]==2) { // FULL
+            } else if (this.uddots[i][j]==teka.viewer.kropki.Defaults.FULL) {
                 g.fillStyle='#000000';
                 g.beginPath();
                 g.arc(i*S+S/2+1,(j+1)*S+1,S/8,S/8,0,2*Math.PI);
