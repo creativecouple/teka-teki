@@ -86,7 +86,7 @@ teka.PuzzleApplet.prototype.init = function()
 
 teka.PuzzleApplet.prototype.init2 = function()
 {
-    this.pv = new teka[this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
+    this.pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
     this.pv.setMetrics(this.canvas.width-40,this.canvas.height-40);
     this.paint();
     this.canvas.addEventListener('mousemove',this.mouseMovedListener.bind(this),false);
@@ -137,7 +137,7 @@ teka.PuzzleApplet.prototype.paint = function()
     this.image.restore();
 };
 
-teka.PuzzleApplet.prototype.loadFile = function(filename, callback, setter)
+teka.PuzzleApplet.prototype.loadFile = function(filename, callback)
 {
     var me = this;
     

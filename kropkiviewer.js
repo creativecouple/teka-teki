@@ -22,15 +22,16 @@ teka.viewer.kropki.Defaults = {
     FULL: 2
 };
 
-teka.KropkiViewer = function(data)
+teka.viewer.kropki.KropkiViewer = function(data)
 {
     this.x = 0;
     this.y = 0;
     
     this.initData(data);
 };
+teka.viewer.kropki.KropkiViewer.prototype = teka.viewer.PuzzleViewer.prototype;
 
-teka.KropkiViewer.prototype.initData = function(data)
+teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('size'));
     this.asciiToData(data.get('puzzle'));
@@ -46,7 +47,7 @@ teka.KropkiViewer.prototype.initData = function(data)
     }
 };
 
-teka.KropkiViewer.prototype.asciiToData = function(ascii)
+teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
 {
     if (ascii===undefined) return;
 
@@ -105,7 +106,7 @@ teka.KropkiViewer.prototype.asciiToData = function(ascii)
     }
 };
 
-teka.KropkiViewer.prototype.setMetrics = function(width, height)
+teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(width, height)
 {
     this.scale = Math.round(Math.min((width-3)/this.X,(height-3)/this.X));
     this.width = this.X * this.scale + 3;
@@ -115,7 +116,7 @@ teka.KropkiViewer.prototype.setMetrics = function(width, height)
     this.top = Math.round((height-this.height)/2)+0.5;
 };
 
-teka.KropkiViewer.prototype.paintImage = function(g) 
+teka.viewer.kropki.KropkiViewer.prototype.paintImage = function(g) 
 {
     var X = this.X;
     var S = this.scale;
@@ -209,7 +210,7 @@ teka.KropkiViewer.prototype.paintImage = function(g)
     g.restore();
 };
 
-teka.KropkiViewer.prototype.processMouseMovedEvent = function(xc,yc)
+teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,yc)
 {
     xc-=this.left;
     yc-=this.top;
@@ -228,7 +229,7 @@ teka.KropkiViewer.prototype.processMouseMovedEvent = function(xc,yc)
     return this.x!=oldx || this.y!=oldy;
 };
 
-teka.KropkiViewer.prototype.processMousePressedEvent = function(xc,yc)
+teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc,yc)
 {
     var erg = this.processMouseMovedEvent(xc,yc);
     
@@ -242,7 +243,7 @@ teka.KropkiViewer.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
-teka.KropkiViewer.prototype.processKeyEvent = function(key,c)
+teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
 {
     if (key==40 && this.y<this.X-1) {
         this.y++;
@@ -274,48 +275,3 @@ teka.KropkiViewer.prototype.processKeyEvent = function(key,c)
 
     return false;
 };
-
-//////////////////////////////////////////////////////////////////
-
-teka.KropkiViewer.prototype.asciiToArray = function(ascii)
-{
-    var instring = false;
-    var s = '';
-    var ascii_length = ascii.length;
-    for (var i=0;i<ascii_length;i++) {
-        var c = ascii.charAt(i);
-        if (instring) {
-            if (c==')') {
-                instring = false;
-            } else {
-                s+=c;
-            }
-        } else {
-            if (c=='(') {
-                instring = true;
-            }
-        }
-    }
-    
-    var breite = 1;
-    var pos1 = ascii.indexOf("(");
-    var pos2 = ascii.indexOf(")");
-    if (pos1!=-1 && pos2!=-1) {
-        breite = pos2-pos1-1;
-    }
-    var hoehe = s.length/breite;
-    
-    var c = [];
-    for (var i=0;i<breite;i++) {
-        c[i] = [];
-    }
-    
-    for (var j=0;j<hoehe;j++) {
-        for (var i=0;i<breite;i++) {
-            c[i][j] = s.charAt(i+breite*j);
-        }
-    }
-    
-    return c;
-};
-
