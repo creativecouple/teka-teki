@@ -98,18 +98,10 @@ teka.PuzzleApplet.prototype.init2 = function()
 teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
 {
     this.canvas.focus();
-    var x;
-    var y;
+    e = normalizeMouseEvent(e);
     
-    if (e.pageX != undefined && e.pageY != undefined) {
-        x = e.pageX;
-        y = e.pageY;
-    } else {
-        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-    }
-    x = x-this.canvas.offsetLeft-20;
-    y = y-this.canvas.offsetTop-20;
+    var x = e.x-this.canvas.offsetLeft-20;
+    var y = e.y-this.canvas.offsetTop-20;
     
     if (this.pv.processMouseMovedEvent(x,y)) {
         this.paint();
@@ -118,18 +110,10 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
 
 teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 {
-    var x;
-    var y;
+    e = normalizeMouseEvent(e);
     
-    if (e.pageX != undefined && e.pageY != undefined) {
-        x = e.pageX;
-        y = e.pageY;
-    } else {
-        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-    }
-    x = x-this.canvas.offsetLeft-20;
-    y = y-this.canvas.offsetTop-20;
+    var x = e.x-this.canvas.offsetLeft-20;
+    var y = e.y-this.canvas.offsetTop-20;
     
     if (this.pv.processMousePressedEvent(x,y)) {
         this.paint();
