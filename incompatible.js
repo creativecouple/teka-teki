@@ -14,7 +14,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
  
-normalizeMouseEvent = function(e)
+teka.normalizeMouseEvent = function(e)
 {
     e.x = 0;
     e.y = 0;
@@ -28,4 +28,19 @@ normalizeMouseEvent = function(e)
     }
 
     return e;
+};
+
+teka.myBind = function(ptr,fn)
+{
+    return fn.bind(ptr);
+};
+
+teka.addScript = function(src,callback)
+{
+    var script = document.createElement('script');
+    script.onload = callback;
+    script.type = 'text/javascript';
+    script.charset = 'UTF-8';
+    script.src = src;
+    document.getElementsByTagName('head')[0].appendChild(script);
 };
