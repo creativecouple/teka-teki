@@ -80,10 +80,16 @@ teka.PuzzleApplet.prototype.init = function()
 {
     if (this.values_.FILE===false) return;
     
-    this.loadFile(this.values_.FILE);
+    this.loadFile(this.values_.FILE, this.init2.bind(this));
 };
 
-teka.PuzzleApplet.prototype.loadFile = function(filename)
+teka.PuzzleApplet.prototype.init2 = function()
+{
+    this.image.fillStyle = '#f00';
+    this.image.fillRect(100,100,this.canvas.width-200,this.canvas.height-200);
+};
+
+teka.PuzzleApplet.prototype.loadFile = function(filename, callback)
 {
     var res = new XMLHttpRequest();
     res.open('GET',filename);
@@ -97,8 +103,13 @@ teka.PuzzleApplet.prototype.loadFile = function(filename)
         var type = psdata.get('type');
         if (type.length<2) return null;
         type = type.substring(1,type.length-1).toLowerCase();
-        
-        console.log(type);
+
+        var script = document.createElement('script');
+        script.onload = callback;
+        script.type = 'text/javascript';
+        script.charset = 'UTF-8';
+        script.src = type+'viewer.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
     };
     res.send();
 };
