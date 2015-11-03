@@ -85,12 +85,25 @@ teka.PuzzleApplet.prototype.init = function()
 
 teka.PuzzleApplet.prototype.init2 = function()
 {
-    this.image.fillStyle = '#f00';
-    this.image.fillRect(100,100,this.canvas.width-200,this.canvas.height-200);
+    this.pv = new teka[this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
+    this.pv.setMetrics(this.canvas.width-40,this.canvas.height-40);
+    this.paint();
 };
 
-teka.PuzzleApplet.prototype.loadFile = function(filename, callback)
+teka.PuzzleApplet.prototype.paint = function()
 {
+    this.image.fillStyle = this.values_.BACKGROUND;
+    this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
+    this.image.save();
+    this.image.translate(20,20);
+    this.pv.paintImage(this.image);
+    this.image.restore();
+};
+
+teka.PuzzleApplet.prototype.loadFile = function(filename, callback, setter)
+{
+    var me = this;
+    
     var res = new XMLHttpRequest();
     res.open('GET',filename);
     res.responseType = 'text';
@@ -104,6 +117,9 @@ teka.PuzzleApplet.prototype.loadFile = function(filename, callback)
         if (type.length<2) return null;
         type = type.substring(1,type.length-1).toLowerCase();
 
+        me.psdata = psdata;
+        me.type = type;
+        
         var script = document.createElement('script');
         script.onload = callback;
         script.type = 'text/javascript';
