@@ -119,6 +119,9 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 
 teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+    
     if (this.pv.processKeyEvent(e.keyCode,e.charCode)) {
         this.paint();
     }
