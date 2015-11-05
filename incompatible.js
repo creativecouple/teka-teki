@@ -41,6 +41,7 @@ teka.addScript = function(src,callback)
     script.onload = callback;
     script.type = 'text/javascript';
     script.charset = 'UTF-8';
-    script.src = src;
+    // added random number due to cached files while testing...
+    script.src = src+'?r='+Math.random();
     document.getElementsByTagName('head')[0].appendChild(script);
 };

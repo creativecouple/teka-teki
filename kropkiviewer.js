@@ -106,6 +106,11 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
     }
 };
 
+teka.viewer.kropki.KropkiViewer.prototype.getName = function()
+{
+    return 'Kropki';
+};
+
 teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(width, height)
 {
     this.scale = Math.round(Math.min((width-3)/this.X,(height-3)/this.X));
@@ -212,8 +217,8 @@ teka.viewer.kropki.KropkiViewer.prototype.paintImage = function(g)
 
 teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,yc)
 {
-    xc-=this.left;
-    yc-=this.top;
+    xc = xc-this.left-1;
+    yc = yc-this.top-1;
 
     var oldx = this.x;
     var oldy = this.y;

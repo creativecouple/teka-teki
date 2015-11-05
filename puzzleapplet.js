@@ -22,7 +22,11 @@ teka.Defaults = {
     BORDER: '1px solid black',
     TARGET: 'applet',
     BACKGROUND: '#eeeeee',
-    FILE: false
+    FILE: false,
+    HEADFONTHEIGHT: 20,
+    HEADHEIGHT: 28,
+    HEADCOLOR: '#000000',
+    HEADTEXT: ''
 };
 
 teka.PuzzleApplet = function(options)
@@ -83,7 +87,8 @@ teka.PuzzleApplet.prototype.init = function()
     
     this.loadFile(this.values_.FILE, teka.myBind(this,function() {
         this.pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
-        this.pv.setMetrics(this.canvas.width-40,this.canvas.height-40);
+        this.values_.HEADTEXT = this.pv.getName();
+        this.pv.setMetrics(this.canvas.width,this.canvas.height-this.values_.HEADHEIGHT);
         this.paint();
         this.canvas.addEventListener('mousemove',this.mouseMovedListener.bind(this),false);
         this.canvas.addEventListener('mousedown',this.mousePressedListener.bind(this),false);
@@ -97,8 +102,8 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
     this.canvas.focus();
     e = teka.normalizeMouseEvent(e);
     
-    var x = e.x-this.canvas.offsetLeft-20;
-    var y = e.y-this.canvas.offsetTop-20;
+    var x = e.x-this.canvas.offsetLeft;
+    var y = e.y-this.canvas.offsetTop-this.values_.HEADHEIGHT;
     
     if (this.pv.processMouseMovedEvent(x,y)) {
         this.paint();
@@ -109,8 +114,8 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 {
     e = teka.normalizeMouseEvent(e);
     
-    var x = e.x-this.canvas.offsetLeft-20;
-    var y = e.y-this.canvas.offsetTop-20;
+    var x = e.x-this.canvas.offsetLeft;
+    var y = e.y-this.canvas.offsetTop-this.values_.HEADHEIGHT;
     
     if (this.pv.processMousePressedEvent(x,y)) {
         this.paint();
@@ -128,8 +133,15 @@ teka.PuzzleApplet.prototype.paint = function()
 {
     this.image.fillStyle = this.values_.BACKGROUND;
     this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
+    
+    this.image.textAlign = 'center';
+    this.image.textBaseline = 'alphabetic';
+    this.image.fillStyle = this.values_.HEADCOLOR;
+    this.image.font = 'bold '+this.values_.HEADFONTHEIGHT+'px URW Chancery L';
+    this.image.fillText(this.values_.HEADTEXT,this.canvas.width/2,this.values_.HEADHEIGHT-this.values_.HEADFONTHEIGHT/2);
+
     this.image.save();
-    this.image.translate(20,20);
+    this.image.translate(0,this.values_.HEADHEIGHT);
     this.pv.paintImage(this.image);
     this.image.restore();
 };
