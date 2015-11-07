@@ -102,8 +102,16 @@ teka.PuzzleApplet.prototype.init = function()
     if (this.values_.FILE===false) return;
     
     this.loadFile(this.values_.FILE, teka.myBind(this,function() {
+        
         this.pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
-        this.values_.HEADTEXT = this.pv.getName();
+
+        this.display = [];
+
+        var hd = new teka.HeadDisplay();
+        hd.setTitle(this.pv.getName());
+        hd.setExtent(0,0,this.canvas.width,this.values_.HEADHEIGHT);
+        this.display[0] = hd;
+        
         this.pv.setMetrics(this.canvas.width-2*this.values_.PUZZLEMARGIN,this.canvas.height-this.values_.HEADHEIGHT-2*this.values_.PUZZLEMARGIN);
         this.paint();
         this.canvas.addEventListener('mousemove',this.mouseMovedListener.bind(this),false);
@@ -152,13 +160,14 @@ teka.PuzzleApplet.prototype.paint = function()
 {
     this.image.fillStyle = this.values_.BACKGROUND;
     this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
-    
-    this.image.textAlign = 'center';
-    this.image.textBaseline = 'alphabetic';
-    this.image.fillStyle = this.values_.HEADCOLOR;
-    this.image.font = 'bold '+this.values_.HEADFONTHEIGHT+'px URW Chancery L';
-    this.image.fillText(this.values_.HEADTEXT,this.canvas.width/2,this.values_.HEADHEIGHT-this.values_.HEADFONTHEIGHT/2);
 
+    for (var i in this.display) {
+        this.image.save();
+        this.display[i].translate(this.image);
+        this.display[i].paint(this.image);
+        this.image.restore();
+    }
+    
     this.image.save();
     this.image.translate(this.values_.PUZZLEMARGIN,this.values_.HEADHEIGHT+this.values_.PUZZLEMARGIN);
     this.pv.paintImage(this.image);
