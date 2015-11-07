@@ -22,6 +22,7 @@ teka.Defaults = {
     BORDER: '1px solid black',
     TARGET: 'applet',
     BACKGROUND: '#eeeeee',
+    TEXTCOLOR: '#888888',
     FILE: false
 };
 
@@ -38,7 +39,7 @@ teka.PuzzleApplet = function(options)
 
     this.paintLogo();
     
-    setTimeout(this.init.bind(this),1000);
+//    setTimeout(this.init.bind(this),1000);
 };
 
 teka.PuzzleApplet.prototype.setDefaults = function()
@@ -73,8 +74,22 @@ teka.PuzzleApplet.prototype.addCanvas = function()
 
 teka.PuzzleApplet.prototype.paintLogo = function()
 {
-    this.image.fillStyle = this.values_.BACKGROUND;
-    this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
+    var image = this.image;
+    image.fillStyle = this.values_.BACKGROUND;
+    image.fillRect(0,0,this.canvas.width,this.canvas.height);
+    
+    var height = Math.floor(this.canvas.height/3);
+    image.textAlign = 'left';
+    image.textBaseline = 'middle';
+    image.fillStyle = this.values_.TEXTCOLOR;
+    image.font = 'bold '+height+'px sans-serif';
+    image.fillText('TEKA',20,this.canvas.height/2-0.25*height);
+    image.strokeStyle = '#000';
+    image.strokeText('TEKA',20,this.canvas.height/2-0.25*height);
+    
+    image.textAlign = 'right';
+    image.fillText('TEKI',this.canvas.width-20,this.canvas.height/2+0.25*height);
+    image.strokeText('TEKI',this.canvas.width-20,this.canvas.height/2+0.25*height);
 };
 
 teka.PuzzleApplet.prototype.init = function()
