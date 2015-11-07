@@ -16,15 +16,13 @@
 
 teka.HeadDisplay = function()
 {
-    this.left = 0;
-    this.top = 0;
-    this.width = 300;
-    this.height = 24;
+    teka.Display.call(this,0,0,300,24);
     this.title = 'Teka-Teki';
     this.color = '#000';
     this.textheight = 20;
 };
-teka.HeadDisplay.prototype = teka.Display.prototype;
+teka.HeadDisplay.prototype = Object.create(teka.Display.prototype);
+teka.HeadDisplay.constructor = teka.Display;
 
 teka.HeadDisplay.prototype.setTitle = function(title)
 {
@@ -32,28 +30,8 @@ teka.HeadDisplay.prototype.setTitle = function(title)
         this.title = title;
 };
 
-teka.HeadDisplay.prototype.setExtent = function(left,top,width,height)
-{
-    if (left!==undefined)
-        this.left = left;
-    if (top!==undefined)
-        this.top = top;
-    if (width!==undefined)
-        this.width = width;
-    if (height!==undefined)
-        this.height = height;
-};
-
-teka.HeadDisplay.prototype.translate = function(g)
-{
-    g.translate(this.left,this.top);
-};
-
 teka.HeadDisplay.prototype.paint = function(g)
 {
-    g.fillStyle = '#f00';
-    g.fillRect(this.left,this.top,this.width,this.height);
-    
     g.textAlign = 'center';
     g.textBaseline = 'alphabetic';
     g.fillStyle = this.color;
