@@ -43,7 +43,7 @@ teka.PuzzleApplet = function(options)
 
     this.paintLogo();
     
-//    setTimeout(this.init.bind(this),1000);
+    setTimeout(this.init.bind(this),1000);
 };
 
 teka.PuzzleApplet.prototype.setDefaults = function()
