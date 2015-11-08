@@ -17,6 +17,8 @@
 teka.ButtonTool = function()
 {
     this.buttons_ = ['Testen','Rückgängig','Anleitung'];
+    this.aktivButton = false;
+    this.y = [0,0,0];
 };
 teka.ButtonTool.prototype = new teka.Tool;
 
@@ -34,12 +36,42 @@ teka.ButtonTool.prototype.paint = function(g)
 {
     var mindim = this.getMinDim(g);
     var x = (this.width-mindim.width)/2;
-    var y = [];
-    y[0] = 1;
-    y[1] = Math.floor((this.height-(this.textHeight+5))/2);
-    y[2] = this.height-(this.textHeight+5)-1;
+    this.y[0] = 1;
+    this.y[1] = Math.floor((this.height-(this.textHeight+5))/2);
+    this.y[2] = this.height-(this.textHeight+5)-1;
     
     for (var i=0;i<=2;i++) {
-        this.paintButton(g,x+0.5,y[i]+0.5,mindim.width,this.textHeight+5,false,this.buttons_[i]);
+        this.paintButton(g,x+0.5,this.y[i]+0.5,mindim.width,this.textHeight+5,this.aktivButton===i,this.buttons_[i]);
     }
+};
+
+teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
+{
+    this.aktivButton = this.getButton(xc,yc);
+    if (this.aktivButton===-1) return false;
+    
+    return true;
+};
+
+teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
+{
+    this.aktivButton = this.getButton(xc,yc);
+    if (this.aktivButton===-1) return false;
+    
+    return true;
+};
+
+teka.ButtonTool.prototype.getButton = function(xc,yc)
+{
+    for (var i=0;i<3;i++)
+        if (yc>=this.y[i] && yc<=this.y[i]+this.textHeight+5)
+            return i;
+    return false;
+};
+
+teka.ButtonTool.prototype.resetButtons = function()
+{
+    if (this.aktivButton===false) return false;
+    this.aktivButton = false;
+    return true;
 };

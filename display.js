@@ -50,3 +50,13 @@ teka.Display.prototype.paint = function(g)
     g.fillStyle = '#f00';
     g.fillRect(0,0,this.width,this.height);
 };
+
+teka.Display.prototype.processMouseMovedEvent = function(xc,yc)
+{
+    return false;
+};
+
+teka.Display.prototype.processMousePressedEvent = function(xc,yc)
+{
+    return false;
+};

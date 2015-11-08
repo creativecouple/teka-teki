@@ -114,8 +114,7 @@ teka.PuzzleApplet.prototype.init = function()
         var bt = new teka.ButtonTool();
         
         this.pv = pv;
-        this.tools = [bt];
-
+        this.bt = bt;
         this.display = [hd,pv,bt];
 
         hd.setTitle(this.pv.getName());
@@ -160,10 +159,16 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
     var x = e.x-this.canvas.offsetLeft;
     var y = e.y-this.canvas.offsetTop;
 
-    if (this.pv.inExtent(x,y)) {
-        if (this.pv.processMouseMovedEvent(x-this.pv.left,y-this.pv.top)) {
-            this.paint();
+    var paint = this.bt.resetButtons();
+    for (var d in this.display) {
+        if (this.display[d].inExtent(x,y)) {
+            if (this.display[d].processMouseMovedEvent(x-this.pv.left,y-this.pv.top)) {
+                paint = true;
+            }
         }
+    }
+    if (paint) {
+        this.paint();
     }
 };
 
@@ -174,10 +179,16 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
     var x = e.x-this.canvas.offsetLeft;
     var y = e.y-this.canvas.offsetTop;
     
-    if (this.pv.inExtent(x,y)) {
-        if (this.pv.processMousePressedEvent(x-this.pv.left,y-this.pv.top)) {
-            this.paint();
+    var paint = this.bt.resetButtons();
+    for (var d in this.display) {
+        if (this.display[d].inExtent(x,y)) {
+            if (this.display[d].processMousePressedEvent(x-this.pv.left,y-this.pv.top)) {
+                paint = true;
+            }
         }
+    }
+    if (paint) {
+        this.paint();
     }
 };
 
