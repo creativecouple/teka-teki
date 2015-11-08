@@ -113,8 +113,8 @@ teka.PuzzleApplet.prototype.init = function()
         this.display = [hd,pv,bt];
 
         hd.setTitle(this.pv.getName());
-        hd.setColor(this.values_HEADCOLOR);
-        hd.setTextHeight(this.values_HEADFONTHEIGHT);
+        hd.setColor(this.values_.HEADCOLOR);
+        hd.setTextHeight(this.values_.HEADFONTHEIGHT);
         hd.setExtent(0,0,this.canvas.width,this.values_.HEADHEIGHT);
         
         var pm = this.values_.PUZZLEMARGIN;
