@@ -66,6 +66,11 @@ teka.Tool.prototype.getMinDim = function(g)
     return { width:0, height:0 };
 };
 
+teka.Tool.prototype.getButtonFont = function()
+{
+    return 'bold '+this.textHeight+'px sans-serif';
+};
+
 teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
 {
     g.fillStyle = this.colorPassive;
@@ -86,6 +91,6 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
     g.fillStyle = this.colorText;
     g.textAlign = 'center';
     g.textBaseline = 'middle';
-    g.font = 'bold '+this.textHeight+'px sans-serif';
+    g.font = this.getButtonFont();
     g.fillText(text,x+width/2,y+height/2);
 };

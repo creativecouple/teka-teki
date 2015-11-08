@@ -128,7 +128,7 @@ teka.PuzzleApplet.prototype.init = function()
         bt.setColorBorderDark(this.values_.BUTTON_COLOR_BORDER_DARK);
         bt.setColorBorderBright(this.values_.BUTTON_COLOR_BORDER_BRIGHT);
         bt.setColorText(this.values_.BUTTON_COLOR_TEXT);
-        bt.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);                                
+        bt.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         
         var pm = this.values_.PUZZLEMARGIN;
         
@@ -140,8 +140,8 @@ teka.PuzzleApplet.prototype.init = function()
         pv.setExtent(pm,this.values_.HEADHEIGHT+pm,metrics.width,metrics.height);
         pv.setMetrics();
 
-        bt.setExtent(metrics.width+2*pm,this.values_.HEADHEIGHT+pm,
-                     this.canvas.width-3*pm-metrics.width,mindim.height);
+        bt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm),
+                     Math.floor(this.canvas.width-3*pm-metrics.width),Math.floor(mindim.height));
                 
         this.paint();
         
