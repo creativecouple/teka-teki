@@ -16,8 +16,50 @@
 
 teka.Tool = function()
 {
+    this.colorActive = '#303030';
+    this.colorPassive = '#606060';
+    this.colorBorderDark = '#202020';
+    this.colorBorderBright = '#A0A0A0';
+    this.colorText = '#FFFFFF';
+    this.textHeight = 12;
 };
 teka.Tool.prototype = new teka.Display;
+
+teka.Tool.prototype.setColorActive = function(color)
+{
+    if (color!==undefined)
+        this.colorActive = color;
+};
+
+teka.Tool.prototype.setColorPassive = function(color)
+{
+    if (color!==undefined)
+        this.colorPassive = color;
+};
+
+teka.Tool.prototype.setColorBorderDark = function(color)
+{
+    if (color!==undefined)
+        this.colorBorderDark = color;
+};
+
+teka.Tool.prototype.setColorBorderBright = function(color)
+{
+    if (color!==undefined)
+        this.colorBorderBright = color;
+};
+
+teka.Tool.prototype.setColorText = function(color)
+{
+    if (color!==undefined)
+        this.colorText = color;
+};
+
+teka.Tool.prototype.setTextHeight = function(textheight)
+{
+    if (textheight!==undefined)
+        this.textHeight = textheight;
+};
 
 teka.Tool.prototype.getMinDim = function(g)
 {
@@ -26,24 +68,24 @@ teka.Tool.prototype.getMinDim = function(g)
 
 teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
 {
-    g.fillStyle = '#606060';
+    g.fillStyle = this.colorPassive;
     g.fillRect(x,y,width,height);
-    g.strokeStyle = '#A0A0A0';
+    g.strokeStyle = this.colorBorderBright;
     g.beginPath();
     g.moveTo(x,y+height-1);
     g.lineTo(x,y);
     g.lineTo(x+width-1,y);
     g.stroke();
-    g.strokeStyle = '#202020';
+    g.strokeStyle = this.colorBorderDark;
     g.beginPath();
     g.moveTo(x,y+height-1);
     g.lineTo(x+width-1,y+height-1);
     g.lineTo(x+width-1,y);
     g.stroke();
     
-    g.fillStyle = '#FFFFFF';
+    g.fillStyle = this.colorText;
     g.textAlign = 'center';
     g.textBaseline = 'middle';
-    g.font = 'bold 12px sans-serif';
+    g.font = 'bold '+this.textHeight+'px sans-serif';
     g.fillText(text,x+width/2,y+height/2);
 };

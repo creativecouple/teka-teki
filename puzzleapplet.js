@@ -27,6 +27,12 @@ teka.Defaults = {
     HEADHEIGHT: 28,
     HEADCOLOR: '#000000',
     HEADTEXT: '',
+    BUTTON_COLOR_ACTIVE: '#303030',
+    BUTTON_COLOR_PASSIVE: '#606060',
+    BUTTON_COLOR_BORDER_DARK: '#202020',
+    BUTTON_COLOR_BORDER_BRIGHT: '#A0A0A0',
+    BUTTON_COLOR_TEXT: '#FFFFFF',
+    BUTTON_TEXT_HEIGHT: 12,
     PUZZLEMARGIN: 10,
     FILE: false
 };
@@ -116,6 +122,13 @@ teka.PuzzleApplet.prototype.init = function()
         hd.setColor(this.values_.HEADCOLOR);
         hd.setTextHeight(this.values_.HEADFONTHEIGHT);
         hd.setExtent(0,0,this.canvas.width,this.values_.HEADHEIGHT);
+
+        bt.setColorActive(this.values_.BUTTON_COLOR_ACTIVE);
+        bt.setColorPassive(this.values_.BUTTON_COLOR_PASSIVE);
+        bt.setColorBorderDark(this.values_.BUTTON_COLOR_BORDER_DARK);
+        bt.setColorBorderBright(this.values_.BUTTON_COLOR_BORDER_BRIGHT);
+        bt.setColorText(this.values_.BUTTON_COLOR_TEXT);
+        bt.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);                                
         
         var pm = this.values_.PUZZLEMARGIN;
         
