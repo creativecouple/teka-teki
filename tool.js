@@ -22,43 +22,53 @@ teka.Tool = function()
     this.colorBorderBright = '#A0A0A0';
     this.colorText = '#FFFFFF';
     this.textHeight = 12;
+    
+    this.BUTTON_ACTIVE = 1;
+    this.BUTTON_PASSIVE = 2;
+    this.BUTTON_DEACTIVATED = 3;
 };
 teka.Tool.prototype = new teka.Display;
 
 teka.Tool.prototype.setColorActive = function(color)
 {
-    if (color!==undefined)
+    if (color!==undefined) {
         this.colorActive = color;
+    }
 };
 
 teka.Tool.prototype.setColorPassive = function(color)
 {
-    if (color!==undefined)
+    if (color!==undefined) {
         this.colorPassive = color;
+    }
 };
 
 teka.Tool.prototype.setColorBorderDark = function(color)
 {
-    if (color!==undefined)
+    if (color!==undefined) {
         this.colorBorderDark = color;
+    }
 };
 
 teka.Tool.prototype.setColorBorderBright = function(color)
 {
-    if (color!==undefined)
+    if (color!==undefined) {
         this.colorBorderBright = color;
+    }
 };
 
 teka.Tool.prototype.setColorText = function(color)
 {
-    if (color!==undefined)
+    if (color!==undefined) {
         this.colorText = color;
+    }
 };
 
 teka.Tool.prototype.setTextHeight = function(textheight)
 {
-    if (textheight!==undefined)
+    if (textheight!==undefined) {
         this.textHeight = textheight;
+    }
 };
 
 teka.Tool.prototype.getMinDim = function(g)
@@ -73,7 +83,7 @@ teka.Tool.prototype.getButtonFont = function()
 
 teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
 {
-    g.fillStyle = this.colorPassive;
+    g.fillStyle = mode==this.BUTTON_ACTIVE?this.colorActive:this.colorPassive;
     g.fillRect(x,y,width,height);
     g.strokeStyle = this.colorBorderBright;
     g.beginPath();
@@ -88,7 +98,7 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
     g.lineTo(x+width-1,y);
     g.stroke();
     
-    g.fillStyle = this.colorText;
+    g.fillStyle = mode==this.BUTTON_DEACTIVATED?this.colorBorderBright:this.colorText;
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     g.font = this.getButtonFont();

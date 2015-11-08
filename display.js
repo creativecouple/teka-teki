@@ -20,14 +20,18 @@ teka.Display = function()
 
 teka.Display.prototype.setExtent = function(left,top,width,height)
 {
-    if (left!==undefined)
+    if (left!==undefined) {
         this.left = left;
-    if (top!==undefined)
+    }
+    if (top!==undefined) {
         this.top = top;
-    if (width!==undefined)
+    }
+    if (width!==undefined) {
         this.width = width;
-    if (height!==undefined)
+    }
+    if (height!==undefined) {
         this.height = height;
+    }
 };
 
 teka.Display.prototype.inExtent = function(x,y)

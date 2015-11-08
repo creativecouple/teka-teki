@@ -25,20 +25,23 @@ teka.HeadDisplay.prototype = new teka.Display;
 
 teka.HeadDisplay.prototype.setTitle = function(title)
 {
-    if (title!==undefined)
+    if (title!==undefined) {
         this.title = title;
+    }
 };
 
 teka.HeadDisplay.prototype.setColor = function(color)
 {
-    if (color!==undefined)
+    if (color!==undefined) {
         this.color = color;
+    }
 };
 
 teka.HeadDisplay.prototype.setTextHeight = function(textheight)
 {
-    if (textheight!==undefined)
+    if (textheight!==undefined) {
         this.textheight = textheight;
+    }
 };
 
 teka.HeadDisplay.prototype.paint = function(g)

@@ -34,11 +34,12 @@ teka.ButtonTool.prototype.paint = function(g)
 {
     var mindim = this.getMinDim(g);
     var x = (this.width-mindim.width)/2;
-    var y1 = 1;
-    var y2 = Math.floor((this.height-(this.textHeight+5))/2);
-    var y3 = this.height-(this.textHeight+5)-1;
+    var y = [];
+    y[0] = 1;
+    y[1] = Math.floor((this.height-(this.textHeight+5))/2);
+    y[2] = this.height-(this.textHeight+5)-1;
     
-    this.paintButton(g,x+0.5,y1+0.5,mindim.width,this.textHeight+5,false,this.buttons_[0]);
-    this.paintButton(g,x+0.5,y2+0.5,mindim.width,this.textHeight+5,false,this.buttons_[1]);
-    this.paintButton(g,x+0.5,y3+0.5,mindim.width,this.textHeight+5,false,this.buttons_[2]);
+    for (var i=0;i<=2;i++) {
+        this.paintButton(g,x+0.5,y[i]+0.5,mindim.width,this.textHeight+5,false,this.buttons_[i]);
+    }
 };
