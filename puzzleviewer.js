@@ -16,7 +16,11 @@
 
 teka.viewer = {};
 
-teka.viewer.PuzzleViewer = function() {};
+teka.viewer.PuzzleViewer = function() 
+{
+    this.setExtent(0,0,300,300);
+};
+teka.viewer.PuzzleViewer.prototype = new teka.Display;
 
 teka.viewer.PuzzleViewer.prototype.asciiToArray = function(ascii)
 {

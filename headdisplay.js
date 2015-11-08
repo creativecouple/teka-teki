@@ -16,13 +16,12 @@
 
 teka.HeadDisplay = function()
 {
-    teka.Display.call(this,0,0,300,24);
+    this.setExtent(0,0,300,24);
     this.title = 'Teka-Teki';
     this.color = '#000';
     this.textheight = 20;
 };
-teka.HeadDisplay.prototype = Object.create(teka.Display.prototype);
-teka.HeadDisplay.constructor = teka.Display;
+teka.HeadDisplay.prototype = new teka.Display;
 
 teka.HeadDisplay.prototype.setTitle = function(title)
 {
@@ -38,3 +37,4 @@ teka.HeadDisplay.prototype.paint = function(g)
     g.font = 'bold '+this.textheight+'px URW Chancery L';
     g.fillText(this.title,this.width/2,this.height-this.textheight/2);
 };
+

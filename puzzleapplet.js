@@ -102,8 +102,8 @@ teka.PuzzleApplet.prototype.init = function()
     if (this.values_.FILE===false) return;
     
     this.loadFile(this.values_.FILE, teka.myBind(this,function() {
-        
-        this.pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
+
+        var pv = this.pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
 
         this.display = [];
 
@@ -112,8 +112,15 @@ teka.PuzzleApplet.prototype.init = function()
         hd.setExtent(0,0,this.canvas.width,this.values_.HEADHEIGHT);
         this.display[0] = hd;
         
-        this.pv.setMetrics(this.canvas.width-2*this.values_.PUZZLEMARGIN,this.canvas.height-this.values_.HEADHEIGHT-2*this.values_.PUZZLEMARGIN);
+        pv.setExtent(this.values_.PUZZLEMARGIN,
+                     this.values_.HEADHEIGHT+this.values_.PUZZLEMARGIN,
+                     this.canvas.width-2*this.values_.PUZZLEMARGIN,
+                     this.canvas.height-this.values_.HEADHEIGHT-2*this.values_.PUZZLEMARGIN);
+        pv.setMetrics(this.canvas.width-2*this.values_.PUZZLEMARGIN,this.canvas.height-this.values_.HEADHEIGHT-2*this.values_.PUZZLEMARGIN);
+        this.display[1] = pv;
+        
         this.paint();
+        
         this.canvas.addEventListener('mousemove',this.mouseMovedListener.bind(this),false);
         this.canvas.addEventListener('mousedown',this.mousePressedListener.bind(this),false);
         document.addEventListener('keypress',this.keyPressedListener.bind(this),false);
@@ -167,11 +174,6 @@ teka.PuzzleApplet.prototype.paint = function()
         this.display[i].paint(this.image);
         this.image.restore();
     }
-    
-    this.image.save();
-    this.image.translate(this.values_.PUZZLEMARGIN,this.values_.HEADHEIGHT+this.values_.PUZZLEMARGIN);
-    this.pv.paintImage(this.image);
-    this.image.restore();
 };
 
 teka.PuzzleApplet.prototype.loadFile = function(filename, callback)

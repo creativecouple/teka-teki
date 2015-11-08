@@ -14,9 +14,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-teka.Display = function(left,top,width,height) 
+teka.Display = function() 
 {
-    this.setExtent(left,top,width,height);
 };
 
 teka.Display.prototype.setExtent = function(left,top,width,height)
@@ -36,3 +35,8 @@ teka.Display.prototype.translate = function(g)
     g.translate(this.left,this.top);
 };
 
+teka.Display.prototype.paint = function(g)
+{
+    g.fillStyle = '#f00';
+    g.fillRect(0,0,this.width,this.height);
+};

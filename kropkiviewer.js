@@ -29,7 +29,7 @@ teka.viewer.kropki.KropkiViewer = function(data)
     
     this.initData(data);
 };
-teka.viewer.kropki.KropkiViewer.prototype = teka.viewer.PuzzleViewer.prototype;
+teka.viewer.kropki.KropkiViewer.prototype = new teka.viewer.PuzzleViewer;
 
 teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
 {
@@ -111,23 +111,23 @@ teka.viewer.kropki.KropkiViewer.prototype.getName = function()
     return 'Kropki';
 };
 
-teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(width, height)
+teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function()
 {
-    this.scale = Math.round(Math.min((width-3)/this.X,(height-3)/this.X));
-    this.width = this.X * this.scale + 3;
-    this.height = this.X * this.scale + 3;
+    this.scale = Math.round(Math.min((this.width-3)/this.X,(this.height-3)/this.X));
+    var realwidth = this.X * this.scale + 3;
+    var realheight = this.X * this.scale + 3;
     
-    this.left = Math.round((width-this.width)/2)+0.5;
-    this.top = Math.round((height-this.height)/2)+0.5;
+    this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
+    this.deltaY = Math.round((this.height-realheight)/2)+0.5;
 };
 
-teka.viewer.kropki.KropkiViewer.prototype.paintImage = function(g) 
+teka.viewer.kropki.KropkiViewer.prototype.paint = function(g) 
 {
     var X = this.X;
     var S = this.scale;
     
     g.save();
-    g.translate(this.left,this.top);
+    g.translate(this.deltaX,this.deltaY);
 
     g.fillStyle = '#ffffff';
     g.fillRect(1,1,X*S,X*S);
@@ -217,8 +217,8 @@ teka.viewer.kropki.KropkiViewer.prototype.paintImage = function(g)
 
 teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,yc)
 {
-    xc = xc-this.left-1;
-    yc = yc-this.top-1;
+    xc = xc-this.deltaX-1;
+    yc = yc-this.deltaY-1;
 
     var oldx = this.x;
     var oldy = this.y;
@@ -238,8 +238,8 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc
 {
     var erg = this.processMouseMovedEvent(xc,yc);
     
-    xc-=this.left;
-    yc-=this.top;
+    xc-=this.deltaX;
+    yc-=this.deltaY;
     
     if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) { return erg; }
     
