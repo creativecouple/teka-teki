@@ -34,7 +34,7 @@ teka.HeadDisplay.prototype.paint = function(g)
     g.textAlign = 'center';
     g.textBaseline = 'alphabetic';
     g.fillStyle = this.color;
-    g.font = 'bold '+this.textheight+'px URW Chancery L';
+    g.font = 'bold '+this.textheight+'px "URW Chancery L",sans-serif';
     g.fillText(this.title,this.width/2,this.height-this.textheight/2);
 };
 
