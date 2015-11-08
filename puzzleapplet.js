@@ -103,22 +103,31 @@ teka.PuzzleApplet.prototype.init = function()
     
     this.loadFile(this.values_.FILE, teka.myBind(this,function() {
 
-        var pv = this.pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
-
-        this.display = [];
-
+        var pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
         var hd = new teka.HeadDisplay();
+        var bt = new teka.ButtonTool();
+        
+        this.pv = pv;
+        this.tools = [bt];
+
+        this.display = [hd,pv,bt];
+
         hd.setTitle(this.pv.getName());
         hd.setExtent(0,0,this.canvas.width,this.values_.HEADHEIGHT);
-        this.display[0] = hd;
         
-        pv.setExtent(this.values_.PUZZLEMARGIN,
-                     this.values_.HEADHEIGHT+this.values_.PUZZLEMARGIN,
-                     this.canvas.width-2*this.values_.PUZZLEMARGIN,
-                     this.canvas.height-this.values_.HEADHEIGHT-2*this.values_.PUZZLEMARGIN);
-        pv.setMetrics(this.canvas.width-2*this.values_.PUZZLEMARGIN,this.canvas.height-this.values_.HEADHEIGHT-2*this.values_.PUZZLEMARGIN);
-        this.display[1] = pv;
+        var pm = this.values_.PUZZLEMARGIN;
         
+        var mindim = bt.getMinDim(this.image);
+        pv.setExtent(pm,this.values_.HEADHEIGHT+pm,
+                     this.canvas.width-mindim.width-3*pm,
+                     this.canvas.height-this.values_.HEADHEIGHT-2*pm);
+        var metrics = pv.setMetrics();
+        pv.setExtent(pm,this.values_.HEADHEIGHT+pm,metrics.width,metrics.height);
+        pv.setMetrics();
+
+        bt.setExtent(metrics.width+2*pm,this.values_.HEADHEIGHT+pm,
+                     this.canvas.width-3*pm-metrics.width,mindim.height);
+                
         this.paint();
         
         this.canvas.addEventListener('mousemove',this.mouseMovedListener.bind(this),false);
@@ -133,11 +142,13 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
     this.canvas.focus();
     e = teka.normalizeMouseEvent(e);
     
-    var x = e.x-this.canvas.offsetLeft-this.values_.PUZZLEMARGIN;
-    var y = e.y-this.canvas.offsetTop-this.values_.HEADHEIGHT-this.values_.PUZZLEMARGIN;
-    
-    if (this.pv.processMouseMovedEvent(x,y)) {
-        this.paint();
+    var x = e.x-this.canvas.offsetLeft;
+    var y = e.y-this.canvas.offsetTop;
+
+    if (this.pv.inExtent(x,y)) {
+        if (this.pv.processMouseMovedEvent(x-this.pv.left,y-this.pv.top)) {
+            this.paint();
+        }
     }
 };
 
@@ -145,11 +156,13 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 {
     e = teka.normalizeMouseEvent(e);
     
-    var x = e.x-this.canvas.offsetLeft-this.values_.PUZZLEMARGIN;
-    var y = e.y-this.canvas.offsetTop-this.values_.HEADHEIGHT-this.values_.PUZZLEMARGIN;
+    var x = e.x-this.canvas.offsetLeft;
+    var y = e.y-this.canvas.offsetTop;
     
-    if (this.pv.processMousePressedEvent(x,y)) {
-        this.paint();
+    if (this.pv.inExtent(x,y)) {
+        if (this.pv.processMousePressedEvent(x-this.pv.left,y-this.pv.top)) {
+            this.paint();
+        }
     }
 };
 

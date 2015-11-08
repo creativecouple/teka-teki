@@ -30,6 +30,12 @@ teka.Display.prototype.setExtent = function(left,top,width,height)
         this.height = height;
 };
 
+teka.Display.prototype.inExtent = function(x,y)
+{
+    return x>=this.left && x<=this.left+this.width 
+        && y>=this.top && y<=this.top+this.height;
+};
+
 teka.Display.prototype.translate = function(g)
 {
     g.translate(this.left,this.top);

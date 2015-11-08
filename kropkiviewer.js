@@ -119,6 +119,8 @@ teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function()
     
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.round((this.height-realheight)/2)+0.5;
+
+    return {width:realwidth,height:realheight,scale:this.scale};
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.paint = function(g) 
