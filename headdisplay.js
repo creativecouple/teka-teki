@@ -29,6 +29,18 @@ teka.HeadDisplay.prototype.setTitle = function(title)
         this.title = title;
 };
 
+teka.HeadDisplay.prototype.setColor = function(color)
+{
+    if (color!==undefined)
+        this.color = color;
+};
+
+teka.HeadDisplay.prototype.setTextHeight = function(textheight)
+{
+    if (textheight!==undefined)
+        this.textheight = textheight;
+};
+
 teka.HeadDisplay.prototype.paint = function(g)
 {
     g.textAlign = 'center';
