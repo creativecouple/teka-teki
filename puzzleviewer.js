@@ -16,11 +16,33 @@
 
 teka.viewer = {};
 
+teka.viewer.Defaults = {
+    NORMAL: -1,
+    WAIT: -2,
+    BLINK_START: 0,
+    BLINK_END: 14,
+    SOLVED_COLOR: [
+        '#101010','#303030','#505050','#707070',
+        '#909090','#A0A0A0','#B0B0B0','#C0C0C0'
+    ]
+};
+
 teka.viewer.PuzzleViewer = function() 
 {
+    this.mode = teka.viewer.Defaults.NORMAL;
     this.setExtent(0,0,300,300);
 };
 teka.viewer.PuzzleViewer.prototype = new teka.Display;
+
+teka.viewer.PuzzleViewer.prototype.setMode = function(mode) 
+{
+    this.mode = mode;
+};
+
+teka.viewer.PuzzleViewer.prototype.getMode = function()
+{
+    return this.mode;
+};
 
 teka.viewer.PuzzleViewer.prototype.asciiToArray = function(ascii)
 {

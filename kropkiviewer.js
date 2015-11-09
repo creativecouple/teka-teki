@@ -121,6 +121,15 @@ teka.viewer.kropki.KropkiViewer.prototype.getName = function()
     return 'Kropki';
 };
 
+teka.viewer.kropki.KropkiViewer.prototype.clearError = function()
+{
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            this.error[i][j] = false;
+        }
+    }
+};
+
 teka.viewer.kropki.KropkiViewer.prototype.check = function()
 {
     var X = this.X;
@@ -137,7 +146,6 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         for (var j=0;j<X;j++) {
             if (this.f[i][j]==0) {
                 this.error[i][j] = true;
-                console.log(""+i+" "+j);
                 return 'Das markierte Feld ist leer.';
             }
         }
@@ -277,10 +285,19 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.error[i][j]===true) {
+            if (this.mode>=teka.viewer.Defaults.BLINK_START
+                && this.mode<=teka.viewer.Defaults.BLINK_END) {
+                g.fillStyle = teka.viewer.Defaults.SOLVED_COLOR[
+                                  Math.round(Math.abs(this.mode+(i+3)*this.mode%(j+1)
+                                  +(j+1)*(j+4)*(9-this.mode)%(i+1)
+                                  +this.f[i][j]+i+(X+1)*j))%8
+                              ];
+            } else if (this.error[i][j]===true) {
                 g.fillStyle = '#f00';
-                g.fillRect(i*S+1,j*S+1,S,S);
+            } else {
+                g.fillStyle = '#fff';
             }
+            g.fillRect(i*S+1,j*S+1,S,S);
         }
     }
     
@@ -360,9 +377,11 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
         }
     }
 
-    g.strokeStyle='#ff0000';
-    g.strokeRect(S*this.x+4,S*this.y+4,S-6,S-6);
-    g.strokeRect(S*this.x+5,S*this.y+5,S-8,S-8);
+    if (this.mode==teka.viewer.Defaults.NORMAL) {
+        g.strokeStyle='#ff0000';
+        g.strokeRect(S*this.x+4,S*this.y+4,S-6,S-6);
+        g.strokeRect(S*this.x+5,S*this.y+5,S-8,S-8);
+    }
     
     g.restore();
 };

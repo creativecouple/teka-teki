@@ -155,6 +155,11 @@ teka.PuzzleApplet.prototype.init = function()
 teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
 {
     this.canvas.focus();
+
+    if (this.pv.getMode()!=teka.viewer.Defaults.NORMAL) {
+        return;
+    }
+    
     e = teka.normalizeMouseEvent(e);
     
     var x = e.x-this.canvas.offsetLeft;
@@ -175,6 +180,17 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
 
 teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 {
+    if (this.pv.getMode()==teka.viewer.Defaults.WAIT
+        || this.pv.getMode()==teka.viewer.Defaults.BLINK_END) {
+        this.pv.clearError();
+        this.pv.setMode(teka.viewer.Defaults.NORMAL);
+        this.paint();
+        return;
+    }
+    if (this.pv.getMode()!=teka.viewer.Defaults.NORMAL) {
+        return;
+    }
+    
     e = teka.normalizeMouseEvent(e);
     
     var x = e.x-this.canvas.offsetLeft;
@@ -219,8 +235,28 @@ teka.PuzzleApplet.prototype.paint = function()
 teka.PuzzleApplet.prototype.check = function()
 {
     var erg = this.pv.check();
+ 
+    if (erg!==true)
+        {
+            this.pv.setMode(teka.viewer.Defaults.WAIT);
+            return;
+        }
     
-    console.log('erg='+erg);
+    this.pv.setMode(teka.viewer.Defaults.BLINK_START);
+    this.paint();
+    setTimeout(this.blink.bind(this),300);
+};
+
+teka.PuzzleApplet.prototype.blink = function()
+{
+    if (this.pv.getMode()<teka.viewer.Defaults.BLINK_START 
+        || this.pv.getMode()>=teka.viewer.Defaults.BLINK_END) {
+        return;
+    }
+    
+    this.pv.setMode(this.pv.getMode()+1);
+    this.paint();
+    setTimeout(this.blink.bind(this),300);
 };
 
 teka.PuzzleApplet.prototype.loadFile = function(filename, callback)
