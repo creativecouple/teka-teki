@@ -128,6 +128,7 @@ teka.PuzzleApplet.prototype.init = function()
         bt.setColorBorderBright(this.values_.BUTTON_COLOR_BORDER_BRIGHT);
         bt.setColorText(this.values_.BUTTON_COLOR_TEXT);
         bt.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
+        bt.setEvents(this.check.bind(this),false,false);
         
         var pm = this.values_.PUZZLEMARGIN;
         
@@ -213,6 +214,13 @@ teka.PuzzleApplet.prototype.paint = function()
         this.display[i].paint(this.image);
         this.image.restore();
     }
+};
+
+teka.PuzzleApplet.prototype.check = function()
+{
+    var erg = this.pv.check();
+    
+    console.log('erg='+erg);
 };
 
 teka.PuzzleApplet.prototype.loadFile = function(filename, callback)

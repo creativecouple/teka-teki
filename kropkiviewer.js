@@ -45,6 +45,16 @@ teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
             this.f[i][j] = 0;
         }
     }
+    
+    this.error = [];
+    for (var i=0;i<this.X;i++) {
+        this.error[i] = [];
+    }
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            this.error[i][j] = false;
+        }
+    }
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
@@ -111,6 +121,137 @@ teka.viewer.kropki.KropkiViewer.prototype.getName = function()
     return 'Kropki';
 };
 
+teka.viewer.kropki.KropkiViewer.prototype.check = function()
+{
+    var X = this.X;
+    
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<X;j++) {
+            if (this.puzzle[i][j]!=0) {
+                this.f[i][j] = this.puzzle[i][j];
+            }
+        }
+    }
+    
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<X;j++) {
+            if (this.f[i][j]==0) {
+                this.error[i][j] = true;
+                console.log(""+i+" "+j);
+                return 'Das markierte Feld ist leer.';
+            }
+        }
+    }
+
+    for (var j=0;j<X;j++) {
+        var da = [];
+        for (var i=0;i<X;i++) {
+            da[i] = false;
+        }
+        
+        for (var i=0;i<X;i++) {
+            if (da[this.f[i][j]-1]===true) {
+                for (var ii=0;ii<X;ii++) {
+                    if (this.f[ii][j]==this.f[i][j]) {
+                        this.error[ii][j] = true;
+                    }
+                }
+                return 'Die markierten Zahlen kommen in der Zeile doppelt vor.';
+            } else {
+                da[this.f[i][j]-1] = true;
+            }
+        }
+    }
+    
+    for (var i=0;i<X;i++) {
+        var da = [];
+        for (var j=0;j<X;j++) {
+            da[j] = false;
+        }
+        
+        for (var j=0;j<X;j++) {
+            if (da[this.f[i][j]-1]===true) {
+                for (var jj=0;jj<X;jj++) {
+                    if (this.f[i][jj]==this.f[i][j]) {
+                        this.error[i][jj] = true;
+                    }
+                }
+                return 'Die markierten Zahlen kommen in der Spalte doppelt vor.';
+            } else {
+                da[this.f[i][j]-1] = true;
+            }
+        }
+    }
+
+    for (var i=0;i<X-1;i++) {
+        for (var j=0;j<X;j++) {
+            switch (this.lrdots[i][j]) {
+              case teka.viewer.kropki.Defaults.NONE:
+                if (this.f[i][j]==2*this.f[i+1][j] || this.f[i+1][j]==2*this.f[i][j]) {
+                    this.error[i][j] = true;
+                    this.error[i+1][j] = true;
+                    return 'Die eine der beiden markierten Zahlen ist das Doppelte der anderen.';
+                }
+                if (this.f[i][j]==this.f[i+1][j]+1 || this.f[i+1][j]==this.f[i][j]+1) {
+                    this.error[i][j] = true;
+                    this.error[i+1][j] = true;
+                    return 'Die Zahlen in den beiden markierten Feldern sind benachbart.';
+                }
+                break;
+              case teka.viewer.kropki.Defaults.EMPTY:
+                if (this.f[i][j]!=this.f[i+1][j]+1 && this.f[i+1][j]!=this.f[i][j]+1) {
+                    this.error[i][j] = true;
+                    this.error[i+1][j] = true;
+                    return 'Die beiden markierten Felder enthalten keine benachbarten Zahlen.';
+                }
+                break;
+              case teka.viewer.kropki.Defaults.FULL:
+                if (this.f[i][j]!=2*this.f[i+1][j] && this.f[i+1][j]!=2*this.f[i][j]) {
+                    this.error[i][j] = true;
+                    this.error[i+1][j] = true;
+                    return 'Keines der beiden markierten Felder enthält das Doppelte des anderen.';
+                }
+                break;
+            }
+        }
+    }
+    
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<X-1;j++) {
+            switch (this.uddots[i][j]) {
+              case teka.viewer.kropki.Defaults.NONE:
+                if (this.f[i][j]==2*this.f[i][j+1] || this.f[i][j+1]==2*this.f[i][j]) {
+                    this.error[i][j] = true;
+                    this.error[i][j+1] = true;
+                    return 'Die eine der beiden markierten Zahlen ist das Doppelte der anderen.';
+                }
+                if (this.f[i][j]==this.f[i][j+1]+1 || this.f[i][j+1]==this.f[i][j]+1) {
+                    this.error[i][j] = true;
+                    this.error[i][j+1] = true;
+                    return 'Die Zahlen in den beiden markierten Feldern sind benachbart.';
+                }
+                break;
+              case teka.viewer.kropki.Defaults.EMPTY:
+                if (this.f[i][j]!=this.f[i][j+1]+1 && this.f[i][j+1]!=this.f[i][j]+1) {
+                    this.error[i][j] = true;
+                    this.error[i][j+1] = true;
+                    return 'Die beiden markierten Felder enthalten keine benachbarten Zahlen.';
+                }
+                break;
+              case teka.viewer.kropki.Defaults.FULL:
+                if (this.f[i][j]!=2*this.f[i][j+1] && this.f[i][j+1]!=2*this.f[i][j]) {
+                    this.error[i][j] = true;
+                    this.error[i][j+1] = true;
+                    return 'Keines der beiden markierten Felder enthält das Doppelte des anderen.';
+                }
+                break;
+            }
+        }
+    }
+    
+    return true;
+};
+
 teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function()
 {
     this.scale = Math.round(Math.min((this.width-3)/this.X,(this.height-3)/this.X));
@@ -133,6 +274,15 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 
     g.fillStyle = '#ffffff';
     g.fillRect(1,1,X*S,X*S);
+
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<X;j++) {
+            if (this.error[i][j]===true) {
+                g.fillStyle = '#f00';
+                g.fillRect(i*S+1,j*S+1,S,S);
+            }
+        }
+    }
     
     g.strokeStyle = '#000000';
     for (var i=0;i<=X;i++) {

@@ -19,8 +19,22 @@ teka.ButtonTool = function()
     this.buttons_ = ['Testen','Rückgängig','Anleitung'];
     this.aktivButton = false;
     this.y = [0,0,0];
+    this.events = [false,false,false];
 };
 teka.ButtonTool.prototype = new teka.Tool;
+
+teka.ButtonTool.prototype.setEvents = function(f1,f2,f3)
+{
+    if (f1!==undefined) {
+        this.events[0] = f1;
+    }
+    if (f2!==undefined) {
+        this.events[1] = f2;
+    }
+    if (f3!==undefined) {
+        this.events[2] = f3;
+    }
+};
 
 teka.ButtonTool.prototype.getMinDim = function(g)
 {
@@ -57,6 +71,9 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
 {
     this.aktivButton = this.getButton(xc,yc);
     if (this.aktivButton===-1) return false;
+
+    if (this.events[this.aktivButton]!==false)
+        this.events[this.aktivButton]();
     
     return true;
 };
@@ -75,3 +92,4 @@ teka.ButtonTool.prototype.resetButtons = function()
     this.aktivButton = false;
     return true;
 };
+
