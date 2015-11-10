@@ -76,6 +76,11 @@ teka.Tool.prototype.getMinDim = function(g)
     return { width:0, height:0 };
 };
 
+teka.Tool.prototype.getTextFont = function()
+{
+    return ''+this.textHeight+'px sans-serif';
+};
+
 teka.Tool.prototype.getButtonFont = function()
 {
     return 'bold '+this.textHeight+'px sans-serif';

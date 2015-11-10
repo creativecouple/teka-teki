@@ -53,11 +53,10 @@ teka.TextTool.prototype.paint = function(g)
         this.wrapText(g);
     }
     
-    g.font = this.getButtonFont();
     g.fillStyle = this.highlight?this.texthighlightcolor:this.textcolor;
     g.textAlign = 'left';
     g.textBaseline = 'top';
-    g.font = this.getButtonFont();
+    g.font = this.getTextFont();
     
     var y = 2;
     for (var i=0;i<this.wrapped_text.length;i++) {
@@ -75,8 +74,8 @@ teka.TextTool.prototype.wrapText = function(g)
     var s = this.text;
     var v = [];
     
-    g.font = this.getButtonFont();
     while (true) {
+        g.font = this.getTextFont();
         v = [];
         var ch = this.textHeight;
         var t = s.split('\n');

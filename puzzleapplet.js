@@ -22,7 +22,8 @@ teka.Defaults = {
     BORDER: '1px solid black',
     TARGET: 'applet',
     BACKGROUND: '#eeeeee',
-    TEXTCOLOR: '#888888',
+    TEXTCOLOR: '#000000',
+    LOGOCOLOR: '#888888',
     HEADFONTHEIGHT: 20,
     HEADHEIGHT: 28,
     HEADCOLOR: '#000000',
@@ -105,7 +106,7 @@ teka.PuzzleApplet.prototype.paintLogo = function()
     var height = Math.floor(this.canvas.height/3);
     image.textAlign = 'left';
     image.textBaseline = 'middle';
-    image.fillStyle = this.values_.TEXTCOLOR;
+    image.fillStyle = this.values_.LOGOCOLOR;
     image.font = 'bold '+height+'px sans-serif';
     image.fillText('TEKA',20,this.canvas.height/2-0.25*height);
     image.strokeStyle = '#000';
@@ -199,6 +200,8 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         }
     }
     if (paint) {
+        this.paint();
+    } else if (this.tt.setText("",false)) {
         this.paint();
     }
 };
