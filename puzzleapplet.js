@@ -23,6 +23,7 @@ teka.Defaults = {
     TARGET: 'applet',
     BACKGROUND: '#eeeeee',
     TEXTCOLOR: '#000000',
+    HIGHLIGHTCOLOR: '#ff0000',
     LOGOCOLOR: '#888888',
     HEADFONTHEIGHT: 20,
     HEADHEIGHT: 28,
@@ -149,6 +150,7 @@ teka.PuzzleApplet.prototype.init = function()
         bt.setEvents(this.check.bind(this),false,false,this.setText.bind(this));
 
         tt.setTextcolor(this.values_.TEXTCOLOR);
+        tt.setHighlight(this.values_.HIGHLIGHTCOLOR);
         
         var pm = this.values_.PUZZLEMARGIN;
         
@@ -268,7 +270,7 @@ teka.PuzzleApplet.prototype.check = function()
  
     if (erg!==true)
         {
-            this.tt.setText(erg,true);
+            this.tt.setText(erg,false);
             this.pv.setMode(teka.viewer.Defaults.WAIT);
             this.paint();
             return;

@@ -44,6 +44,11 @@ teka.TextTool.prototype.setTextcolor = function(color)
     this.textcolor = color;
 };
 
+teka.TextTool.prototype.setHighlight = function(color)
+{
+    this.texthighlightcolor = color;
+};
+
 teka.TextTool.prototype.paint = function(g)
 {
     if (this.text===undefined) {
