@@ -17,6 +17,8 @@
 teka.TextTool = function()
 {
     this.text = '';
+    this.textcolor = '#000';
+    this.texthighlightcolor = '#f00';
     this.wrapped_text = false;
 };
 teka.TextTool.prototype = new teka.Tool;
@@ -27,13 +29,19 @@ teka.TextTool.prototype.getMinDim = function(g)
     return { width:150, height:h };
 };
 
-teka.TextTool.prototype.setText = function(t)
+teka.TextTool.prototype.setText = function(t,highlight)
 {
-    if (this.text==t) return false;
+    if (this.text==t && this.highlight==highlight) return false;
     
     this.text = t;
+    this.highlight = highlight;
     this.wrapped_text = false;
     return true;
+};
+
+teka.TextTool.prototype.setTextcolor = function(color)
+{
+    this.textcolor = color;
 };
 
 teka.TextTool.prototype.paint = function(g)
@@ -46,7 +54,7 @@ teka.TextTool.prototype.paint = function(g)
     }
     
     g.font = this.getButtonFont();
-    g.fillStyle = '#000';
+    g.fillStyle = this.highlight?this.texthighlightcolor:this.textcolor;
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.font = this.getButtonFont();

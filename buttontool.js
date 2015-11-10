@@ -75,7 +75,7 @@ teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
     }
 
     if (this.events[3]!==false) {
-        this.events[3](this.description_[this.aktivButton]);
+        this.events[3](this.description_[this.aktivButton],false);
     }
     
     return true;

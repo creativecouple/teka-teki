@@ -74,10 +74,10 @@ teka.PuzzleApplet.prototype.setOptions = function(options)
     }
 };
 
-teka.PuzzleApplet.prototype.setText = function(text)
+teka.PuzzleApplet.prototype.setText = function(text, highlight)
 {
     if (this.tt!==undefined) {
-        if (this.tt.setText(text))
+        if (this.tt.setText(text,highlight))
             this.paint();
     }
 };
@@ -145,6 +145,8 @@ teka.PuzzleApplet.prototype.init = function()
         bt.setColorText(this.values_.BUTTON_COLOR_TEXT);
         bt.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         bt.setEvents(this.check.bind(this),false,false,this.setText.bind(this));
+
+        tt.setTextcolor(this.values_.TEXTCOLOR);
         
         var pm = this.values_.PUZZLEMARGIN;
         
@@ -206,7 +208,7 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
         || this.pv.getMode()==teka.viewer.Defaults.BLINK_END) {
         this.pv.clearError();
         this.pv.setMode(teka.viewer.Defaults.NORMAL);
-        this.tt.setText('');
+        this.tt.setText('',false);
         this.paint();
         return;
     }
@@ -262,13 +264,13 @@ teka.PuzzleApplet.prototype.check = function()
  
     if (erg!==true)
         {
-            this.tt.setText(erg);
+            this.tt.setText(erg,true);
             this.pv.setMode(teka.viewer.Defaults.WAIT);
             this.paint();
             return;
         }
     
-    this.tt.setText('Herzlichen Glückwunsch!!!');
+    this.tt.setText('Herzlichen Glückwunsch!!!',false);
     this.pv.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
     setTimeout(this.blink.bind(this),300);
