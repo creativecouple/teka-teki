@@ -127,12 +127,14 @@ teka.PuzzleApplet.prototype.init = function()
         var pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
         var hd = new teka.HeadDisplay();
         var bt = new teka.ButtonTool();
+        var ct = new teka.ColorTool();
         var tt = new teka.TextTool();
         
         this.pv = pv;
         this.bt = bt;
+        this.ct = ct;
         this.tt = tt;
-        this.display = [hd,pv,bt,tt];
+        this.display = [hd,pv,bt,ct,tt];
 
         pv.setSolvedColor(this.values_.SOLVED_COLOR);
         
@@ -155,9 +157,10 @@ teka.PuzzleApplet.prototype.init = function()
         var pm = this.values_.PUZZLEMARGIN;
         
         var mindimbt = bt.getMinDim(this.image);
+        var mindimct = ct.getMinDim(this.image);
         var mindimtt = tt.getMinDim(this.image);
-        var mindim = { width: Math.max(mindimbt.width,mindimtt.width),
-                       height: mindimbt.height+mindimtt.height+this.values_.TOOLGAP };
+        var mindim = { width: Math.max(Math.max(mindimbt.width,mindimct.width),mindimtt.width),
+                       height: mindimbt.height+mindimct.height+mindimtt.height+2*this.values_.TOOLGAP };
         pv.setExtent(pm,this.values_.HEADHEIGHT+pm,
                      this.canvas.width-mindim.width-3*pm,
                      this.canvas.height-this.values_.HEADHEIGHT-2*pm);
@@ -167,9 +170,12 @@ teka.PuzzleApplet.prototype.init = function()
 
         bt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm),
                      Math.floor(this.canvas.width-3*pm-metrics.width),Math.floor(mindimbt.height));
-                
-        tt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+this.values_.TOOLGAP),
-                     Math.floor(this.canvas.width-3*pm-metrics.width),this.canvas.height-Math.floor(mindimbt.height)-this.values_.TOOLGAP-2*pm-this.values_.HEADHEIGHT);
+
+        ct.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+this.values_.TOOLGAP),
+                     Math.floor(this.canvas.width-3*pm-metrics.width),Math.floor(mindimct.height));
+
+        tt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+Math.floor(mindimct.height)+2*this.values_.TOOLGAP),
+                     Math.floor(this.canvas.width-3*pm-metrics.width),this.canvas.height-Math.floor(mindimbt.height)-Math.floor(mindimct.height)-2*this.values_.TOOLGAP-2*pm-this.values_.HEADHEIGHT);
                 
         this.paint();
         
