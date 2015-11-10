@@ -34,6 +34,7 @@ teka.Defaults = {
     BUTTON_COLOR_TEXT: '#FFFFFF',
     BUTTON_TEXT_HEIGHT: 12,
     PUZZLEMARGIN: 10,
+    TOOLGAP:20,
     SOLVED_COLOR: [
         '#101010','#303030','#505050','#707070',
         '#909090','#A0A0A0','#B0B0B0','#C0C0C0'
@@ -153,7 +154,7 @@ teka.PuzzleApplet.prototype.init = function()
         var mindimbt = bt.getMinDim(this.image);
         var mindimtt = tt.getMinDim(this.image);
         var mindim = { width: Math.max(mindimbt.width,mindimtt.width),
-                       height: mindimbt.height+mindimtt.height+this.values_.PUZZLEMARGIN };
+                       height: mindimbt.height+mindimtt.height+this.values_.TOOLGAP };
         pv.setExtent(pm,this.values_.HEADHEIGHT+pm,
                      this.canvas.width-mindim.width-3*pm,
                      this.canvas.height-this.values_.HEADHEIGHT-2*pm);
@@ -164,8 +165,8 @@ teka.PuzzleApplet.prototype.init = function()
         bt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm),
                      Math.floor(this.canvas.width-3*pm-metrics.width),Math.floor(mindimbt.height));
                 
-        tt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+this.values_.PUZZLEMARGIN),
-                     Math.floor(this.canvas.width-3*pm-metrics.width),this.canvas.height-Math.floor(mindimbt.height)-3*this.values_.PUZZLEMARGIN-this.values_.HEADHEIGHT);
+        tt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+this.values_.TOOLGAP),
+                     Math.floor(this.canvas.width-3*pm-metrics.width),this.canvas.height-Math.floor(mindimbt.height)-this.values_.TOOLGAP-2*pm-this.values_.HEADHEIGHT);
                 
         this.paint();
         
