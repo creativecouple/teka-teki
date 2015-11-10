@@ -27,10 +27,18 @@ teka.viewer.Defaults = {
     ]
 };
 
-teka.viewer.PuzzleViewer = function() 
+teka.viewer.PuzzleViewer = function(data)
 {
     this.mode = teka.viewer.Defaults.NORMAL;
     this.solved_color = teka.viewer.Defaults.SOLVED_COLOR;
+    this.save = false;
+    
+    this.initData(data);
+    this.reset();
+    this.reset();
+    this.saveState();
+    this.clearError();
+    
     this.setExtent(0,0,300,300);
 };
 teka.viewer.PuzzleViewer.prototype = new teka.Display;
@@ -48,6 +56,41 @@ teka.viewer.PuzzleViewer.prototype.getMode = function()
 teka.viewer.PuzzleViewer.prototype.setSolvedColor = function(sc)
 {
     this.solved_color = sc;
+};
+
+teka.viewer.PuzzleViewer.prototype.reset = function()
+{
+};
+
+teka.viewer.PuzzleViewer.prototype.clearError = function()
+{
+};
+
+teka.viewer.PuzzleViewer.prototype.initData = function(data)
+{
+};
+
+teka.viewer.PuzzleViewer.prototype.saveState = function()
+{
+    return {};
+};
+
+teka.viewer.PuzzleViewer.prototype.loadState = function(state)
+{
+};
+
+teka.viewer.PuzzleViewer.prototype.save = function()
+{
+    this.save = this.saveState();
+};
+
+teka.viewer.PuzzleViewer.prototype.undo = function()
+{
+    if (this.save!==false) {
+        var tmp = this.saveState();
+        this.loadState(this.save);
+        this.save = tmp;
+    }
 };
 
 teka.viewer.PuzzleViewer.prototype.asciiToArray = function(ascii)

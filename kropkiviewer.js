@@ -24,10 +24,19 @@ teka.viewer.kropki.Defaults = {
 
 teka.viewer.kropki.KropkiViewer = function(data)
 {
-    this.x = 0;
-    this.y = 0;
+    // This stuff should be done via calling the constructor of puzzleviewer...
+    this.mode = teka.viewer.Defaults.NORMAL;
+    this.solved_color = teka.viewer.Defaults.SOLVED_COLOR;
+    this.save = false;
     
     this.initData(data);
+    this.reset();
+    this.reset();
+    this.save = this.saveState();
+    this.clearError();
+    
+    this.x = 0;
+    this.y = 0;    
 };
 teka.viewer.kropki.KropkiViewer.prototype = new teka.viewer.PuzzleViewer;
 
@@ -121,11 +130,44 @@ teka.viewer.kropki.KropkiViewer.prototype.getName = function()
     return 'Kropki';
 };
 
+teka.viewer.kropki.KropkiViewer.prototype.reset = function()
+{
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            this.f[i][j] = 0;
+        }
+    }
+};
+
 teka.viewer.kropki.KropkiViewer.prototype.clearError = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             this.error[i][j] = false;
+        }
+    }
+};
+
+teka.viewer.kropki.KropkiViewer.prototype.saveState = function()
+{
+    var f = [];
+    for (var i=0;i<this.X;i++) {
+        f[i] = [];
+    }
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            f[i][j] = this.f[i][j];
+        }
+    }
+
+    return { f:f };
+};
+
+teka.viewer.kropki.KropkiViewer.prototype.loadState = function(state)
+{
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            this.f[i][j] = state.f[i][j];
         }
     }
 };

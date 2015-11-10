@@ -147,7 +147,7 @@ teka.PuzzleApplet.prototype.init = function()
         bt.setColorBorderBright(this.values_.BUTTON_COLOR_BORDER_BRIGHT);
         bt.setColorText(this.values_.BUTTON_COLOR_TEXT);
         bt.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
-        bt.setEvents(this.check.bind(this),false,false,this.setText.bind(this));
+        bt.setEvents(this.check.bind(this),this.undo.bind(this),false,this.setText.bind(this));
 
         tt.setTextcolor(this.values_.TEXTCOLOR);
         tt.setHighlight(this.values_.HIGHLIGHTCOLOR);
@@ -280,6 +280,11 @@ teka.PuzzleApplet.prototype.check = function()
     this.pv.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
     setTimeout(this.blink.bind(this),300);
+};
+
+teka.PuzzleApplet.prototype.undo = function()
+{
+    this.pv.undo();
 };
 
 teka.PuzzleApplet.prototype.blink = function()
