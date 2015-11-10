@@ -17,13 +17,18 @@
 teka.ButtonTool = function()
 {
     this.buttons_ = ['Testen','Rückgängig','Anleitung'];
+    this.description_ = [
+        'Überprüft, ob die Lösung richtig ist.',
+        'Macht alles bis inklusive der letzten größeren Änderung (=färben, löschen) rückgängig. Nochmaliges Drücken macht das letzte Rückgängingmachen wieder rückgängig.',
+        'Zeigt die Aufgabenstellung und eine Anleitung zur Bedienung dieses Applets an.'
+    ];
     this.aktivButton = false;
     this.y = [0,0,0];
-    this.events = [false,false,false];
+    this.events = [false,false,false,false];
 };
 teka.ButtonTool.prototype = new teka.Tool;
 
-teka.ButtonTool.prototype.setEvents = function(f1,f2,f3)
+teka.ButtonTool.prototype.setEvents = function(f1,f2,f3,f4)
 {
     if (f1!==undefined) {
         this.events[0] = f1;
@@ -33,6 +38,9 @@ teka.ButtonTool.prototype.setEvents = function(f1,f2,f3)
     }
     if (f3!==undefined) {
         this.events[2] = f3;
+    }
+    if (f4!==undefined) {
+        this.events[3] = f4;
     }
 };
 
@@ -62,7 +70,13 @@ teka.ButtonTool.prototype.paint = function(g)
 teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
 {
     this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===-1) return false;
+    if (this.aktivButton===-1) {
+        return false;
+    }
+
+    if (this.events[3]!==false) {
+        this.events[3](this.description_[this.aktivButton]);
+    }
     
     return true;
 };
@@ -70,10 +84,13 @@ teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
 teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
 {
     this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===-1) return false;
+    if (this.aktivButton===-1) {
+        return false;
+    }
 
-    if (this.events[this.aktivButton]!==false)
+    if (this.events[this.aktivButton]!==false) {
         this.events[this.aktivButton]();
+    }
     
     return true;
 };

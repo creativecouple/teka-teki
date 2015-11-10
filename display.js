@@ -45,6 +45,17 @@ teka.Display.prototype.translate = function(g)
     g.translate(this.left,this.top);
 };
 
+teka.Display.prototype.clip = function(g)
+{
+    g.beginPath();
+    g.moveTo(0,0);
+    g.lineTo(this.width,0);
+    g.lineTo(this.width,this.height);
+    g.lineTo(0,this.height);
+    g.closePath();
+    g.clip();
+};
+
 teka.Display.prototype.paint = function(g)
 {
     g.fillStyle = '#f00';
