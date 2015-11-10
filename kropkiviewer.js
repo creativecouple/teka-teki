@@ -24,21 +24,12 @@ teka.viewer.kropki.Defaults = {
 
 teka.viewer.kropki.KropkiViewer = function(data)
 {
-    // This stuff should be done via calling the constructor of puzzleviewer...
-    this.mode = teka.viewer.Defaults.NORMAL;
-    this.solved_color = teka.viewer.Defaults.SOLVED_COLOR;
-    this.save = false;
-    
-    this.initData(data);
-    this.reset();
-    this.reset();
-    this.save = this.saveState();
-    this.clearError();
-    
+    teka.viewer.PuzzleViewer.call(this,data);
+
     this.x = 0;
     this.y = 0;    
 };
-teka.viewer.kropki.KropkiViewer.prototype = new teka.viewer.PuzzleViewer;
+teka.extend(teka.viewer.kropki.KropkiViewer,teka.viewer.PuzzleViewer);
 
 teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
 {

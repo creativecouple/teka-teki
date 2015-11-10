@@ -45,3 +45,9 @@ teka.addScript = function(src,callback)
     script.src = src+'?r='+Math.random();
     document.getElementsByTagName('head')[0].appendChild(script);
 };
+
+teka.extend = function(child,parent)
+{
+    child.prototype = Object.create(parent.prototype);
+    child.prototype.constructor = child;
+};

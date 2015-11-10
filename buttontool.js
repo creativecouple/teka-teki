@@ -16,6 +16,8 @@
 
 teka.ButtonTool = function()
 {
+    teka.Tool.call(this);
+    
     this.buttons_ = ['Testen','Rückgängig','Anleitung'];
     this.description_ = [
         'Überprüft, ob die Lösung richtig ist.',
@@ -26,7 +28,7 @@ teka.ButtonTool = function()
     this.y = [0,0,0];
     this.events = [false,false,false,false];
 };
-teka.ButtonTool.prototype = new teka.Tool;
+teka.extend(teka.ButtonTool,teka.Tool);
 
 teka.ButtonTool.prototype.setEvents = function(f1,f2,f3,f4)
 {

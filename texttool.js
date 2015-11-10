@@ -16,12 +16,14 @@
 
 teka.TextTool = function()
 {
+    teka.Tool.call(this);
+    
     this.text = '';
     this.textcolor = '#000';
     this.texthighlightcolor = '#f00';
     this.wrapped_text = false;
 };
-teka.TextTool.prototype = new teka.Tool;
+teka.extend(teka.TextTool,teka.Tool);
 
 teka.TextTool.prototype.getMinDim = function(g)
 {

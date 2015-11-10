@@ -16,6 +16,8 @@
 
 teka.Tool = function()
 {
+    teka.Display.call(this);
+    
     this.colorActive = '#303030';
     this.colorPassive = '#606060';
     this.colorBorderDark = '#202020';
@@ -27,7 +29,7 @@ teka.Tool = function()
     this.BUTTON_PASSIVE = 2;
     this.BUTTON_DEACTIVATED = 3;
 };
-teka.Tool.prototype = new teka.Display;
+teka.extend(teka.Tool,teka.Display);
 
 teka.Tool.prototype.setColorActive = function(color)
 {

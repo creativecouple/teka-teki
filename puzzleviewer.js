@@ -29,19 +29,20 @@ teka.viewer.Defaults = {
 
 teka.viewer.PuzzleViewer = function(data)
 {
+    teka.Display.call(this);
+    
     this.mode = teka.viewer.Defaults.NORMAL;
     this.solved_color = teka.viewer.Defaults.SOLVED_COLOR;
-    this.save = false;
     
     this.initData(data);
     this.reset();
     this.reset();
-    this.saveState();
+    this.save = this.saveState();
     this.clearError();
     
     this.setExtent(0,0,300,300);
 };
-teka.viewer.PuzzleViewer.prototype = new teka.Display;
+teka.extend(teka.viewer.PuzzleViewer,teka.Display);
 
 teka.viewer.PuzzleViewer.prototype.setMode = function(mode) 
 {

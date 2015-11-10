@@ -16,12 +16,14 @@
 
 teka.HeadDisplay = function()
 {
+    teka.Display.call(this);
+    
     this.setExtent(0,0,300,24);
     this.title = 'Teka-Teki';
     this.color = '#000';
     this.textheight = 20;
 };
-teka.HeadDisplay.prototype = new teka.Display;
+teka.extend(teka.HeadDisplay,teka.Display);
 
 teka.HeadDisplay.prototype.setTitle = function(title)
 {
