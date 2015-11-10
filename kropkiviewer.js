@@ -287,7 +287,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
         for (var j=0;j<X;j++) {
             if (this.mode>=teka.viewer.Defaults.BLINK_START
                 && this.mode<=teka.viewer.Defaults.BLINK_END) {
-                g.fillStyle = teka.viewer.Defaults.SOLVED_COLOR[
+                g.fillStyle = this.solved_color[
                                   Math.round(Math.abs(this.mode+(i+3)*this.mode%(j+1)
                                   +(j+1)*(j+4)*(9-this.mode)%(i+1)
                                   +this.f[i][j]+i+(X+1)*j))%8

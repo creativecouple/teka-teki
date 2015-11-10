@@ -30,6 +30,7 @@ teka.viewer.Defaults = {
 teka.viewer.PuzzleViewer = function() 
 {
     this.mode = teka.viewer.Defaults.NORMAL;
+    this.solved_color = teka.viewer.Defaults.SOLVED_COLOR;
     this.setExtent(0,0,300,300);
 };
 teka.viewer.PuzzleViewer.prototype = new teka.Display;
@@ -42,6 +43,11 @@ teka.viewer.PuzzleViewer.prototype.setMode = function(mode)
 teka.viewer.PuzzleViewer.prototype.getMode = function()
 {
     return this.mode;
+};
+
+teka.viewer.PuzzleViewer.prototype.setSolvedColor = function(sc)
+{
+    this.solved_color = sc;
 };
 
 teka.viewer.PuzzleViewer.prototype.asciiToArray = function(ascii)

@@ -34,6 +34,10 @@ teka.Defaults = {
     BUTTON_COLOR_TEXT: '#FFFFFF',
     BUTTON_TEXT_HEIGHT: 12,
     PUZZLEMARGIN: 10,
+    SOLVED_COLOR: [
+        '#101010','#303030','#505050','#707070',
+        '#909090','#A0A0A0','#B0B0B0','#C0C0C0'
+    ],
     FILE: false
 };
 
@@ -117,6 +121,8 @@ teka.PuzzleApplet.prototype.init = function()
         this.bt = bt;
         this.display = [hd,pv,bt];
 
+        pv.setSolvedColor(this.values_.SOLVED_COLOR);
+        
         hd.setTitle(this.pv.getName());
         hd.setColor(this.values_.HEADCOLOR);
         hd.setTextHeight(this.values_.HEADFONTHEIGHT);
