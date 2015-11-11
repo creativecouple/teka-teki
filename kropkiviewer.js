@@ -28,13 +28,19 @@ teka.viewer.kropki.KropkiViewer = function(data)
 
     this.x = 0;
     this.y = 0;    
+    this.xm = 0;
+    this.ym = 0;
+    this.exp = false;
 };
 teka.extend(teka.viewer.kropki.KropkiViewer,teka.viewer.PuzzleViewer);
+
+//////////////////////////////////////////////////////////////////
 
 teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('size'));
     this.asciiToData(data.get('puzzle'));
+    this.solution = this.asciiToSolution(data.get('solution'));
     
     this.f = [];
     this.c = [];
@@ -55,7 +61,9 @@ teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
 
 teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
 {
-    if (ascii===undefined) return;
+    if (ascii===undefined) {
+        return;
+    }
 
     var c = this.asciiToArray(ascii);
 
@@ -112,10 +120,85 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
     }
 };
 
+teka.viewer.kropki.KropkiViewer.prototype.asciiToSolution = function(ascii)
+{
+    if (ascii===undefined) {
+        return;
+    }
+
+    var c = this.asciiToArray(ascii);
+    
+    var erg = [];
+    for (var i=0;i<this.X;i++) {
+        erg[i] = [];
+    }
+    
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            erg[i][j] = c[i][j].charCodeAt(0)-'0'.charCodeAt(0);
+        }
+    }
+
+    return erg;
+};
+
+teka.viewer.kropki.KropkiViewer.prototype.addSolution = function()
+{
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            this.f[i][j] = this.solution[i][j];
+        }
+    }
+};
+
+//////////////////////////////////////////////////////////////////
+
 teka.viewer.kropki.KropkiViewer.prototype.getName = function()
 {
     return 'Kropki';
 };
+
+teka.viewer.kropki.KropkiViewer.prototype.getInstructions = function()
+{
+    return 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
+        +'dass jede Zahl in jeder Zeile und jeder Spalte genau einmal vorkommt.\n\n'
+        +'Befindet sich zwischen zwei Feldern ein schwarzer Kreis, '
+        +'so muss eine der beiden Zahlen in diesen Feldern genau das Doppelte '
+        +'der anderen sein.\n\n'
+        +'Ein weißer Kreis hingegen bedeutet, dass eine der beiden Zahlen '
+        +'in diesen Feldern genau um eins größer sein muss als die andere.\n\n'
+        +'Befindet sich kein Kreis zwischen zwei Feldern, so darf keine '
+        +'der beiden Eigenschaften zutreffen.';
+};
+
+teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
+{
+    return
+        '/format 1 /type (kropki) /sol false /size 4'
+        +' /puzzle [ (+-+-+-+-+) (| * * O |) (+ +*+*+O+) (|   * * |) (+O+ +O+*+)'
+        +' (| O   * |) (+*+O+ +*+) (| * O   |) (+-+-+-+-+) ]'
+        +' /solution [ (1243) (3124) (4312)(2431) ]';
+};
+
+teka.viewer.kropki.KropkiViewer.prototype.getUsage = function()
+{
+    return 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
+        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.';
+};
+
+//////////////////////////////////////////////////////////////////
 
 teka.viewer.kropki.KropkiViewer.prototype.reset = function()
 {
@@ -185,10 +268,12 @@ teka.viewer.kropki.KropkiViewer.prototype.loadState = function(state)
     }
 };
 
+//////////////////////////////////////////////////////////////////
+
 teka.viewer.kropki.KropkiViewer.prototype.check = function()
 {
     var X = this.X;
-    
+   
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.puzzle[i][j]!=0) {
@@ -196,10 +281,30 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
             }
         }
     }
-    
+
+    var check = [];
+    for (var i=0;i<this.X;i++) {
+        check[i] = [];
+    }
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            check[i][j] = 0;
+        }
+    }
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.f[i][j]==0) {
+            if (this.f[i][j]>=1000) {
+                check[i][j] = this.getExpert(this.f[i][j]);
+                if (check[i][j]==0) {
+                    this.error[i][j] = true;
+                    return 'Das markierte Feld enthält kein eindeutiges Symbol.';
+                }
+            } else {
+                check[i][j] = this.f[i][j];
+            }
+            
+            if (check[i][j]==0) {
                 this.error[i][j] = true;
                 return 'Das markierte Feld ist leer.';
             }
@@ -213,15 +318,15 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         }
         
         for (var i=0;i<X;i++) {
-            if (da[this.f[i][j]-1]===true) {
+            if (da[check[i][j]-1]===true) {
                 for (var ii=0;ii<X;ii++) {
-                    if (this.f[ii][j]==this.f[i][j]) {
+                    if (check[ii][j]==check[i][j]) {
                         this.error[ii][j] = true;
                     }
                 }
                 return 'Die markierten Zahlen kommen in der Zeile doppelt vor.';
             } else {
-                da[this.f[i][j]-1] = true;
+                da[check[i][j]-1] = true;
             }
         }
     }
@@ -233,15 +338,15 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         }
         
         for (var j=0;j<X;j++) {
-            if (da[this.f[i][j]-1]===true) {
+            if (da[check[i][j]-1]===true) {
                 for (var jj=0;jj<X;jj++) {
-                    if (this.f[i][jj]==this.f[i][j]) {
+                    if (check[i][jj]==check[i][j]) {
                         this.error[i][jj] = true;
                     }
                 }
                 return 'Die markierten Zahlen kommen in der Spalte doppelt vor.';
             } else {
-                da[this.f[i][j]-1] = true;
+                da[check[i][j]-1] = true;
             }
         }
     }
@@ -250,26 +355,26 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         for (var j=0;j<X;j++) {
             switch (this.lrdots[i][j]) {
               case teka.viewer.kropki.Defaults.NONE:
-                if (this.f[i][j]==2*this.f[i+1][j] || this.f[i+1][j]==2*this.f[i][j]) {
+                if (check[i][j]==2*check[i+1][j] || check[i+1][j]==2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
                     return 'Die eine der beiden markierten Zahlen ist das Doppelte der anderen.';
                 }
-                if (this.f[i][j]==this.f[i+1][j]+1 || this.f[i+1][j]==this.f[i][j]+1) {
+                if (check[i][j]==check[i+1][j]+1 || check[i+1][j]==check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
                     return 'Die Zahlen in den beiden markierten Feldern sind benachbart.';
                 }
                 break;
               case teka.viewer.kropki.Defaults.EMPTY:
-                if (this.f[i][j]!=this.f[i+1][j]+1 && this.f[i+1][j]!=this.f[i][j]+1) {
+                if (check[i][j]!=check[i+1][j]+1 && check[i+1][j]!=check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
                     return 'Die beiden markierten Felder enthalten keine benachbarten Zahlen.';
                 }
                 break;
               case teka.viewer.kropki.Defaults.FULL:
-                if (this.f[i][j]!=2*this.f[i+1][j] && this.f[i+1][j]!=2*this.f[i][j]) {
+                if (check[i][j]!=2*check[i+1][j] && check[i+1][j]!=2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
                     return 'Keines der beiden markierten Felder enthält das Doppelte des anderen.';
@@ -283,26 +388,26 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         for (var j=0;j<X-1;j++) {
             switch (this.uddots[i][j]) {
               case teka.viewer.kropki.Defaults.NONE:
-                if (this.f[i][j]==2*this.f[i][j+1] || this.f[i][j+1]==2*this.f[i][j]) {
+                if (check[i][j]==2*check[i][j+1] || check[i][j+1]==2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
                     return 'Die eine der beiden markierten Zahlen ist das Doppelte der anderen.';
                 }
-                if (this.f[i][j]==this.f[i][j+1]+1 || this.f[i][j+1]==this.f[i][j]+1) {
+                if (check[i][j]==check[i][j+1]+1 || check[i][j+1]==check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
                     return 'Die Zahlen in den beiden markierten Feldern sind benachbart.';
                 }
                 break;
               case teka.viewer.kropki.Defaults.EMPTY:
-                if (this.f[i][j]!=this.f[i][j+1]+1 && this.f[i][j+1]!=this.f[i][j]+1) {
+                if (check[i][j]!=check[i][j+1]+1 && check[i][j+1]!=check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
                     return 'Die beiden markierten Felder enthalten keine benachbarten Zahlen.';
                 }
                 break;
               case teka.viewer.kropki.Defaults.FULL:
-                if (this.f[i][j]!=2*this.f[i][j+1] && this.f[i][j+1]!=2*this.f[i][j]) {
+                if (check[i][j]!=2*check[i][j+1] && check[i][j+1]!=2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
                     return 'Keines der beiden markierten Felder enthält das Doppelte des anderen.';
@@ -314,6 +419,8 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
     
     return true;
 };
+
+//////////////////////////////////////////////////////////////////
 
 teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function()
 {
@@ -421,7 +528,10 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
                 g.fillText(this.puzzle[i][j],1+i*S+S/2,1+j*S+S/2);
                 continue;
             }
-            if (this.f[i][j]>0) {
+            if (this.f[i][j]==0) {
+                continue;
+            }
+            if (this.f[i][j]<1000) {
                 g.textAlign = 'center';
                 g.textBaseline = 'middle';
                 g.fillStyle = this.getColorString(this.c[i][j]);
@@ -429,17 +539,65 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
                 g.fillText(this.f[i][j],1+i*S+S/2,1+j*S+S/2);
                 continue;
             }
+            
+            g.textAlign = 'center';
+            g.textBaseline = 'middle';
+            g.fillStyle = this.getColorString(this.c[i][j]);
+            g.font = Math.round((S-6)/4)+'px sans-serif';
+            for (var k=1;k<=9;k++) {
+                if (((this.f[i][j]-1000)&(1<<k))!=0) {
+                    g.fillText(''+k,1+S*i+((k-1)%3+1)*S/4,1+S*j+Math.floor((k-1)/3+1)*S/4);
+                }
+            }
+                
+            g.beginPath();
+            g.moveTo(1+S*i+3*S/8,1+S*j+S/8);
+            g.lineTo(1+S*i+3*S/8,1+S*(j+1)-S/8);
+            g.stroke();
+            g.beginPath();
+            g.moveTo(1+S*(i+1)-3*S/8,1+S*j+S/8);
+            g.lineTo(1+S*(i+1)-3*S/8,1+S*(j+1)-S/8);
+            g.stroke();
+            g.beginPath();
+            g.moveTo(1+S*i+S/8,1+S*j+3*S/8);
+            g.lineTo(1+S*(i+1)-S/8,1+S*j+3*S/8);
+            g.stroke();
+            g.beginPath();
+            g.moveTo(1+S*i+S/8,1+S*(j+1)-3*S/8);
+            g.lineTo(1+S*(i+1)-S/8,1+S*(j+1)-3*S/8);
+            g.stroke();
+            g.beginPath();
+            g.moveTo((i+1)*S+3-S/8,(j+1)*S+3-S/8);
+            g.lineTo((i+1)*S-2,(j+1)*S-2);
+            g.stroke();
+            g.beginPath();
+            g.moveTo((i+1)*S+3-S/8,(j+1)*S-2);
+            g.lineTo((i+1)*S-2,(j+1)*S+3-S/8);
+            g.stroke();
         }
     }
 
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle='#ff0000';
-        g.strokeRect(S*this.x+4,S*this.y+4,S-6,S-6);
-        g.strokeRect(S*this.x+5,S*this.y+5,S-8,S-8);
+        if (this.exp) {
+            g.beginPath();
+            g.moveTo((this.x+1)*S+3-S/8,(this.y+1)*S+3-S/8);
+            g.lineTo((this.x+1)*S-2,(this.y+1)*S-2);
+            g.stroke();
+            g.beginPath();
+            g.moveTo((this.x+1)*S+3-S/8,(this.y+1)*S-2);
+            g.lineTo((this.x+1)*S-2,(this.y+1)*S+3-S/8);
+            g.stroke();
+        } else {
+            g.strokeRect(S*this.x+4,S*this.y+4,S-6,S-6);
+            g.strokeRect(S*this.x+5,S*this.y+5,S-8,S-8);
+        }
     }
     
     g.restore();
 };
+
+//////////////////////////////////////////////////////////////////
 
 teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,yc)
 {
@@ -451,25 +609,53 @@ teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,y
     
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
+
+    this.xm = xc-this.scale*this.x;
+    this.ym = yc-this.scale*this.y;
     
     if (this.x<0) { this.x=0; }
     if (this.y<0) { this.y=0; }
     if (this.x>this.X-1) { this.x=this.X-1; }
     if (this.y>this.X-1) { this.y=this.X-1; }
     
-    return this.x!=oldx || this.y!=oldy;
+    var oldexp = this.exp;
+    this.exp = this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8;
+    
+    return this.x!=oldx || this.y!=oldy || this.exp!=oldexp;
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc,yc)
 {
     var erg = this.processMouseMovedEvent(xc,yc);
     
-    xc-=this.deltaX;
-    yc-=this.deltaY;
+    xc = xc-this.deltaX-1;
+    yc = yc-this.deltaY-1;
     
-    if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) { return erg; }
+    if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) { 
+        return erg;
+    }
     
-    this.set(this.x,this.y,(this.f[this.x][this.y]+1) % (this.X+1));
+    if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
+        if (this.f[this.x][this.y]<1000) {
+            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
+        } else {
+            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
+        }
+        return true;
+    }
+
+    if (this.f[this.x][this.y]>=1000) {
+        var nr = ((this.xm<3*this.scale/8)?0:(this.xm>this.scale-3*this.scale/8)?2:1)+
+            3*((this.ym<3*this.scale/8)?0:(this.ym>this.scale-3*this.scale/8)?2:1)+1;
+        if (nr<1 || nr>this.X) {
+            return erg;
+        }
+        
+        this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000);
+    }
+    else {
+        this.set(this.x,this.y,(this.f[this.x][this.y]+1) % (this.X+1));
+    }
     
     return true;
 };
@@ -496,14 +682,38 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
     if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.X) { return false; }
     
     if (c>=49 && c<=48+this.X) {
-        this.set(this.x,this.y,c-48);
+        if (this.f[this.x][this.y]<1000) {
+            this.set(this.x,this.y,c-48);
+        } else {
+            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<(c-48)))+1000);
+        }
         return true;
     }
+    
+    if (c>=65 && c<=90) {
+        this.set(this.x,this.y,c-65+10);
+        return true;
+    }
+    
+    if (c>=97 && c<=122) {
+        this.set(this.x,this.y,c-97+10);
+        return true;
+    }
+    
     if (c==32) {
         this.set(this.x,this.y,0);
         return true;
     }
 
+    if (c==35 || c==44) {
+        if (this.f[this.x][this.y]<1000) {
+            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]))
+        } else {
+            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]))
+        }
+        return true;
+    }
+    
     return false;
 };
 
@@ -512,4 +722,37 @@ teka.viewer.kropki.KropkiViewer.prototype.set = function(x,y,val)
     if (this.f[x][y]!=0 && this.c[x][y]!=this.color) return;
     this.f[x][y] = val;
     this.c[x][y] = this.color;
+};
+
+teka.viewer.kropki.KropkiViewer.prototype.setExpert = function(h)
+{
+    return 1000+(h==0?0:(1<<h));
+};
+
+teka.viewer.kropki.KropkiViewer.prototype.getExpert = function(h)
+{
+    if (h<1000) {
+        return h;
+    }
+    
+    var min = 10;
+    var max = 0;
+    h -= 1000;
+    
+    for (var i=1;i<=9;i++) {
+        if ((h&(1<<i))!=0) {
+            if (i<min) {
+                min = i;
+            }
+            if (i>max) {
+                max = i;
+            }
+        }
+    }
+
+    if (min==max) {
+        return min;
+    }
+    
+    return 0;
 };
