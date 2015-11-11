@@ -93,7 +93,7 @@ teka.CasesTool.prototype.paint = function(g)
     g.fillStyle = this.colorNormalText;
     g.textAlign = 'left';
     g.textBaseline = 'middle';
-    g.font = this.getTextFont();
+    g.font = this.getButtonFont();
     g.fillText('Stufe: '+this.stack.length,
                2*this.textHeight+23.5,
                1.5+(this.textHeight+5)/2);
