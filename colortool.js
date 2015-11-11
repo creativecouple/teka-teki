@@ -27,9 +27,17 @@ teka.ColorTool = function()
     this.buttonWidth = 100;
     this.aktivButton = false;
     this.events = [false,false,false,false];
+    
+    this.colorHeadline = '#000';
 };
 teka.extend(teka.ColorTool,teka.Tool);
 
+teka.ColorTool.prototype.setColorHeadline = function(color)
+{
+    if (color!==undefined) {
+        this.colorHeadline = color;
+    }
+};
 teka.ColorTool.prototype.setColors = function(c)
 {
     this.colorname = c.names;
@@ -143,7 +151,7 @@ teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
 
 teka.ColorTool.prototype.paint = function(g)
 {
-    g.fillStyle = this.colorText;
+    g.fillStyle = this.colorHeadline;
     g.textAlign = 'center';
     g.textBaseline = 'top';
     g.font = this.getButtonFont();
