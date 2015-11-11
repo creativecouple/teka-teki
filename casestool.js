@@ -22,8 +22,16 @@ teka.CasesTool = function()
     this.delta = 0;
     this.stack = [];
     this.events = [false,false,false,false];
+    this.colorNormalText = '#000';
 };
 teka.extend(teka.CasesTool,teka.Tool);
+
+teka.CasesTool.prototype.setColorNormalText = function(color)
+{
+    if (color!==undefined) {
+        this.colorNormalText = color;
+    }
+};
 
 teka.CasesTool.prototype.setEvents = function(f1,f2,f3)
 {
@@ -60,7 +68,7 @@ teka.CasesTool.prototype.paint = function(g)
         this.paintButton(g,1.5,1.5,this.textHeight+5,this.textHeight+5,
                          button===0?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,false);
         
-        g.strokeStyle = '#fff';
+        g.strokeStyle = this.colorText;
         g.beginPath();
         g.moveTo(5,half+1);
         g.lineTo(half+half-3,half+1);
@@ -75,14 +83,14 @@ teka.CasesTool.prototype.paint = function(g)
         this.paintButton(g,this.textHeight+12.5,1.5,this.textHeight+5,this.textHeight+5,
                          button===1?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,false);
         
-        g.strokeStyle = '#fff';
+        g.strokeStyle = this.colorText;
         g.beginPath();
         g.moveTo(this.textHeight+11+5,half+1);
         g.lineTo(this.textHeight+11+half+half-3,half+1);
         g.stroke();
     }
     
-    g.fillStyle = '#000';
+    g.fillStyle = this.colorNormalText;
     g.textAlign = 'left';
     g.textBaseline = 'middle';
     g.font = this.getTextFont();

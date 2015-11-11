@@ -38,6 +38,7 @@ teka.ColorTool.prototype.setColorHeadline = function(color)
         this.colorHeadline = color;
     }
 };
+
 teka.ColorTool.prototype.setColors = function(c)
 {
     this.colorname = c.names;

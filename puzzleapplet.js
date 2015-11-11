@@ -169,6 +169,13 @@ teka.PuzzleApplet.prototype.init = function()
         ct.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         ct.setEvents(this.setColor.bind(this),this.copyColor.bind(this),this.clearColor.bind(this),this.setText.bind(this));
         
+        cat.setColorActive(this.values_.BUTTON_COLOR_ACTIVE);
+        cat.setColorPassive(this.values_.BUTTON_COLOR_PASSIVE);
+        cat.setColorBorderDark(this.values_.BUTTON_COLOR_BORDER_DARK);
+        cat.setColorBorderBright(this.values_.BUTTON_COLOR_BORDER_BRIGHT);
+        cat.setColorText(this.values_.BUTTON_COLOR_TEXT);
+        cat.setColorNormalText(this.values_.TEXTCOLOR);
+        cat.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         cat.setEvents(this.saveState.bind(this),this.loadState.bind(this),this.setText.bind(this));
         
         tt.setTextcolor(this.values_.TEXTCOLOR);
