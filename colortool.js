@@ -143,7 +143,7 @@ teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
 
 teka.ColorTool.prototype.paint = function(g)
 {
-    g.fillStyle = '#000';
+    g.fillStyle = this.colorText;
     g.textAlign = 'center';
     g.textBaseline = 'top';
     g.font = this.getButtonFont();
