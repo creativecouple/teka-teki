@@ -41,6 +41,11 @@ teka.Defaults = {
         '#101010','#303030','#505050','#707070',
         '#909090','#A0A0A0','#B0B0B0','#C0C0C0'
     ],
+    COLORTOOL_COLORS: {
+        colors: ['#000','#00f','#0c0','#c40'],
+        names: ['schwarz','blau','grün','braun'],
+        names_akk: ['schwarzen','blauen','grünen','braunen']
+    },                       
     FILE: false
 };
 
@@ -152,6 +157,13 @@ teka.PuzzleApplet.prototype.init = function()
         bt.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         bt.setEvents(this.check.bind(this),this.undo.bind(this),false,this.setText.bind(this));
 
+        ct.setColors(this.values_.COLORTOOL_COLORS);
+        ct.setColorActive(this.values_.BUTTON_COLOR_ACTIVE);
+        ct.setColorPassive(this.values_.BUTTON_COLOR_PASSIVE);
+        ct.setColorBorderDark(this.values_.BUTTON_COLOR_BORDER_DARK);
+        ct.setColorBorderBright(this.values_.BUTTON_COLOR_BORDER_BRIGHT);
+        ct.setColorText(this.values_.BUTTON_COLOR_TEXT);
+        ct.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         ct.setEvents(this.setColor.bind(this),this.copyColor.bind(this),this.clearColor.bind(this),this.setText.bind(this));
         
         tt.setTextcolor(this.values_.TEXTCOLOR);

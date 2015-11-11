@@ -30,6 +30,13 @@ teka.ColorTool = function()
 };
 teka.extend(teka.ColorTool,teka.Tool);
 
+teka.ColorTool.prototype.setColors = function(c)
+{
+    this.colorname = c.names;
+    this.colornameAKK = c.names_akk;
+    this.colors = c.colors;
+};
+
 teka.ColorTool.prototype.setEvents = function(f1,f2,f3,f4)
 {
     if (f1!==undefined) {
