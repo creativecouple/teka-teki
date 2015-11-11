@@ -133,13 +133,15 @@ teka.PuzzleApplet.prototype.init = function()
         var hd = new teka.HeadDisplay();
         var bt = new teka.ButtonTool();
         var ct = new teka.ColorTool();
+        var cat = new teka.CasesTool();
         var tt = new teka.TextTool();
         
         this.pv = pv;
         this.bt = bt;
         this.ct = ct;
+        this.cat = ct;
         this.tt = tt;
-        this.display = [hd,pv,bt,ct,tt];
+        this.display = [hd,pv,bt,ct,cat,tt];
 
         pv.setSolvedColor(this.values_.SOLVED_COLOR);
         pv.setColorTool(ct);
@@ -167,6 +169,8 @@ teka.PuzzleApplet.prototype.init = function()
         ct.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         ct.setEvents(this.setColor.bind(this),this.copyColor.bind(this),this.clearColor.bind(this),this.setText.bind(this));
         
+        cat.setEvents(this.saveState.bind(this),this.loadState.bind(this),this.setText.bind(this));
+        
         tt.setTextcolor(this.values_.TEXTCOLOR);
         tt.setHighlight(this.values_.HIGHLIGHTCOLOR);
 
@@ -174,9 +178,10 @@ teka.PuzzleApplet.prototype.init = function()
         
         var mindimbt = bt.getMinDim(this.image);
         var mindimct = ct.getMinDim(this.image);
+        var mindimcat = cat.getMinDim(this.image);
         var mindimtt = tt.getMinDim(this.image);
-        var mindim = { width: Math.max(Math.max(mindimbt.width,mindimct.width),mindimtt.width),
-                       height: mindimbt.height+mindimct.height+mindimtt.height+2*this.values_.TOOLGAP };
+        var mindim = { width: Math.max(Math.max(Math.max(mindimbt.width,mindimct.width),mindimcat.width),mindimtt.width),
+                       height: mindimbt.height+mindimct.height+mindimcat.height+mindimtt.height+3*this.values_.TOOLGAP };
         pv.setExtent(pm,this.values_.HEADHEIGHT+pm,
                      this.canvas.width-mindim.width-3*pm,
                      this.canvas.height-this.values_.HEADHEIGHT-2*pm);
@@ -190,7 +195,10 @@ teka.PuzzleApplet.prototype.init = function()
         ct.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+this.values_.TOOLGAP),
                      Math.floor(this.canvas.width-3*pm-metrics.width),Math.floor(mindimct.height));
 
-        tt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+Math.floor(mindimct.height)+2*this.values_.TOOLGAP),
+        cat.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+Math.floor(mindimct.height)+2*this.values_.TOOLGAP),
+                     Math.floor(this.canvas.width-3*pm-metrics.width),Math.floor(mindimcat.height));
+        
+        tt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+Math.floor(mindimct.height)+Math.floor(mindimcat.height)+3*this.values_.TOOLGAP),
                      Math.floor(this.canvas.width-3*pm-metrics.width),this.canvas.height-Math.floor(mindimbt.height)-Math.floor(mindimct.height)-2*this.values_.TOOLGAP-2*pm-this.values_.HEADHEIGHT);
                 
         this.paint();
@@ -326,6 +334,18 @@ teka.PuzzleApplet.prototype.clearColor = function(color)
 {
     this.pv.save();
     this.pv.clearColor(color);
+};
+
+teka.PuzzleApplet.prototype.saveState = function()
+{
+    return this.pv.saveState();
+};
+
+teka.PuzzleApplet.prototype.loadState = function(state)
+{
+    this.pv.save();
+    this.pv.loadState(state);
+    this.paint();
 };
 
 teka.PuzzleApplet.prototype.blink = function()
