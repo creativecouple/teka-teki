@@ -173,8 +173,7 @@ teka.viewer.kropki.KropkiViewer.prototype.getInstructions = function()
 
 teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
 {
-    return
-        '/format 1 /type (kropki) /sol false /size 4'
+    return '/format 1 /type (kropki) /sol false /size 4'
         +' /puzzle [ (+-+-+-+-+) (| * * O |) (+ +*+*+O+) (|   * * |) (+O+ +O+*+)'
         +' (| O   * |) (+*+O+ +*+) (| * O   |) (+-+-+-+-+) ]'
         +' /solution [ (1243) (3124) (4312)(2431) ]';
