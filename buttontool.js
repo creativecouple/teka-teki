@@ -65,7 +65,9 @@ teka.ButtonTool.prototype.paint = function(g)
     this.y[2] = this.height-(this.textHeight+5)-1;
     
     for (var i=0;i<=2;i++) {
-        this.paintButton(g,x+0.5,this.y[i]+0.5,mindim.width,this.textHeight+5,this.aktivButton===i,this.buttons_[i]);
+        this.paintButton(g,x+0.5,this.y[i]+0.5,
+                         mindim.width,this.textHeight+5,
+                         this.aktivButton===i?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,this.buttons_[i]);
     }
 };
 

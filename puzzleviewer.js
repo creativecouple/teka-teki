@@ -37,12 +37,38 @@ teka.viewer.PuzzleViewer = function(data)
     this.initData(data);
     this.reset();
     this.reset();
-    this.save = this.saveState();
+    this.saved = this.saveState();
     this.clearError();
     
     this.setExtent(0,0,300,300);
+    
+    this.color = 0;
+    this.colortool = false;
 };
 teka.extend(teka.viewer.PuzzleViewer,teka.Display);
+
+teka.viewer.PuzzleViewer.prototype.setColor = function(color)
+{
+    this.color = color;
+};
+
+teka.viewer.PuzzleViewer.prototype.getColor = function()
+{
+    return this.color;
+};
+
+teka.viewer.PuzzleViewer.prototype.setColorTool = function(colortool)
+{
+    this.colortool = colortool;
+};
+
+teka.viewer.PuzzleViewer.prototype.getColorString = function(color)
+{
+    if (this.colortool===false) {
+        return '#000';
+    }
+    return this.colortool.getColorString(color);
+};
 
 teka.viewer.PuzzleViewer.prototype.setMode = function(mode) 
 {
@@ -59,38 +85,25 @@ teka.viewer.PuzzleViewer.prototype.setSolvedColor = function(sc)
     this.solved_color = sc;
 };
 
-teka.viewer.PuzzleViewer.prototype.reset = function()
-{
-};
-
-teka.viewer.PuzzleViewer.prototype.clearError = function()
-{
-};
-
-teka.viewer.PuzzleViewer.prototype.initData = function(data)
-{
-};
-
-teka.viewer.PuzzleViewer.prototype.saveState = function()
-{
-    return {};
-};
-
-teka.viewer.PuzzleViewer.prototype.loadState = function(state)
-{
-};
+teka.viewer.PuzzleViewer.prototype.reset = function() {};
+teka.viewer.PuzzleViewer.prototype.clearError = function() {};
+teka.viewer.PuzzleViewer.prototype.copyColor = function(color) {};
+teka.viewer.PuzzleViewer.prototype.clearColor = function(color) {};
+teka.viewer.PuzzleViewer.prototype.initData = function(data) {};
+teka.viewer.PuzzleViewer.prototype.saveState = function() { return {}; };
+teka.viewer.PuzzleViewer.prototype.loadState = function(state) {};
 
 teka.viewer.PuzzleViewer.prototype.save = function()
 {
-    this.save = this.saveState();
+    this.saved = this.saveState();
 };
 
 teka.viewer.PuzzleViewer.prototype.undo = function()
 {
-    if (this.save!==false) {
+    if (this.saved!==false) {
         var tmp = this.saveState();
-        this.loadState(this.save);
-        this.save = tmp;
+        this.loadState(this.saved);
+        this.saved = tmp;
     }
 };
 
