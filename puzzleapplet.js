@@ -148,6 +148,7 @@ teka.PuzzleApplet.prototype.init = function()
 
         pv.setSolvedColor(this.values_.SOLVED_COLOR);
         pv.setColorTool(ct);
+        pv.setTextParameter(this.values_.TEXTCOLOR,this.values_.BUTTON_TEXT_HEIGHT);
 
         hd.setTitle(this.pv.getName());
         hd.setColor(this.values_.HEADCOLOR);

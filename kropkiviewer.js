@@ -366,11 +366,11 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
 
 //////////////////////////////////////////////////////////////////
 
-teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
+teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function()
 {
-    this.scale = Math.round(Math.min((this.width-3)/this.X,(this.height-3)/this.X));
+    this.scale = Math.round(Math.min((this.width-3)/this.X,(this.height-3-this.textheight-2)/this.X));
     var realwidth = this.X * this.scale + 3;
-    var realheight = this.X * this.scale + 3;
+    var realheight = this.X * this.scale + 3 + this.textheight+2;
 
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.round((this.height-realheight)/2)+0.5;
@@ -484,6 +484,12 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
         }
     }
 
+    g.textAlign = 'left';
+    g.textBaseline = 'top';
+    g.fillStyle = this.textcolor;
+    g.font = 'bold '+this.textheight+'px sans-serif';
+    g.fillText('Ziffern von 1 bis '+this.X+'.',1,X*S+5);
+    
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle='#ff0000';
         if (this.exp) {

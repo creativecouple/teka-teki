@@ -44,8 +44,17 @@ teka.viewer.PuzzleViewer = function(data)
 
     this.color = 0;
     this.colortool = false;
+    
+    this.textcolor = '#000';
+    this.textheight = 12;
 };
 teka.extend(teka.viewer.PuzzleViewer,teka.Display);
+
+teka.viewer.PuzzleViewer.prototype.setTextParameter = function(color, height)
+{
+    this.textcolor = color;
+    this.textheight = height;
+};
 
 teka.viewer.PuzzleViewer.prototype.setColor = function(color)
 {
