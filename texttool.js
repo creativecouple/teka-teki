@@ -14,8 +14,6 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var teka = teka || {};
-
 teka.TextTool = function()
 {
     teka.Tool.call(this);

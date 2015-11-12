@@ -14,7 +14,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var teka = teka || {};
+var teka = {};
 
 teka.Defaults = {
     WIDTH: 500,
