@@ -51,3 +51,42 @@ teka.extend = function(child,parent)
     child.prototype = Object.create(parent.prototype);
     child.prototype.constructor = child;
 };
+
+teka.new_array = function(dims,val)
+{
+    var param = dims[0];
+    var newdims = [];
+    for (var i=1;i<dims.length;i++) {
+        newdims[i-1] = dims[i];
+    }
+
+    var tmp = [];
+    for (var i=0;i<param;i++) {
+        tmp[i] = (newdims.length===0)?val:teka.new_array(newdims,val);
+    }
+
+    return tmp;
+};
+
+teka.drawLine = function(g,x1,y1,x2,y2)
+{
+    g.beginPath();
+    g.moveTo(x1,y1);
+    g.lineTo(x2,y2);
+    g.stroke();
+};
+
+teka.fillOval = function(g,x,y,width,height,start,end)
+{
+    g.beginPath();
+    g.arc(x,y,width,height,start,end);
+    g.fill();
+};
+                         
+teka.strokeOval = function(g,x,y,width,height,start,end)
+{
+    g.beginPath();
+    g.arc(x,y,width,height,start,end);
+    g.stroke();
+};
+                         
