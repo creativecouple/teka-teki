@@ -14,6 +14,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+var teka = teka || {};
+
 teka.TextTool = function()
 {
     teka.Tool.call(this);
@@ -33,7 +35,9 @@ teka.TextTool.prototype.getMinDim = function(g)
 
 teka.TextTool.prototype.setText = function(t,highlight)
 {
-    if (this.text==t && this.highlight==highlight) return false;
+    if (this.text==t && this.highlight==highlight) {
+        return false;
+    }
 
     this.text = t;
     this.highlight = highlight;
@@ -108,8 +112,9 @@ teka.TextTool.prototype.wrapText = function(g)
             }
         }
 
-        if (ch<=this.height) break;
-        if (this.textHeight<=6) break;
+        if (ch<=this.height || this.textHeight<=6) {
+            break;
+        }
 
         this.textHeight--;
     }

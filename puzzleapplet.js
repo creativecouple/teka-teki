@@ -14,7 +14,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var teka = {};
+var teka = teka || {};
 
 teka.Defaults = {
     WIDTH: 500,
@@ -85,8 +85,9 @@ teka.PuzzleApplet.prototype.setOptions = function(options)
 teka.PuzzleApplet.prototype.setText = function(text, highlight)
 {
     if (this.tt!==undefined) {
-        if (this.tt.setText(text,highlight))
+        if (this.tt.setText(text,highlight)) {
             this.paint();
+        }
     }
 };
 
@@ -125,7 +126,9 @@ teka.PuzzleApplet.prototype.paintLogo = function()
 
 teka.PuzzleApplet.prototype.init = function()
 {
-    if (this.values_.FILE===false) return;
+    if (this.values_.FILE===false) {
+        return;
+    }
 
     this.loadFile(this.values_.FILE, teka.myBind(this,function() {
 
@@ -247,8 +250,8 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
 
 teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 {
-    if (this.pv.getMode()==teka.viewer.Defaults.WAIT
-        || this.pv.getMode()==teka.viewer.Defaults.BLINK_END) {
+    if (this.pv.getMode()==teka.viewer.Defaults.WAIT ||
+        this.pv.getMode()==teka.viewer.Defaults.BLINK_END) {
         this.pv.clearError();
         this.pv.setMode(teka.viewer.Defaults.NORMAL);
         this.tt.setText('',false);
@@ -279,8 +282,12 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 
 teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 {
-    if (e.preventDefault) e.preventDefault();
-    if (e.stopPropagation) e.stopPropagation();
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
 
     if (this.pv.processKeyEvent(e.keyCode,e.charCode)) {
         this.paint();
@@ -332,7 +339,9 @@ teka.PuzzleApplet.prototype.setColor = function(color)
 
 teka.PuzzleApplet.prototype.copyColor = function(color)
 {
-    if (color==this.pv.getColor()) return;
+    if (color==this.pv.getColor()) {
+        return;
+    }
     this.pv.save();
     this.pv.copyColor(color);
 };
@@ -357,8 +366,8 @@ teka.PuzzleApplet.prototype.loadState = function(state)
 
 teka.PuzzleApplet.prototype.blink = function()
 {
-    if (this.pv.getMode()<teka.viewer.Defaults.BLINK_START
-        || this.pv.getMode()>=teka.viewer.Defaults.BLINK_END) {
+    if (this.pv.getMode()<teka.viewer.Defaults.BLINK_START ||
+        this.pv.getMode()>=teka.viewer.Defaults.BLINK_END) {
         return;
     }
 
@@ -375,13 +384,19 @@ teka.PuzzleApplet.prototype.loadFile = function(filename, callback)
     res.open('GET',filename);
     res.responseType = 'text';
     res.onreadystatechange = function() {
-        if (this.readyState!=4) { return; }
+        if (this.readyState!=4) {
+            return;
+        }
 
         var psdata = new teka.PSData(this.responseText);
-        if (psdata.failed()) { return null; }
+        if (psdata.failed()) {
+            return;
+        }
 
         var type = psdata.get('type');
-        if (type.length<2) { return null; }
+        if (type.length<2) {
+            return;
+        }
         type = type.substring(1,type.length-1).toLowerCase();
 
         me.psdata = psdata;

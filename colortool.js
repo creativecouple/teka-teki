@@ -14,6 +14,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+var teka = teka || {};
+
 teka.ColorTool = function()
 {
     teka.Tool.call(this);
@@ -92,14 +94,14 @@ teka.ColorTool.prototype.processMouseMovedEvent = function(xc,yc)
     var x = this.aktivButton.x;
     var y = this.aktivButton.y;
 
-    if (x==0 && this.color!=y) {
+    if (x===0 && this.color!=y) {
         if (this.events[3]!==false) {
             this.events[3]('Setzt die Stiftfarbe auf '+this.colorname[y]+'.',false);
         }
         return true;
     }
 
-    if (x==1 && this.color!=y) {
+    if (x===1 && this.color!=y) {
         if (this.events[3]!==false) {
             this.events[3]('Färbt alle Felder mit '+this.colornameAkk[this.color]+' Symbolen '+this.colorname[y]+' ein.',false);
         }
@@ -126,21 +128,21 @@ teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
     var x = this.aktivButton.x;
     var y = this.aktivButton.y;
 
-    if (x==0 && this.color!=y) {
+    if (x===0 && this.color!=y) {
         if (this.events[0]!==false) {
             this.events[0](y);
         }
         return true;
     }
 
-    if (x==1 && this.color!=y) {
+    if (x===1 && this.color!=y) {
         if (this.events[1]!==false) {
             this.events[1](y);
         }
         return true;
     }
 
-    if (x==2) {
+    if (x===2) {
         if (this.events[2]!==false) {
             this.events[2](y);
         }
@@ -167,17 +169,17 @@ teka.ColorTool.prototype.paint = function(g)
     for (var i=1;i<5;i++) {
         this.paintButton(g,1,1+i*(this.buttonHeight+6),
                          this.buttonWidth,this.buttonHeight,
-                         (i-1==this.color || (x==0 && i-1==y))?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         (i-1==this.color || (x===0 && i-1==y))?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          false);
         if (i-1!=this.color) {
             this.paintButton(g,7+this.buttonWidth,1+i*(this.buttonHeight+6),
                              this.buttonWidth,this.buttonHeight,
-                             (x==1 && i-1==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                             (x===1 && i-1==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                              'färben');
         }
         this.paintButton(g,13+2*this.buttonWidth,1+i*(this.buttonHeight+6),
                          this.buttonWidth,this.buttonHeight,
-                         (x==2 && i-1==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         (x===2 && i-1==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          'löschen');
 
         g.fillStyle = this.colors[i-1];

@@ -14,6 +14,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+var teka = teka || {};
+
 teka.viewer.kropki = {};
 
 teka.viewer.kropki.Defaults = {
@@ -38,7 +40,7 @@ teka.extend(teka.viewer.kropki.KropkiViewer,teka.viewer.PuzzleViewer);
 
 teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
 {
-    this.X = parseInt(data.get('size'));
+    this.X = parseInt(data.get('size'),10);
     this.asciiToData(data.get('puzzle'));
     this.solution = this.asciiToSolution(data.get('solution'));
 
@@ -123,7 +125,7 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
 teka.viewer.kropki.KropkiViewer.prototype.asciiToSolution = function(ascii)
 {
     if (ascii===undefined) {
-        return;
+        return null;
     }
 
     var c = this.asciiToArray(ascii);
@@ -295,7 +297,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         for (var j=0;j<X;j++) {
             if (this.f[i][j]>=1000) {
                 check[i][j] = this.getExpert(this.f[i][j]);
-                if (check[i][j]==0) {
+                if (check[i][j]===teka.viewer.kropki.Defaults.NONE) {
                     this.error[i][j] = true;
                     return 'Das markierte Feld enthält kein eindeutiges Symbol.';
                 }
@@ -303,7 +305,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                 check[i][j] = this.f[i][j];
             }
 
-            if (check[i][j]==0) {
+            if (check[i][j]===teka.viewer.kropki.Defaults.NONE) {
                 this.error[i][j] = true;
                 return 'Das markierte Feld ist leer.';
             }
@@ -519,7 +521,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.puzzle[i][j]!=0) {
+            if (this.puzzle[i][j]!==0) {
                 g.textAlign = 'center';
                 g.textBaseline = 'middle';
                 g.fillStyle = '#000';
@@ -527,7 +529,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
                 g.fillText(this.puzzle[i][j],1+i*S+S/2,1+j*S+S/2);
                 continue;
             }
-            if (this.f[i][j]==0) {
+            if (this.f[i][j]==teka.viewer.kropki.Defaults.NONE) {
                 continue;
             }
             if (this.f[i][j]<1000) {
@@ -706,9 +708,9 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
 
     if (c==35 || c==44) {
         if (this.f[this.x][this.y]<1000) {
-            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]))
+            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
         } else {
-            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]))
+            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
         }
         return true;
     }
@@ -718,14 +720,16 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
 
 teka.viewer.kropki.KropkiViewer.prototype.set = function(x,y,val)
 {
-    if (this.f[x][y]!=0 && this.c[x][y]!=this.color) return;
+    if (this.f[x][y]!=0 && this.c[x][y]!=this.color) {
+        return;
+    }
     this.f[x][y] = val;
     this.c[x][y] = this.color;
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.setExpert = function(h)
 {
-    return 1000+(h==0?0:(1<<h));
+    return 1000+(h===0?0:(1<<h));
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.getExpert = function(h)

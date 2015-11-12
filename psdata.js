@@ -14,6 +14,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+var teka = teka || {};
+
 teka.PSData = function(psdata)
 {
     this.failed_ = true;
@@ -34,15 +36,15 @@ teka.PSData = function(psdata)
     }
 
     this.failed_ = false;
-}
+};
 
 teka.PSData.prototype.failed = function()
 {
     return this.failed_===false?false:true;
-}
+};
 
 teka.PSData.prototype.get = function(key)
 {
     if (this.values_[key]===undefined) { return false; }
     return this.values_[key];
-}
+};

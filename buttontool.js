@@ -14,6 +14,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+var teka = teka || {};
+
 teka.ButtonTool = function()
 {
     teka.Tool.call(this);
@@ -101,15 +103,19 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
 
 teka.ButtonTool.prototype.getButton = function(xc,yc)
 {
-    for (var i=0;i<3;i++)
-        if (yc>=this.y[i] && yc<=this.y[i]+this.textHeight+5)
+    for (var i=0;i<3;i++) {
+        if (yc>=this.y[i] && yc<=this.y[i]+this.textHeight+5) {
             return i;
+        }
+    }
     return false;
 };
 
 teka.ButtonTool.prototype.resetButtons = function()
 {
-    if (this.aktivButton===false) return false;
+    if (this.aktivButton===false) {
+        return false;
+    }
     this.aktivButton = false;
     return true;
 };
