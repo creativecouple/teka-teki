@@ -1,20 +1,20 @@
 /*
  *  Copyright (C) 2015 Bernhard Seckinger
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of version 3 of the GNU General Public License as 
+ *  it under the terms of version 3 of the GNU General Public License as
  *  published by the Free Software Foundation.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *      
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-teka = {};
+var teka = {};
 
 teka.Defaults = {
     WIDTH: 500,
@@ -45,7 +45,7 @@ teka.Defaults = {
         colors: ['#000','#00f','#0c0','#c40'],
         names: ['schwarz','blau','grün','braun'],
         names_akk: ['schwarzen','blauen','grünen','braunen']
-    },                       
+    },
     FILE: false
 };
 
@@ -56,12 +56,12 @@ teka.PuzzleApplet = function(options)
     if (options !== undefined) {
         this.setOptions(options);
     }
-    
+
     this.canvas = this.addCanvas();
     this.image = this.canvas.getContext('2d');
 
     this.paintLogo();
-    
+
     setTimeout(this.init.bind(this),1000);
 };
 
@@ -108,7 +108,7 @@ teka.PuzzleApplet.prototype.paintLogo = function()
     var image = this.image;
     image.fillStyle = this.values_.BACKGROUND;
     image.fillRect(0,0,this.canvas.width,this.canvas.height);
-    
+
     var height = Math.floor(this.canvas.height/3);
     image.textAlign = 'left';
     image.textBaseline = 'middle';
@@ -117,7 +117,7 @@ teka.PuzzleApplet.prototype.paintLogo = function()
     image.fillText('TEKA',20,this.canvas.height/2-0.25*height);
     image.strokeStyle = '#000';
     image.strokeText('TEKA',20,this.canvas.height/2-0.25*height);
-    
+
     image.textAlign = 'right';
     image.fillText('TEKI',this.canvas.width-20,this.canvas.height/2+0.25*height);
     image.strokeText('TEKI',this.canvas.width-20,this.canvas.height/2+0.25*height);
@@ -126,7 +126,7 @@ teka.PuzzleApplet.prototype.paintLogo = function()
 teka.PuzzleApplet.prototype.init = function()
 {
     if (this.values_.FILE===false) return;
-    
+
     this.loadFile(this.values_.FILE, teka.myBind(this,function() {
 
         var pv = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](this.psdata);
@@ -135,7 +135,7 @@ teka.PuzzleApplet.prototype.init = function()
         var ct = new teka.ColorTool();
         var cat = new teka.CasesTool();
         var tt = new teka.TextTool();
-        
+
         this.pv = pv;
         this.bt = bt;
         this.ct = ct;
@@ -145,7 +145,7 @@ teka.PuzzleApplet.prototype.init = function()
 
         pv.setSolvedColor(this.values_.SOLVED_COLOR);
         pv.setColorTool(ct);
-        
+
         hd.setTitle(this.pv.getName());
         hd.setColor(this.values_.HEADCOLOR);
         hd.setTextHeight(this.values_.HEADFONTHEIGHT);
@@ -168,7 +168,7 @@ teka.PuzzleApplet.prototype.init = function()
         ct.setColorHeadline(this.values_.TEXTCOLOR);
         ct.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         ct.setEvents(this.setColor.bind(this),this.copyColor.bind(this),this.clearColor.bind(this),this.setText.bind(this));
-        
+
         cat.setColorActive(this.values_.BUTTON_COLOR_ACTIVE);
         cat.setColorPassive(this.values_.BUTTON_COLOR_PASSIVE);
         cat.setColorBorderDark(this.values_.BUTTON_COLOR_BORDER_DARK);
@@ -177,12 +177,12 @@ teka.PuzzleApplet.prototype.init = function()
         cat.setColorNormalText(this.values_.TEXTCOLOR);
         cat.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
         cat.setEvents(this.saveState.bind(this),this.loadState.bind(this),this.setText.bind(this));
-        
+
         tt.setTextcolor(this.values_.TEXTCOLOR);
         tt.setHighlight(this.values_.HIGHLIGHTCOLOR);
 
         var pm = this.values_.PUZZLEMARGIN;
-        
+
         var mindimbt = bt.getMinDim(this.image);
         var mindimct = ct.getMinDim(this.image);
         var mindimcat = cat.getMinDim(this.image);
@@ -204,12 +204,12 @@ teka.PuzzleApplet.prototype.init = function()
 
         cat.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+Math.floor(mindimct.height)+2*this.values_.TOOLGAP),
                      Math.floor(this.canvas.width-3*pm-metrics.width),Math.floor(mindimcat.height));
-        
+
         tt.setExtent(Math.floor(metrics.width+2*pm),Math.floor(this.values_.HEADHEIGHT+pm+Math.floor(mindimbt.height)+Math.floor(mindimct.height)+Math.floor(mindimcat.height)+3*this.values_.TOOLGAP),
                      Math.floor(this.canvas.width-3*pm-metrics.width),this.canvas.height-Math.floor(mindimbt.height)-Math.floor(mindimct.height)-2*this.values_.TOOLGAP-2*pm-this.values_.HEADHEIGHT);
-                
+
         this.paint();
-        
+
         this.canvas.addEventListener('mousemove',this.mouseMovedListener.bind(this),false);
         this.canvas.addEventListener('mousedown',this.mousePressedListener.bind(this),false);
         document.addEventListener('keypress',this.keyPressedListener.bind(this),false);
@@ -224,9 +224,9 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
     if (this.pv.getMode()!=teka.viewer.Defaults.NORMAL) {
         return;
     }
-    
+
     e = teka.normalizeMouseEvent(e);
-    
+
     var x = e.x-this.canvas.offsetLeft;
     var y = e.y-this.canvas.offsetTop;
 
@@ -258,12 +258,12 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
     if (this.pv.getMode()!=teka.viewer.Defaults.NORMAL) {
         return;
     }
-    
+
     e = teka.normalizeMouseEvent(e);
-    
+
     var x = e.x-this.canvas.offsetLeft;
     var y = e.y-this.canvas.offsetTop;
-    
+
     var paint = this.bt.resetButtons();
     for (var d in this.display) {
         if (this.display[d].inExtent(x,y)) {
@@ -281,7 +281,7 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 {
     if (e.preventDefault) e.preventDefault();
     if (e.stopPropagation) e.stopPropagation();
-    
+
     if (this.pv.processKeyEvent(e.keyCode,e.charCode)) {
         this.paint();
     }
@@ -304,7 +304,7 @@ teka.PuzzleApplet.prototype.paint = function()
 teka.PuzzleApplet.prototype.check = function()
 {
     var erg = this.pv.check();
- 
+
     if (erg!==true)
         {
             this.tt.setText(erg,false);
@@ -312,7 +312,7 @@ teka.PuzzleApplet.prototype.check = function()
             this.paint();
             return;
         }
-    
+
     this.tt.setText('Herzlichen Glückwunsch!!!',false);
     this.pv.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
@@ -357,11 +357,11 @@ teka.PuzzleApplet.prototype.loadState = function(state)
 
 teka.PuzzleApplet.prototype.blink = function()
 {
-    if (this.pv.getMode()<teka.viewer.Defaults.BLINK_START 
+    if (this.pv.getMode()<teka.viewer.Defaults.BLINK_START
         || this.pv.getMode()>=teka.viewer.Defaults.BLINK_END) {
         return;
     }
-    
+
     this.pv.setMode(this.pv.getMode()+1);
     this.paint();
     setTimeout(this.blink.bind(this),300);
@@ -370,23 +370,23 @@ teka.PuzzleApplet.prototype.blink = function()
 teka.PuzzleApplet.prototype.loadFile = function(filename, callback)
 {
     var me = this;
-    
+
     var res = new XMLHttpRequest();
     res.open('GET',filename);
     res.responseType = 'text';
     res.onreadystatechange = function() {
         if (this.readyState!=4) { return; }
-        
+
         var psdata = new teka.PSData(this.responseText);
         if (psdata.failed()) { return null; }
-        
+
         var type = psdata.get('type');
         if (type.length<2) { return null; }
         type = type.substring(1,type.length-1).toLowerCase();
 
         me.psdata = psdata;
         me.type = type;
-        
+
         teka.addScript(type+'viewer.js',teka.myBind(this,callback));
     };
     res.send();

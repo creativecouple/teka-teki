@@ -1,15 +1,15 @@
 /*
  *  Copyright (C) 2015 Bernhard Seckinger
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of version 3 of the GNU General Public License as 
+ *  it under the terms of version 3 of the GNU General Public License as
  *  published by the Free Software Foundation.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *      
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -17,14 +17,14 @@
 teka.Tool = function()
 {
     teka.Display.call(this);
-    
+
     this.colorActive = '#303030';
     this.colorPassive = '#606060';
     this.colorBorderDark = '#202020';
     this.colorBorderBright = '#A0A0A0';
     this.colorText = '#FFFFFF';
     this.textHeight = 12;
-    
+
     this.BUTTON_ACTIVE = 1;
     this.BUTTON_PASSIVE = 2;
     this.BUTTON_DEACTIVATED = 3;
@@ -104,7 +104,7 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
     g.lineTo(x+width-1,y+height-1);
     g.lineTo(x+width-1,y);
     g.stroke();
-    
+
     if (text!==false) {
         g.fillStyle = mode==this.BUTTON_DEACTIVATED?this.colorBorderBright:this.colorText;
         g.textAlign = 'center';

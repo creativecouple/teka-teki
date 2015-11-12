@@ -1,15 +1,15 @@
 /*
  *  Copyright (C) 2015 Bernhard Seckinger
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of version 3 of the GNU General Public License as 
+ *  it under the terms of version 3 of the GNU General Public License as
  *  published by the Free Software Foundation.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *      
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -17,7 +17,7 @@
 teka.TextTool = function()
 {
     teka.Tool.call(this);
-    
+
     this.text = '';
     this.textcolor = '#000';
     this.texthighlightcolor = '#f00';
@@ -34,7 +34,7 @@ teka.TextTool.prototype.getMinDim = function(g)
 teka.TextTool.prototype.setText = function(t,highlight)
 {
     if (this.text==t && this.highlight==highlight) return false;
-    
+
     this.text = t;
     this.highlight = highlight;
     this.wrapped_text = false;
@@ -59,12 +59,12 @@ teka.TextTool.prototype.paint = function(g)
     if (this.wrapped_text===false) {
         this.wrapText(g);
     }
-    
+
     g.fillStyle = this.highlight?this.texthighlightcolor:this.textcolor;
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.font = this.getTextFont();
-    
+
     var y = 2;
     for (var i=0;i<this.wrapped_text.length;i++) {
         if (this.wrapped_text[i]===null) {
@@ -80,7 +80,7 @@ teka.TextTool.prototype.wrapText = function(g)
 {
     var s = this.text;
     var v = [];
-    
+
     while (true) {
         g.font = this.getTextFont();
         v = [];
@@ -89,9 +89,9 @@ teka.TextTool.prototype.wrapText = function(g)
         var tpos = 0;
         while (tpos<t.length) {
             var par = t[tpos++];
-            
+
             var toks = par.split(' ');
-            
+
             var c = 0;
             while (c<toks.length) {
                 var h = toks[c++];
@@ -101,7 +101,7 @@ teka.TextTool.prototype.wrapText = function(g)
                 v.push(h);
                 ch+=this.textHeight+2;
             }
-            
+
             if (tpos<t.length) {
                 v.push(null);
                 ch+=5;
@@ -110,7 +110,7 @@ teka.TextTool.prototype.wrapText = function(g)
 
         if (ch<=this.height) break;
         if (this.textHeight<=6) break;
-        
+
         this.textHeight--;
     }
 

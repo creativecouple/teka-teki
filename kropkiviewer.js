@@ -1,15 +1,15 @@
 /*
  *  Copyright (C) 2015 Bernhard Seckinger
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of version 3 of the GNU General Public License as 
+ *  it under the terms of version 3 of the GNU General Public License as
  *  published by the Free Software Foundation.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *      
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,7 +27,7 @@ teka.viewer.kropki.KropkiViewer = function(data)
     teka.viewer.PuzzleViewer.call(this,data);
 
     this.x = 0;
-    this.y = 0;    
+    this.y = 0;
     this.xm = 0;
     this.ym = 0;
     this.exp = false;
@@ -41,7 +41,7 @@ teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
     this.X = parseInt(data.get('size'));
     this.asciiToData(data.get('puzzle'));
     this.solution = this.asciiToSolution(data.get('solution'));
-    
+
     this.f = [];
     this.c = [];
     this.error = [];
@@ -71,7 +71,7 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
     for (var i=0;i<this.X;i++) {
         this.puzzle[i] = [];
     }
-    
+
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             var ch = c[2*i+1][2*j+1];
@@ -84,7 +84,7 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-    
+
     this.lrdots = [];
     for (var i=0;i<this.X-1;i++) {
         this.lrdots[i] = [];
@@ -101,7 +101,7 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-    
+
     this.uddots = [];
     for (var i=0;i<this.X;i++) {
         this.uddots[i] = [];
@@ -127,12 +127,12 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToSolution = function(ascii)
     }
 
     var c = this.asciiToArray(ascii);
-    
+
     var erg = [];
     for (var i=0;i<this.X;i++) {
         erg[i] = [];
     }
-    
+
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             erg[i][j] = c[i][j].charCodeAt(0)-'0'.charCodeAt(0);
@@ -272,7 +272,7 @@ teka.viewer.kropki.KropkiViewer.prototype.loadState = function(state)
 teka.viewer.kropki.KropkiViewer.prototype.check = function()
 {
     var X = this.X;
-   
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.puzzle[i][j]!=0) {
@@ -302,7 +302,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
             } else {
                 check[i][j] = this.f[i][j];
             }
-            
+
             if (check[i][j]==0) {
                 this.error[i][j] = true;
                 return 'Das markierte Feld ist leer.';
@@ -315,7 +315,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         for (var i=0;i<X;i++) {
             da[i] = false;
         }
-        
+
         for (var i=0;i<X;i++) {
             if (da[check[i][j]-1]===true) {
                 for (var ii=0;ii<X;ii++) {
@@ -329,13 +329,13 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         var da = [];
         for (var j=0;j<X;j++) {
             da[j] = false;
         }
-        
+
         for (var j=0;j<X;j++) {
             if (da[check[i][j]-1]===true) {
                 for (var jj=0;jj<X;jj++) {
@@ -382,7 +382,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
             switch (this.uddots[i][j]) {
@@ -415,7 +415,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
             }
         }
     }
-    
+
     return true;
 };
 
@@ -426,18 +426,18 @@ teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function()
     this.scale = Math.round(Math.min((this.width-3)/this.X,(this.height-3)/this.X));
     var realwidth = this.X * this.scale + 3;
     var realheight = this.X * this.scale + 3;
-    
+
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.round((this.height-realheight)/2)+0.5;
 
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 
-teka.viewer.kropki.KropkiViewer.prototype.paint = function(g) 
+teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 {
     var X = this.X;
     var S = this.scale;
-    
+
     g.save();
     g.translate(this.deltaX,this.deltaY);
 
@@ -461,14 +461,14 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
             g.fillRect(i*S+1,j*S+1,S,S);
         }
     }
-    
+
     g.strokeStyle = '#000000';
     for (var i=0;i<=X;i++) {
         g.beginPath();
         g.moveTo(1,i*S+1);
         g.lineTo(X*S+1,i*S+1);
         g.stroke();
-        
+
         g.beginPath();
         g.moveTo(i*S+1,1);
         g.lineTo(i*S+1,X*S+1);
@@ -476,7 +476,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
     }
     g.strokeRect(2,2,X*S-2,X*S-2);
     g.strokeRect(0,0,X*S+2,X*S+2);
-    
+
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {
             if (this.lrdots[i][j]==teka.viewer.kropki.Defaults.EMPTY) {
@@ -496,7 +496,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
             if (this.uddots[i][j]==teka.viewer.kropki.Defaults.EMPTY) {
@@ -516,7 +516,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.puzzle[i][j]!=0) {
@@ -538,7 +538,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
                 g.fillText(this.f[i][j],1+i*S+S/2,1+j*S+S/2);
                 continue;
             }
-            
+
             g.textAlign = 'center';
             g.textBaseline = 'middle';
             g.fillStyle = this.getColorString(this.c[i][j]);
@@ -548,7 +548,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
                     g.fillText(''+k,1+S*i+((k-1)%3+1)*S/4,1+S*j+Math.floor((k-1)/3+1)*S/4);
                 }
             }
-                
+
             g.beginPath();
             g.moveTo(1+S*i+3*S/8,1+S*j+S/8);
             g.lineTo(1+S*i+3*S/8,1+S*(j+1)-S/8);
@@ -592,7 +592,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
             g.strokeRect(S*this.x+5,S*this.y+5,S-8,S-8);
         }
     }
-    
+
     g.restore();
 };
 
@@ -605,35 +605,35 @@ teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,y
 
     var oldx = this.x;
     var oldy = this.y;
-    
+
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
 
     this.xm = xc-this.scale*this.x;
     this.ym = yc-this.scale*this.y;
-    
+
     if (this.x<0) { this.x=0; }
     if (this.y<0) { this.y=0; }
     if (this.x>this.X-1) { this.x=this.X-1; }
     if (this.y>this.X-1) { this.y=this.X-1; }
-    
+
     var oldexp = this.exp;
     this.exp = this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8;
-    
+
     return this.x!=oldx || this.y!=oldy || this.exp!=oldexp;
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc,yc)
 {
     var erg = this.processMouseMovedEvent(xc,yc);
-    
+
     xc = xc-this.deltaX-1;
     yc = yc-this.deltaY-1;
-    
-    if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) { 
+
+    if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) {
         return erg;
     }
-    
+
     if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
         if (this.f[this.x][this.y]<1000) {
             this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
@@ -649,13 +649,13 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc
         if (nr<1 || nr>this.X) {
             return erg;
         }
-        
+
         this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000);
     }
     else {
         this.set(this.x,this.y,(this.f[this.x][this.y]+1) % (this.X+1));
     }
-    
+
     return true;
 };
 
@@ -677,9 +677,9 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
         this.x--;
         return true;
     }
-    
+
     if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.X) { return false; }
-    
+
     if (c>=49 && c<=48+this.X) {
         if (this.f[this.x][this.y]<1000) {
             this.set(this.x,this.y,c-48);
@@ -688,17 +688,17 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
         }
         return true;
     }
-    
+
     if (c>=65 && c<=90) {
         this.set(this.x,this.y,c-65+10);
         return true;
     }
-    
+
     if (c>=97 && c<=122) {
         this.set(this.x,this.y,c-97+10);
         return true;
     }
-    
+
     if (c==32) {
         this.set(this.x,this.y,0);
         return true;
@@ -712,7 +712,7 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
         }
         return true;
     }
-    
+
     return false;
 };
 
@@ -733,11 +733,11 @@ teka.viewer.kropki.KropkiViewer.prototype.getExpert = function(h)
     if (h<1000) {
         return h;
     }
-    
+
     var min = 10;
     var max = 0;
     h -= 1000;
-    
+
     for (var i=1;i<=9;i++) {
         if ((h&(1<<i))!=0) {
             if (i<min) {
@@ -752,6 +752,6 @@ teka.viewer.kropki.KropkiViewer.prototype.getExpert = function(h)
     if (min==max) {
         return min;
     }
-    
+
     return 0;
 };

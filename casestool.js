@@ -1,23 +1,23 @@
 /*
  *  Copyright (C) 2015 Bernhard Seckinger
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of version 3 of the GNU General Public License as 
+ *  it under the terms of version 3 of the GNU General Public License as
  *  published by the Free Software Foundation.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *      
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 teka.CasesTool = function()
 {
-    teka.Tool.call(this);    
-    
+    teka.Tool.call(this);
+
     this.aktivButton = false;
     this.delta = 0;
     this.stack = [];
@@ -59,15 +59,15 @@ teka.CasesTool.prototype.paint = function(g)
     this.delta = (this.width-mindim.width)/2;
     g.save();
     g.translate(this.delta,0);
-    
+
     var half = (this.textHeight+5)/2;
-    
+
     var button = this.aktivButton===false?-1:this.aktivButton;
-    
+
     if (this.stack.length<9) {
         this.paintButton(g,1.5,1.5,this.textHeight+5,this.textHeight+5,
                          button===0?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,false);
-        
+
         g.strokeStyle = this.colorText;
         g.beginPath();
         g.moveTo(5,half+1);
@@ -78,18 +78,18 @@ teka.CasesTool.prototype.paint = function(g)
         g.lineTo(half+1,half+half-3);
         g.stroke();
     }
-    
+
     if (this.stack.length>0) {
         this.paintButton(g,this.textHeight+12.5,1.5,this.textHeight+5,this.textHeight+5,
                          button===1?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,false);
-        
+
         g.strokeStyle = this.colorText;
         g.beginPath();
         g.moveTo(this.textHeight+11+5,half+1);
         g.lineTo(this.textHeight+11+half+half-3,half+1);
         g.stroke();
     }
-    
+
     g.fillStyle = this.colorNormalText;
     g.textAlign = 'left';
     g.textBaseline = 'middle';
@@ -97,7 +97,7 @@ teka.CasesTool.prototype.paint = function(g)
     g.fillText('Stufe: '+this.stack.length,
                2*this.textHeight+23.5,
                1.5+(this.textHeight+5)/2);
-    
+
     g.restore();
 };
 
@@ -114,14 +114,14 @@ teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
         }
         return true;
     }
-    
+
     if (this.aktivButton===1 && this.stack.length>0) {
         if (this.events[2]!==false) {
             this.events[2]('Kehrt zum zuvor gespeicherten Zustand zurück.',false);
         }
         return true;
     }
-    
+
     return false;
 };
 
@@ -138,21 +138,21 @@ teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
         }
         return true;
     }
-    
+
     if (this.aktivButton===1 && this.stack.length>0) {
         if (this.events[1]!==false) {
             this.events[1](this.stack.pop());
         }
         return true;
     }
-    
+
     return true;
 };
 
 teka.CasesTool.prototype.getButton = function(xc,yc)
 {
     xc -= this.delta;
-    
+
     if (xc>=2 && xc<=2+this.textHeight+5 && yc>=1 && yc<1+this.textHeight+5) {
         return 0;
     }

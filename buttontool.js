@@ -1,15 +1,15 @@
 /*
  *  Copyright (C) 2015 Bernhard Seckinger
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of version 3 of the GNU General Public License as 
+ *  it under the terms of version 3 of the GNU General Public License as
  *  published by the Free Software Foundation.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *      
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -17,7 +17,7 @@
 teka.ButtonTool = function()
 {
     teka.Tool.call(this);
-    
+
     this.buttons_ = ['Testen','Rückgängig','Anleitung'];
     this.description_ = [
         'Überprüft, ob die Lösung richtig ist.',
@@ -63,7 +63,7 @@ teka.ButtonTool.prototype.paint = function(g)
     this.y[0] = 1;
     this.y[1] = Math.floor((this.height-(this.textHeight+5))/2);
     this.y[2] = this.height-(this.textHeight+5)-1;
-    
+
     for (var i=0;i<=2;i++) {
         this.paintButton(g,x+0.5,this.y[i]+0.5,
                          mindim.width,this.textHeight+5,
@@ -81,7 +81,7 @@ teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
     if (this.events[3]!==false) {
         this.events[3](this.description_[this.aktivButton],false);
     }
-    
+
     return true;
 };
 
@@ -95,7 +95,7 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
     if (this.events[this.aktivButton]!==false) {
         this.events[this.aktivButton]();
     }
-    
+
     return true;
 };
 
@@ -113,4 +113,3 @@ teka.ButtonTool.prototype.resetButtons = function()
     this.aktivButton = false;
     return true;
 };
-
