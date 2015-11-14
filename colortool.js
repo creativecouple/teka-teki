@@ -19,7 +19,6 @@ teka.ColorTool = function()
     teka.Tool.call(this);
 
     this.colorname = ['schwarz','blau','grün','braun'];
-    this.colornameAkk = ['schwarzen','blauen','grünen','braunen'];
     this.colors = ['#000','#00f','#0c0','#c40'];
 
     this.color = 0;
@@ -42,7 +41,6 @@ teka.ColorTool.prototype.setColorHeadline = function(color)
 teka.ColorTool.prototype.setColors = function(c)
 {
     this.colorname = c.names;
-    this.colornameAKK = c.names_akk;
     this.colors = c.colors;
 };
 
@@ -94,21 +92,21 @@ teka.ColorTool.prototype.processMouseMovedEvent = function(xc,yc)
 
     if (x===0 && this.color!=y) {
         if (this.events[3]!==false) {
-            this.events[3]('Setzt die Stiftfarbe auf '+this.colorname[y]+'.',false);
+            this.events[3](teka.translate('set_color',[teka.translate(this.colorname[y])]),false);
         }
         return true;
     }
 
     if (x===1 && this.color!=y) {
         if (this.events[3]!==false) {
-            this.events[3]('Färbt alle Felder mit '+this.colornameAkk[this.color]+' Symbolen '+this.colorname[y]+' ein.',false);
+            this.events[3](teka.translate('change_color',[teka.translate(this.colorname[this.color]+'_a'),teka.translate(this.colorname[y])]),false);
         }
         return true;
     }
 
     if (x==2) {
         if (this.events[3]!==false) {
-            this.events[3]('Löscht alle Felder mit '+this.colornameAkk[y]+' Symbolen.',false);
+            this.events[3](teka.translate('delete_color',[teka.translate(this.colorname[y]+'_a')]),false);
         }
         return true;
     }
@@ -156,7 +154,7 @@ teka.ColorTool.prototype.paint = function(g)
     g.textAlign = 'center';
     g.textBaseline = 'top';
     g.font = this.getButtonFont();
-    g.fillText('Stiftfarbe: '+this.colorname[this.color],this.width/2,2);
+    g.fillText(teka.translate('color_of_pen',[teka.translate(this.colorname[this.color])]),this.width/2,2);
 
     this.buttonHeight = (this.height-26)/5;
     this.buttonWidth = (this.width-14)/3;
@@ -173,12 +171,12 @@ teka.ColorTool.prototype.paint = function(g)
             this.paintButton(g,7+this.buttonWidth,1+i*(this.buttonHeight+6),
                              this.buttonWidth,this.buttonHeight,
                              (x===1 && i-1==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
-                             'färben');
+                             teka.translate('coloring'));
         }
         this.paintButton(g,13+2*this.buttonWidth,1+i*(this.buttonHeight+6),
                          this.buttonWidth,this.buttonHeight,
                          (x===2 && i-1==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
-                         'löschen');
+                         teka.translate('deleting'));
 
         g.fillStyle = this.colors[i-1];
         g.fillRect(5,5+i*(this.buttonHeight+6),

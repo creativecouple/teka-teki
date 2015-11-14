@@ -44,8 +44,8 @@ teka.Defaults = {
     COLORTOOL_COLORS: {
         colors: ['#000','#00f','#0c0','#c40'],
         names: ['schwarz','blau','grün','braun'],
-        names_akk: ['schwarzen','blauen','grünen','braunen']
     },
+    LANG: 'de',
     FILE: false
 };
 
@@ -62,7 +62,9 @@ teka.PuzzleApplet = function(options)
 
     this.paintLogo();
 
-    setTimeout(this.init.bind(this),1000);
+    teka.addScript('language/'+this.values_.LANG+'.js', teka.myBind(this,function() {
+        setTimeout(this.init.bind(this),1000);
+    }));
 };
 
 teka.PuzzleApplet.prototype.setDefaults = function()
@@ -99,6 +101,7 @@ teka.PuzzleApplet.prototype.addCanvas = function()
     canvas.style.width = canvas.width+'px';
     canvas.style.height = canvas.height+'px';
     canvas.style.border = this.values_.BORDER;
+    canvas.style.outline = '0px';
     canvas.setAttribute('tabindex','1');
     document.getElementById(this.values_.TARGET).appendChild(canvas);
     canvas.focus();
@@ -323,7 +326,7 @@ teka.PuzzleApplet.prototype.check = function()
             return;
         }
 
-    this.tt.setText('Herzlichen Glückwunsch!!!',false);
+    this.tt.setText(teka.translate('congratulations'),false);
     this.pv.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
     setTimeout(this.blink.bind(this),300);

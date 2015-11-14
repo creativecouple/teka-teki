@@ -18,11 +18,15 @@ teka.ButtonTool = function()
 {
     teka.Tool.call(this);
 
-    this.buttons_ = ['Testen','Rückgängig','Anleitung'];
+    this.buttons_ = [
+        teka.translate('check'),
+        teka.translate('undo'),
+        teka.translate('instructions')
+    ];
     this.description_ = [
-        'Überprüft, ob die Lösung richtig ist.',
-        'Macht alles bis inklusive der letzten größeren Änderung (=färben, löschen) rückgängig. Nochmaliges Drücken macht das letzte Rückgängingmachen wieder rückgängig.',
-        'Zeigt die Aufgabenstellung und eine Anleitung zur Bedienung dieses Applets an.'
+        teka.translate('check_descr'),
+        teka.translate('undo_descr'),
+        teka.translate('instructions_descr')
     ];
     this.aktivButton = false;
     this.y = [0,0,0];

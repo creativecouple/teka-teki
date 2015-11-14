@@ -49,7 +49,7 @@ teka.CasesTool.prototype.setEvents = function(f1,f2,f3)
 teka.CasesTool.prototype.getMinDim = function(g)
 {
     g.font = this.getButtonFont();
-    return { width:g.measureText('Stufe: 9').width+2*this.textHeight+14,
+    return { width:g.measureText(teka.translate('level',['9'])).width+2*this.textHeight+14,
              height:this.textHeight+7 };
 };
 
@@ -94,7 +94,7 @@ teka.CasesTool.prototype.paint = function(g)
     g.textAlign = 'left';
     g.textBaseline = 'middle';
     g.font = this.getButtonFont();
-    g.fillText('Stufe: '+this.stack.length,
+    g.fillText(teka.translate('level',[this.stack.length]),
                2*this.textHeight+23.5,
                1.5+(this.textHeight+5)/2);
 
@@ -110,14 +110,14 @@ teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
 
     if (this.aktivButton===0 && this.stack.length<9) {
         if (this.events[2]!==false) {
-            this.events[2]('Speichert den aktuellen Zustand.',false);
+            this.events[2](teka.translate('save_state'),false);
         }
         return true;
     }
 
     if (this.aktivButton===1 && this.stack.length>0) {
         if (this.events[2]!==false) {
-            this.events[2]('Kehrt zum zuvor gespeicherten Zustand zurück.',false);
+            this.events[2](teka.translate('load_state'),false);
         }
         return true;
     }

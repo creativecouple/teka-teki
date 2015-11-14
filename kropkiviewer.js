@@ -121,20 +121,12 @@ teka.viewer.kropki.KropkiViewer.prototype.addSolution = function()
 
 teka.viewer.kropki.KropkiViewer.prototype.getName = function()
 {
-    return 'Kropki';
+    return teka.translate('kropki');
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.getInstructions = function()
 {
-    return 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
-        +'dass jede Zahl in jeder Zeile und jeder Spalte genau einmal vorkommt.\n\n'
-        +'Befindet sich zwischen zwei Feldern ein schwarzer Kreis, '
-        +'so muss eine der beiden Zahlen in diesen Feldern genau das Doppelte '
-        +'der anderen sein.\n\n'
-        +'Ein weißer Kreis hingegen bedeutet, dass eine der beiden Zahlen '
-        +'in diesen Feldern genau um eins größer sein muss als die andere.\n\n'
-        +'Befindet sich kein Kreis zwischen zwei Feldern, so darf keine '
-        +'der beiden Eigenschaften zutreffen.';
+    return teka.translate('kropki_instructions');        
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
@@ -147,20 +139,7 @@ teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
 
 teka.viewer.kropki.KropkiViewer.prototype.getUsage = function()
 {
-    return 'Bedienung mit der Maus:\n\n'
-        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
-        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
-        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
-        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
-        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
-        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
-        +'den Expertenmodus.\n\n\n'
-        +'Bedienung mit der Tastatur:\n\n'
-        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
-        +'Leertaste: Feldinhalt löschen\n'
-        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
-        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
-        +'und ausschalten.';
+    return teka.translate('kropki_usage');
 };
 
 //////////////////////////////////////////////////////////////////
@@ -250,7 +229,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                 check[i][j] = this.getExpert(this.f[i][j]);
                 if (check[i][j]===teka.viewer.kropki.Defaults.NONE) {
                     this.error[i][j] = true;
-                    return 'Das markierte Feld enthält kein eindeutiges Symbol.';
+                    return teka.translate('kropki_unique_symbol');
                 }
             } else {
                 check[i][j] = this.f[i][j];
@@ -258,7 +237,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
 
             if (check[i][j]===teka.viewer.kropki.Defaults.NONE) {
                 this.error[i][j] = true;
-                return 'Das markierte Feld ist leer.';
+                return teka.translate('kropki_empty');
             }
         }
     }
@@ -272,7 +251,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                         this.error[ii][j] = true;
                     }
                 }
-                return 'Die markierten Zahlen kommen in der Zeile doppelt vor.';
+                return teka.translate('kropki_row_duplicate');
             } else {
                 da[check[i][j]-1] = true;
             }
@@ -288,7 +267,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                         this.error[i][jj] = true;
                     }
                 }
-                return 'Die markierten Zahlen kommen in der Spalte doppelt vor.';
+                return teka.translate('kropki_column_duplicate');
             } else {
                 da[check[i][j]-1] = true;
             }
@@ -302,26 +281,26 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                 if (check[i][j]==2*check[i+1][j] || check[i+1][j]==2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
-                    return 'Die eine der beiden markierten Zahlen ist das Doppelte der anderen.';
+                    return teka.translate('kropki_twice');
                 }
                 if (check[i][j]==check[i+1][j]+1 || check[i+1][j]==check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
-                    return 'Die Zahlen in den beiden markierten Feldern sind benachbart.';
+                    return teka.translate('kropki_neighbours');
                 }
                 break;
               case teka.viewer.kropki.Defaults.EMPTY:
                 if (check[i][j]!=check[i+1][j]+1 && check[i+1][j]!=check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
-                    return 'Die beiden markierten Felder enthalten keine benachbarten Zahlen.';
+                    return teka.translate('kropki_no_neighbours');
                 }
                 break;
               case teka.viewer.kropki.Defaults.FULL:
                 if (check[i][j]!=2*check[i+1][j] && check[i+1][j]!=2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
-                    return 'Keines der beiden markierten Felder enthält das Doppelte des anderen.';
+                    return teka.translate('kropki_not_twice');
                 }
                 break;
             }
@@ -335,26 +314,26 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                 if (check[i][j]==2*check[i][j+1] || check[i][j+1]==2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
-                    return 'Die eine der beiden markierten Zahlen ist das Doppelte der anderen.';
+                    return teka.translate('kropki_twice');
                 }
                 if (check[i][j]==check[i][j+1]+1 || check[i][j+1]==check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
-                    return 'Die Zahlen in den beiden markierten Feldern sind benachbart.';
+                    return teka.translate('kropki_neighbours');
                 }
                 break;
               case teka.viewer.kropki.Defaults.EMPTY:
                 if (check[i][j]!=check[i][j+1]+1 && check[i][j+1]!=check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
-                    return 'Die beiden markierten Felder enthalten keine benachbarten Zahlen.';
+                    return teka.translate('kropki_no_neightbours');
                 }
                 break;
               case teka.viewer.kropki.Defaults.FULL:
                 if (check[i][j]!=2*check[i][j+1] && check[i][j+1]!=2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
-                    return 'Keines der beiden markierten Felder enthält das Doppelte des anderen.';
+                    return teka.translate('kropki_not_twice');
                 }
                 break;
             }
@@ -488,7 +467,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
     g.textBaseline = 'top';
     g.fillStyle = this.textcolor;
     g.font = 'bold '+this.textheight+'px sans-serif';
-    g.fillText('Ziffern von 1 bis '+this.X+'.',1,X*S+5);
+    g.fillText(teka.translate('kropki_digits',[this.X]),1,X*S+5);
     
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle='#ff0000';
