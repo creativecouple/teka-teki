@@ -22,7 +22,7 @@ teka.translate = function(index,param)
     
     var str = '???';
     
-    if (teka.dictionary) {
+    if (teka.dictionary && teka.dictionary[index]!==undefined) {
         str = teka.dictionary[index];
     }
     
@@ -34,6 +34,7 @@ teka.translate = function(index,param)
 };
 
 teka.dictionary = {
+    back_to_puzzle: 'Zurück zum Rätsel',
     blau: 'blau',
     blau_a: 'blauen',
     braun: 'braun',
@@ -52,13 +53,16 @@ teka.dictionary = {
     instructions_descr: 'Zeigt die Aufgabenstellung und eine Anleitung zur Bedienung dieses Applets an.',
     level: 'Stufe: {1}',
     load_state: 'Kehrt zum zuvor gespeicherten Zustand zurück.',
+    problem: 'Aufgabe',
     save_state: 'Speichert den aktuellen Zustand.',
     schwarz: 'schwarz',
     schwarz_a: 'schwarzen',
     set_color: 'Setzt die Stiftfarbe auf {1}.',
     undo: 'Rückgängig',
     undo_descr: 'Macht alles bis inklusive der letzten größeren Änderung (=färben, löschen) rückgängig. Nochmaliges Drücken macht das letzte Rückgängingmachen wieder rückgängig.',
-    
+    usage: 'Bedienung',
+    usage_applet: 'Allgemein',
+
     kropki: 'Kropki',
     kropki_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
         +'dass jede Zahl in jeder Zeile und jeder Spalte genau einmal vorkommt.\n\n'

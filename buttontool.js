@@ -97,7 +97,11 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
     }
 
     if (this.events[this.aktivButton]!==false) {
-        this.events[this.aktivButton]();
+        if (this.aktivButton==2) {
+            this.events[this.aktivButton](true);
+        } else {
+            this.events[this.aktivButton]();
+        }
     }
 
     return true;

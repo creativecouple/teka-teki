@@ -57,6 +57,7 @@ teka.PuzzleApplet = function(options)
         this.setOptions(options);
     }
 
+    this.showInstructions = false;
     this.canvas = this.addCanvas();
     this.image = this.canvas.getContext('2d');
 
@@ -165,7 +166,10 @@ teka.PuzzleApplet.prototype.init = function()
         bt.setColorBorderBright(this.values_.BUTTON_COLOR_BORDER_BRIGHT);
         bt.setColorText(this.values_.BUTTON_COLOR_TEXT);
         bt.setTextHeight(this.values_.BUTTON_TEXT_HEIGHT);
-        bt.setEvents(this.check.bind(this),this.undo.bind(this),false,this.setText.bind(this));
+        bt.setEvents(this.check.bind(this),
+                     this.undo.bind(this),
+                     this.setInstructions.bind(this),
+                     this.setText.bind(this));
 
         ct.setColors(this.values_.COLORTOOL_COLORS);
         ct.setColorActive(this.values_.BUTTON_COLOR_ACTIVE);
@@ -222,6 +226,15 @@ teka.PuzzleApplet.prototype.init = function()
         this.canvas.addEventListener('mousedown',this.mousePressedListener.bind(this),false);
         this.canvas.addEventListener('keypress',this.keyPressedListener.bind(this),false);
         this.canvas.focus();
+        
+        var instructions = new teka.Instructions();
+        
+        this.instructions = instructions;
+        instructions.setExtent(pm,
+                               pm+this.values_.HEADHEIGHT,
+                               this.canvas.width-2*pm,
+                               this.canvas.height-this.values_.HEADHEIGHT-2*pm);
+        instructions.setEvent(this.setInstructions.bind(this));
     }));
 };
 
@@ -238,6 +251,14 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
     var x = e.x-this.canvas.offsetLeft;
     var y = e.y-this.canvas.offsetTop;
 
+    if (this.showInstructions) {
+        if (this.instructions.processMouseMovedEvent(x-this.instructions.left,
+                                                     y-this.instructions.top)) {
+            this.paint();
+        }
+        return;
+    }
+    
     var paint = this.bt.resetButtons();
     for (var d in this.display) {
         if (this.display[d].inExtent(x,y)) {
@@ -272,6 +293,14 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
     var x = e.x-this.canvas.offsetLeft;
     var y = e.y-this.canvas.offsetTop;
 
+    if (this.showInstructions) {
+        if (this.instructions.processMousePressedEvent(x-this.instructions.left,
+                                                       y-this.instructions.top)) {
+            this.paint();
+        }
+        return;
+    }
+    
     var paint = this.bt.resetButtons();
     for (var d in this.display) {
         if (this.display[d].inExtent(x,y)) {
@@ -305,6 +334,25 @@ teka.PuzzleApplet.prototype.paint = function()
     this.image.fillStyle = this.values_.BACKGROUND;
     this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
 
+    if (this.showInstructions) {
+        this.image.save();
+        this.display[0].translate(this.image);
+        this.display[0].clip(this.image);
+        this.display[0].paint(this.image);
+        this.image.restore();
+        this.image.save();
+        this.instructions.translate(this.image);
+        this.instructions.clip(this.image);
+        this.instructions.paint(this.image);
+        this.image.restore();
+        return;
+    }
+    
+    this.paintNormal();
+};
+
+teka.PuzzleApplet.prototype.paintNormal = function()
+{
     for (var i in this.display) {
         this.image.save();
         this.display[i].translate(this.image);
@@ -335,6 +383,12 @@ teka.PuzzleApplet.prototype.check = function()
 teka.PuzzleApplet.prototype.undo = function()
 {
     this.pv.undo();
+};
+
+teka.PuzzleApplet.prototype.setInstructions = function(val)
+{
+    this.showInstructions = val;
+    this.paint();
 };
 
 teka.PuzzleApplet.prototype.setColor = function(color)
