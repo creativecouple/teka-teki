@@ -40,7 +40,6 @@ teka.Instructions = function()
     this.event = false;
 
     this.graphics = null;
-    this.textcolor = '#000';
 
     this.exampleViewer = false;
 };
@@ -139,7 +138,7 @@ teka.Instructions.prototype.paint = function(g)
         this.exampleViewer.reset();
     }
 
-    g.fillStyle = this.textcolor;
+    g.fillStyle = this.colorText;
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.font = this.getTitleFont();
