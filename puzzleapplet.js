@@ -234,6 +234,7 @@ teka.PuzzleApplet.prototype.init = function()
         instructions.setColorPassive(this.values_.BUTTON_COLOR_PASSIVE);
         instructions.setColorBorderDark(this.values_.BUTTON_COLOR_BORDER_DARK);
         instructions.setColorBorderBright(this.values_.BUTTON_COLOR_BORDER_BRIGHT);
+        instructions.setColorText(this.values_.BUTTON_COLOR_TEXT);
         instructions.setGraphics(this.image);
         instructions.setInstructions(pv.getInstructions());
         instructions.setUsage(pv.getUsage());
