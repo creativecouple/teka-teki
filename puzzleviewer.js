@@ -44,7 +44,7 @@ teka.viewer.PuzzleViewer = function(data)
 
     this.color = 0;
     this.colortool = false;
-    
+
     this.textcolor = '#000';
     this.textheight = 12;
 };

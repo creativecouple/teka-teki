@@ -226,10 +226,12 @@ teka.PuzzleApplet.prototype.init = function()
         this.canvas.addEventListener('mousedown',this.mousePressedListener.bind(this),false);
         this.canvas.addEventListener('keypress',this.keyPressedListener.bind(this),false);
         this.canvas.focus();
-        
+
         var instructions = new teka.Instructions();
-        
+
         this.instructions = instructions;
+        instructions.setInstructions(pv.getInstructions());
+        instructions.setUsage(pv.getUsage());
         instructions.setExtent(pm,
                                pm+this.values_.HEADHEIGHT,
                                this.canvas.width-2*pm,
@@ -258,7 +260,7 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         }
         return;
     }
-    
+
     var paint = this.bt.resetButtons();
     for (var d in this.display) {
         if (this.display[d].inExtent(x,y)) {
@@ -300,7 +302,7 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
         }
         return;
     }
-    
+
     var paint = this.bt.resetButtons();
     for (var d in this.display) {
         if (this.display[d].inExtent(x,y)) {
@@ -318,7 +320,7 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 {
     if (this.pv.processKeyEvent(e.keyCode,e.charCode)) {
         this.paint();
-        
+
         if (e.preventDefault) {
             e.preventDefault();
         }
@@ -347,7 +349,7 @@ teka.PuzzleApplet.prototype.paint = function()
         this.image.restore();
         return;
     }
-    
+
     this.paintNormal();
 };
 

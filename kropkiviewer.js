@@ -126,7 +126,7 @@ teka.viewer.kropki.KropkiViewer.prototype.getName = function()
 
 teka.viewer.kropki.KropkiViewer.prototype.getInstructions = function()
 {
-    return teka.translate('kropki_instructions');        
+    return teka.translate('kropki_instructions');
 };
 
 teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
@@ -468,7 +468,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
     g.fillStyle = this.textcolor;
     g.font = 'bold '+this.textheight+'px sans-serif';
     g.fillText(teka.translate('kropki_digits',[this.X]),1,X*S+5);
-    
+
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle='#ff0000';
         if (this.exp) {
@@ -549,7 +549,7 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc
 teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
 {
     this.exp = false;
-    
+
     if (key==40 && this.y<this.X-1) {
         this.y++;
         return true;
@@ -567,8 +567,8 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
         return true;
     }
 
-    if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.X) { 
-        return false; 
+    if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.X) {
+        return false;
     }
 
     if (c>=49 && c<=48+this.X) {

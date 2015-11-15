@@ -18,7 +18,7 @@ teka.Display = function()
 {
 };
 
-teka.Display.prototype.setExtent = function(left,top,width,height)
+teka.Display.prototype.setExtent_ = function(left,top,width,height)
 {
     if (left!==undefined) {
         this.left = left;
@@ -32,6 +32,11 @@ teka.Display.prototype.setExtent = function(left,top,width,height)
     if (height!==undefined) {
         this.height = height;
     }
+};
+
+teka.Display.prototype.setExtent = function(left,top,width,height)
+{
+    this.setExtent_(left,top,width,height);
 };
 
 teka.Display.prototype.inExtent = function(x,y)

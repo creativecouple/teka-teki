@@ -19,17 +19,17 @@ teka.translate = function(index,param)
     if (param===undefined) {
         param = [];
     }
-    
+
     var str = '???';
-    
+
     if (teka.dictionary && teka.dictionary[index]!==undefined) {
         str = teka.dictionary[index];
     }
-    
+
     for (var i=1;i<=param.length;i++) {
         str = str.replace('{'+i+'}',param[i-1]);
     }
-    
+
     return str;
 };
 
@@ -51,6 +51,31 @@ teka.dictionary = {
     grün_a: 'grünen',
     instructions: 'Anleitung',
     instructions_descr: 'Zeigt die Aufgabenstellung und eine Anleitung zur Bedienung dieses Applets an.',
+    instructions_global: 'Testen (Strg-Enter): Wenn Sie auf diesen Button klicken, überprüft '
+        +'das Applet, ob Ihre Lösung stimmt. Ist die Lösung richtig, so blinkt '
+        +'das Rätsel in unterschiedlichen Blautönen. Ist die Lösung hingegen falsch, '
+        +'so wird ein Fehler im Rätsel markiert und ein Fehlertext angezeigt.\n\n'
+        +'Rückgängig (F3): Die letzte größere Änderung wird rückgängig gemacht. Sie '
+        +'können auch das Rückgängigmachen selbst rückgängig machen, indem sie diesen '
+        +'Button nochmal drücken.\n\n'
+        +'Anleitung (F4): Zeigt eine Anleitung zum Rätsel, sowie zur Bedienung des '
+        +'Applets an.\n\n'
+        +'Farben wählen (F5 - F8): Ihnen stehen im Applet vier verschiedene Farben zur '
+        +'Auswahl. Markierungen in einer Farbe können mit einer anderen Farbe nicht '
+        +'überschrieben werden.\n\n'
+        +'Färben (Shift-F5 - Shift-F8): Wenn Sie auf \'färben\' klicken, können sie '
+        +'die Markierungen in der aktuellen Schriftfarbe umfärben.\n\n'
+        +'Löschen (Strg-F5 - Strg-F8): Damit löschen Sie alle Markierungen der entsprechenden '
+        +'Farbe.\n\n'
+        +'Fallunterscheidungen (Bild-hoch und Bild-runter): Klicken Sie auf das '
+        +'Plus-Symbol um eine neue Fallunterscheidung zu beginnen. Sie können dann '
+        +'einen Fall ausprobieren und jederzeit wieder zu dem vorigen Zustand zurückkehren, '
+        +'indem Sie auf das Minus-Symbol klicken. Die Fallunterscheidungen können '
+        +'neunfach verschachtelt sein.\n\n\n'
+        +'Rätsel auf Zeit lösen: Wenn Sie in Ihren Einstellungen angegeben haben, '
+        +'dass Sie das Überraschungsrätsel auf Zeit lösen wollen, erhalten Sie beim '
+        +'Start des Applets einen Startbildschirm mit drei Button. Was diese Button '
+        +'genau bewirken, wird auf dem Startbildschirm erklärt.',
     level: 'Stufe: {1}',
     load_state: 'Kehrt zum zuvor gespeicherten Zustand zurück.',
     problem: 'Aufgabe',
@@ -96,7 +121,6 @@ teka.dictionary = {
     kropki_no_neighbours: 'Die beiden markierten Felder enthalten keine benachbarten Zahlen.',
     kropki_not_twice: 'Keines der beiden markierten Felder enthält das Doppelte des anderen.',
     kropki_digits: 'Ziffern von 1 bis {1}.',
-    
+
     dummy_to_avoid_comma_bug: ''
 };
-

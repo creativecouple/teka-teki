@@ -82,11 +82,10 @@ teka.fillOval = function(g,x,y,width,height,start,end)
     g.arc(x,y,width,height,start,end);
     g.fill();
 };
-                         
+
 teka.strokeOval = function(g,x,y,width,height,start,end)
 {
     g.beginPath();
     g.arc(x,y,width,height,start,end);
     g.stroke();
 };
-                         
