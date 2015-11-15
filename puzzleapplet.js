@@ -82,11 +82,9 @@ teka.PuzzleApplet = function(options)
 
     this.paintLogo();
 
-    /*
     teka.addScript('language/'+this.values_.LANGUAGE+'.js', teka.myBind(this,function() {
         setTimeout(this.init.bind(this),1000);
     }));
-     */
 };
 
 teka.PuzzleApplet.prototype.setDefaults = function()
@@ -132,13 +130,15 @@ teka.PuzzleApplet.prototype.addCanvas = function()
 
 /** Paints a simple Teka-Teki logo on the screen until loading
  *  of the puzzle and additional script files has beend done.
+ *  Fill and outline color can be customized using LOGO_FILL_COLOR
+ *  and LOGO_OUTLINE_COLOR.
  */
 teka.PuzzleApplet.prototype.paintLogo = function()
 {
     var image = this.image;
     var width = this.canvas.width;
     var height = this.canvas.height;
-    var textHeight = Math.floor(width/4);
+    var textHeight = 133;
     
     image.fillStyle = this.values_.BACKGROUND_COLOR;
     image.fillRect(0,0,width,height);
@@ -148,14 +148,16 @@ teka.PuzzleApplet.prototype.paintLogo = function()
     image.fillStyle = this.values_.LOGO_FILL_COLOR;
     image.strokeStyle = this.values_.LOGO_OUTLINE_COLOR;
 
-    var teka_left = width/2+image.measureText('A').width;
+    var teka_right = Math.max(width/2+108,
+                              image.measureText('TEKA').width+20);
+    var teki_left = Math.min(width/2-48,
+                             width-image.measureText('TEKI').width-20);
     var teka_top = height/2-0.25*textHeight;
-    var teki_left = width/2-image.measureText('T').width;
     var teki_top = height/2+0.25*textHeight;
     
     image.textAlign = 'right';
-    image.fillText('TEKA',teka_left,teka_top);
-    image.strokeText('TEKA',teka_left,teka_top);
+    image.fillText('TEKA',teka_right,teka_top);
+    image.strokeText('TEKA',teka_right,teka_top);
 
     image.textAlign = 'left';
     image.fillText('TEKI',teki_left,teki_top);
