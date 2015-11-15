@@ -230,6 +230,7 @@ teka.PuzzleApplet.prototype.init = function()
         var instructions = new teka.Instructions();
 
         this.instructions = instructions;
+        instructions.setGraphics(this.image);
         instructions.setInstructions(pv.getInstructions());
         instructions.setUsage(pv.getUsage());
         instructions.setExtent(pm,
