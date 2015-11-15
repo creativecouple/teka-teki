@@ -38,6 +38,8 @@ teka.Instructions = function()
     
     this.graphics = null;
     this.textcolor = '#000';
+    
+    this.exampleViewer = false;
 };
 teka.extend(teka.Instructions,teka.Tool);
 
@@ -49,6 +51,11 @@ teka.Instructions.prototype.setInstructions = function(instructions)
 teka.Instructions.prototype.setUsage = function(usage)
 {
     this.usage = usage;
+};
+
+teka.Instructions.prototype.setExampleViewer = function(ex)
+{
+    this.exampleViewer = ex;
 };
 
 teka.Instructions.prototype.setGraphics = function(g)
@@ -82,6 +89,8 @@ teka.Instructions.prototype.initTexts = function(w,h)
 
 teka.Instructions.prototype.initExample = function(w,h)
 {
+    this.exampleViewer.setExtent(0,0,200,h/2-this.bh-20);
+    this.exampleViewer.setMetrics();
 };
 
 teka.Instructions.prototype.setEvent = function(f)
@@ -113,6 +122,19 @@ teka.Instructions.prototype.paint = function(g)
     this.paintButton(g,3*this.bw+30,0,this.bw,this.bh,
                      this.aktivButton===3?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                      this.buttonText[3]);
+
+    if (this.mode==0) {
+        g.save();
+        g.translate(this.width-210,this.bh+20);
+        this.exampleViewer.paint(g);
+        g.restore();
+        this.exampleViewer.addSolution();
+        g.save();
+        g.translate(this.width-210,this.bh+this.height/2+5);
+        this.exampleViewer.paint(g);
+        g.restore();
+        this.exampleViewer.reset();
+    }
 
     g.fillStyle = this.textcolor;
     g.textAlign = 'left';

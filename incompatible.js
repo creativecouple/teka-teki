@@ -76,16 +76,16 @@ teka.drawLine = function(g,x1,y1,x2,y2)
     g.stroke();
 };
 
-teka.fillOval = function(g,x,y,width,height,start,end)
+teka.fillOval = function(g,x,y,scale,start,end)
 {
     g.beginPath();
-    g.arc(x,y,width,height,start,end);
+    g.arc(x,y,scale,start,end);
     g.fill();
 };
 
-teka.strokeOval = function(g,x,y,width,height,start,end)
+teka.strokeOval = function(g,x,y,scale,start,end)
 {
     g.beginPath();
-    g.arc(x,y,width,height,start,end);
+    g.arc(x,y,scale,start,end);
     g.stroke();
 };
