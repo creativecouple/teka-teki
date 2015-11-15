@@ -19,12 +19,14 @@ teka.Instructions = function()
     teka.Tool.call(this);
 
     this.buttonText = [
-        teka.translate('problem'),               
+        teka.translate('problem'),
         teka.translate('usage'),
         teka.translate('usage_applet'),
-        teka.translate('back_to_puzzle')                       
+        teka.translate('back_to_puzzle'),
+        teka.translate('next'),
+        teka.translate('back')
     ];
-    
+
     this.bw = 50;
     this.bh = 10;
 
@@ -33,12 +35,13 @@ teka.Instructions = function()
     this.usage = '';
 
     this.mode = 0;
+    this.page = 0;
     this.aktivButton = false;
     this.event = false;
-    
+
     this.graphics = null;
     this.textcolor = '#000';
-    
+
     this.exampleViewer = false;
 };
 teka.extend(teka.Instructions,teka.Tool);
@@ -140,17 +143,36 @@ teka.Instructions.prototype.paint = function(g)
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.font = this.getTitleFont();
-    
+
     g.fillText(this.buttonText[this.mode],0,this.bh+20);
 
     g.font = this.getTextFont();
     var y = this.bh+50+this.textHeight*2;
     var lh = this.textHeight;
-    for (var i=0;i<this.text[this.mode][0].length;i++) {
-        if (this.text[this.mode][0][i]!==null) {
-            g.fillText(this.text[this.mode][0][i],0,y);
+    for (var i=0;i<this.text[this.mode][this.page].length;i++) {
+        if (this.text[this.mode][this.page][i]!==null) {
+            g.fillText(this.text[this.mode][this.page][i],0,y);
         }
         y += lh;
+    }
+
+    if (this.page==0 && this.text[this.mode].length>1) {
+        this.paintButton(g,(this.width-(this.mode==0?200:0)-this.bw)/2,this.height-this.bh,this.bw,this.bh,
+                         this.aktivButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.buttonText[4]);
+    }
+    if (this.page==this.text[this.mode].length-1 && this.text[this.mode].length>1) {
+        this.paintButton(g,(this.width-(this.mode==0?200:0)-this.bw)/2,this.height-this.bh,this.bw,this.bh,
+                         this.aktivButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.buttonText[5]);
+    }
+    if (this.page>0 && this.page<this.text[this.mode].length-1) {
+        this.paintButton(g,(this.width-(this.mode==0?200:0))/2+5,this.height-this.bh,this.bw,this.bh,
+                         this.aktivButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.buttonText[4]);
+        this.paintButton(g,(this.width-(this.mode==0?200:0))/2-this.bw-5,this.height-this.bh,this.bw,this.bh,
+                         this.aktivButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.buttonText[5]);
     }
 };
 
@@ -171,10 +193,17 @@ teka.Instructions.prototype.processMousePressedEvent = function(xc,yc)
         return false;
     }
 
-    if (this.aktivButton==3) {
+    if (this.aktivButton==4 && this.page<this.text[this.mode].length-1) {
+        this.page++;
+        this.aktivButton = this.getButton(xc,yc);
+    } else if (this.aktivButton==5 && this.page>0) {
+        this.page--;
+        this.aktivButton = this.getButton(xc,yc);
+    } else if (this.aktivButton==3) {
         this.event(false);
     } else {
         this.mode = this.aktivButton;
+        this.page = 0;
     }
 
     return true;
@@ -187,6 +216,28 @@ teka.Instructions.prototype.getButton = function(xc,yc)
             return i;
         }
     }
+
+    if (yc>=this.height-this.bh && yc<=this.height) {
+        if (this.page==0) {
+            if (xc>=(this.width-(this.mode==0?200:0)-this.bw)/2 &&
+                xc<=(this.width-(this.mode==0?200:0)+this.bw)/2)
+                return 4;
+        }
+        if (this.page==this.text[this.mode].length-1) {
+            if (xc>=(this.width-(this.mode==0?200:0)-this.bw)/2 &&
+                xc<=(this.width-(this.mode==0?200:0)+this.bw)/2)
+                return 5;
+        }
+        if (this.page>0 && this.page<this.text[this.mode].length-1) {
+            if (xc>=(this.width-(this.mode==0?200:0))/2-this.bw-5 &&
+                xc<=(this.width-(this.mode==0?200:0))/2-5)
+                return 5;
+            if (xc>=(this.width-(this.mode==0?200:0))/2+5 &&
+                xc<=(this.width-(this.mode==0?200:0))/2+this.bw+5)
+                return 4;
+        }
+    }
+
     return false;
 };
 
@@ -194,12 +245,12 @@ teka.Instructions.prototype.wrap = function(text,width,height)
 {
     var vv = [];
     var v = [];
-    
+
     var ch = 0;
-    
+
     var t = text.split('\n');
     var first = true;
-    
+
     this.graphics.font = this.getTextFont();
     while (t.length>0) {
         var par = t.shift();
@@ -212,7 +263,7 @@ teka.Instructions.prototype.wrap = function(text,width,height)
             v.push(null);
         }
         first = true;
-        
+
         var t2 = par.split(' ');
         var az = t2.length;
         var c = 0;
@@ -223,7 +274,7 @@ teka.Instructions.prototype.wrap = function(text,width,height)
             }
             ch += this.textHeight;
             v.push(h);
-            
+
             if (ch+this.textHeight>height-this.textHeight) {
                 vv.push(v);
                 v = [];
@@ -231,7 +282,7 @@ teka.Instructions.prototype.wrap = function(text,width,height)
             }
         }
     }
-    
+
     if (v.length>0) {
         vv.push(v);
     }

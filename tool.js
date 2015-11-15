@@ -106,10 +106,22 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
     g.stroke();
 
     if (text!==false) {
+        g.save();
+        g.beginPath();
+        g.moveTo(x,y);
+        g.lineTo(x+width,y);
+        g.lineTo(x+width,y+height);
+        g.lineTo(x,y+height);
+        g.closePath();
+        g.clip();
+
         g.fillStyle = mode==this.BUTTON_DEACTIVATED?this.colorBorderBright:this.colorText;
-        g.textAlign = 'center';
         g.textBaseline = 'middle';
         g.font = this.getButtonFont();
-        g.fillText(text,x+width/2,y+height/2);
+        var center = g.measureText(text).width<width;
+        g.textAlign = center?'center':'left';
+        g.fillText(text,x+(center?(width/2):0),y+height/2);
+
+        g.restore();
     }
 };

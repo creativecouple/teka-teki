@@ -233,9 +233,10 @@ teka.PuzzleApplet.prototype.init = function()
         instructions.setGraphics(this.image);
         instructions.setInstructions(pv.getInstructions());
         instructions.setUsage(pv.getUsage());
-        
+
         var ex = new teka.viewer[this.type][this.type.substring(0,1).toUpperCase()+this.type.substring(1)+'Viewer'](new teka.PSData('<<\n'+pv.getExample()+'\n>>'));
         ex.setTextParameter(this.values_.TEXTCOLOR,this.values_.BUTTON_TEXT_HEIGHT);
+        ex.setMode(teka.viewer.Defaults.WAIT);
         instructions.setExampleViewer(ex);
         instructions.setExtent(pm,
                                pm+this.values_.HEADHEIGHT,

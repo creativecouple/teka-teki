@@ -34,6 +34,7 @@ teka.translate = function(index,param)
 };
 
 teka.dictionary = {
+    back: 'Zurück',
     back_to_puzzle: 'Zurück zum Rätsel',
     blau: 'blau',
     blau_a: 'blauen',
@@ -78,6 +79,7 @@ teka.dictionary = {
         +'genau bewirken, wird auf dem Startbildschirm erklärt.',
     level: 'Stufe: {1}',
     load_state: 'Kehrt zum zuvor gespeicherten Zustand zurück.',
+    next: 'Weiter',
     problem: 'Aufgabe',
     save_state: 'Speichert den aktuellen Zustand.',
     schwarz: 'schwarz',
