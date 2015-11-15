@@ -29,6 +29,7 @@ teka.Instructions = function()
 
     this.bw = 50;
     this.bh = 10;
+    this.gap = 5;
 
     this.text = false;
     this.instructions = '';
@@ -42,12 +43,20 @@ teka.Instructions = function()
     this.graphics = null;
 
     this.exampleViewer = false;
+    this.color = '#000';
 };
 teka.extend(teka.Instructions,teka.Tool);
 
 teka.Instructions.prototype.setInstructions = function(instructions)
 {
     this.instructions = instructions;
+};
+
+teka.Tool.prototype.setColor = function(color)
+{
+    if (color!==undefined) {
+        this.color = color;
+    }
 };
 
 teka.Instructions.prototype.setUsage = function(usage)
@@ -138,7 +147,7 @@ teka.Instructions.prototype.paint = function(g)
         this.exampleViewer.reset();
     }
 
-    g.fillStyle = this.colorText;
+    g.fillStyle = this.color;
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.font = this.getTitleFont();
