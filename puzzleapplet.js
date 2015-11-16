@@ -230,7 +230,6 @@ teka.PuzzleApplet.prototype.init = function()
         this.ct = ct;
         this.cat = ct;
         this.tt = tt;
-        this.display = [hd,pv,bt,ct,cat,tt];
 
         pv.setSolvedColor(this.values_.SOLVED_COLOR);
         pv.setColorTool(ct);
@@ -351,13 +350,13 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
     }
 
     var paint = this.bt.resetButtons();
-    for (var d in this.display) {
-        if (this.display[d].inExtent(x,y)) {
-            if (this.display[d].processMouseMovedEvent(x-this.display[d].left,y-this.display[d].top)) {
-                paint = true;
-            }
+    if (this.layout.inExtent(x,y)) {
+        if (this.layout.processMouseMovedEvent(x-this.layout.left,
+                                               y-this.layout.top)) {
+            paint = true;
         }
     }
+    
     if (paint) {
         this.paint();
     } else if (this.tt.setText("",false)) {
@@ -393,13 +392,13 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
     }
 
     var paint = this.bt.resetButtons();
-    for (var d in this.display) {
-        if (this.display[d].inExtent(x,y)) {
-            if (this.display[d].processMousePressedEvent(x-this.display[d].left,y-this.display[d].top)) {
-                paint = true;
-            }
+    if (this.layout.inExtent(x,y)) {
+        if (this.layout.processMousePressedEvent(x-this.layout.left,
+                                                 y-this.layout.top)) {
+            paint = true;
         }
     }
+    
     if (paint) {
         this.paint();
     }
@@ -431,20 +430,7 @@ teka.PuzzleApplet.prototype.paint = function()
     this.head.paint(this.image);
     this.image.restore();
     
-    this.image.save();
-    this.layout.translate(this.image);
-    this.layout.clip(this.image);
-    this.layout.paint(this.image);
-    this.image.restore();
-
-    return;
-    
     if (this.showInstructions) {
-        this.image.save();
-        this.display[0].translate(this.image);
-        this.display[0].clip(this.image);
-        this.display[0].paint(this.image);
-        this.image.restore();
         this.image.save();
         this.instructions.translate(this.image);
         this.instructions.clip(this.image);
@@ -453,18 +439,11 @@ teka.PuzzleApplet.prototype.paint = function()
         return;
     }
 
-    this.paintNormal();
-};
-
-teka.PuzzleApplet.prototype.paintNormal = function()
-{
-    for (var i in this.display) {
-        this.image.save();
-        this.display[i].translate(this.image);
-        this.display[i].clip(this.image);
-        this.display[i].paint(this.image);
-        this.image.restore();
-    }
+    this.image.save();
+    this.layout.translate(this.image);
+    this.layout.clip(this.image);
+    this.layout.paint(this.image);
+    this.image.restore();
 };
 
 teka.PuzzleApplet.prototype.check = function()

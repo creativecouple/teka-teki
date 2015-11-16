@@ -46,3 +46,33 @@ teka.Layout.prototype.paint = function(g)
         g.restore();
     }
 };
+
+teka.Layout.prototype.processMouseMovedEvent = function(xc,yc)
+{
+    var paint = false;
+    for (var i=0;i<this.tools.length;i++) {
+        if (this.tools[i].inExtent(xc,yc)) {
+            if (this.tools[i].processMouseMovedEvent(xc-this.tools[i].left,
+                                                     yc-this.tools[i].top)) {
+                paint = true;
+            }
+        }
+    }
+    
+    return paint;
+};
+
+teka.Layout.prototype.processMousePressedEvent = function(xc,yc)
+{
+    var paint = false;
+    for (var i=0;i<this.tools.length;i++) {
+        if (this.tools[i].inExtent(xc,yc)) {
+            if (this.tools[i].processMousePressedEvent(xc-this.tools[i].left,
+                                                       yc-this.tools[i].top)) {
+                paint = true;
+            }
+        }
+    }
+    
+    return paint;
+};
