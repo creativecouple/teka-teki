@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * A container arranging the puzzle as well as the needed tools in
  * left-right order. That is, the puzzle is displayed at the left and
  * the tools are displayed at the right from top to bottom.
@@ -37,12 +37,12 @@ teka.LRLayout.prototype.arrangeTools = function(g) {
     if (this.tools.length==0) {
         return false;
     }
-    
+
     var mindim = [];
     for (var i=1;i<this.tools.length;i++) {
         mindim[i] = this.tools[i].getMinDim(g);
     }
-    
+
     var width = 0;
     var height = (this.tools.length-2)*this.gap;
     for (var i=1;i<this.tools.length;i++) {
@@ -53,11 +53,11 @@ teka.LRLayout.prototype.arrangeTools = function(g) {
     if (width>this.width || height>this.height) {
         return false;
     }
-    
+
     this.tools[0].setExtent(0,0,this.width-width-this.gap,this.height);
     var metrics = this.tools[0].setMetrics();
     this.tools[0].setExtent(0,0,metrics.width,this.height);
-    this.tools[0].setMetrics();    
+    this.tools[0].setMetrics();
 
     var y = 0;
     for (var i=1;i<this.tools.length-1;i++) {
@@ -67,11 +67,11 @@ teka.LRLayout.prototype.arrangeTools = function(g) {
                                 mindim[i].height);
         y+=mindim[i].height+this.gap;
     }
-    
+
     this.tools[this.tools.length-1].setExtent(metrics.width+this.gap,
                                               y,
                                               this.width-metrics.width-this.gap,
                                               this.height-y);
-    
+
     return metrics.scale;
 };

@@ -43,12 +43,7 @@ teka.TextTool.prototype.setText = function(t,highlight)
     return true;
 };
 
-teka.TextTool.prototype.setTextcolor = function(color)
-{
-    this.textcolor = color;
-};
-
-teka.TextTool.prototype.setHighlight = function(color)
+teka.TextTool.prototype.setHighlightColor = function(color)
 {
     this.texthighlightcolor = color;
 };

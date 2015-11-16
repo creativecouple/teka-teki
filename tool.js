@@ -31,46 +31,14 @@ teka.Tool = function()
 };
 teka.extend(teka.Tool,teka.Display);
 
-teka.Tool.prototype.setColorActive = function(color)
+teka.Tool.prototype.setButtonParameter = function(colors,height)
 {
-    if (color!==undefined) {
-        this.colorActive = color;
-    }
-};
-
-teka.Tool.prototype.setColorPassive = function(color)
-{
-    if (color!==undefined) {
-        this.colorPassive = color;
-    }
-};
-
-teka.Tool.prototype.setColorBorderDark = function(color)
-{
-    if (color!==undefined) {
-        this.colorBorderDark = color;
-    }
-};
-
-teka.Tool.prototype.setColorBorderBright = function(color)
-{
-    if (color!==undefined) {
-        this.colorBorderBright = color;
-    }
-};
-
-teka.Tool.prototype.setColorText = function(color)
-{
-    if (color!==undefined) {
-        this.colorText = color;
-    }
-};
-
-teka.Tool.prototype.setTextHeight = function(textheight)
-{
-    if (textheight!==undefined) {
-        this.textHeight = textheight;
-    }
+    this.colorText = colors.TEXT;
+    this.colorActive = colors.ACTIVE;
+    this.colorPassive = colors.PASSIVE;
+    this.colorBorderDark = colors.BORDER_DARK;
+    this.colorBorderBright = colors.BORDER_BRIGHT;
+    this.textHeight = height-5;
 };
 
 teka.Tool.prototype.getMinDim = function(g)

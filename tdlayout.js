@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * A container arranging the puzzle as well as the needed tools in
  * top-down order. That is, the puzzle is displayed at the top and
  * the tools are displayed below the puzzle in columns.
@@ -37,14 +37,14 @@ teka.TDLayout.prototype.arrangeTools = function(g) {
     if (this.tools.length==0) {
         return false;
     }
-    
+
     var mindim = [];
     for (var i=1;i<this.tools.length;i++) {
         mindim[i] = this.tools[i].getMinDim(g);
     }
 
     this.getOptimumFit(mindim);
-    
+
     var x = 0;
     var y = this.height-this.bestheight;
     for (var i=0;i<this.best.length;i++) {
@@ -53,7 +53,7 @@ teka.TDLayout.prototype.arrangeTools = function(g) {
             for (var j=0;j<this.best[i].length;j++) {
                 maxwidth = Math.max(maxwidth,mindim[this.best[i][j]].width);
             }
-            
+
             if (i==this.best.length-1) {
                 maxwidth = Math.max(maxwidth,this.width-x);
             }
@@ -71,10 +71,10 @@ teka.TDLayout.prototype.arrangeTools = function(g) {
             y = this.height-this.bestheight;
         }
     }
-    
+
     this.tools[0].setExtent(0,0,this.width,this.height-this.bestheight-this.gap);
     var metrics = this.tools[0].setMetrics();
-    
+
     return metrics.scale;
 };
 
@@ -103,7 +103,7 @@ teka.TDLayout.prototype.fill = function(mindim, nr, col, akt) {
                 height = Math.max(height,sum);
             }
         }
-        
+
         var width = -this.gap;
         for (var i=0;i<akt.length;i++) {
             if (akt[i].length>0) {
@@ -117,7 +117,7 @@ teka.TDLayout.prototype.fill = function(mindim, nr, col, akt) {
 
         if (width>this.width) return;
         if (height>=this.bestheight) return;
-        
+
         this.best = [];
         for (var i=0;i<akt.length;i++) {
             if (akt[i].length>0) {
@@ -128,10 +128,10 @@ teka.TDLayout.prototype.fill = function(mindim, nr, col, akt) {
             }
         }
         this.bestheight = height;
-        
+
         return;
     }
-    
+
     if (akt[col]===undefined) akt[col] = [];
     akt[col].push(nr);
     this.fill(mindim,nr+1,col,akt);

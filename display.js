@@ -16,6 +16,8 @@
 
 teka.Display = function()
 {
+    this.textcolor = '#000';
+    this.textheight = 12;
 };
 
 teka.Display.prototype.setExtent_ = function(left,top,width,height)
@@ -32,6 +34,12 @@ teka.Display.prototype.setExtent_ = function(left,top,width,height)
     if (height!==undefined) {
         this.height = height;
     }
+};
+
+teka.Display.prototype.setTextParameter = function(color, height)
+{
+    this.textcolor = color;
+    this.textheight = height;
 };
 
 teka.Display.prototype.setExtent = function(left,top,width,height)

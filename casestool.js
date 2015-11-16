@@ -26,13 +26,6 @@ teka.CasesTool = function()
 };
 teka.extend(teka.CasesTool,teka.Tool);
 
-teka.CasesTool.prototype.setColorNormalText = function(color)
-{
-    if (color!==undefined) {
-        this.colorNormalText = color;
-    }
-};
-
 teka.CasesTool.prototype.setEvents = function(f1,f2,f3)
 {
     if (f1!==undefined) {

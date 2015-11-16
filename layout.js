@@ -16,13 +16,13 @@
 
 /**
  * Constructor.
- * 
+ *
  * An abstract class used as parent for concrete layout classes.
  */
 teka.Layout = function()
 {
     teka.Display.call(this);
-    
+
     this.tools = [];
     this.gap = '20';
 };
@@ -58,7 +58,7 @@ teka.Layout.prototype.processMouseMovedEvent = function(xc,yc)
             }
         }
     }
-    
+
     return paint;
 };
 
@@ -73,6 +73,6 @@ teka.Layout.prototype.processMousePressedEvent = function(xc,yc)
             }
         }
     }
-    
+
     return paint;
 };

@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Displays a title at the top of the applet. This title is
  * typically the type of the puzzle to solve and can be preceded by
  * the type of the context, in which the puzzle is solved.
@@ -68,7 +68,7 @@ teka.HeadDisplay.prototype.setTextColor = function(color)
 
 /**
  * Prints the title.
- * The parameter g is an CanvasRenderingContext2D which is assumed 
+ * The parameter g is an CanvasRenderingContext2D which is assumed
  * to be translated to the origin of this display.
  */
 teka.HeadDisplay.prototype.paint = function(g)
