@@ -14,17 +14,33 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Constructor.
+ * 
+ * Displays a title at the top of the applet. This title is
+ * typically the type of the puzzle to solve and can be preceded by
+ * the type of the context, in which the puzzle is solved.
+ */
 teka.HeadDisplay = function()
 {
     teka.Display.call(this);
 
-    this.setExtent(0,0,300,24);
     this.title = 'Teka-Teki';
-    this.color = '#000';
-    this.textheight = 20;
+    this.text_color = '#000';
 };
 teka.extend(teka.HeadDisplay,teka.Display);
 
+/**
+ * Returns the title used.
+ */
+teka.HeadDisplay.prototype.getTitle = function()
+{
+    return this.title;
+};
+
+/**
+ * Sets the title. It will be used the next time, print() is called.
+ */
 teka.HeadDisplay.prototype.setTitle = function(title)
 {
     if (title!==undefined) {
@@ -32,25 +48,34 @@ teka.HeadDisplay.prototype.setTitle = function(title)
     }
 };
 
-teka.HeadDisplay.prototype.setColor = function(color)
+/**
+ * Returns the color used.
+ */
+teka.HeadDisplay.prototype.getTextColor = function()
+{
+    return this.text_color;
+};
+
+/**
+ * Sets the color. It will be used the next time, print() is called.
+ */
+teka.HeadDisplay.prototype.setTextColor = function(color)
 {
     if (color!==undefined) {
-        this.color = color;
+        this.text_color = color;
     }
 };
 
-teka.HeadDisplay.prototype.setTextHeight = function(textheight)
-{
-    if (textheight!==undefined) {
-        this.textheight = textheight;
-    }
-};
-
+/**
+ * Prints the title.
+ * The parameter g is an CanvasRenderingContext2D which is assumed 
+ * to be translated to the origin of this display.
+ */
 teka.HeadDisplay.prototype.paint = function(g)
 {
     g.textAlign = 'center';
-    g.textBaseline = 'alphabetic';
-    g.fillStyle = this.color;
-    g.font = 'bold '+this.textheight+'px "URW Chancery L",sans-serif';
-    g.fillText(this.title,this.width/2,this.height-this.textheight/2);
+    g.textBaseline = 'middle';
+    g.fillStyle = this.text_color;
+    g.font = 'bold '+this.height+'px "URW Chancery L",sans-serif';
+    g.fillText(this.title,this.width/2,this.height/2);
 };
