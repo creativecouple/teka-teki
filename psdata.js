@@ -14,6 +14,12 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Constructor.
+ * 
+ * The string psdata should contain a puzzle in sgf format. The 
+ * format is parsed and stored as key->value pairs.
+ */
 teka.PSData = function(psdata)
 {
     this.failed_ = true;
@@ -36,11 +42,18 @@ teka.PSData = function(psdata)
     this.failed_ = false;
 };
 
+/**
+ * Returns true, if the parsing done in the constructor did not succeed.
+ */
 teka.PSData.prototype.failed = function()
 {
     return this.failed_===false?false:true;
 };
 
+/**
+ * Returns the value, that belongs to a given key or false if the
+ * key does not exist.
+ */
 teka.PSData.prototype.get = function(key)
 {
     if (this.values_[key]===undefined) { return false; }

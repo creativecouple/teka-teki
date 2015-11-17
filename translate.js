@@ -14,6 +14,15 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Takes a string (index) and optionally an array with parameters
+ * and returns a translated version of that string with the parameters
+ * in place of {1}, {2} and so on.
+ * 
+ * The german version of the dictionary is located in this file. The values
+ * can be overridden in an other file. Thus the german version akts as an
+ * backup if the translation does not exist.
+ */
 teka.translate = function(index,param)
 {
     if (param===undefined) {
@@ -33,6 +42,9 @@ teka.translate = function(index,param)
     return str;
 };
 
+/**
+ * The german dictionary.
+ */
 teka.dictionary = {
     back: 'Zurück',
     back_to_puzzle: 'Zurück zum Rätsel',
