@@ -234,7 +234,7 @@ teka.PuzzleApplet.prototype.init = function()
         return;
     }
 
-    this.loadFile(this.values_.FILE, teka.myBind(this,function() {
+    this.loadPuzzleData(this.values_.FILE, teka.myBind(this,function() {
         this.puzzleViewer =
             new teka.viewer[this.type][this.typeToViewer(this.type)](this.psdata);
         this.head = new teka.HeadDisplay();
@@ -272,6 +272,46 @@ teka.PuzzleApplet.prototype.init = function()
         this.canvas.focus();
     }));
 };
+
+//////////////////////////////////////////////////////////////////
+
+/**
+ * Loads the file 'filename' from the server. This file is
+ * thought to contain the data describing the puzzle in spf format.
+ * The type of the puzzle is extracted and the correspondig viewer
+ * is loaded. After the load is complete, the callback function
+ * is called.
+ */
+teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
+{
+    var res = new XMLHttpRequest();
+    res.open('GET',filename);
+    res.responseType = 'text';
+    res.onreadystatechange = teka.myBind(this, function() {
+        if (res.readyState!=4) {
+            return;
+        }
+
+        var psdata = new teka.PSData(res.responseText);
+        if (psdata.failed()) {
+            return;
+        }
+
+        var type = psdata.get('type');
+        if (type.length<2) {
+            return;
+        }
+        type = type.substring(1,type.length-1).toLowerCase();
+        
+        this.psdata = psdata;
+        this.type = type;
+
+        teka.addScript(type+'viewer.js',teka.myBind(this,callback));
+    });
+    res.send();
+};
+
+//////////////////////////////////////////////////////////////////
 
 /**
  * Adds an layout container to the applet. Two different
@@ -408,106 +448,12 @@ teka.PuzzleApplet.prototype.typeToViewer = function(type)
 
 //////////////////////////////////////////////////////////////////
 
-teka.PuzzleApplet.prototype.setText = function(text, highlight)
-{
-    if (this.tt!==undefined) {
-        if (this.tt.setText(text,highlight)) {
-            this.paint();
-        }
-    }
-};
-
-teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
-{
-    this.canvas.focus();
-
-    if (this.pv.getMode()!=teka.viewer.Defaults.NORMAL) {
-        return;
-    }
-
-    e = teka.normalizeMouseEvent(e);
-
-    var x = e.x-this.canvas.offsetLeft;
-    var y = e.y-this.canvas.offsetTop;
-
-    if (this.showInstructions) {
-        if (this.instructions.processMouseMovedEvent(x-this.instructions.left,
-                                                     y-this.instructions.top)) {
-            this.paint();
-        }
-        return;
-    }
-
-    var paint = this.bt.resetButtons();
-    if (this.layout.inExtent(x,y)) {
-        if (this.layout.processMouseMovedEvent(x-this.layout.left,
-                                               y-this.layout.top)) {
-            paint = true;
-        }
-    }
-
-    if (paint) {
-        this.paint();
-    } else if (this.tt.setText("",false)) {
-        this.paint();
-    }
-};
-
-teka.PuzzleApplet.prototype.mousePressedListener = function(e)
-{
-    if (this.pv.getMode()==teka.viewer.Defaults.WAIT ||
-        this.pv.getMode()==teka.viewer.Defaults.BLINK_END) {
-        this.pv.clearError();
-        this.pv.setMode(teka.viewer.Defaults.NORMAL);
-        this.tt.setText('',false);
-        this.paint();
-        return;
-    }
-    if (this.pv.getMode()!=teka.viewer.Defaults.NORMAL) {
-        return;
-    }
-
-    e = teka.normalizeMouseEvent(e);
-
-    var x = e.x-this.canvas.offsetLeft;
-    var y = e.y-this.canvas.offsetTop;
-
-    if (this.showInstructions) {
-        if (this.instructions.processMousePressedEvent(x-this.instructions.left,
-                                                       y-this.instructions.top)) {
-            this.paint();
-        }
-        return;
-    }
-
-    var paint = this.bt.resetButtons();
-    if (this.layout.inExtent(x,y)) {
-        if (this.layout.processMousePressedEvent(x-this.layout.left,
-                                                 y-this.layout.top)) {
-            paint = true;
-        }
-    }
-
-    if (paint) {
-        this.paint();
-    }
-};
-
-teka.PuzzleApplet.prototype.keyPressedListener = function(e)
-{
-    if (this.pv.processKeyEvent(e.keyCode,e.charCode)) {
-        this.paint();
-
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
-    }
-    this.canvas.focus();
-};
-
+/** 
+ * Paints the canvas. First the whole canvas is painted
+ * with the background color. Then, the head is painted.
+ * After that, depending of the mode the instructions or the
+ * layout container is painted.
+ */
 teka.PuzzleApplet.prototype.paint = function()
 {
     this.image.fillStyle = this.values_.BACKGROUND_COLOR;
@@ -535,107 +481,210 @@ teka.PuzzleApplet.prototype.paint = function()
     this.image.restore();
 };
 
-teka.PuzzleApplet.prototype.check = function()
-{
-    var erg = this.pv.check();
+//////////////////////////////////////////////////////////////////
 
-    if (erg!==true)
-        {
-            this.tt.setText(erg,false);
-            this.pv.setMode(teka.viewer.Defaults.WAIT);
+/**
+ * Eventhandler for mousemove events.
+ */
+teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
+{
+    this.canvas.focus();
+
+    if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
+        return;
+    }
+
+    e = teka.normalizeMouseEvent(e);
+
+    var x = e.x-this.canvas.offsetLeft;
+    var y = e.y-this.canvas.offsetTop;
+
+    if (this.showInstructions) {
+        if (this.instructions.processMouseMovedEvent(x-this.instructions.left,
+                                                     y-this.instructions.top)) {
             this.paint();
-            return;
         }
+        return;
+    }
 
-    this.tt.setText(teka.translate('congratulations'),false);
-    this.pv.setMode(teka.viewer.Defaults.BLINK_START);
-    this.paint();
-    setTimeout(this.blink.bind(this),300);
+    var paint = this.buttonTool.resetButtons();
+    if (this.layout.inExtent(x,y)) {
+        if (this.layout.processMouseMovedEvent(x-this.layout.left,
+                                               y-this.layout.top)) {
+            paint = true;
+        }
+    }
+
+    if (paint) {
+        this.paint();
+    } else if (this.textTool.setText("",false)) {
+        this.paint();
+    }
 };
 
-teka.PuzzleApplet.prototype.undo = function()
+/**
+ * Eventhandler for mousedown events.
+ */
+teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 {
-    this.pv.undo();
+    if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
+            this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
+        this.puzzleViewer.clearError();
+        this.puzzleViewer.setMode(teka.viewer.Defaults.NORMAL);
+        this.textTool.setText('',false);
+        this.paint();
+        return;
+    }
+    if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
+        return;
+    }
+
+    e = teka.normalizeMouseEvent(e);
+
+    var x = e.x-this.canvas.offsetLeft;
+    var y = e.y-this.canvas.offsetTop;
+
+    if (this.showInstructions) {
+        if (this.instructions.processMousePressedEvent(x-this.instructions.left,
+                                                       y-this.instructions.top)) {
+            this.paint();
+        }
+        return;
+    }
+
+    var paint = this.buttonTool.resetButtons();
+    if (this.layout.inExtent(x,y)) {
+        if (this.layout.processMousePressedEvent(x-this.layout.left,
+                                                 y-this.layout.top)) {
+            paint = true;
+        }
+    }
+
+    if (paint) {
+        this.paint();
+    }
 };
 
+/**
+ * Eventhandler for keypress events.
+ */
+teka.PuzzleApplet.prototype.keyPressedListener = function(e)
+{
+    if (this.puzzleViewer.processKeyEvent(e.keyCode,e.charCode)) {
+        this.paint();
+
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
+    }
+    this.canvas.focus();
+};
+
+//////////////////////////////////////////////////////////////////
+
+/** Sets the text of the texttool. */
+teka.PuzzleApplet.prototype.setText = function(text, highlight)
+{
+    if (this.tt!==undefined) {
+        if (this.tt.setText(text,highlight)) {
+            this.paint();
+        }
+    }
+};
+
+/** Sets, if instuctions should be displayed or not. */
 teka.PuzzleApplet.prototype.setInstructions = function(val)
 {
     this.showInstructions = val;
     this.paint();
 };
 
-teka.PuzzleApplet.prototype.setColor = function(color)
+/** 
+ * Checks, if the puzzle has been solved correctly. If not,
+ * the reason will be displayed in the texttool and as red
+ * marks in the puzzle. If it is correct, a congratulations
+ * message is shown and the puzzle blinks for about 4 seconds.
+ */
+teka.PuzzleApplet.prototype.check = function()
 {
-    this.ct.setColor(color);
-    this.pv.setColor(color);
-};
+    var erg = this.puzzleViewer.check();
 
-teka.PuzzleApplet.prototype.copyColor = function(color)
-{
-    if (color==this.pv.getColor()) {
+    if (erg!==true) {
+        this.textTool.setText(erg,false);
+        this.puzzleViewer.setMode(teka.viewer.Defaults.WAIT);
+        this.paint();
         return;
     }
-    this.pv.save();
-    this.pv.copyColor(color);
-};
 
-teka.PuzzleApplet.prototype.clearColor = function(color)
-{
-    this.pv.save();
-    this.pv.clearColor(color);
-};
-
-teka.PuzzleApplet.prototype.saveState = function()
-{
-    return this.pv.saveState();
-};
-
-teka.PuzzleApplet.prototype.loadState = function(state)
-{
-    this.pv.save();
-    this.pv.loadState(state);
+    this.textTool.setText(teka.translate('congratulations'),false);
+    this.puzzleViewer.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
+    
+    setTimeout(this.blink.bind(this),300);
 };
 
+/** 
+ * Let's the applet blink by recursivly calling itself after
+ * 300 milliseconds until the counter (mode) reaches BLINK_END.
+ */
 teka.PuzzleApplet.prototype.blink = function()
 {
-    if (this.pv.getMode()<teka.viewer.Defaults.BLINK_START ||
-        this.pv.getMode()>=teka.viewer.Defaults.BLINK_END) {
+    if (this.puzzleViewer.getMode()<teka.viewer.Defaults.BLINK_START ||
+        this.puzzleViewer.getMode()>=teka.viewer.Defaults.BLINK_END) {
         return;
     }
 
-    this.pv.setMode(this.pv.getMode()+1);
+    this.puzzleViewer.setMode(this.puzzleViewer.getMode()+1);
     this.paint();
     setTimeout(this.blink.bind(this),300);
 };
 
-teka.PuzzleApplet.prototype.loadFile = function(filename, callback)
+/** Undos the last part of changes. */
+teka.PuzzleApplet.prototype.undo = function()
 {
-    var me = this;
+    this.puzzleViewer.undo();
+};
 
-    var res = new XMLHttpRequest();
-    res.open('GET',filename);
-    res.responseType = 'text';
-    res.onreadystatechange = function() {
-        if (this.readyState!=4) {
-            return;
-        }
+/** Sets the color of the pen. */
+teka.PuzzleApplet.prototype.setColor = function(color)
+{
+    this.colorTool.setColor(color);
+    this.puzzleViewer.setColor(color);
+};
 
-        var psdata = new teka.PSData(this.responseText);
-        if (psdata.failed()) {
-            return;
-        }
+/** 
+ * Changes all symbols in a certain color to the actual
+ * color.
+ */
+teka.PuzzleApplet.prototype.copyColor = function(color)
+{
+    if (color==this.puzzleViewer.getColor()) {
+        return;
+    }
+    this.puzzleViewer.save();
+    this.puzzleViewer.copyColor(color);
+};
 
-        var type = psdata.get('type');
-        if (type.length<2) {
-            return;
-        }
-        type = type.substring(1,type.length-1).toLowerCase();
+/** Deletes all symbols of the given color. */
+teka.PuzzleApplet.prototype.clearColor = function(color)
+{
+    this.puzzleViewer.save();
+    this.puzzleViewer.clearColor(color);
+};
 
-        me.psdata = psdata;
-        me.type = type;
+/** Saves the current state of the puzzle. */
+teka.PuzzleApplet.prototype.saveState = function()
+{
+    return this.puzzleViewer.saveState();
+};
 
-        teka.addScript(type+'viewer.js',teka.myBind(this,callback));
-    };
-    res.send();
+/** Loads the current state of the puzzle. */
+teka.PuzzleApplet.prototype.loadState = function(state)
+{
+    this.puzzleViewer.save();
+    this.puzzleViewer.loadState(state);
+    this.paint();
 };
