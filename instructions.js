@@ -37,7 +37,7 @@ teka.Instructions = function()
 
     this.mode = 0;
     this.page = 0;
-    this.aktivButton = false;
+    this.activeButton = false;
     this.event = false;
 
     this.graphics = null;
@@ -120,18 +120,18 @@ teka.Instructions.prototype.paint = function(g)
 {
     this.paintButton(g,0,0,this.bw,this.bh,
                      this.mode===0?this.BUTTON_DEACTIVATED:
-                         (this.aktivButton===0?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
+                         (this.activeButton===0?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
                      this.buttonText[0]);
     this.paintButton(g,this.bw+10,0,this.bw,this.bh,
                      this.mode===1?this.BUTTON_DEACTIVATED:
-                         (this.aktivButton===1?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
+                         (this.activeButton===1?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
                      this.buttonText[1]);
     this.paintButton(g,2*this.bw+20,0,this.bw,this.bh,
                      this.mode===2?this.BUTTON_DEACTIVATED:
-                         (this.aktivButton===2?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
+                         (this.activeButton===2?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
                      this.buttonText[2]);
     this.paintButton(g,3*this.bw+30,0,this.bw,this.bh,
-                     this.aktivButton===3?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                     this.activeButton===3?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                      this.buttonText[3]);
 
     if (this.mode==0) {
@@ -166,28 +166,28 @@ teka.Instructions.prototype.paint = function(g)
 
     if (this.page==0 && this.text[this.mode].length>1) {
         this.paintButton(g,(this.width-(this.mode==0?200:0)-this.bw)/2,this.height-this.bh,this.bw,this.bh,
-                         this.aktivButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.activeButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[4]);
     }
     if (this.page==this.text[this.mode].length-1 && this.text[this.mode].length>1) {
         this.paintButton(g,(this.width-(this.mode==0?200:0)-this.bw)/2,this.height-this.bh,this.bw,this.bh,
-                         this.aktivButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.activeButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[5]);
     }
     if (this.page>0 && this.page<this.text[this.mode].length-1) {
         this.paintButton(g,(this.width-(this.mode==0?200:0))/2+5,this.height-this.bh,this.bw,this.bh,
-                         this.aktivButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.activeButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[4]);
         this.paintButton(g,(this.width-(this.mode==0?200:0))/2-this.bw-5,this.height-this.bh,this.bw,this.bh,
-                         this.aktivButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.activeButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[5]);
     }
 };
 
 teka.Instructions.prototype.processMouseMovedEvent = function(xc,yc)
 {
-    this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===-1) {
+    this.activeButton = this.getButton(xc,yc);
+    if (this.activeButton===-1) {
         return false;
     }
 
@@ -196,21 +196,21 @@ teka.Instructions.prototype.processMouseMovedEvent = function(xc,yc)
 
 teka.Instructions.prototype.processMousePressedEvent = function(xc,yc)
 {
-    this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===-1) {
+    this.activeButton = this.getButton(xc,yc);
+    if (this.activeButton===-1) {
         return false;
     }
 
-    if (this.aktivButton==4 && this.page<this.text[this.mode].length-1) {
+    if (this.activeButton==4 && this.page<this.text[this.mode].length-1) {
         this.page++;
-        this.aktivButton = this.getButton(xc,yc);
-    } else if (this.aktivButton==5 && this.page>0) {
+        this.activeButton = this.getButton(xc,yc);
+    } else if (this.activeButton==5 && this.page>0) {
         this.page--;
-        this.aktivButton = this.getButton(xc,yc);
-    } else if (this.aktivButton==3) {
+        this.activeButton = this.getButton(xc,yc);
+    } else if (this.activeButton==3) {
         this.event(false);
     } else {
-        this.mode = this.aktivButton;
+        this.mode = this.activeButton;
         this.page = 0;
     }
 

@@ -24,7 +24,7 @@ teka.CasesTool = function()
 {
     teka.Tool.call(this);
 
-    this.aktivButton = false;
+    this.activeButton = false;
     this.delta = 0;
     this.stack = [];
     this.events = [false,false,false];
@@ -50,8 +50,8 @@ teka.CasesTool.prototype.setEvents = function(plus,minus,setText)
 /** Resets all buttons */
 teka.CasesTool.prototype.resetButtons = function()
 {
-    var changed = this.aktivButton!==false;
-    this.aktivButton = false;
+    var changed = this.activeButton!==false;
+    this.activeButton = false;
     return changed;
 };
 
@@ -83,7 +83,7 @@ teka.CasesTool.prototype.paint = function(g)
 
     var half = this.buttonHeight/2;
 
-    var button = this.aktivButton===false?-1:this.aktivButton;
+    var button = this.activeButton===false?-1:this.activeButton;
 
     if (this.stack.length<this.maxLevel) {
         this.paintButton(g,0,0,this.buttonHeight,this.buttonHeight,
@@ -119,19 +119,19 @@ teka.CasesTool.prototype.paint = function(g)
 /** Handle mousemove event */
 teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
 {
-    this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===-1) {
+    this.activeButton = this.getButton(xc,yc);
+    if (this.activeButton===-1) {
         return false;
     }
 
-    if (this.aktivButton===0 && this.stack.length<this.maxLevel) {
+    if (this.activeButton===0 && this.stack.length<this.maxLevel) {
         if (this.events[2]!==false) {
             this.events[2](teka.translate('save_state'),false);
         }
         return true;
     }
 
-    if (this.aktivButton===1 && this.stack.length>0) {
+    if (this.activeButton===1 && this.stack.length>0) {
         if (this.events[2]!==false) {
             this.events[2](teka.translate('load_state'),false);
         }
@@ -144,19 +144,19 @@ teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
 /** Handle mousedown event */
 teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
 {
-    this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===-1) {
+    this.activeButton = this.getButton(xc,yc);
+    if (this.activeButton===-1) {
         return false;
     }
 
-    if (this.aktivButton===0 && this.stack.length<this.maxLevel) {
+    if (this.activeButton===0 && this.stack.length<this.maxLevel) {
         if (this.events[0]!==false) {
             this.stack.push(this.events[0]());
         }
         return true;
     }
 
-    if (this.aktivButton===1 && this.stack.length>0) {
+    if (this.activeButton===1 && this.stack.length>0) {
         if (this.events[1]!==false) {
             this.events[1](this.stack.pop());
         }

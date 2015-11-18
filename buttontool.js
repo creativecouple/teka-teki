@@ -33,7 +33,7 @@ teka.ButtonTool = function()
         teka.translate('undo_descr'),
         teka.translate('instructions_descr')
     ];
-    this.aktivButton = false;
+    this.activeButton = false;
     this.events = [false,false,false,false];
     this.gap = 7;
     this.delta = 0;
@@ -53,8 +53,8 @@ teka.ButtonTool.prototype.setEvents = function(check,undo,instr,setText)
 /** Resets all buttons */
 teka.ButtonTool.prototype.resetButtons = function()
 {
-    var changed = this.aktivButton!==false;
-    this.aktivButton = false;
+    var changed = this.activeButton!==false;
+    this.activeButton = false;
     return changed;
 };
 
@@ -85,7 +85,7 @@ teka.ButtonTool.prototype.paint = function(g)
     g.translate(this.delta,0);
     for (var i=0;i<=2;i++) {
         this.paintButton(g,0,0,mindim.width,this.buttonHeight,
-                         this.aktivButton===i?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,this.buttons_[i]);
+                         this.activeButton===i?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,this.buttons_[i]);
         g.translate(0,this.buttonHeight+this.gap);
     }
     g.restore();
@@ -94,13 +94,13 @@ teka.ButtonTool.prototype.paint = function(g)
 /** Handle mousemove event */
 teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
 {
-    this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===-1) {
+    this.activeButton = this.getButton(xc,yc);
+    if (this.activeButton===-1) {
         return false;
     }
 
     if (this.events[3]!==false) {
-        this.events[3](this.description_[this.aktivButton],false);
+        this.events[3](this.description_[this.activeButton],false);
     }
 
     return true;
@@ -109,16 +109,16 @@ teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
 /** Handle mousedown event */
 teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
 {
-    this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===-1) {
+    this.activeButton = this.getButton(xc,yc);
+    if (this.activeButton===-1) {
         return false;
     }
 
-    if (this.events[this.aktivButton]!==false) {
-        if (this.aktivButton==2) {
-            this.events[this.aktivButton](true);
+    if (this.events[this.activeButton]!==false) {
+        if (this.activeButton==2) {
+            this.events[this.activeButton](true);
         } else {
-            this.events[this.aktivButton]();
+            this.events[this.activeButton]();
         }
     }
 

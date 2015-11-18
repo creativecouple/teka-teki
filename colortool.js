@@ -14,6 +14,12 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Constructor.
+ * 
+ * Tool which controls all, that has to do with the color
+ * of the items in the puzzle.
+ */
 teka.ColorTool = function()
 {
     teka.Tool.call(this);
@@ -21,93 +27,153 @@ teka.ColorTool = function()
     this.colorname = ['schwarz','blau','grün','braun'];
     this.colors = ['#000','#00f','#0c0','#c40'];
 
-    this.color = 0;
-    this.buttonHeight = 20;
-    this.buttonWidth = 100;
-    this.aktivButton = false;
+    this.activeColor = 0;
+    this.activeButton = false;
     this.events = [false,false,false,false];
-
-    this.colorHeadline = '#000';
+    this.buttonWidth;
+    this.gap = 7;
+    this.buttonPadding = 5;
 };
 teka.extend(teka.ColorTool,teka.Tool);
 
-teka.ColorTool.prototype.setColorHeadline = function(color)
-{
-    if (color!==undefined) {
-        this.colorHeadline = color;
-    }
-};
-
+/**
+ * Sets the names and the values of the colors.
+ * Names are indices in the dictionary. Colors are
+ * written as CSS styles.
+ */
 teka.ColorTool.prototype.setColors = function(c)
 {
     this.colorname = c.names;
     this.colors = c.colors;
 };
 
-teka.ColorTool.prototype.setEvents = function(f1,f2,f3,f4)
-{
-    if (f1!==undefined) {
-        this.events[0] = f1;
-    }
-    if (f2!==undefined) {
-        this.events[1] = f2;
-    }
-    if (f3!==undefined) {
-        this.events[2] = f3;
-    }
-    if (f4!==undefined) {
-        this.events[3] = f4;
-    }
-};
-
-teka.ColorTool.prototype.setColor = function(color)
-{
-    this.color = color;
-};
-
+/** Returns the CSS style of the active color. */
 teka.ColorTool.prototype.getColorString = function(color)
 {
     return this.colors[color];
 };
 
+/** Sets the functions to call in case of events. */
+teka.ColorTool.prototype.setEvents = function(setColor,copyColor,clearColor,setText)
+{
+    this.events[0] = setColor;
+    this.events[1] = copyColor;
+    this.events[2] = clearColor;
+    this.events[3] = setText;
+};
+
+/** Sets the active color. */
+teka.ColorTool.prototype.setColor = function(color)
+{
+    this.activeColor = color;
+};
+
 /** Resets all buttons */
 teka.ColorTool.prototype.resetButtons = function()
 {
-    var changed = this.aktivButton!==false;
-    this.aktivButton = false;
+    var changed = this.activeButton!==false;
+    this.activeButton = false;
     return changed;
 };
 
+/** 
+ * Returns the minimum dimension of this tool:
+ * The width of all buttons is determined by the longest text
+ * plus twice the constant buttonPadding.
+ * The width is the width of three buttons plus two gaps between
+ * or, if greater, the maximum width of the headline.
+ * The height is the height of the headline plus the
+ * sum of the height of all buttons plus all gaps.
+ */
 teka.ColorTool.prototype.getMinDim = function(g)
 {
     g.font = this.getButtonFont();
-    var w = g.measureText("färben").width;
-    w = Math.max(w,g.measureText("löschen").width)+6;
-    w = 14+Math.max(g.measureText("Stiftfarbe: schwarz").width,3*w);
-    var h = 5*(this.textHeight+5)+26;
-    return { width:w, height:h };
+    this.buttonWidth = 
+        Math.max(g.measureText(teka.translate('coloring')).width,
+                 g.measureText(teka.translate('deleting')).width)+
+        2*this.buttonPadding;
+    var width = Math.max(3*this.buttonWidth+2*this.gap);
+    for (var i=0;i<this.colorname.length;i++) {
+        width = Math.max(width,
+            g.measureText(
+                teka.translate('color_of_pen',
+                    [teka.translate(this.colorname[this.activeColor])])).width);
+    }
+    
+    var height = this.textHeight+
+        this.colorname.length*(this.buttonHeight+this.gap);
+    
+    return { width:width, height:height };
 };
 
+/** Paints the tool on the screen. */
+teka.ColorTool.prototype.paint = function(g)
+{
+    var mindim = this.getMinDim(g);
+    this.delta = (this.width-mindim.width)/2;
+    
+    g.save();
+    g.translate(this.delta,0);
+    
+    g.fillStyle = this.textcolor;
+    g.textAlign = 'center';
+    g.textBaseline = 'top';
+    g.font = 'bold '+this.getTextFont();
+    g.fillText(teka.translate('color_of_pen',
+                              [teka.translate(this.colorname[this.activeColor])]),
+               mindim.width/2,2);
+    
+    g.translate(0,this.textHeight+this.gap);
+
+    var x = this.activeButton===false?-1:this.activeButton.x;
+    var y = this.activeButton===false?-1:this.activeButton.y;
+
+    for (var i=0;i<this.colorname.length;i++) {
+        this.paintButton(g,0,0,this.buttonWidth,this.buttonHeight,
+                         (i==this.activeColor || (x===0 && i==y))?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         false);
+        g.fillStyle = this.colors[i];
+        g.fillRect(4,4,this.buttonWidth-8,this.buttonHeight-8);
+                
+        if (i!=this.activeColor) {
+            this.paintButton(g,this.gap+this.buttonWidth,0,
+                             this.buttonWidth,this.buttonHeight,
+                             (x===1 && i==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                             teka.translate('coloring'));
+        }
+        
+        this.paintButton(g,2*(this.gap+this.buttonWidth),0,
+                         this.buttonWidth,this.buttonHeight,
+                         (x===2 && i==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         teka.translate('deleting'));
+        
+        g.translate(0,this.buttonHeight+this.gap);
+    }
+    
+    g.restore();
+};
+
+/** Handle mousemove event */
 teka.ColorTool.prototype.processMouseMovedEvent = function(xc,yc)
 {
-    this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===false) {
+    this.activeButton = this.getButton(xc,yc);
+    if (this.activeButton===false) {
         return false;
     }
 
-    var x = this.aktivButton.x;
-    var y = this.aktivButton.y;
+    var x = this.activeButton.x;
+    var y = this.activeButton.y;
 
-    if (x===0 && this.color!=y) {
+    if (x===0 && this.activeColor!=y) {
         if (this.events[3]!==false) {
             this.events[3](teka.translate('set_color',[teka.translate(this.colorname[y])]),false);
         }
         return true;
     }
 
-    if (x===1 && this.color!=y) {
+    if (x===1 && this.activeColor!=y) {
         if (this.events[3]!==false) {
-            this.events[3](teka.translate('change_color',[teka.translate(this.colorname[this.color]+'_a'),teka.translate(this.colorname[y])]),false);
+            this.events[3](teka.translate('change_color',[teka.translate(this.colorname[this.activeColor]+'_a'),teka.translate(this.colorname[y])]),false);
         }
         return true;
     }
@@ -122,24 +188,25 @@ teka.ColorTool.prototype.processMouseMovedEvent = function(xc,yc)
     return false;
 };
 
+/** Handle mousedown event */
 teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
 {
-    this.aktivButton = this.getButton(xc,yc);
-    if (this.aktivButton===false) {
+    this.activeButton = this.getButton(xc,yc);
+    if (this.activeButton===false) {
         return false;
     }
 
-    var x = this.aktivButton.x;
-    var y = this.aktivButton.y;
+    var x = this.activeButton.x;
+    var y = this.activeButton.y;
 
-    if (x===0 && this.color!=y) {
+    if (x===0 && this.activeColor!=y) {
         if (this.events[0]!==false) {
             this.events[0](y);
         }
         return true;
     }
 
-    if (x===1 && this.color!=y) {
+    if (x===1 && this.activeColor!=y) {
         if (this.events[1]!==false) {
             this.events[1](y);
         }
@@ -156,51 +223,22 @@ teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
     return false;
 };
 
-teka.ColorTool.prototype.paint = function(g)
-{
-    g.fillStyle = this.colorHeadline;
-    g.textAlign = 'center';
-    g.textBaseline = 'top';
-    g.font = this.getButtonFont();
-    g.fillText(teka.translate('color_of_pen',[teka.translate(this.colorname[this.color])]),this.width/2,2);
-
-    this.buttonHeight = (this.height-26)/5;
-    this.buttonWidth = (this.width-14)/3;
-
-    var x = this.aktivButton===false?-1:this.aktivButton.x;
-    var y = this.aktivButton===false?-1:this.aktivButton.y;
-
-    for (var i=1;i<5;i++) {
-        this.paintButton(g,1,1+i*(this.buttonHeight+6),
-                         this.buttonWidth,this.buttonHeight,
-                         (i-1==this.color || (x===0 && i-1==y))?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
-                         false);
-        if (i-1!=this.color) {
-            this.paintButton(g,7+this.buttonWidth,1+i*(this.buttonHeight+6),
-                             this.buttonWidth,this.buttonHeight,
-                             (x===1 && i-1==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
-                             teka.translate('coloring'));
-        }
-        this.paintButton(g,13+2*this.buttonWidth,1+i*(this.buttonHeight+6),
-                         this.buttonWidth,this.buttonHeight,
-                         (x===2 && i-1==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
-                         teka.translate('deleting'));
-
-        g.fillStyle = this.colors[i-1];
-        g.fillRect(5,5+i*(this.buttonHeight+6),
-                   this.buttonWidth-8,this.buttonHeight-8);
-    }
-};
-
+/** 
+ * Calculate the button at coordinates xc, yc.
+ * The return value will be an object with two values,
+ * named x and y. x is 0 for setColor, 1 for copyColor 
+ * and 2 for clearColor. y is the button row.
+ * If none of the buttons is hit, false is returned.
+ */
 teka.ColorTool.prototype.getButton = function(xc,yc)
 {
     for (var i=0;i<3;i++) {
-        for (var j=1;j<=4;j++) {
-            if (xc>=1+i*(this.buttonWidth+6)
-                && xc<=1+i*(this.buttonWidth+6)+this.buttonWidth
-                && yc>=1+j*(this.buttonHeight+6)
-                && yc<=1+j*(this.buttonHeight+6)+this.buttonHeight) {
-                return {x:i,y:j-1};
+        for (var j=0;j<this.colorname.length;j++) {
+            if (xc>=i*(this.buttonWidth+this.gap)
+                && xc<=i*(this.buttonWidth+this.gap)+this.buttonWidth
+                && yc>=this.textHeight+this.gap+j*(this.buttonHeight+this.gap)
+                && yc<=this.textHeight+this.gap+j*(this.buttonHeight+this.gap)+this.buttonHeight) {
+                return {x:i,y:j};
             }
         }
     }

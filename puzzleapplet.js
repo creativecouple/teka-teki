@@ -247,12 +247,6 @@ teka.PuzzleApplet.prototype.init = function()
         this.textTool = new teka.TextTool();
         this.instructions = new teka.Instructions();
 
-        this.addLayout([this.puzzleViewer,
-                        this.buttonTool,
-                        this.colorTool,
-                        this.casesTool,
-                        this.textTool]);
-
         this.initPuzzleViewer();
         this.initHead(this.puzzleViewer.getName());
         this.initButtonTool();
@@ -260,6 +254,12 @@ teka.PuzzleApplet.prototype.init = function()
         this.initCasesTool();
         this.initTextTool();
         this.initInstructions();
+
+        this.addLayout([this.puzzleViewer,
+                        this.buttonTool,
+                        this.colorTool,
+                        this.casesTool,
+                        this.textTool]);
 
         this.paint();
 
