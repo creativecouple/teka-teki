@@ -14,6 +14,12 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Constructor.
+ * 
+ * Creates a tool, which allowes the user to do trial and error
+ * by saving states on a stack.
+ */
 teka.CasesTool = function()
 {
     teka.Tool.call(this);
@@ -21,31 +27,45 @@ teka.CasesTool = function()
     this.aktivButton = false;
     this.delta = 0;
     this.stack = [];
-    this.events = [false,false,false,false];
-    this.colorNormalText = '#000';
+    this.events = [false,false,false];
+    this.maxLevel = 9;
+    this.gap = 7;
 };
 teka.extend(teka.CasesTool,teka.Tool);
 
-teka.CasesTool.prototype.setEvents = function(f1,f2,f3)
+/** Sets the maximum number of saved states. */
+teka.CasesTool.prototype.setMaxLevel = function(level) 
 {
-    if (f1!==undefined) {
-        this.events[0] = f1;
-    }
-    if (f2!==undefined) {
-        this.events[1] = f2;
-    }
-    if (f3!==undefined) {
-        this.events[2] = f3;
-    }
+    this.maxLevel = level;
 };
 
+/** Sets the functions to call in case of events. */
+teka.CasesTool.prototype.setEvents = function(plus,minus,setText)
+{
+    this.events[0] = plus;
+    this.events[1] = minus;
+    this.events[2] = setText;
+};
+
+/** 
+ * Returns the minimum dimension of this tool:
+ * width: 2 squared buttons, 1 text and two gaps in between
+ * height: the height of a button
+ */
 teka.CasesTool.prototype.getMinDim = function(g)
 {
     g.font = this.getButtonFont();
-    return { width:g.measureText(teka.translate('level',['9'])).width+2*this.textHeight+14,
-             height:this.textHeight+7 };
+    var width = 0;
+    for (var i=0;i<=this.maxLevel;i++) {
+        width = Math.max(width,g.measureText(teka.translate('level',[i])).width);
+    }
+    return { 
+        width: width+2*this.gap+2*this.buttonHeight,
+        height: this.buttonHeight 
+    };
 };
 
+/** Paints the tool on the screen. */
 teka.CasesTool.prototype.paint = function(g)
 {
     var mindim = this.getMinDim(g);
@@ -53,47 +73,42 @@ teka.CasesTool.prototype.paint = function(g)
     g.save();
     g.translate(this.delta,0);
 
-    var half = (this.textHeight+5)/2;
+    var half = this.buttonHeight/2;
 
     var button = this.aktivButton===false?-1:this.aktivButton;
 
-    if (this.stack.length<9) {
-        this.paintButton(g,1.5,1.5,this.textHeight+5,this.textHeight+5,
+    if (this.stack.length<this.maxLevel) {
+        this.paintButton(g,0,0,this.buttonHeight,this.buttonHeight,
                          button===0?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,false);
 
         g.strokeStyle = this.colorText;
-        g.beginPath();
-        g.moveTo(5,half+1);
-        g.lineTo(half+half-3,half+1);
-        g.stroke();
-        g.beginPath();
-        g.moveTo(half+1,5);
-        g.lineTo(half+1,half+half-3);
-        g.stroke();
+        teka.drawLine(g,4,half,this.buttonHeight-4,half);
+        teka.drawLine(g,half,4,half,this.buttonHeight-4);
     }
 
+    g.translate(this.buttonHeight+this.gap,0);
+    
     if (this.stack.length>0) {
-        this.paintButton(g,this.textHeight+12.5,1.5,this.textHeight+5,this.textHeight+5,
+        this.paintButton(g,0,0,this.buttonHeight,this.buttonHeight,
                          button===1?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,false);
 
         g.strokeStyle = this.colorText;
-        g.beginPath();
-        g.moveTo(this.textHeight+11+5,half+1);
-        g.lineTo(this.textHeight+11+half+half-3,half+1);
-        g.stroke();
+        teka.drawLine(g,4,half,this.buttonHeight-4,half);
     }
 
-    g.fillStyle = this.colorNormalText;
+    g.translate(this.buttonHeight+this.gap,0);
+    
+    g.fillStyle = this.textcolor;
     g.textAlign = 'left';
     g.textBaseline = 'middle';
-    g.font = this.getButtonFont();
+    g.font = 'bold '+this.getTextFont();
     g.fillText(teka.translate('level',[this.stack.length]),
-               2*this.textHeight+23.5,
-               1.5+(this.textHeight+5)/2);
+               0,this.buttonHeight/2+1);
 
     g.restore();
 };
 
+/** Handle mousemove event */
 teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
 {
     this.aktivButton = this.getButton(xc,yc);
@@ -101,7 +116,7 @@ teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
         return false;
     }
 
-    if (this.aktivButton===0 && this.stack.length<9) {
+    if (this.aktivButton===0 && this.stack.length<this.maxLevel) {
         if (this.events[2]!==false) {
             this.events[2](teka.translate('save_state'),false);
         }
@@ -118,6 +133,7 @@ teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
     return false;
 };
 
+/** Handle mousedown event */
 teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
 {
     this.aktivButton = this.getButton(xc,yc);
@@ -125,7 +141,7 @@ teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
         return false;
     }
 
-    if (this.aktivButton===0 && this.stack.length<9) {
+    if (this.aktivButton===0 && this.stack.length<this.maxLevel) {
         if (this.events[0]!==false) {
             this.stack.push(this.events[0]());
         }
@@ -142,15 +158,25 @@ teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
+/** 
+ * Calculate the number of the button at coordinates xc, yc.
+ * 0 is the plus button, 1 is the minus button. If none
+ * of the buttons is hit, false is returned.
+ */
 teka.CasesTool.prototype.getButton = function(xc,yc)
 {
     xc -= this.delta;
 
-    if (xc>=2 && xc<=2+this.textHeight+5 && yc>=1 && yc<1+this.textHeight+5) {
+    if (xc>=0 && xc<=this.buttonHeight && 
+        yc>=0 && yc<=this.buttonHeight) {
         return 0;
     }
-    if (xc>=this.textHeight+13 && xc<=2*this.textHeight+18 && yc>=1 && yc<1+this.textHeight+5) {
+    
+    xc -= this.buttonHeight+this.gap;
+    if (xc>=0 && xc<=this.buttonHeight && 
+        yc>=0 && yc<=this.buttonHeight) {
         return 1;
     }
+    
     return false;
 };

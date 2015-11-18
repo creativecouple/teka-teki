@@ -115,6 +115,9 @@ teka.Defaults.COLORTOOL_COLORS = {
     names: ['schwarz','blau','grün','braun'],
 };
 
+/** The maximum level to use in the cases tool. */
+teka.Defaults.MAX_LEVEL = 12;
+
 /** The name of the file to load. Has to be overridden. */
 teka.Defaults.FILE = false;
 
@@ -398,6 +401,7 @@ teka.PuzzleApplet.prototype.initColorTool = function()
 /** Initializes the cases tool. */
 teka.PuzzleApplet.prototype.initCasesTool = function()
 {
+    this.casesTool.setMaxLevel(this.values_.MAX_LEVEL);
     this.casesTool.setTextParameter(this.values_.TEXT_COLOR,
                                     this.values_.TEXT_HEIGHT);
     this.casesTool.setButtonParameter(this.values_.BUTTON_COLORS,
