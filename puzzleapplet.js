@@ -517,7 +517,7 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
 
     if (paint) {
         this.paint();
-    } else if (this.textTool.setText("",false)) {
+    } else if (this.setText("",false)) {
         this.paint();
     }
 };
@@ -531,7 +531,7 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
             this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
         this.puzzleViewer.clearError();
         this.puzzleViewer.setMode(teka.viewer.Defaults.NORMAL);
-        this.textTool.setText('',false);
+        this.setText('',false);
         this.paint();
         return;
     }
@@ -588,8 +588,8 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 /** Sets the text of the texttool. */
 teka.PuzzleApplet.prototype.setText = function(text, highlight)
 {
-    if (this.tt!==undefined) {
-        if (this.tt.setText(text,highlight)) {
+    if (this.textTool!==undefined) {
+        if (this.textTool.setText(this.image,text,highlight)) {
             this.paint();
         }
     }
@@ -613,13 +613,13 @@ teka.PuzzleApplet.prototype.check = function()
     var erg = this.puzzleViewer.check();
 
     if (erg!==true) {
-        this.textTool.setText(erg,false);
+        this.setText(erg,false);
         this.puzzleViewer.setMode(teka.viewer.Defaults.WAIT);
         this.paint();
         return;
     }
 
-    this.textTool.setText(teka.translate('congratulations'),false);
+    this.setText(teka.translate('congratulations'),false);
     this.puzzleViewer.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
     
