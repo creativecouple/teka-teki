@@ -14,6 +14,11 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Constructor.
+ * 
+ * Tool with three buttons: Check, undo and instructions.
+ */
 teka.ButtonTool = function()
 {
     teka.Tool.call(this);
@@ -29,52 +34,64 @@ teka.ButtonTool = function()
         teka.translate('instructions_descr')
     ];
     this.aktivButton = false;
-    this.y = [0,0,0];
     this.events = [false,false,false,false];
+    this.gap = 7;
+    this.delta = 0;
+    this.minwidth = 0;
 };
 teka.extend(teka.ButtonTool,teka.Tool);
 
-teka.ButtonTool.prototype.setEvents = function(f1,f2,f3,f4)
+/** Sets the functions to call in case of events. */
+teka.ButtonTool.prototype.setEvents = function(check,undo,instr,setText)
 {
-    if (f1!==undefined) {
-        this.events[0] = f1;
-    }
-    if (f2!==undefined) {
-        this.events[1] = f2;
-    }
-    if (f3!==undefined) {
-        this.events[2] = f3;
-    }
-    if (f4!==undefined) {
-        this.events[3] = f4;
-    }
+    this.events[0] = check;
+    this.events[1] = undo;
+    this.events[2] = instr;
+    this.events[3] = setText;
 };
 
+/** Resets all buttons */
+teka.ButtonTool.prototype.resetButtons = function()
+{
+    var changed = this.aktivButton!==false;
+    this.aktivButton = false;
+    return changed;
+};
+
+/** 
+ * Returns the minimum dimension of this tool:
+ * The width is the width of the longest text plus 16 pixel on each side.
+ * The height is the height of three buttons plus two gaps.
+ */
 teka.ButtonTool.prototype.getMinDim = function(g)
 {
     g.font = this.getButtonFont();
-    var w = g.measureText(this.buttons_[0]).width;
-    w = Math.max(w,g.measureText(this.buttons_[1]).width);
-    w = Math.max(w,g.measureText(this.buttons_[2]).width);
-    var h = 3*(this.textHeight+5)+2*6;
-    return { width:w+32, height:h };
+    var width = 0;
+    for (var i=0;i<3;i++) {
+        width = Math.max(width,g.measureText(this.buttons_[i]).width);
+    }
+    var height = 3*this.buttonHeight+2*this.gap;
+    return { width:width+32, height:height };
 };
 
+/** Paints the tool on the screen. */
 teka.ButtonTool.prototype.paint = function(g)
 {
     var mindim = this.getMinDim(g);
-    var x = (this.width-mindim.width)/2;
-    this.y[0] = 1;
-    this.y[1] = Math.floor((this.height-(this.textHeight+5))/2);
-    this.y[2] = this.height-(this.textHeight+5)-1;
-
+    this.delta = (this.width-mindim.width)/2;
+    this.minwidth = mindim.width;
+    
+    g.save();
+    g.translate(this.delta,0);
     for (var i=0;i<=2;i++) {
-        this.paintButton(g,x+0.5,this.y[i]+0.5,
-                         mindim.width,this.textHeight+5,
+        this.paintButton(g,0,0,mindim.width,this.buttonHeight,
                          this.aktivButton===i?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,this.buttons_[i]);
+        g.translate(0,this.buttonHeight+this.gap);
     }
+    g.restore();
 };
 
+/** Handle mousemove event */
 teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
 {
     this.aktivButton = this.getButton(xc,yc);
@@ -89,6 +106,7 @@ teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
     return true;
 };
 
+/** Handle mousedown event */
 teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
 {
     this.aktivButton = this.getButton(xc,yc);
@@ -107,21 +125,22 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
+/** 
+ * Calculate the number of the button at coordinates xc, yc.
+ * If none of the buttons is hit, false is returned.
+ */
 teka.ButtonTool.prototype.getButton = function(xc,yc)
 {
-    for (var i=0;i<3;i++) {
-        if (yc>=this.y[i] && yc<=this.y[i]+this.textHeight+5) {
+    xc -= this.delta;
+    
+    for (var i=0;i<=2;i++) {
+        if (xc>=0 && xc<=this.minwidth &&
+            yc>=0 && yc<=this.buttonHeight) {
             return i;
         }
+        yc -= (this.buttonHeight+this.gap);
     }
+    
     return false;
 };
 
-teka.ButtonTool.prototype.resetButtons = function()
-{
-    if (this.aktivButton===false) {
-        return false;
-    }
-    this.aktivButton = false;
-    return true;
-};
