@@ -511,7 +511,7 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         return;
     }
 
-    var paint = this.buttonTool.resetButtons();
+    var paint = false;
     if (this.layout.inExtent(x,y)) {
         if (this.layout.processMouseMovedEvent(x-this.layout.left,
                                                y-this.layout.top)) {
@@ -556,7 +556,7 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
         return;
     }
 
-    var paint = this.buttonTool.resetButtons();
+    var paint = false;
     if (this.layout.inExtent(x,y)) {
         if (this.layout.processMousePressedEvent(x-this.layout.left,
                                                  y-this.layout.top)) {

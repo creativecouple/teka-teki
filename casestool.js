@@ -47,6 +47,14 @@ teka.CasesTool.prototype.setEvents = function(plus,minus,setText)
     this.events[2] = setText;
 };
 
+/** Resets all buttons */
+teka.CasesTool.prototype.resetButtons = function()
+{
+    var changed = this.aktivButton!==false;
+    this.aktivButton = false;
+    return changed;
+};
+
 /** 
  * Returns the minimum dimension of this tool:
  * width: 2 squared buttons, 1 text and two gaps in between

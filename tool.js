@@ -73,6 +73,15 @@ teka.Tool.prototype.getButtonFont = function()
     return 'bold '+this.textHeight+'px sans-serif';
 };
 
+/** 
+ * Abstract function. Resets all buttons to passive mode. 
+ * Returns true, of a change has occured.
+ */
+teka.Tool.prototype.resetButtons = function()
+{
+    return false;
+};
+
 /**
  * Paints a button on image g at position x,y = (top, left) of
  * given width and height. 

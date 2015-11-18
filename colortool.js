@@ -70,6 +70,14 @@ teka.ColorTool.prototype.getColorString = function(color)
     return this.colors[color];
 };
 
+/** Resets all buttons */
+teka.ColorTool.prototype.resetButtons = function()
+{
+    var changed = this.aktivButton!==false;
+    this.aktivButton = false;
+    return changed;
+};
+
 teka.ColorTool.prototype.getMinDim = function(g)
 {
     g.font = this.getButtonFont();

@@ -28,14 +28,17 @@ teka.Layout = function()
 };
 teka.extend(teka.Layout,teka.Display);
 
+/** Sets the tools that will be layouted. */
 teka.Layout.prototype.setTools = function(tools) {
     this.tools = tools;
 };
 
+/** Sets the gap between the tools. */
 teka.Layout.prototype.setGap = function(gap) {
     this.gap = gap;
 };
 
+/** Paints all tools in the layout on the screen. */
 teka.Layout.prototype.paint = function(g)
 {
     for (var i in this.tools) {
@@ -47,9 +50,16 @@ teka.Layout.prototype.paint = function(g)
     }
 };
 
+/** Handles mousemove events by sending them to the tools. */
 teka.Layout.prototype.processMouseMovedEvent = function(xc,yc)
 {
     var paint = false;
+    for (var i=1;i<this.tools.length;i++) {
+        if (this.tools[i].resetButtons()) {
+            paint = true;
+        }
+    }
+    
     for (var i=0;i<this.tools.length;i++) {
         if (this.tools[i].inExtent(xc,yc)) {
             if (this.tools[i].processMouseMovedEvent(xc-this.tools[i].left,
@@ -62,6 +72,7 @@ teka.Layout.prototype.processMouseMovedEvent = function(xc,yc)
     return paint;
 };
 
+/** Handles mousedown events by sending them to the tools. */
 teka.Layout.prototype.processMousePressedEvent = function(xc,yc)
 {
     var paint = false;
