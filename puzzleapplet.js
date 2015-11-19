@@ -429,6 +429,7 @@ teka.PuzzleApplet.prototype.initInstructions = function()
     this.instructions.setInstructions(this.puzzleViewer.getInstructions());
     this.instructions.setUsage(this.puzzleViewer.getUsage());
     this.instructions.setGraphics(this.image);
+    this.instructions.setGap(this.values_.GAP);
 
     var psdata = new teka.PSData('<<\n'+this.puzzleViewer.getExample()+'\n>>');
     var ex = new teka.viewer[this.type][this.typeToViewer(this.type)](psdata);
@@ -436,11 +437,12 @@ teka.PuzzleApplet.prototype.initInstructions = function()
                         this.values_.TEXT_HEIGHT);
     ex.setMode(teka.viewer.Defaults.WAIT);
     this.instructions.setExampleViewer(ex);
-    this.instructions.setExtent(this.MARGIN,
-                                this.MARGIN+this.values_.HEAD_HEIGHT,
-                                this.canvas.width-2*this.MARGIN,
+    this.instructions.setExtent(this.values_.MARGIN,
+                                this.values_.MARGIN+this.values_.HEAD_HEIGHT+
+                                    this.values_.GAP,
+                                this.canvas.width-2*this.values_.MARGIN,
                                 this.canvas.height-this.values_.HEAD_HEIGHT-
-                                    2*this.MARGIN);
+                                    2*this.values_.MARGIN-this.values_.GAP);
     this.instructions.setEvent(this.setInstructions.bind(this));
 };
 

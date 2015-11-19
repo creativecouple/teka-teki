@@ -14,6 +14,14 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Constructor.
+ * 
+ * Displays the instructions of the puzzle, the usage of the
+ * puzzle viewer and the usage of the applet as a whole.
+ * Beneath the instructions of the puzzle, a small example
+ * with solution is shown.
+ */
 teka.Instructions = function()
 {
     teka.Tool.call(this);
@@ -27,9 +35,12 @@ teka.Instructions = function()
         teka.translate('back')
     ];
 
-    this.bw = 50;
-    this.bh = 10;
+    this.buttonWidth = 50;
     this.gap = 5;
+    this.imageWidth = 200;
+    this.imageHeight = 200;
+    this.headlineHeight = 20;
+    this.textareaHeight = 200;
 
     this.text = false;
     this.instructions = '';
@@ -47,158 +58,216 @@ teka.Instructions = function()
 };
 teka.extend(teka.Instructions,teka.Tool);
 
+/** Sets the instructions vor the puzzle */
 teka.Instructions.prototype.setInstructions = function(instructions)
 {
     this.instructions = instructions;
 };
 
-teka.Tool.prototype.setColor = function(color)
-{
-    if (color!==undefined) {
-        this.color = color;
-    }
-};
-
+/** Sets the usage for the viewer */
 teka.Instructions.prototype.setUsage = function(usage)
 {
     this.usage = usage;
 };
 
-teka.Instructions.prototype.setExampleViewer = function(ex)
-{
-    this.exampleViewer = ex;
-};
-
+/** Saves the image */
 teka.Instructions.prototype.setGraphics = function(g)
 {
     this.graphics = g;
 };
 
+/** Sets the gap between the tools. */
+teka.Instructions.prototype.setGap = function(gap) {
+    this.gap = gap;
+};
+
+/** Sets the viewer to be used to display the example. */
+teka.Instructions.prototype.setExampleViewer = function(ex)
+{
+    this.exampleViewer = ex;
+};
+
+/** Sets the event which toggles the display of instructions. */
+teka.Instructions.prototype.setEvent = function(setInstructions)
+{
+    this.event = setInstructions;
+};
+
+/** 
+ * Sets the extent and inits buttons, texts and example.
+ * Calls the function in the 'superclass'. As this concept does
+ * not exist in javascript, the superclass 'display' contains
+ * two versions of setExtent, the one without _ to be overridden,
+ * the other one to be used here.
+ */
 teka.Instructions.prototype.setExtent = function(left,top,width,height)
 {
     this.setExtent_(left,top,width,height);
 
-    this.initButtons(this.width,this.height);
-    this.initTexts(this.width,this.height);
-    this.initExample(this.width,this.height);
+    this.initButtons();
+    this.initExample();
+    this.initTexts();
 };
 
-teka.Instructions.prototype.initButtons = function(w,h)
+/** Calculate the width of the buttons. */
+teka.Instructions.prototype.initButtons = function()
 {
-    this.bw = (this.width-30)/4;
-    this.bh = this.textHeight+5;
+    this.buttonWidth = (this.width-30)/4;
 };
 
-teka.Instructions.prototype.initTexts = function(w,h)
+/** 
+ * Calculates the extent of the example.
+ * If the example needs less width than the 200px available. 
+ * The available space is reduced to have more space for the text.
+ */
+teka.Instructions.prototype.initExample = function()
 {
+    this.imageHeight = (this.height-this.buttonHeight-2*this.gap)/2;
+    this.exampleViewer.setExtent(0,0,200,this.imageHeight);
+    var metrics = this.exampleViewer.setMetrics(this.graphics);
+    this.imageWidth = metrics.width;
+    this.exampleViewer.setExtent(0,0,this.imageWidth,this.imageHeight);
+    this.exampleViewer.setMetrics(this.graphics);
+};
+
+/** Wraps the three texts */
+teka.Instructions.prototype.initTexts = function()
+{
+    this.headlineHeight = 2*this.textHeight+15;
+    this.textareaHeight = this.height-2*this.buttonHeight-2*this.gap-
+                          this.headlineHeight;
+    
     this.text = [];
-    this.text[0] = this.wrap(this.instructions,w-210,h-2*this.bh-40-this.bh*2);
-    this.text[1] = this.wrap(this.usage,w,h-2*this.bh-40-this.bh*2);
+    this.text[0] = this.wrap(this.instructions,
+                             this.width-this.imageWidth-this.gap,
+                             this.textareaHeight);
+    this.text[1] = this.wrap(this.usage,
+                             this.width,
+                             this.textareaHeight);
     this.text[2] = this.wrap(teka.translate('instructions_global'),
-                             w,h-2*this.bh-40-this.bh*2);
+                             this.width,
+                             this.textareaHeight);
 };
 
-teka.Instructions.prototype.initExample = function(w,h)
-{
-    this.exampleViewer.setExtent(0,0,200,h/2-this.bh-20);
-    this.exampleViewer.setMetrics();
-};
-
-teka.Instructions.prototype.setEvent = function(f)
-{
-    if (f!==undefined) {
-        this.event = f;
-    }
-};
-
-teka.Tool.prototype.getTitleFont = function()
+/** Title is displayed twice as height as normal text. */
+teka.Instructions.prototype.getTitleFont = function()
 {
     return 'bold '+(2*this.textHeight)+'px sans-serif';
 };
 
+//////////////////////////////////////////////////////////////////
+
+/** Paints the instructions on the screen. */
 teka.Instructions.prototype.paint = function(g)
 {
-    this.paintButton(g,0,0,this.bw,this.bh,
-                     this.mode===0?this.BUTTON_DEACTIVATED:
-                         (this.activeButton===0?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
-                     this.buttonText[0]);
-    this.paintButton(g,this.bw+10,0,this.bw,this.bh,
-                     this.mode===1?this.BUTTON_DEACTIVATED:
-                         (this.activeButton===1?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
-                     this.buttonText[1]);
-    this.paintButton(g,2*this.bw+20,0,this.bw,this.bh,
-                     this.mode===2?this.BUTTON_DEACTIVATED:
-                         (this.activeButton===2?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
-                     this.buttonText[2]);
-    this.paintButton(g,3*this.bw+30,0,this.bw,this.bh,
-                     this.activeButton===3?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
-                     this.buttonText[3]);
+    // top buttons
+    for (var i=0;i<=3;i++) {
+        this.paintButton(g,i*(this.buttonWidth+10),0,
+                         this.buttonWidth,this.buttonHeight,
+                         this.mode===i?this.BUTTON_DEACTIVATED:
+                         (this.activeButton===i?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
+                         this.buttonText[i]);
+    }
 
+    g.save();
+    g.translate(0,this.buttonHeight+this.gap);
+    
+    // Should we show the examples?
     if (this.mode==0) {
         g.save();
-        g.translate(this.width-210,this.bh+20);
+        g.translate(this.width-this.imageWidth,0);
         this.exampleViewer.paint(g);
         g.restore();
+        
         this.exampleViewer.addSolution();
         g.save();
-        g.translate(this.width-210,this.bh+this.height/2+5);
+        g.translate(this.width-this.imageWidth,this.imageHeight+this.gap);
         this.exampleViewer.paint(g);
         g.restore();
         this.exampleViewer.reset();
     }
 
+    g.save();
+    
+    // Clip to avoid headline overlapping image
+    if (this.mode==0) {
+        g.beginPath();
+        g.moveTo(0,0);
+        g.lineTo(this.width-this.imageWidth-this.gap,0);
+        g.lineTo(this.width-this.imageWidth-this.gap,this.headlineHeight);
+        g.lineTo(0,this.headlineHeight);
+        g.closePath();
+        g.clip();
+    }
+    
+    // headline
     g.fillStyle = this.color;
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.font = this.getTitleFont();
+    g.fillText(this.buttonText[this.mode]+
+               (this.page>0?(' ('+teka.translate('continuation')+')'):''),
+               0,2);
+    g.restore();
 
-    g.fillText(this.buttonText[this.mode],0,this.bh+20);
-
+    g.translate(0,this.headlineHeight);
+    
+    // textarea
     g.font = this.getTextFont();
-    var y = this.bh+50+this.textHeight*2;
-    var lh = this.textHeight;
+    var y = 2;
     for (var i=0;i<this.text[this.mode][this.page].length;i++) {
         if (this.text[this.mode][this.page][i]!==null) {
             g.fillText(this.text[this.mode][this.page][i],0,y);
         }
-        y += lh;
+        y += this.textHeight;
     }
 
+    g.translate(0,this.textareaHeight+this.gap);
+    
+    // bottom buttons 
+    var delta = (this.mode==0?(this.imageWidth+this.gap):0)
+    
     if (this.page==0 && this.text[this.mode].length>1) {
-        this.paintButton(g,(this.width-(this.mode==0?200:0)-this.bw)/2,this.height-this.bh,this.bw,this.bh,
+        this.paintButton(g,(this.width-delta-this.buttonWidth)/2,0,
+                         this.buttonWidth,this.buttonHeight,
                          this.activeButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[4]);
     }
     if (this.page==this.text[this.mode].length-1 && this.text[this.mode].length>1) {
-        this.paintButton(g,(this.width-(this.mode==0?200:0)-this.bw)/2,this.height-this.bh,this.bw,this.bh,
+        this.paintButton(g,(this.width-delta-this.buttonWidth)/2,0,
+                         this.buttonWidth,this.buttonHeight,
                          this.activeButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[5]);
     }
     if (this.page>0 && this.page<this.text[this.mode].length-1) {
-        this.paintButton(g,(this.width-(this.mode==0?200:0))/2+5,this.height-this.bh,this.bw,this.bh,
+        this.paintButton(g,(this.width-delta)/2+5,0,
+                         this.buttonWidth,this.buttonHeight,
                          this.activeButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[4]);
-        this.paintButton(g,(this.width-(this.mode==0?200:0))/2-this.bw-5,this.height-this.bh,this.bw,this.bh,
+        this.paintButton(g,(this.width-delta)/2-this.buttonWidth-5,0,
+                         this.buttonWidth,this.buttonHeight,
                          this.activeButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[5]);
     }
+    
+    g.restore();
 };
 
+/** Handle mousemove event */
 teka.Instructions.prototype.processMouseMovedEvent = function(xc,yc)
 {
+    var last = this.activeButton;
     this.activeButton = this.getButton(xc,yc);
-    if (this.activeButton===-1) {
-        return false;
-    }
-
-    return true;
+    return this.activeButton!==last;
 };
 
+/** Handle mousedown event */
 teka.Instructions.prototype.processMousePressedEvent = function(xc,yc)
 {
+    var last = this.activeButton;
     this.activeButton = this.getButton(xc,yc);
-    if (this.activeButton===-1) {
-        return false;
+    if (this.activeButton===false) {
+        return this.activeButton!==last;
     }
 
     if (this.activeButton==4 && this.page<this.text[this.mode].length-1) {
@@ -217,31 +286,39 @@ teka.Instructions.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
+/** 
+ * Calculate the number of the button at coordinates xc, yc.
+ * 0 to 3 are the buttons at the top.
+ * 4 is the next button and 5 is the back button.
+ */
 teka.Instructions.prototype.getButton = function(xc,yc)
 {
     for (var i=0;i<4;i++) {
-        if (xc>=i*(10+this.bw) && xc<=i*(10+this.bw)+this.bw && yc>=0 && yc<=this.bh) {
+        if (xc>=i*(10+this.buttonWidth) && xc<=i*(10+this.buttonWidth)+this.buttonWidth && 
+            yc>=0 && yc<=this.buttonHeight) {
             return i;
         }
     }
 
-    if (yc>=this.height-this.bh && yc<=this.height) {
+    var delta = (this.mode==0?(this.imageWidth+this.gap):0)
+        
+    if (yc>=this.height-this.buttonHeight && yc<=this.height) {
         if (this.page==0) {
-            if (xc>=(this.width-(this.mode==0?200:0)-this.bw)/2 &&
-                xc<=(this.width-(this.mode==0?200:0)+this.bw)/2)
+            if (xc>=(this.width-delta-this.buttonWidth)/2 &&
+                xc<=(this.width-delta+this.buttonWidth)/2)
                 return 4;
         }
         if (this.page==this.text[this.mode].length-1) {
-            if (xc>=(this.width-(this.mode==0?200:0)-this.bw)/2 &&
-                xc<=(this.width-(this.mode==0?200:0)+this.bw)/2)
+            if (xc>=(this.width-delta-this.buttonWidth)/2 &&
+                xc<=(this.width-delta+this.buttonWidth)/2)
                 return 5;
         }
         if (this.page>0 && this.page<this.text[this.mode].length-1) {
-            if (xc>=(this.width-(this.mode==0?200:0))/2-this.bw-5 &&
-                xc<=(this.width-(this.mode==0?200:0))/2-5)
+            if (xc>=(this.width-delta)/2-this.buttonWidth-5 &&
+                xc<=(this.width-delta)/2-5)
                 return 5;
-            if (xc>=(this.width-(this.mode==0?200:0))/2+5 &&
-                xc<=(this.width-(this.mode==0?200:0))/2+this.bw+5)
+            if (xc>=(this.width-delta)/2+5 &&
+                xc<=(this.width-delta)/2+this.buttonWidth+5)
                 return 4;
         }
     }
@@ -249,6 +326,11 @@ teka.Instructions.prototype.getButton = function(xc,yc)
     return false;
 };
 
+/** 
+ * Wraps the given text. If the text does not fit in the
+ * area spanned by width and height, several pages are 
+ * created.
+ */
 teka.Instructions.prototype.wrap = function(text,width,height)
 {
     var vv = [];

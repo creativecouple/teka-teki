@@ -73,7 +73,7 @@ teka.TDLayout.prototype.arrangeTools = function(g) {
     }
 
     this.tools[0].setExtent(0,0,this.width,this.height-this.bestheight-this.gap);
-    var metrics = this.tools[0].setMetrics();
+    var metrics = this.tools[0].setMetrics(g);
 
     return metrics.scale;
 };

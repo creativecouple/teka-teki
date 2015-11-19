@@ -58,6 +58,7 @@ teka.dictionary = {
     coloring: 'färben',
     color_of_pen: 'Stiftfarbe: {1}',
     congratulations: 'Herzlichen Glückwunsch!!!',
+    continuation: 'Fortsetzung',
     delete_color: 'Löscht alle Felder mit {1} Symbolen.',
     deleting: 'löschen',
     grün: 'grün',

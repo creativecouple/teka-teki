@@ -345,12 +345,19 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
 
 //////////////////////////////////////////////////////////////////
 
-teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function()
+teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
 {
     this.scale = Math.round(Math.min((this.width-3)/this.X,(this.height-3-this.textheight-2)/this.X));
     var realwidth = this.X * this.scale + 3;
     var realheight = this.X * this.scale + 3 + this.textheight+2;
 
+    g.font = 'bold '+this.textheight+'px sans-serif';
+    var textwidth = g.measureText(teka.translate('kropki_digits',[this.X])).width+1;
+    console.log(realwidth,textwidth);
+    if (textwidth>realwidth) {
+        realwidth = textwidth;
+    }
+    
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.round((this.height-realheight)/2)+0.5;
 
