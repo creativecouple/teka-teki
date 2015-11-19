@@ -54,7 +54,6 @@ teka.Instructions = function()
     this.graphics = null;
 
     this.exampleViewer = false;
-    this.color = '#000';
 };
 teka.extend(teka.Instructions,teka.Tool);
 
@@ -201,7 +200,7 @@ teka.Instructions.prototype.paint = function(g)
     }
 
     // headline
-    g.fillStyle = this.color;
+    g.fillStyle = this.textcolor;
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.font = this.getTitleFont();
@@ -213,6 +212,7 @@ teka.Instructions.prototype.paint = function(g)
     g.translate(0,this.headlineHeight);
 
     // textarea
+    g.fillStyle = this.textcolor;
     g.font = this.getTextFont();
     var y = 2;
     for (var i=0;i<this.text[this.mode][this.page].length;i++) {
