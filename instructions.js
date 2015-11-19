@@ -219,7 +219,7 @@ teka.Instructions.prototype.paint = function(g)
         if (this.text[this.mode][this.page][i]!==null) {
             g.fillText(this.text[this.mode][this.page][i],0,y);
         }
-        y += this.textHeight;
+        y += this.textHeight+2;
     }
 
     g.translate(0,this.textareaHeight+this.gap);
@@ -353,7 +353,7 @@ teka.Instructions.prototype.wrap = function(text,width,height)
                 first = false;
                 continue;
             }
-            ch += this.textHeight;
+            ch += this.textHeight+2;
             v.push(null);
         }
         first = true;
@@ -366,10 +366,10 @@ teka.Instructions.prototype.wrap = function(text,width,height)
             while (c<az && this.graphics.measureText(h+' '+t2[c]).width<width) {
                 h = h+' '+t2[c++];
             }
-            ch += this.textHeight;
+            ch += this.textHeight+2;
             v.push(h);
 
-            if (ch+this.textHeight>height-this.textHeight) {
+            if (ch+this.textHeight+2>height) {
                 vv.push(v);
                 v = [];
                 ch = 0;
