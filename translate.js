@@ -98,7 +98,7 @@ teka.dictionary = {
     orange: 'orange',
     orange_a: 'orangenen',
     pink: 'rosa',
-    pint_a: 'rosafarbigen',
+    pink_a: 'rosafarbigen',
     problem: 'Aufgabe',
     save_state: 'Speichert den aktuellen Zustand.',
     set_color: 'Setzt die Stiftfarbe auf {1}.',
