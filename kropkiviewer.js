@@ -347,7 +347,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
 
 teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
 {
-    this.scale = Math.round(Math.min((this.width-3)/this.X,(this.height-3-this.textheight-2)/this.X));
+    this.scale = Math.floor(Math.min((this.width-3)/this.X,(this.height-3-this.textheight-2)/this.X));
     var realwidth = this.X * this.scale + 3;
     var realheight = this.X * this.scale + 3 + this.textheight+2;
 

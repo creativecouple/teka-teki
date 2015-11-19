@@ -366,11 +366,13 @@ teka.PuzzleApplet.prototype.initPuzzleViewer = function()
 /** Initializes the head. */
 teka.PuzzleApplet.prototype.initHead = function(title)
 {
+    this.head.setTitle(title);
+    this.head.setTextParameter(this.values_.TEXT_COLOR,
+                                    this.values_.TEXT_HEIGHT);
     this.head.setExtent(this.values_.MARGIN,
                         this.values_.MARGIN,
                         this.canvas.width-2*this.values_.MARGIN,
                         this.values_.HEAD_HEIGHT);
-    this.head.setTitle(title);
 };
 
 /** Initializes the button tool. */

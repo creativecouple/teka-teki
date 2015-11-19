@@ -43,27 +43,7 @@ teka.HeadDisplay.prototype.getTitle = function()
  */
 teka.HeadDisplay.prototype.setTitle = function(title)
 {
-    if (title!==undefined) {
-        this.title = title;
-    }
-};
-
-/**
- * Returns the color used.
- */
-teka.HeadDisplay.prototype.getTextColor = function()
-{
-    return this.text_color;
-};
-
-/**
- * Sets the color. It will be used the next time, print() is called.
- */
-teka.HeadDisplay.prototype.setTextColor = function(color)
-{
-    if (color!==undefined) {
-        this.text_color = color;
-    }
+    this.title = title;
 };
 
 /**
