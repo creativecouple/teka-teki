@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * The parent of all the tools, that can be seen on the canvas.
  */
 teka.Display = function()
@@ -69,7 +69,7 @@ teka.Display.prototype.inExtent = function(x,y)
 };
 
 /**
- * Translates the reference point of the canvas to the 
+ * Translates the reference point of the canvas to the
  * topleft of the tool. After this translation the
  * tool can just assume, that it is placed at the origin.
  */

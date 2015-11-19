@@ -34,7 +34,7 @@ teka.extend(teka.LRLayout,teka.Layout);
  * puzzle will be returned as a measure on how good the layout fits.
  */
 teka.LRLayout.prototype.arrangeTools = function(g) {
-    if (this.tools.length==0) {
+    if (this.tools.length===0) {
         return false;
     }
 
@@ -72,6 +72,9 @@ teka.LRLayout.prototype.arrangeTools = function(g) {
                                               y,
                                               this.width-metrics.width-this.gap,
                                               this.height-y);
+    if (metrics.scale<18) {
+        return false;
+    }
 
     return metrics.scale;
 };

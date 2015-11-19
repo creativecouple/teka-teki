@@ -16,8 +16,8 @@
 
 /**
  * Constructor.
- * 
- * The string psdata should contain a puzzle in sgf format. The 
+ *
+ * The string psdata should contain a puzzle in sgf format. The
  * format is parsed and stored as key->value pairs.
  */
 teka.PSData = function(psdata)

@@ -353,14 +353,12 @@ teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
 
     g.font = 'bold '+this.textheight+'px sans-serif';
     var textwidth = g.measureText(teka.translate('kropki_digits',[this.X])).width+1;
-    console.log(realwidth,textwidth);
-    if (textwidth>realwidth) {
-        realwidth = textwidth;
-    }
-    
+    realwidth = Math.max(realwidth,textwidth);
+
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.round((this.height-realheight)/2)+0.5;
 
+    if (realwidth>this.width || realheight>this.height) this.scale=false;
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 

@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Displays the instructions of the puzzle, the usage of the
  * puzzle viewer and the usage of the applet as a whole.
  * Beneath the instructions of the puzzle, a small example
@@ -93,7 +93,7 @@ teka.Instructions.prototype.setEvent = function(setInstructions)
     this.event = setInstructions;
 };
 
-/** 
+/**
  * Sets the extent and inits buttons, texts and example.
  * Calls the function in the 'superclass'. As this concept does
  * not exist in javascript, the superclass 'display' contains
@@ -115,9 +115,9 @@ teka.Instructions.prototype.initButtons = function()
     this.buttonWidth = (this.width-30)/4;
 };
 
-/** 
+/**
  * Calculates the extent of the example.
- * If the example needs less width than the 200px available. 
+ * If the example needs less width than the 200px available.
  * The available space is reduced to have more space for the text.
  */
 teka.Instructions.prototype.initExample = function()
@@ -136,7 +136,7 @@ teka.Instructions.prototype.initTexts = function()
     this.headlineHeight = 2*this.textHeight+15;
     this.textareaHeight = this.height-2*this.buttonHeight-2*this.gap-
                           this.headlineHeight;
-    
+
     this.text = [];
     this.text[0] = this.wrap(this.instructions,
                              this.width-this.imageWidth-this.gap,
@@ -171,14 +171,14 @@ teka.Instructions.prototype.paint = function(g)
 
     g.save();
     g.translate(0,this.buttonHeight+this.gap);
-    
+
     // Should we show the examples?
-    if (this.mode==0) {
+    if (this.mode===0) {
         g.save();
         g.translate(this.width-this.imageWidth,0);
         this.exampleViewer.paint(g);
         g.restore();
-        
+
         this.exampleViewer.addSolution();
         g.save();
         g.translate(this.width-this.imageWidth,this.imageHeight+this.gap);
@@ -188,9 +188,9 @@ teka.Instructions.prototype.paint = function(g)
     }
 
     g.save();
-    
+
     // Clip to avoid headline overlapping image
-    if (this.mode==0) {
+    if (this.mode===0) {
         g.beginPath();
         g.moveTo(0,0);
         g.lineTo(this.width-this.imageWidth-this.gap,0);
@@ -199,7 +199,7 @@ teka.Instructions.prototype.paint = function(g)
         g.closePath();
         g.clip();
     }
-    
+
     // headline
     g.fillStyle = this.color;
     g.textAlign = 'left';
@@ -211,7 +211,7 @@ teka.Instructions.prototype.paint = function(g)
     g.restore();
 
     g.translate(0,this.headlineHeight);
-    
+
     // textarea
     g.font = this.getTextFont();
     var y = 2;
@@ -223,11 +223,11 @@ teka.Instructions.prototype.paint = function(g)
     }
 
     g.translate(0,this.textareaHeight+this.gap);
-    
-    // bottom buttons 
-    var delta = (this.mode==0?(this.imageWidth+this.gap):0)
-    
-    if (this.page==0 && this.text[this.mode].length>1) {
+
+    // bottom buttons
+    var delta = (this.mode===0?(this.imageWidth+this.gap):0);
+
+    if (this.page===0 && this.text[this.mode].length>1) {
         this.paintButton(g,(this.width-delta-this.buttonWidth)/2,0,
                          this.buttonWidth,this.buttonHeight,
                          this.activeButton===4?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
@@ -249,7 +249,7 @@ teka.Instructions.prototype.paint = function(g)
                          this.activeButton===5?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          this.buttonText[5]);
     }
-    
+
     g.restore();
 };
 
@@ -286,7 +286,7 @@ teka.Instructions.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
-/** 
+/**
  * Calculate the number of the button at coordinates xc, yc.
  * 0 to 3 are the buttons at the top.
  * 4 is the next button and 5 is the back button.
@@ -294,41 +294,45 @@ teka.Instructions.prototype.processMousePressedEvent = function(xc,yc)
 teka.Instructions.prototype.getButton = function(xc,yc)
 {
     for (var i=0;i<4;i++) {
-        if (xc>=i*(10+this.buttonWidth) && xc<=i*(10+this.buttonWidth)+this.buttonWidth && 
+        if (xc>=i*(10+this.buttonWidth) && xc<=i*(10+this.buttonWidth)+this.buttonWidth &&
             yc>=0 && yc<=this.buttonHeight) {
             return i;
         }
     }
 
-    var delta = (this.mode==0?(this.imageWidth+this.gap):0)
-        
+    var delta = (this.mode===0?(this.imageWidth+this.gap):0);
+
     if (yc>=this.height-this.buttonHeight && yc<=this.height) {
-        if (this.page==0) {
+        if (this.page===0) {
             if (xc>=(this.width-delta-this.buttonWidth)/2 &&
-                xc<=(this.width-delta+this.buttonWidth)/2)
+                xc<=(this.width-delta+this.buttonWidth)/2) {
                 return 4;
+            }
         }
         if (this.page==this.text[this.mode].length-1) {
             if (xc>=(this.width-delta-this.buttonWidth)/2 &&
-                xc<=(this.width-delta+this.buttonWidth)/2)
+                xc<=(this.width-delta+this.buttonWidth)/2) {
                 return 5;
+            }
         }
         if (this.page>0 && this.page<this.text[this.mode].length-1) {
             if (xc>=(this.width-delta)/2-this.buttonWidth-5 &&
-                xc<=(this.width-delta)/2-5)
+                xc<=(this.width-delta)/2-5) {
                 return 5;
+            }
             if (xc>=(this.width-delta)/2+5 &&
-                xc<=(this.width-delta)/2+this.buttonWidth+5)
+                xc<=(this.width-delta)/2+this.buttonWidth+5) {
                 return 4;
+            }
         }
     }
 
     return false;
 };
 
-/** 
+/**
  * Wraps the given text. If the text does not fit in the
- * area spanned by width and height, several pages are 
+ * area spanned by width and height, several pages are
  * created.
  */
 teka.Instructions.prototype.wrap = function(text,width,height)

@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Tool which controls all, that has to do with the color
  * of the items in the puzzle.
  */
@@ -24,13 +24,13 @@ teka.ColorTool = function()
 {
     teka.Tool.call(this);
 
-    this.colorname = ['schwarz','blau','grün','braun'];
+    this.colorname = ['black','blue','green','brown'];
     this.colors = ['#000','#00f','#0c0','#c40'];
 
     this.activeColor = 0;
     this.activeButton = false;
     this.events = [false,false,false,false];
-    this.buttonWidth;
+    this.buttonWidth = 20;
     this.gap = 7;
     this.buttonPadding = 5;
 };
@@ -76,7 +76,7 @@ teka.ColorTool.prototype.resetButtons = function()
     return changed;
 };
 
-/** 
+/**
  * Returns the minimum dimension of this tool:
  * The width of all buttons is determined by the longest text
  * plus twice the constant buttonPadding.
@@ -88,7 +88,7 @@ teka.ColorTool.prototype.resetButtons = function()
 teka.ColorTool.prototype.getMinDim = function(g)
 {
     g.font = this.getButtonFont();
-    this.buttonWidth = 
+    this.buttonWidth =
         Math.max(g.measureText(teka.translate('coloring')).width,
                  g.measureText(teka.translate('deleting')).width)+
         2*this.buttonPadding;
@@ -99,10 +99,10 @@ teka.ColorTool.prototype.getMinDim = function(g)
                 teka.translate('color_of_pen',
                     [teka.translate(this.colorname[this.activeColor])])).width);
     }
-    
+
     var height = this.textHeight+
         this.colorname.length*(this.buttonHeight+this.gap);
-    
+
     return { width:width, height:height };
 };
 
@@ -111,10 +111,10 @@ teka.ColorTool.prototype.paint = function(g)
 {
     var mindim = this.getMinDim(g);
     this.delta = (this.width-mindim.width)/2;
-    
+
     g.save();
     g.translate(this.delta,0);
-    
+
     g.fillStyle = this.textcolor;
     g.textAlign = 'center';
     g.textBaseline = 'top';
@@ -122,7 +122,7 @@ teka.ColorTool.prototype.paint = function(g)
     g.fillText(teka.translate('color_of_pen',
                               [teka.translate(this.colorname[this.activeColor])]),
                mindim.width/2,2);
-    
+
     g.translate(0,this.textHeight+this.gap);
 
     var x = this.activeButton===false?-1:this.activeButton.x;
@@ -134,22 +134,22 @@ teka.ColorTool.prototype.paint = function(g)
                          false);
         g.fillStyle = this.colors[i];
         g.fillRect(4,4,this.buttonWidth-8,this.buttonHeight-8);
-                
+
         if (i!=this.activeColor) {
             this.paintButton(g,this.gap+this.buttonWidth,0,
                              this.buttonWidth,this.buttonHeight,
                              (x===1 && i==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                              teka.translate('coloring'));
         }
-        
+
         this.paintButton(g,2*(this.gap+this.buttonWidth),0,
                          this.buttonWidth,this.buttonHeight,
                          (x===2 && i==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
                          teka.translate('deleting'));
-        
+
         g.translate(0,this.buttonHeight+this.gap);
     }
-    
+
     g.restore();
 };
 
@@ -223,10 +223,10 @@ teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
     return false;
 };
 
-/** 
+/**
  * Calculate the button at coordinates xc, yc.
  * The return value will be an object with two values,
- * named x and y. x is 0 for setColor, 1 for copyColor 
+ * named x and y. x is 0 for setColor, 1 for copyColor
  * and 2 for clearColor. y is the button row.
  * If none of the buttons is hit, false is returned.
  */

@@ -21,13 +21,13 @@
 teka.viewer = {};
 
 /**
- * Some default values. 
- * 
+ * Some default values.
+ *
  * NORMAL, WAIT, BLINK_START and BLINK_END are used to control
  * the 'mode' of the viewer. WAIT waits for a mouseclick, while
  * the values between BLINK_START and BLINK_END make the puzzle
  * blink. In NORMAL mode, the cursor is shown.
- * 
+ *
  * The SOLVED_COLOR define the colors used while blinking. They
  * will be overwritten by the defaults defined in puzzleapplet.js
  * or by the application.
@@ -45,7 +45,7 @@ teka.viewer.Defaults = {
 
 /**
  * Constructor.
- * 
+ *
  * Defines a new PuzzleViewer. This constructor should be
  * considered to be abstract, as it is of no use without a
  * child.

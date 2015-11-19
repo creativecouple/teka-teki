@@ -33,8 +33,9 @@ teka.extend(teka.TDLayout,teka.Layout);
  * fit in the given place. If they fit, the scale of the cells of the
  * puzzle will be returned as a measure on how good the layout fits.
  */
-teka.TDLayout.prototype.arrangeTools = function(g) {
-    if (this.tools.length==0) {
+teka.TDLayout.prototype.arrangeTools = function(g)
+{
+    if (this.tools.length===0) {
         return false;
     }
 
@@ -75,6 +76,10 @@ teka.TDLayout.prototype.arrangeTools = function(g) {
     this.tools[0].setExtent(0,0,this.width,this.height-this.bestheight-this.gap);
     var metrics = this.tools[0].setMetrics(g);
 
+    if (metrics.scale<18) {
+        return false;
+    }
+
     return metrics.scale;
 };
 
@@ -84,13 +89,15 @@ teka.TDLayout.prototype.arrangeTools = function(g) {
  * while all tools fit on the page. Parameter mindim is an
  * array of the minimum width and height of the tools.
  */
-teka.TDLayout.prototype.getOptimumFit = function(mindim) {
+teka.TDLayout.prototype.getOptimumFit = function(mindim)
+{
     this.bestheight = this.height;
     this.best = [];
     this.fill(mindim,1,0,[]);
 };
 
-teka.TDLayout.prototype.fill = function(mindim, nr, col, akt) {
+teka.TDLayout.prototype.fill = function(mindim, nr, col, akt)
+{
     if (nr>=mindim.length){
 
         var height = 0;
@@ -115,8 +122,9 @@ teka.TDLayout.prototype.fill = function(mindim, nr, col, akt) {
             }
         }
 
-        if (width>this.width) return;
-        if (height>=this.bestheight) return;
+        if (width>this.width || height>=this.bestheight) {
+            return;
+        }
 
         this.best = [];
         for (var i=0;i<akt.length;i++) {
@@ -132,15 +140,18 @@ teka.TDLayout.prototype.fill = function(mindim, nr, col, akt) {
         return;
     }
 
-    if (akt[col]===undefined) akt[col] = [];
+    if (akt[col]===undefined) {
+        akt[col] = [];
+    }
     akt[col].push(nr);
     this.fill(mindim,nr+1,col,akt);
     akt[col].pop();
-    if (akt[col].length>0)
-        {
-            if (akt[col+1]===undefined) akt[col+1] = [];
-            akt[col+1].push(nr);
-            this.fill(mindim,nr+1,col+1,akt);
-            akt[col+1].pop();
+    if (akt[col].length>0) {
+        if (akt[col+1]===undefined) {
+            akt[col+1] = [];
         }
+        akt[col+1].push(nr);
+        this.fill(mindim,nr+1,col+1,akt);
+        akt[col+1].pop();
+    }
 };

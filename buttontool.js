@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Tool with three buttons: Check, undo and instructions.
  */
 teka.ButtonTool = function()
@@ -58,7 +58,7 @@ teka.ButtonTool.prototype.resetButtons = function()
     return changed;
 };
 
-/** 
+/**
  * Returns the minimum dimension of this tool:
  * The width is the width of the longest text plus 16 pixel on each side.
  * The height is the height of three buttons plus two gaps.
@@ -80,7 +80,7 @@ teka.ButtonTool.prototype.paint = function(g)
     var mindim = this.getMinDim(g);
     this.delta = (this.width-mindim.width)/2;
     this.minwidth = mindim.width;
-    
+
     g.save();
     g.translate(this.delta,0);
     for (var i=0;i<=2;i++) {
@@ -125,14 +125,14 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
-/** 
+/**
  * Calculate the number of the button at coordinates xc, yc.
  * If none of the buttons is hit, false is returned.
  */
 teka.ButtonTool.prototype.getButton = function(xc,yc)
 {
     xc -= this.delta;
-    
+
     for (var i=0;i<=2;i++) {
         if (xc>=0 && xc<=this.minwidth &&
             yc>=0 && yc<=this.buttonHeight) {
@@ -140,7 +140,6 @@ teka.ButtonTool.prototype.getButton = function(xc,yc)
         }
         yc -= (this.buttonHeight+this.gap);
     }
-    
+
     return false;
 };
-

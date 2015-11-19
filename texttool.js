@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Tool to display some text. The text may be highlighted.
  */
 teka.TextTool = function()
@@ -33,9 +33,9 @@ teka.extend(teka.TextTool,teka.Tool);
 
 /**
  * Sets the text to display. If the second parameter is given
- * and set to true, the text will be highlighted. 
+ * and set to true, the text will be highlighted.
  * Newlines can be used inside the text to indicate new paragraphs.
- * If neighter text nor highlight state are changed the 
+ * If neighter text nor highlight state are changed the
  * function returns false, else true. This helps the calling
  * function to decide, whether the tool has to be repainted.
  */
@@ -57,7 +57,7 @@ teka.TextTool.prototype.setHighlightColor = function(color)
     this.texthighlightcolor = color;
 };
 
-/** 
+/**
  * Returns the minimum dimension of this tool, which is
  * three lines of text width 150 pixel.
  */
@@ -72,7 +72,7 @@ teka.TextTool.prototype.paint = function(g)
 {
     if (this.wrapped_text===false) {
         return;
-    }    
+    }
 
     g.fillStyle = this.highlight?this.texthighlightcolor:this.textcolor;
     g.textAlign = 'left';
@@ -92,8 +92,8 @@ teka.TextTool.prototype.paint = function(g)
 
 /**
  * Calculates how to wrap the text. Linebreaks can only occur at spaces.
- * If it doesn't fit into the extent, the size of the font is reduced 
- * until it fits or the size is too small. In the later case, it might 
+ * If it doesn't fit into the extent, the size of the font is reduced
+ * until it fits or the size is too small. In the later case, it might
  * happen, that part of the text is not displayed anymore.
  */
 teka.TextTool.prototype.wrapText = function(g)
@@ -102,7 +102,7 @@ teka.TextTool.prototype.wrapText = function(g)
         this.wrapped_text = [];
         return;
     }
-    
+
     var s = this.text;
     var v = [];
 

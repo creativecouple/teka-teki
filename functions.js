@@ -21,7 +21,7 @@
 
 
 /**
- * Calculates the position of the mouse relative to the canvas. 
+ * Calculates the position of the mouse relative to the canvas.
  * Should work in all supported browsers.
  */
 teka.normalizeMouseEvent = function(e)
@@ -46,9 +46,9 @@ teka.myBind = function(ptr,fn)
     return fn.bind(ptr);
 };
 
-/** 
- * Dynamically loads a new javascript file by adding it to the end of 
- * the HEAD element of the webpage. 
+/**
+ * Dynamically loads a new javascript file by adding it to the end of
+ * the HEAD element of the webpage.
  */
 teka.addScript = function(src,callback)
 {
@@ -62,7 +62,7 @@ teka.addScript = function(src,callback)
 };
 
 /**
- * Implements object inheritance. Besides the constructor has to call 
+ * Implements object inheritance. Besides the constructor has to call
  * the constructor of its parent somehow.
  */
 teka.extend = function(child,parent)
@@ -100,7 +100,7 @@ teka.drawLine = function(g,x1,y1,x2,y2)
     g.stroke();
 };
 
-/** 
+/**
  * Draws a filled arc with center in x,y, radius r,
  * starting at angle start and ending at angle end.
  */
@@ -111,7 +111,7 @@ teka.fillOval = function(g,x,y,r,start,end)
     g.fill();
 };
 
-/** 
+/**
  * Draws a stroked arc with center in x,y, radius r,
  * starting at angle start and ending at angle end.
  */

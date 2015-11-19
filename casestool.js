@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Creates a tool, which allowes the user to do trial and error
  * by saving states on a stack.
  */
@@ -34,7 +34,7 @@ teka.CasesTool = function()
 teka.extend(teka.CasesTool,teka.Tool);
 
 /** Sets the maximum number of saved states. */
-teka.CasesTool.prototype.setMaxLevel = function(level) 
+teka.CasesTool.prototype.setMaxLevel = function(level)
 {
     this.maxLevel = level;
 };
@@ -55,7 +55,7 @@ teka.CasesTool.prototype.resetButtons = function()
     return changed;
 };
 
-/** 
+/**
  * Returns the minimum dimension of this tool:
  * width: 2 squared buttons, 1 text and two gaps in between
  * height: the height of a button
@@ -67,9 +67,9 @@ teka.CasesTool.prototype.getMinDim = function(g)
     for (var i=0;i<=this.maxLevel;i++) {
         width = Math.max(width,g.measureText(teka.translate('level',[i])).width);
     }
-    return { 
+    return {
         width: width+2*this.gap+2*this.buttonHeight,
-        height: this.buttonHeight 
+        height: this.buttonHeight
     };
 };
 
@@ -95,7 +95,7 @@ teka.CasesTool.prototype.paint = function(g)
     }
 
     g.translate(this.buttonHeight+this.gap,0);
-    
+
     if (this.stack.length>0) {
         this.paintButton(g,0,0,this.buttonHeight,this.buttonHeight,
                          button===1?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,false);
@@ -105,7 +105,7 @@ teka.CasesTool.prototype.paint = function(g)
     }
 
     g.translate(this.buttonHeight+this.gap,0);
-    
+
     g.fillStyle = this.textcolor;
     g.textAlign = 'left';
     g.textBaseline = 'middle';
@@ -166,7 +166,7 @@ teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
-/** 
+/**
  * Calculate the number of the button at coordinates xc, yc.
  * 0 is the plus button, 1 is the minus button. If none
  * of the buttons is hit, false is returned.
@@ -175,16 +175,16 @@ teka.CasesTool.prototype.getButton = function(xc,yc)
 {
     xc -= this.delta;
 
-    if (xc>=0 && xc<=this.buttonHeight && 
+    if (xc>=0 && xc<=this.buttonHeight &&
         yc>=0 && yc<=this.buttonHeight) {
         return 0;
     }
-    
+
     xc -= this.buttonHeight+this.gap;
-    if (xc>=0 && xc<=this.buttonHeight && 
+    if (xc>=0 && xc<=this.buttonHeight &&
         yc>=0 && yc<=this.buttonHeight) {
         return 1;
     }
-    
+
     return false;
 };

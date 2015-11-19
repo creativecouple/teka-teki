@@ -18,7 +18,7 @@
  * Takes a string (index) and optionally an array with parameters
  * and returns a translated version of that string with the parameters
  * in place of {1}, {2} and so on.
- * 
+ *
  * The german version of the dictionary is located in this file. The values
  * can be overridden in an other file. Thus the german version akts as an
  * backup if the translation does not exist.
@@ -48,10 +48,12 @@ teka.translate = function(index,param)
 teka.dictionary = {
     back: 'Zurück',
     back_to_puzzle: 'Zurück zum Rätsel',
-    blau: 'blau',
-    blau_a: 'blauen',
-    braun: 'braun',
-    braun_a: 'braunen',
+    black: 'schwarz',
+    black_a: 'schwarzen',
+    blue: 'blau',
+    blue_a: 'blauen',
+    brown: 'braun',
+    brown_a: 'braunen',
     change_color: 'Färbt alle Felder mit {1} Symbolen {2} ein.',
     check: 'Testen',
     check_descr: 'Überprüft, ob die Lösung richtig ist.',
@@ -61,8 +63,8 @@ teka.dictionary = {
     continuation: 'Fortsetzung',
     delete_color: 'Löscht alle Felder mit {1} Symbolen.',
     deleting: 'löschen',
-    grün: 'grün',
-    grün_a: 'grünen',
+    green: 'grün',
+    green_a: 'grünen',
     instructions: 'Anleitung',
     instructions_descr: 'Zeigt die Aufgabenstellung und eine Anleitung zur Bedienung dieses Applets an.',
     instructions_global: 'Testen (Strg-Enter): Wenn Sie auf diesen Button klicken, überprüft '
@@ -95,8 +97,6 @@ teka.dictionary = {
     next: 'Weiter',
     problem: 'Aufgabe',
     save_state: 'Speichert den aktuellen Zustand.',
-    schwarz: 'schwarz',
-    schwarz_a: 'schwarzen',
     set_color: 'Setzt die Stiftfarbe auf {1}.',
     undo: 'Rückgängig',
     undo_descr: 'Macht alles bis inklusive der letzten größeren Änderung (=färben, löschen) rückgängig. Nochmaliges Drücken macht das letzte Rückgängingmachen wieder rückgängig.',

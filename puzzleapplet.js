@@ -112,7 +112,7 @@ teka.Defaults.SOLVED_COLOR = [
 /** The colors used in the color tool. */
 teka.Defaults.COLORTOOL_COLORS = {
     colors: ['#000','#00f','#0c0','#c40'],
-    names: ['schwarz','blau','grün','braun'],
+    names: ['black','blue','green','brown']
 };
 
 /** The maximum level to use in the cases tool. */
@@ -305,7 +305,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
             return;
         }
         type = type.substring(1,type.length-1).toLowerCase();
-        
+
         this.psdata = psdata;
         this.type = type;
 
@@ -454,7 +454,7 @@ teka.PuzzleApplet.prototype.typeToViewer = function(type)
 
 //////////////////////////////////////////////////////////////////
 
-/** 
+/**
  * Paints the canvas. First the whole canvas is painted
  * with the background color. Then, the head is painted.
  * After that, depending of the mode the instructions or the
@@ -608,7 +608,7 @@ teka.PuzzleApplet.prototype.setInstructions = function(val)
     this.paint();
 };
 
-/** 
+/**
  * Checks, if the puzzle has been solved correctly. If not,
  * the reason will be displayed in the texttool and as red
  * marks in the puzzle. If it is correct, a congratulations
@@ -628,11 +628,11 @@ teka.PuzzleApplet.prototype.check = function()
     this.setText(teka.translate('congratulations'),false);
     this.puzzleViewer.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
-    
+
     setTimeout(this.blink.bind(this),300);
 };
 
-/** 
+/**
  * Let's the applet blink by recursivly calling itself after
  * 300 milliseconds until the counter (mode) reaches BLINK_END.
  */
@@ -661,7 +661,7 @@ teka.PuzzleApplet.prototype.setColor = function(color)
     this.puzzleViewer.setColor(color);
 };
 
-/** 
+/**
  * Changes all symbols in a certain color to the actual
  * color.
  */

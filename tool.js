@@ -16,7 +16,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * The parent of all tools, that can be used to manipulate the puzzle.
  */
 teka.Tool = function()
@@ -58,7 +58,7 @@ teka.Tool.prototype.getMinDim = function(g)
     return { width:0, height:0 };
 };
 
-/** 
+/**
  * Returns a well formated string containing the font used for normal
  * texts. If height is given, the default height is overridden.
  */
@@ -73,8 +73,8 @@ teka.Tool.prototype.getButtonFont = function()
     return 'bold '+this.textHeight+'px sans-serif';
 };
 
-/** 
- * Abstract function. Resets all buttons to passive mode. 
+/**
+ * Abstract function. Resets all buttons to passive mode.
  * Returns true, of a change has occured.
  */
 teka.Tool.prototype.resetButtons = function()
@@ -84,7 +84,7 @@ teka.Tool.prototype.resetButtons = function()
 
 /**
  * Paints a button on image g at position x,y = (top, left) of
- * given width and height. 
+ * given width and height.
  *
  * The mode can be
  * BUTTON_PASSIVE, which is a normal button.
@@ -92,7 +92,7 @@ teka.Tool.prototype.resetButtons = function()
  * because it is something that is just in use or because the
  * mouse hovers over it.
  * BUTTON_DEACTIVATED, which is a button, that cannot be pressed.
- * 
+ *
  * If the text is not false, it is printed centered in the button.
  * The font, returned by getButtonFont is used. If the text is too
  * long for the button, the leftmost part is painted.
@@ -102,7 +102,7 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
     // background
     g.fillStyle = mode==this.BUTTON_ACTIVE?this.colorActive:this.colorPassive;
     g.fillRect(x,y,width,height);
-    
+
     // top and left border
     g.strokeStyle = this.colorBorderBright;
     g.beginPath();
@@ -110,7 +110,7 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
     g.lineTo(x,y);
     g.lineTo(x+width-1,y);
     g.stroke();
-    
+
     // bottom and right border
     g.strokeStyle = this.colorBorderDark;
     g.beginPath();
@@ -119,10 +119,12 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
     g.lineTo(x+width-1,y);
     g.stroke();
 
-    if (text===false)  return;
+    if (text===false) {
+        return;
+    }
 
     g.save();
-    
+
     // set clip area to avoid writing outside of the button
     g.beginPath();
     g.moveTo(x,y);
@@ -139,6 +141,6 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
     var center = g.measureText(text).width<width;
     g.textAlign = center?'center':'left';
     g.fillText(text,x+(center?(width/2):0),y+height/2);
-    
+
     g.restore();
 };

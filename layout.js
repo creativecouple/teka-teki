@@ -59,7 +59,7 @@ teka.Layout.prototype.processMouseMovedEvent = function(xc,yc)
             paint = true;
         }
     }
-    
+
     for (var i=0;i<this.tools.length;i++) {
         if (this.tools[i].inExtent(xc,yc)) {
             if (this.tools[i].processMouseMovedEvent(xc-this.tools[i].left,
