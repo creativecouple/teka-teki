@@ -26,7 +26,6 @@ teka.HeadDisplay = function()
     teka.Display.call(this);
 
     this.title = 'Teka-Teki';
-    this.text_color = '#000';
 };
 teka.extend(teka.HeadDisplay,teka.Display);
 
@@ -55,7 +54,7 @@ teka.HeadDisplay.prototype.paint = function(g)
 {
     g.textAlign = 'center';
     g.textBaseline = 'middle';
-    g.fillStyle = this.text_color;
+    g.fillStyle = this.textcolor;
     g.font = 'bold '+this.height+'px "URW Chancery L",sans-serif';
     g.fillText(this.title,this.width/2,this.height/2);
 };
