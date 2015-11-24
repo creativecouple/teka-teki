@@ -132,7 +132,9 @@ teka.dictionary = {
         +'Leertaste: Feldinhalt löschen\n'
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
-        +'und ausschalten.',
+        +'und ausschalten.\n\n\n'
+        +'Hinweis: Der Expertenmodus kann nur genutzt werden, wenn das Kropki '
+        +'maximal 9 Ziffern enthält.',
     kropki_unique_symbol: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     kropki_empty: 'Das markierte Feld ist leer.',
     kropki_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',
