@@ -40,6 +40,52 @@ teka.normalizeMouseEvent = function(e)
     return e;
 };
 
+/**
+ * Calculates the value of the key.
+ * Should work in all supported browsers.
+ */
+teka.normalizeKeyEvent = function(e)
+{
+    var ret = { 
+        key: e.keyCode,
+        shift: e.shiftKey,
+        ctrl: e.ctrlKey,
+        alt: e.altKey
+    };
+    
+    // correct nonstandard of firefox:
+    if (ret.key==181) {
+        ret.key = 173;
+    }
+    if (ret.key==182) {
+        ret.key = 174;
+    }
+    if (ret.key==183) {
+        ret.key = 175;
+    }
+    if (ret.key==59) {
+        ret.key = 186;
+    }
+    if (ret.key==61) {
+        ret.key = 187;
+    }
+    if (ret.key==173) {
+        ret.key = 189;
+    }
+    
+    // keypad numbers should behave like normal numbers:
+    if (ret.key>=96 && ret.key<=105) {
+        ret.key-=48;
+    }
+    
+    // keypad del is normal del:
+    if (ret.key==110) {
+        ret.key = 46;
+    }
+
+    return ret;
+};
+
 /** A simple way to use bind on anonymous functions. */
 teka.myBind = function(ptr,fn)
 {
@@ -121,3 +167,17 @@ teka.strokeOval = function(g,x,y,scale,start,end)
     g.arc(x,y,scale,start,end);
     g.stroke();
 };
+
+//////////////////////////////////////////////////////////////////
+
+/** Constants to be used in keyboard events */
+teka.KEY_LEFT = 37;
+teka.KEY_RIGHT = 39;
+teka.KEY_UP = 38;
+teka.KEY_DOWN = 40;
+teka.KEY_0 = 48;
+teka.KEY_1 = 49;
+teka.KEY_9 = 57;
+teka.KEY_SPACE = 32;
+teka.KEY_HASH = 163; // Maybe not browser or keyboard compatible...
+teka.KEY_COMMA = 188;

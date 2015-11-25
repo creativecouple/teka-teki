@@ -554,24 +554,32 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc
     return true;
 };
 
-teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
+teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(e)
 {
     this.exp = false;
 
-    if (key==40 && this.y<this.X-1) {
-        this.y++;
+    if (e.key==teka.KEY_DOWN) {
+        if (this.y<this.X-1) {
+            this.y++;
+        }
         return true;
     }
-    if (key==38 && this.y>0) {
-        this.y--;
+    if (e.key==teka.KEY_UP) {
+        if (this.y>0) {
+            this.y--;
+        }
         return true;
     }
-    if (key==39 && this.x<this.X-1) {
-        this.x++;
+    if (e.key==teka.KEY_RIGHT) {
+        if (this.x<this.X-1) {
+            this.x++;
+        }
         return true;
     }
-    if (key==37 && this.x>0) {
-        this.x--;
+    if (e.key==teka.KEY_LEFT) {
+        if (this.x>0) {
+            this.x--;
+        }
         return true;
     }
 
@@ -579,29 +587,31 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(key,c)
         return false;
     }
 
-    if (c>=49 && c<=57 && c<=48+this.X ) {
+    if (e.key>=teka.KEY_0 && e.key<=teka.KEY_9) {
         if (this.f[this.x][this.y]<1000) {
-            if (this.f[this.x][this.y]>0 && this.f[this.x][this.y]*10+(c-48)<=this.X) {
-                this.set(this.x,this.y,this.f[this.x][this.y]*10+(c-48));
-            } else {
-                this.set(this.x,this.y,c-48);
+            if (this.f[this.x][this.y]>0 && this.f[this.x][this.y]*10+(e.key-teka.KEY_0)<=this.X) {
+                this.set(this.x,this.y,this.f[this.x][this.y]*10+(e.key-teka.KEY_0));
+            } else if (e.key>=teka.KEY_1 && e.key-teka.KEY_0<=this.X) {
+                this.set(this.x,this.y,e.key-teka.KEY_0);
             }
         } else {
-            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<(c-48)))+1000);
+            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<(e.key-teka.KEY_0)))+1000);
         }
         return true;
     }
 
-    if (c==32) {
+    if (e.key==teka.KEY_SPACE) {
         this.set(this.x,this.y,0);
         return true;
     }
 
-    if ((c==35 || c==44) && this.X<=9) {
-        if (this.f[this.x][this.y]<1000) {
-            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
-        } else {
-            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_COMMA) {
+        if (this.X<=9) {
+            if (this.f[this.x][this.y]<1000) {
+                this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
+            } else {
+                this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
+            }
         }
         return true;
     }
