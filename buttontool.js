@@ -125,6 +125,27 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
+/** Handle keydown event */
+teka.ButtonTool.prototype.processKeyEvent = function(e) 
+{
+    if (e.key==teka.KEY_ENTER && e.ctrl===true) {
+        this.events[0]();
+        return true;
+    }
+        
+    if (e.key==teka.KEY_F3) {
+        this.events[1]();
+        return true;
+    }
+    
+    if (e.key==teka.KEY_F4) {
+        this.events[2](true);
+        return true;
+    }
+    
+    return false;
+};
+
 /**
  * Calculate the number of the button at coordinates xc, yc.
  * If none of the buttons is hit, false is returned.

@@ -87,3 +87,22 @@ teka.Layout.prototype.processMousePressedEvent = function(xc,yc)
 
     return paint;
 };
+
+/** Handles keydown events by sending them to the tools. */
+teka.Layout.prototype.processKeyEvent = function(e)
+{
+    var paint = false;
+    for (var i=1;i<this.tools.length;i++) {
+        if (this.tools[i].resetButtons()) {
+            paint = true;
+        }
+    }
+
+    for (var i=0;i<this.tools.length;i++) {
+        if (this.tools[i].processKeyEvent(e)) {
+            paint = true;
+        }
+    }
+
+    return paint;
+};

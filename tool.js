@@ -144,3 +144,21 @@ teka.Tool.prototype.paintButton = function(g,x,y,width,height,mode,text)
 
     g.restore();
 };
+
+/** Dummy function for mousemove */
+teka.Tool.prototype.processMouseMovedEvent = function(xc,yc)
+{
+    return false;
+};
+
+/** Dummy function for mousedown */
+teka.Tool.prototype.processMousePressedEvent = function(xc,yc)
+{
+    return false;
+};
+
+/** Dummy function for keydown */
+teka.Tool.prototype.processKeyEvent = function(e)
+{
+    return false;
+};

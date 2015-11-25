@@ -576,17 +576,21 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 /** Eventhandler for keydown events. */
 teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 {
+    if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
+            this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
+        this.puzzleViewer.clearError();
+        this.puzzleViewer.setMode(teka.viewer.Defaults.NORMAL);
+        this.setText('',false);
+        this.paint();
+        teka.stopPropagation(e);
+        return;
+    }
+    
     var myEvent = teka.normalizeKeyEvent(e);
     
-    if (this.puzzleViewer.processKeyEvent(myEvent)) {
+    if (this.layout.processKeyEvent(myEvent)) {
         this.paint();
-        
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
+        teka.stopPropagation(e);
     }
 
     this.canvas.focus();

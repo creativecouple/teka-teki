@@ -166,6 +166,26 @@ teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
+/** Handle keydown event */
+teka.CasesTool.prototype.processKeyEvent = function(e) 
+{
+    if (e.key==teka.KEY_PAGE_UP) {
+        if (this.stack.length<this.maxLevel) {
+            this.stack.push(this.events[0]());
+        }
+        return true;
+    }
+        
+    if (e.key==teka.KEY_PAGE_DOWN) {
+        if (this.stack.length>0) {
+            this.events[1](this.stack.pop());
+        }
+        return true;
+    }
+    
+    return false;
+};
+
 /**
  * Calculate the number of the button at coordinates xc, yc.
  * 0 is the plus button, 1 is the minus button. If none

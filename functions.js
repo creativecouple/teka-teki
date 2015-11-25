@@ -86,6 +86,17 @@ teka.normalizeKeyEvent = function(e)
     return ret;
 };
 
+/** Stops propagation of an event. */
+teka.stopPropagation = function(e)
+{
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+};
+
 /** A simple way to use bind on anonymous functions. */
 teka.myBind = function(ptr,fn)
 {
@@ -181,3 +192,18 @@ teka.KEY_9 = 57;
 teka.KEY_SPACE = 32;
 teka.KEY_HASH = 163; // Maybe not browser or keyboard compatible...
 teka.KEY_COMMA = 188;
+teka.KEY_F1 = 112;
+teka.KEY_F2 = 113;
+teka.KEY_F3 = 114;
+teka.KEY_F4 = 115;
+teka.KEY_F5 = 116;
+teka.KEY_F6 = 117;
+teka.KEY_F7 = 118;
+teka.KEY_F8 = 119;
+teka.KEY_F9 = 120;
+teka.KEY_F10 = 121;
+teka.KEY_F11 = 122;
+teka.KEY_F12 = 123;
+teka.KEY_ENTER = 13
+teka.KEY_PAGE_UP = 33;
+teka.KEY_PAGE_DOWN = 34;
