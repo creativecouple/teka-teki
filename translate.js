@@ -63,6 +63,7 @@ teka.dictionary = {
     continuation: 'Fortsetzung',
     delete_color: 'Löscht alle Felder mit {1} Symbolen.',
     deleting: 'löschen',
+    error: 'Leider ist ein unerwarteter Fehler aufgetreten.',
     green: 'grün',
     green_a: 'grünen',
     instructions: 'Anleitung',

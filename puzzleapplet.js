@@ -234,12 +234,19 @@ teka.PuzzleApplet.prototype.paintLogo = function()
 teka.PuzzleApplet.prototype.init = function()
 {
     if (this.values_.FILE===false) {
+        setError('Missing filename.');
+        this.paint();
         return;
     }
 
     this.loadPuzzleData(this.values_.FILE, teka.myBind(this,function() {
         this.puzzleViewer =
             new teka.viewer[this.type][this.typeToViewer(this.type)](this.psdata);
+        if (this.puzzleViewer===undefined || this.puzzleViewer===false) {
+            setError('Puzzleviewer cannot be loaded - '+this.type);
+            this.paint();
+            return;
+        }
         this.head = new teka.HeadDisplay();
         this.buttonTool = new teka.ButtonTool();
         this.colorTool = new teka.ColorTool();
@@ -295,23 +302,57 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
             return;
         }
 
+        if (res.status!==200) {
+            teka.setError('error while loading file: '+res.status);
+            this.paint();
+            return;
+        }
+        
         var psdata = new teka.PSData(res.responseText);
         if (psdata.failed()) {
+            teka.setError('parsing psdata failed: '+res.responseText);
+            this.paint();
             return;
         }
 
         var type = psdata.get('type');
-        if (type.length<2) {
+        if (type===false || type.length<2) {
+            teka.setError('wrong or not existent type: '+type);
+            this.paint();
             return;
         }
         type = type.substring(1,type.length-1).toLowerCase();
 
+        if (!this.correctType(type)) {
+            teka.setError('unknown type: '+type);
+            this.paint();
+            return;
+        }
+        
         this.psdata = psdata;
         this.type = type;
 
         teka.addScript(type+'viewer.js',teka.myBind(this,callback));
     });
     res.send();
+};
+
+/** 
+ * Checks, if type is a valid puzzletype, that is, a type,
+ * where a viewer exists. We use this, to prevent loading arbitrary
+ * code with crafted files.
+ */
+teka.PuzzleApplet.prototype.correctType = function(type)
+{
+    var whitelist = ['kropki'];
+    
+    for (var i=0;i<whitelist.length;i++) {
+        if (whitelist[i]===type) {
+            return true;
+        }
+    }
+    
+    return false;
 };
 
 //////////////////////////////////////////////////////////////////
@@ -467,6 +508,11 @@ teka.PuzzleApplet.prototype.paint = function()
     this.image.fillStyle = this.values_.BACKGROUND_COLOR;
     this.image.fillRect(0,0,this.canvas.width,this.canvas.height);
 
+    if (teka.error) {
+        this.paintError();
+        return;
+    }
+    
     this.image.save();
     this.head.translate(this.image);
     this.head.clip(this.image);
@@ -489,6 +535,21 @@ teka.PuzzleApplet.prototype.paint = function()
     this.image.restore();
 };
 
+/** Paints an error message on the screen. */
+teka.PuzzleApplet.prototype.paintError = function()
+{
+    this.image.textBaseline = 'middle';
+    this.image.textAlign = 'center';
+    this.image.font = this.values_.TEXT_HEIGHT+'px sans-serif';
+    this.image.fillStyle = this.values_.TEXT_COLOR;
+    this.image.fillText(teka.translate('error'),
+                        this.canvas.width/2,
+                        this.canvas.height/2-this.values_.TEXT_HEIGHT);
+    this.image.fillText(teka.error,
+                        this.canvas.width/2,
+                        this.canvas.height/2+this.values_.TEXT_HEIGHT);
+};
+
 //////////////////////////////////////////////////////////////////
 
 /**
@@ -496,6 +557,11 @@ teka.PuzzleApplet.prototype.paint = function()
  */
 teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
 {
+    if (teka.error) {
+        this.paint();
+        return;
+    }
+    
     this.canvas.focus();
 
     if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
@@ -535,6 +601,11 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
  */
 teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 {
+    if (teka.error) {
+        this.paint();
+        return;
+    }
+
     if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
             this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
         this.puzzleViewer.clearError();
@@ -576,6 +647,11 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
 /** Eventhandler for keydown events. */
 teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 {
+    if (teka.error) {
+        this.paint();
+        return;
+    }
+    
     if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
             this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
         this.puzzleViewer.clearError();

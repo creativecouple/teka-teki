@@ -19,6 +19,10 @@
  * Some of them try to fix browser incompatibilities.
  */
 
+/**
+ * The first error, that occured. If false, no error has occured yet.
+ */
+teka.error = false;
 
 /**
  * Calculates the position of the mouse relative to the canvas.
@@ -101,6 +105,14 @@ teka.stopPropagation = function(e)
 teka.myBind = function(ptr,fn)
 {
     return fn.bind(ptr);
+};
+
+/** Sets the error, if none has been set yet. */
+teka.setError = function(val)
+{
+    if (teka.error===false) {
+        teka.error = val;
+    }
 };
 
 /**
