@@ -43,8 +43,12 @@ teka.extend(teka.ColorTool,teka.Tool);
  */
 teka.ColorTool.prototype.setColors = function(c)
 {
-    this.colorname = c.names;
-    this.colors = c.colors;
+    if (c.names!==undefined) {
+        this.colorname = c.names;
+    }
+    if (c.colors!==undefined) {
+        this.colors = c.colors;
+    }
 };
 
 /** Returns the CSS style of the active color. */
@@ -238,11 +242,17 @@ teka.ColorTool.prototype.processKeyEvent = function(e)
             return false;
         }
         if (e.shift===true) {
-            this.events[1](y);
+            if (this.events[1]!==false) {
+                this.events[1](y);
+            }
         } else if (e.ctrl===true) {
-            this.events[2](y);
+            if (this.events[2]!==false) {
+                this.events[2](y);
+            }
         } else {
-            this.events[0](y);
+            if (this.events[0]!==false) {
+                this.events[0](y);
+            }
         }
         return true;
     }

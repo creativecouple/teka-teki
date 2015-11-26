@@ -43,11 +43,21 @@ teka.extend(teka.Tool,teka.Display);
  */
 teka.Tool.prototype.setButtonParameter = function(colors,height)
 {
-    this.colorText = colors.TEXT;
-    this.colorActive = colors.ACTIVE;
-    this.colorPassive = colors.PASSIVE;
-    this.colorBorderDark = colors.BORDER_DARK;
-    this.colorBorderBright = colors.BORDER_BRIGHT;
+    if (colors.TEXT!==undefined) {
+        this.colorText = colors.TEXT;
+    }
+    if (colors.ACTIVE!==undefined) {
+        this.colorActive = colors.ACTIVE;
+    }
+    if (colors.PASSIVE!==undefined) {
+        this.colorPassive = colors.PASSIVE;
+    }
+    if (colors.BORDER_DARK!==undefined) {
+        this.colorBorderDark = colors.BORDER_DARK;
+    }
+    if (colors.BORDER_BRIGHT!==undefined) {
+        this.colorBorderBright = colors.BORDER_BRIGHT;
+    }
     this.buttonHeight = height;
     this.textHeight = height-5;
 };

@@ -277,7 +277,9 @@ teka.Instructions.prototype.processMousePressedEvent = function(xc,yc)
         this.page--;
         this.activeButton = this.getButton(xc,yc);
     } else if (this.activeButton==3) {
-        this.event(false);
+        if (this.event!==false) {
+            this.event(false);
+        }
     } else {
         this.mode = this.activeButton;
         this.page = 0;
@@ -312,7 +314,9 @@ teka.Instructions.prototype.processKeyEvent = function(e)
             this.mode = this.activeButton;
             this.page = 0;
         } else if (this.activeButton===3) {
-            this.event(false);
+            if (this.event!==false) {
+                this.event(false);
+            }
         }
         return true;
     }

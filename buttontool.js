@@ -129,17 +129,23 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
 teka.ButtonTool.prototype.processKeyEvent = function(e) 
 {
     if (e.key==teka.KEY_ENTER && e.ctrl===true) {
-        this.events[0]();
+        if (this.events[0]!==false) {
+            this.events[0]();
+        }
         return true;
     }
         
     if (e.key==teka.KEY_F3) {
-        this.events[1]();
+        if (this.events[1]!==false) {
+            this.events[1]();
+        }
         return true;
     }
     
     if (e.key==teka.KEY_F4) {
-        this.events[2](true);
+        if (this.events[2]!==false) {
+            this.events[2](true);
+        }
         return true;
     }
     

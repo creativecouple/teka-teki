@@ -115,3 +115,9 @@ teka.Display.prototype.processMousePressedEvent = function(xc,yc)
 {
     return false;
 };
+
+/** An eventhandler for keydown. Does nothing. */
+teka.Display.prototype.processKeyEvent = function(e)
+{
+    return false;
+};

@@ -96,6 +96,7 @@ teka.TDLayout.prototype.getOptimumFit = function(mindim)
     this.fill(mindim,1,0,[]);
 };
 
+/** Recursively add one tool after another. */
 teka.TDLayout.prototype.fill = function(mindim, nr, col, akt)
 {
     if (nr>=mindim.length){

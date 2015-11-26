@@ -171,14 +171,18 @@ teka.CasesTool.prototype.processKeyEvent = function(e)
 {
     if (e.key==teka.KEY_PAGE_UP) {
         if (this.stack.length<this.maxLevel) {
-            this.stack.push(this.events[0]());
+            if (this.events[0]!==false) {
+                this.stack.push(this.events[0]());
+            }
         }
         return true;
     }
         
     if (e.key==teka.KEY_PAGE_DOWN) {
         if (this.stack.length>0) {
-            this.events[1](this.stack.pop());
+            if (this.events[1]!==false) {
+                this.events[1](this.stack.pop());
+            }
         }
         return true;
     }
