@@ -358,6 +358,10 @@ teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.round((this.height-realheight)/2)+0.5;
 
+    this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
+    this.boldfont = teka.getFontData('bold '+Math.round(this.scale/2)+'px sans-serif',this.scale);
+    this.smallfont = teka.getFontData(Math.round((this.scale-6)/4)+'px sans-serif',this.scale);
+    
     if (realwidth>this.width || realheight>this.height) this.scale=false;
     return {width:realwidth,height:realheight,scale:this.scale};
 };
@@ -433,8 +437,8 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
                 g.textAlign = 'center';
                 g.textBaseline = 'middle';
                 g.fillStyle = '#000';
-                g.font = 'bold '+Math.round(S/2)+'px sans-serif';
-                g.fillText(this.puzzle[i][j],1+i*S+S/2,1+j*S+S/2);
+                g.font = this.boldfont.font;
+                g.fillText(this.puzzle[i][j],1+i*S+S/2,1+j*S+S/2+this.boldfont.delta);
                 continue;
             }
             if (this.f[i][j]==teka.viewer.kropki.Defaults.NONE) {
@@ -444,18 +448,18 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
                 g.textAlign = 'center';
                 g.textBaseline = 'middle';
                 g.fillStyle = this.getColorString(this.c[i][j]);
-                g.font = Math.round(S/2)+'px sans-serif';
-                g.fillText(this.f[i][j],1+i*S+S/2,1+j*S+S/2);
+                g.font = this.font.font;
+                g.fillText(this.f[i][j],1+i*S+S/2,1+j*S+S/2+this.font.delta);
                 continue;
             }
 
             g.textAlign = 'center';
             g.textBaseline = 'middle';
             g.fillStyle = this.getColorString(this.c[i][j]);
-            g.font = Math.round((S-6)/4)+'px sans-serif';
+            g.font = this.smallfont.font;
             for (var k=1;k<=9;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
-                    g.fillText(''+k,1+S*i+((k-1)%3+1)*S/4,1+S*j+Math.floor((k-1)/3+1)*S/4);
+                    g.fillText(''+k,1+S*i+((k-1)%3+1)*S/4,1+S*j+Math.floor((k-1)/3+1)*S/4+this.smallfont.delta);
                 }
             }
 
