@@ -14,14 +14,17 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** Add own namespace to avoid conflicts. */
 teka.viewer.kropki = {};
 
+/** Some constants, used for the dots. */
 teka.viewer.kropki.Defaults = {
     NONE: 0,
     EMPTY: 1,
     FULL: 2
 };
 
+/** Constructor */
 teka.viewer.kropki.KropkiViewer = function(data)
 {
     teka.viewer.PuzzleViewer.call(this,data);
@@ -36,19 +39,21 @@ teka.extend(teka.viewer.kropki.KropkiViewer,teka.viewer.PuzzleViewer);
 
 //////////////////////////////////////////////////////////////////
 
+/** Initialize this viewer width the PSData object provided. */
 teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('size'),10);
     var digits = data.get('digits');
     digits = digits===false?1:parseInt(data.get('digits'),10);
     this.asciiToData(data.get('puzzle'),digits);
-    this.solution = this.asciiToSolution(data.get('solution'));
+    this.solution = this.asciiToSolution(data.get('solution'),digits);
 
     this.f = teka.new_array([this.X,this.X],0);
     this.c = teka.new_array([this.X,this.X],0);
     this.error = teka.new_array([this.X,this.X],false);
 };
 
+/** Read puzzle from ascii art. */
 teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
@@ -90,7 +95,8 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
     }
 };
 
-teka.viewer.kropki.KropkiViewer.prototype.asciiToSolution = function(ascii)
+/** Read solution from ascii art. */
+teka.viewer.kropki.KropkiViewer.prototype.asciiToSolution = function(ascii,d)
 {
     if (ascii===false) {
         return null;
@@ -101,13 +107,14 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToSolution = function(ascii)
     var erg = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            erg[i][j] = c[i][j].charCodeAt(0)-'0'.charCodeAt(0);
+            erg[i][j] = this.getNr(c,d*i,j,d);
         }
     }
 
     return erg;
 };
 
+/** Add solution. */
 teka.viewer.kropki.KropkiViewer.prototype.addSolution = function()
 {
     for (var i=0;i<this.X;i++) {
@@ -119,31 +126,18 @@ teka.viewer.kropki.KropkiViewer.prototype.addSolution = function()
 
 //////////////////////////////////////////////////////////////////
 
-teka.viewer.kropki.KropkiViewer.prototype.getName = function()
-{
-    return teka.translate('kropki');
-};
-
-teka.viewer.kropki.KropkiViewer.prototype.getInstructions = function()
-{
-    return teka.translate('kropki_instructions');
-};
-
+/** Returns a small example. */
 teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
 {
-    return '/format 1 /type (kropki) /sol false /size 4'
-        +' /puzzle [ (+-+-+-+-+) (| * * O |) (+ +*+*+O+) (|   * * |) (+O+ +O+*+)'
-        +' (| O   * |) (+*+O+ +*+) (| * O   |) (+-+-+-+-+) ]'
-        +' /solution [ (1243) (3124) (4312)(2431) ]';
-};
-
-teka.viewer.kropki.KropkiViewer.prototype.getUsage = function()
-{
-    return teka.translate('kropki_usage');
+    return '/format 1\n/type (kropki)\n/sol false\n/size 4\n'
+        +'/puzzle [ (+-+-+-+-+) (| * * O |) (+ +O+ +O+) (| O   O |) (+O+ +*+*+)'
+        +' (|   O * |) (+O+ +O+ +) (| * O   |) (+-+-+-+-+) ]\n'
+        +'/solution [ (1243) (4312) (3124) (2431) ]';
 };
 
 //////////////////////////////////////////////////////////////////
 
+/** Reset the whole diagram. */
 teka.viewer.kropki.KropkiViewer.prototype.reset = function()
 {
     for (var i=0;i<this.X;i++) {
@@ -153,6 +147,7 @@ teka.viewer.kropki.KropkiViewer.prototype.reset = function()
     }
 };
 
+/** Reset the error marks. */
 teka.viewer.kropki.KropkiViewer.prototype.clearError = function()
 {
     for (var i=0;i<this.X;i++) {
@@ -162,6 +157,7 @@ teka.viewer.kropki.KropkiViewer.prototype.clearError = function()
     }
 };
 
+/** Copy digits colored with this.color to color. */
 teka.viewer.kropki.KropkiViewer.prototype.copyColor = function(color)
 {
     for (var i=0;i<this.X;i++) {
@@ -173,6 +169,7 @@ teka.viewer.kropki.KropkiViewer.prototype.copyColor = function(color)
     }
 };
 
+/** Delete alle digits with color. */
 teka.viewer.kropki.KropkiViewer.prototype.clearColor = function(color)
 {
     for (var i=0;i<this.X;i++) {
@@ -184,6 +181,7 @@ teka.viewer.kropki.KropkiViewer.prototype.clearColor = function(color)
     }
 };
 
+/** Save current state. */
 teka.viewer.kropki.KropkiViewer.prototype.saveState = function()
 {
     var f = teka.new_array([this.X,this.X],0);
@@ -198,6 +196,7 @@ teka.viewer.kropki.KropkiViewer.prototype.saveState = function()
     return { f:f, c:c };
 };
 
+/** Load state. */
 teka.viewer.kropki.KropkiViewer.prototype.loadState = function(state)
 {
     for (var i=0;i<this.X;i++) {
@@ -210,10 +209,12 @@ teka.viewer.kropki.KropkiViewer.prototype.loadState = function(state)
 
 //////////////////////////////////////////////////////////////////
 
+/** Check, if the solution is correct. */
 teka.viewer.kropki.KropkiViewer.prototype.check = function()
 {
     var X = this.X;
 
+    // Overwrite digits, that are allready given.
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.puzzle[i][j]!=0) {
@@ -222,6 +223,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         }
     }
 
+    // Copy to array check, removing expert mode symbols.
     var check = teka.new_array([this.X,this.X],0);
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
@@ -229,7 +231,7 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                 check[i][j] = this.getExpert(this.f[i][j]);
                 if (check[i][j]===teka.viewer.kropki.Defaults.NONE) {
                     this.error[i][j] = true;
-                    return teka.translate('kropki_unique_symbol');
+                    return 'kropki_unique_symbol';
                 }
             } else {
                 check[i][j] = this.f[i][j];
@@ -237,11 +239,12 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
 
             if (check[i][j]===teka.viewer.kropki.Defaults.NONE) {
                 this.error[i][j] = true;
-                return teka.translate('kropki_empty');
+                return 'kropki_empty';
             }
         }
     }
 
+    // Check duplicates in row
     for (var j=0;j<X;j++) {
         var da = teka.new_array([X],false);
         for (var i=0;i<X;i++) {
@@ -251,13 +254,14 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                         this.error[ii][j] = true;
                     }
                 }
-                return teka.translate('kropki_row_duplicate');
+                return 'kropki_row_duplicate';
             } else {
                 da[check[i][j]-1] = true;
             }
         }
     }
 
+    // Check duplicates in column
     for (var i=0;i<X;i++) {
         var da = teka.new_array([X],false);
         for (var j=0;j<X;j++) {
@@ -267,13 +271,14 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                         this.error[i][jj] = true;
                     }
                 }
-                return teka.translate('kropki_column_duplicate');
+                return 'kropki_column_duplicate';
             } else {
                 da[check[i][j]-1] = true;
             }
         }
     }
 
+    // Check dots and no dots on vertical line
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {
             switch (this.lrdots[i][j]) {
@@ -281,32 +286,33 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                 if (check[i][j]==2*check[i+1][j] || check[i+1][j]==2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
-                    return teka.translate('kropki_twice');
+                    return 'kropki_twice';
                 }
                 if (check[i][j]==check[i+1][j]+1 || check[i+1][j]==check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
-                    return teka.translate('kropki_neighbours');
+                    return 'kropki_neighbours';
                 }
                 break;
               case teka.viewer.kropki.Defaults.EMPTY:
                 if (check[i][j]!=check[i+1][j]+1 && check[i+1][j]!=check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
-                    return teka.translate('kropki_no_neighbours');
+                    return 'kropki_no_neighbours';
                 }
                 break;
               case teka.viewer.kropki.Defaults.FULL:
                 if (check[i][j]!=2*check[i+1][j] && check[i+1][j]!=2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
-                    return teka.translate('kropki_not_twice');
+                    return 'kropki_not_twice';
                 }
                 break;
             }
         }
     }
 
+    // Check dots and no dots on horizontal line
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
             switch (this.uddots[i][j]) {
@@ -314,26 +320,26 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
                 if (check[i][j]==2*check[i][j+1] || check[i][j+1]==2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
-                    return teka.translate('kropki_twice');
+                    return 'kropki_twice';
                 }
                 if (check[i][j]==check[i][j+1]+1 || check[i][j+1]==check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
-                    return teka.translate('kropki_neighbours');
+                    return 'kropki_neighbours';
                 }
                 break;
               case teka.viewer.kropki.Defaults.EMPTY:
                 if (check[i][j]!=check[i][j+1]+1 && check[i][j+1]!=check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
-                    return teka.translate('kropki_no_neightbours');
+                    return 'kropki_no_neightbours';
                 }
                 break;
               case teka.viewer.kropki.Defaults.FULL:
                 if (check[i][j]!=2*check[i][j+1] && check[i][j+1]!=2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
-                    return teka.translate('kropki_not_twice');
+                    return 'kropki_not_twice';
                 }
                 break;
             }
@@ -345,14 +351,29 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
 
 //////////////////////////////////////////////////////////////////
 
+/** 
+ * Calculate the maximum scale, that can be used with the current
+ * extent. This is used by the layout managers to decide which way
+ * the puzzle is displayed - and if it's possible at all.
+ * 
+ * Also calculates some items, that are needed in the print function,
+ * and do not need to be calculated again everytime. That is the 
+ * translation of the text at the bottom, the delta for the fonts
+ * to place the digits vertically centered. And the deltas to move the
+ * puzzle in the center of the provided space.
+ * 
+ * Return value is an object with width and height of the used space, 
+ * and, most important, the scale.
+ */
 teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
 {
     this.scale = Math.floor(Math.min((this.width-3)/this.X,(this.height-3-this.textheight-2)/this.X));
     var realwidth = this.X * this.scale + 3;
     var realheight = this.X * this.scale + 3 + this.textheight+2;
 
+    this.bottomText = teka.translate('kropki_digits',[this.X]);
     g.font = 'bold '+this.textheight+'px sans-serif';
-    var textwidth = g.measureText(teka.translate('kropki_digits',[this.X])).width+1;
+    var textwidth = g.measureText(this.bottomText).width+1;
     realwidth = Math.max(realwidth,textwidth);
 
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
@@ -366,6 +387,8 @@ teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 
+/**
+ * Paints the diagram. */
 teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 {
     var X = this.X;
@@ -476,7 +499,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
     g.textBaseline = 'top';
     g.fillStyle = this.textcolor;
     g.font = 'bold '+this.textheight+'px sans-serif';
-    g.fillText(teka.translate('kropki_digits',[this.X]),1,X*S+5);
+    g.fillText(this.bottomText,1,X*S+5);
 
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle='#ff0000';
@@ -494,6 +517,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 
 //////////////////////////////////////////////////////////////////
 
+/** Handles mousemove event. */
 teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,yc)
 {
     xc = xc-this.deltaX-1;
@@ -520,6 +544,7 @@ teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,y
     return this.x!=oldx || this.y!=oldy || this.exp!=oldexp;
 };
 
+/** Handles mousedown event. */
 teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc,yc)
 {
     var erg = this.processMouseMovedEvent(xc,yc);
@@ -558,6 +583,7 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc
     return true;
 };
 
+/** Handles keydown event. */
 teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(e)
 {
     this.exp = false;
@@ -625,6 +651,7 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(e)
 
 //////////////////////////////////////////////////////////////////
 
+/** Sets the value of a cell, if the color fits. */
 teka.viewer.kropki.KropkiViewer.prototype.set = function(x,y,val)
 {
     if (this.f[x][y]!=0 && this.c[x][y]!=this.color) {
@@ -634,11 +661,13 @@ teka.viewer.kropki.KropkiViewer.prototype.set = function(x,y,val)
     this.c[x][y] = this.color;
 };
 
+/** Converts from normal mode to expert mode. */
 teka.viewer.kropki.KropkiViewer.prototype.setExpert = function(h)
 {
     return 1000+(h===0?0:(1<<h));
 };
 
+/** Converts back from expert mode to normal mode. */
 teka.viewer.kropki.KropkiViewer.prototype.getExpert = function(h)
 {
     if (h<1000) {

@@ -272,7 +272,7 @@ teka.PuzzleApplet.prototype.init = function()
         this.instructions = new teka.Instructions();
 
         this.initPuzzleViewer();
-        this.initHead(this.puzzleViewer.getName());
+        this.initHead(teka.translate(this.type));
         this.initButtonTool();
         this.initColorTool();
         this.initCasesTool();
@@ -487,8 +487,8 @@ teka.PuzzleApplet.prototype.initInstructions = function()
                                        this.values_.TEXT_HEIGHT);
     this.instructions.setButtonParameter(this.values_.BUTTON_COLORS,
                                          this.values_.BUTTON_HEIGHT);
-    this.instructions.setInstructions(this.puzzleViewer.getInstructions());
-    this.instructions.setUsage(this.puzzleViewer.getUsage());
+    this.instructions.setInstructions(teka.translate(this.type+'_instructions'));
+    this.instructions.setUsage(teka.translate(this.type+'_usage'));
     this.instructions.setGraphics(this.image);
     this.instructions.setGap(this.values_.GAP);
 
@@ -748,7 +748,7 @@ teka.PuzzleApplet.prototype.check = function()
     var erg = this.puzzleViewer.check();
 
     if (erg!==true) {
-        this.setText(erg,false);
+        this.setText(teka.translate(erg),false);
         this.puzzleViewer.setMode(teka.viewer.Defaults.WAIT);
         this.paint();
         return;
