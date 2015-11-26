@@ -351,18 +351,18 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
 
 //////////////////////////////////////////////////////////////////
 
-/** 
+/**
  * Calculate the maximum scale, that can be used with the current
  * extent. This is used by the layout managers to decide which way
  * the puzzle is displayed - and if it's possible at all.
- * 
+ *
  * Also calculates some items, that are needed in the print function,
- * and do not need to be calculated again everytime. That is the 
+ * and do not need to be calculated again everytime. That is the
  * translation of the text at the bottom, the delta for the fonts
  * to place the digits vertically centered. And the deltas to move the
  * puzzle in the center of the provided space.
- * 
- * Return value is an object with width and height of the used space, 
+ *
+ * Return value is an object with width and height of the used space,
  * and, most important, the scale.
  */
 teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)

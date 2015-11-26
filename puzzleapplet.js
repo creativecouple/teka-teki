@@ -144,7 +144,7 @@ teka.PuzzleApplet = function(options)
     this.paintLogo();
 
     this.correctLang();
-    
+
     teka.addScript('language/'+this.values_.LANGUAGE+'.js', teka.myBind(this,function() {
         setTimeout(this.init.bind(this),this.values_.LOGO_WAIT);
     }));
@@ -154,13 +154,13 @@ teka.PuzzleApplet = function(options)
 teka.PuzzleApplet.prototype.correctLang = function()
 {
     var whitelist = ['de','en'];
-    
+
     for (var i=0;i<whitelist.length;i++) {
         if (whitelist[i]===this.values_.LANGUAGE) {
             return;
         }
     }
-    
+
     // language is not defined, so fall back to german
     this.values_.LANGUAGE = 'de';
 };
@@ -349,7 +349,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
         this.psdata = psdata;
         this.type = type;
 
-        teka.addScript(type+'viewer.js',teka.myBind(this,callback));
+        teka.addScript('viewer/'+type+'viewer.js',teka.myBind(this,callback));
     });
     res.send();
 };
