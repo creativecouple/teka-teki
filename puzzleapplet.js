@@ -383,6 +383,7 @@ teka.PuzzleApplet.prototype.addLayout = function(tools)
     var td_scale = td.arrangeTools(this.image);
 
     if (lr_scale===false && td_scale===false) {
+        teka.setError('image too small for puzzle');
         return;
     } else if (lr_scale===false) {
         this.layout = td;
@@ -475,7 +476,21 @@ teka.PuzzleApplet.prototype.initInstructions = function()
     this.instructions.setGap(this.values_.GAP);
 
     var psdata = new teka.PSData('<<\n'+this.puzzleViewer.getExample()+'\n>>');
+    if (psdata.failed()) {
+        teka.setError('loading example failed');
+        return;
+    }
+    var type = psdata.get('type');
+    if (type===false || type!=='('+this.type+')') {
+        teka.setError('wrong type in example: '+type);
+        return;
+    }
+    
     var ex = new teka.viewer[this.type][this.typeToViewer(this.type)](psdata);
+    if (ex===undefined || ex===false) {
+        setError('example cannot be loaded - '+this.type);
+        return;
+    }
     ex.setTextParameter(this.values_.TEXT_COLOR,
                         this.values_.TEXT_HEIGHT);
     ex.setMode(teka.viewer.Defaults.WAIT);
