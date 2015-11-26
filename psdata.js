@@ -30,8 +30,9 @@ teka.PSData = function(psdata)
 
     if (p1==-1 || p2==-1 || p2<p1) { return; }
 
-    var d = psdata.substring(p1+2,p2).trim().split("\n/");
-
+    psdata = "\n"+psdata.substring(p1+2,p2).trim();
+    var d = psdata.split("\n/");
+    
     var d_length = d.length;
     for (var i=0;i<d_length;i++) {
         var p = d[i].indexOf(" ");
