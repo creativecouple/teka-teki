@@ -583,17 +583,31 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
         this.setText('',false);
         this.paint();
         teka.stopPropagation(e);
-        return;
+        return false;
+    }
+    if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
+        return true;
     }
     
     var myEvent = teka.normalizeKeyEvent(e);
     
+    if (this.showInstructions) {
+        if (this.instructions.processKeyEvent(myEvent)) {
+            this.paint();
+            teka.stopPropagation(e);
+            return false;
+        }
+        return true;
+    }
+    
     if (this.layout.processKeyEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
+        return false;
     }
 
     this.canvas.focus();
+    return true;
 };
 
 //////////////////////////////////////////////////////////////////

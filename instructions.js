@@ -286,6 +286,54 @@ teka.Instructions.prototype.processMousePressedEvent = function(xc,yc)
     return true;
 };
 
+/** Handle keydown event */
+teka.Instructions.prototype.processKeyEvent = function(e)
+{
+    if (e.key==teka.KEY_RIGHT) {
+        if (this.activeButton===false || this.activeButton>3) {
+            this.activeButton = 3;
+        } else if (this.activeButton<3) {
+            this.activeButton++;
+        }
+        return true;
+    }
+    
+    if (e.key==teka.KEY_LEFT) {
+        if (this.activeButton===false || this.activeButton>3) {
+            this.activeButton = 0;
+        } else if (this.activeButton>0) {
+            this.activeButton--;
+        }
+        return true;
+    }    
+    
+    if (e.key==teka.KEY_ENTER) {
+        if (this.activeButton!==false && this.activeButton<3) {
+            this.mode = this.activeButton;
+            this.page = 0;
+        } else if (this.activeButton===3) {
+            this.event(false);
+        }
+        return true;
+    }
+    
+    if (e.key==teka.KEY_DOWN) {
+        if (this.page<this.text[this.mode].length-1) {
+            this.page++;
+        }
+        return true;
+    }
+    
+    if (e.key==teka.KEY_UP) {
+        if (this.page>0) {
+            this.page--;
+        }
+        return true;
+    }
+    
+    return false;
+};
+
 /**
  * Calculate the number of the button at coordinates xc, yc.
  * 0 to 3 are the buttons at the top.
