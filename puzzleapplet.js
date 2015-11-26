@@ -583,10 +583,10 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         return;
     }
 
-    e = teka.normalizeMouseEvent(e);
+    var position = teka.normalizeMouseEvent(e);
 
-    var x = e.x-this.canvas.offsetLeft;
-    var y = e.y-this.canvas.offsetTop;
+    var x = position.x-this.canvas.offsetLeft;
+    var y = position.y-this.canvas.offsetTop;
 
     if (this.showInstructions) {
         if (this.instructions.processMouseMovedEvent(x-this.instructions.left,
@@ -633,10 +633,10 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
         return;
     }
 
-    e = teka.normalizeMouseEvent(e);
+    var position = teka.normalizeMouseEvent(e);
 
-    var x = e.x-this.canvas.offsetLeft;
-    var y = e.y-this.canvas.offsetTop;
+    var x = position.x-this.canvas.offsetLeft;
+    var y = position.y-this.canvas.offsetTop;
 
     if (this.showInstructions) {
         if (this.instructions.processMousePressedEvent(x-this.instructions.left,
@@ -674,17 +674,31 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
         this.setText('',false);
         this.paint();
         teka.stopPropagation(e);
-        return;
+        return false;
+    }
+    if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
+        return true;
     }
     
     var myEvent = teka.normalizeKeyEvent(e);
     
+    if (this.showInstructions) {
+        if (this.instructions.processKeyEvent(myEvent)) {
+            this.paint();
+            teka.stopPropagation(e);
+            return false;
+        }
+        return true;
+    }
+    
     if (this.layout.processKeyEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
+        return false;
     }
 
     this.canvas.focus();
+    return true;
 };
 
 //////////////////////////////////////////////////////////////////

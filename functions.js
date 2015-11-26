@@ -26,22 +26,20 @@ teka.error = false;
 
 /**
  * Calculates the position of the mouse relative to the canvas.
- * Should work in all supported browsers.
+ * pageX/Y works in most browsers although it's still in the draft status.
+ * In IE8 pageX/Y is not set at all. There the mouseposition is calculated
+ * using clientX/Y and scroll information.
  */
 teka.normalizeMouseEvent = function(e)
 {
-    e.x = 0;
-    e.y = 0;
-
-    if (e.pageX != undefined && e.pageY != undefined) {
-        e.x = e.pageX;
-        e.y = e.pageY;
-    } else {
-        e.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        e.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-    }
-
-    return e;
+    return {
+        x: e.pageX!==undefined?
+            e.pageX:
+            e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft,
+        y: e.pageY!==undefined?
+            e.pageY:
+            e.clientY+document.body.scrollTop+document.documentElement.scrollTop
+    };
 };
 
 /**
@@ -189,6 +187,56 @@ teka.strokeOval = function(g,x,y,scale,start,end)
     g.beginPath();
     g.arc(x,y,scale,start,end);
     g.stroke();
+};
+
+/**
+ * Calculates the height of a digit in the specified font.
+ * As javascript doesn't provide this information, it has to be
+ * calculated using the image data.
+ */
+teka.getFontData = function(font,size)
+{
+    var canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    var image = canvas.getContext("2d");
+    
+    image.fillStyle = '#000';
+    image.fillRect(0,0,size,size);
+    image.fillStyle = '#f00';
+    image.textAlign = 'center';
+    image.textBaseline = 'middle';
+    image.font = font;
+    image.fillText('0',size/2,size/2);
+    
+    var data = image.getImageData(0,0,size,size).data;
+
+    var top = 0;
+    top: for (var j=0;j<size;j++) {
+        for (var i=0;i<size;i++) {
+            if (data[4*(i+size*j)]!==0) {
+                top = j;
+                break top;
+            }
+        }
+    }
+    
+    var bottom = 0;
+    bottom: for (var j=size-1;j>=0;j--) {
+        for (var i=0;i<size;i++) {
+            if (data[4*(i+size*j)]!==0) {
+                bottom = j;
+                break bottom;
+            }
+        }
+    }
+    
+    var delta = 0;
+    if (top<bottom) {
+        delta = size/2-(bottom+top)/2;
+    }
+
+    return { font:font, delta:delta };
 };
 
 //////////////////////////////////////////////////////////////////
