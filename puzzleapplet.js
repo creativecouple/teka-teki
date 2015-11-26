@@ -502,10 +502,10 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         return;
     }
 
-    e = teka.normalizeMouseEvent(e);
+    var position = teka.normalizeMouseEvent(e);
 
-    var x = e.x-this.canvas.offsetLeft;
-    var y = e.y-this.canvas.offsetTop;
+    var x = position.x-this.canvas.offsetLeft;
+    var y = position.y-this.canvas.offsetTop;
 
     if (this.showInstructions) {
         if (this.instructions.processMouseMovedEvent(x-this.instructions.left,
@@ -547,10 +547,10 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
         return;
     }
 
-    e = teka.normalizeMouseEvent(e);
+    var position = teka.normalizeMouseEvent(e);
 
-    var x = e.x-this.canvas.offsetLeft;
-    var y = e.y-this.canvas.offsetTop;
+    var x = position.x-this.canvas.offsetLeft;
+    var y = position.y-this.canvas.offsetTop;
 
     if (this.showInstructions) {
         if (this.instructions.processMousePressedEvent(x-this.instructions.left,

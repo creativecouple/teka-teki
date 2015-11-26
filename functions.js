@@ -22,22 +22,20 @@
 
 /**
  * Calculates the position of the mouse relative to the canvas.
- * Should work in all supported browsers.
+ * pageX/Y works in most browsers although it's still in the draft status.
+ * In IE8 pageX/Y is not set at all. There the mouseposition is calculated
+ * using clientX/Y and scroll information.
  */
 teka.normalizeMouseEvent = function(e)
 {
-    e.x = 0;
-    e.y = 0;
-
-    if (e.pageX != undefined && e.pageY != undefined) {
-        e.x = e.pageX;
-        e.y = e.pageY;
-    } else {
-        e.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        e.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-    }
-
-    return e;
+    return {
+        x: e.pageX!==undefined?
+            e.pageX:
+            e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft,
+        y: e.pageY!==undefined?
+            e.pageY:
+            e.clientY+document.body.scrollTop+document.documentElement.scrollTop
+    };
 };
 
 /**
