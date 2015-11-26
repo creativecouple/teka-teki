@@ -199,8 +199,8 @@ teka.viewer.PuzzleViewer.prototype.asciiToArray = function(ascii)
     return c;
 };
 
-/** 
- * Reads a number of d digits from ascii art array c at 
+/**
+ * Reads a number of d digits from ascii art array c at
  * positon x,y. Returns false, if no number is found.
  */
 teka.viewer.PuzzleViewer.prototype.getNr = function(c,x,y,d)

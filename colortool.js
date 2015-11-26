@@ -227,14 +227,14 @@ teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
     return false;
 };
 
-/** 
- * Handle keydown event 
- * 
+/**
+ * Handle keydown event
+ *
  * Only the first eight colors are supported, as most keyboard
  * do not have more than 12 function keys. Anyway, I cannot imagine,
  * that having more than 8 colors is useful.
  */
-teka.ColorTool.prototype.processKeyEvent = function(e) 
+teka.ColorTool.prototype.processKeyEvent = function(e)
 {
     if (e.key>=teka.KEY_F5 && e.key<=teka.KEY_F12) {
         var y = e.key-teka.KEY_F5;
@@ -256,7 +256,7 @@ teka.ColorTool.prototype.processKeyEvent = function(e)
         }
         return true;
     }
-    
+
     return false;
 };
 

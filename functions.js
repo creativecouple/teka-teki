@@ -48,13 +48,13 @@ teka.normalizeMouseEvent = function(e)
  */
 teka.normalizeKeyEvent = function(e)
 {
-    var ret = { 
+    var ret = {
         key: e.keyCode,
         shift: e.shiftKey,
         ctrl: e.ctrlKey,
         alt: e.altKey
     };
-    
+
     // correct nonstandard of firefox:
     if (ret.key==181) {
         ret.key = 173;
@@ -74,12 +74,12 @@ teka.normalizeKeyEvent = function(e)
     if (ret.key==173) {
         ret.key = 189;
     }
-    
+
     // keypad numbers should behave like normal numbers:
     if (ret.key>=96 && ret.key<=105) {
         ret.key-=48;
     }
-    
+
     // keypad del is normal del:
     if (ret.key==110) {
         ret.key = 46;
@@ -200,7 +200,7 @@ teka.getFontData = function(font,size)
     canvas.width = size;
     canvas.height = size;
     var image = canvas.getContext("2d");
-    
+
     image.fillStyle = '#000';
     image.fillRect(0,0,size,size);
     image.fillStyle = '#f00';
@@ -208,7 +208,7 @@ teka.getFontData = function(font,size)
     image.textBaseline = 'middle';
     image.font = font;
     image.fillText('0',size/2,size/2);
-    
+
     var data = image.getImageData(0,0,size,size).data;
 
     var top = 0;
@@ -220,7 +220,7 @@ teka.getFontData = function(font,size)
             }
         }
     }
-    
+
     var bottom = 0;
     bottom: for (var j=size-1;j>=0;j--) {
         for (var i=0;i<size;i++) {
@@ -230,7 +230,7 @@ teka.getFontData = function(font,size)
             }
         }
     }
-    
+
     var delta = 0;
     if (top<bottom) {
         delta = size/2-(bottom+top)/2;
@@ -264,6 +264,6 @@ teka.KEY_F9 = 120;
 teka.KEY_F10 = 121;
 teka.KEY_F11 = 122;
 teka.KEY_F12 = 123;
-teka.KEY_ENTER = 13
+teka.KEY_ENTER = 13;
 teka.KEY_PAGE_UP = 33;
 teka.KEY_PAGE_DOWN = 34;

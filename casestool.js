@@ -167,7 +167,7 @@ teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
 };
 
 /** Handle keydown event */
-teka.CasesTool.prototype.processKeyEvent = function(e) 
+teka.CasesTool.prototype.processKeyEvent = function(e)
 {
     if (e.key==teka.KEY_PAGE_UP) {
         if (this.stack.length<this.maxLevel) {
@@ -177,7 +177,7 @@ teka.CasesTool.prototype.processKeyEvent = function(e)
         }
         return true;
     }
-        
+
     if (e.key==teka.KEY_PAGE_DOWN) {
         if (this.stack.length>0) {
             if (this.events[1]!==false) {
@@ -186,7 +186,7 @@ teka.CasesTool.prototype.processKeyEvent = function(e)
         }
         return true;
     }
-    
+
     return false;
 };
 

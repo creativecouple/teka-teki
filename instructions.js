@@ -299,7 +299,7 @@ teka.Instructions.prototype.processKeyEvent = function(e)
         }
         return true;
     }
-    
+
     if (e.key==teka.KEY_LEFT) {
         if (this.activeButton===false || this.activeButton>3) {
             this.activeButton = 0;
@@ -307,8 +307,8 @@ teka.Instructions.prototype.processKeyEvent = function(e)
             this.activeButton--;
         }
         return true;
-    }    
-    
+    }
+
     if (e.key==teka.KEY_ENTER) {
         if (this.activeButton!==false && this.activeButton<3) {
             this.mode = this.activeButton;
@@ -320,21 +320,21 @@ teka.Instructions.prototype.processKeyEvent = function(e)
         }
         return true;
     }
-    
+
     if (e.key==teka.KEY_DOWN) {
         if (this.page<this.text[this.mode].length-1) {
             this.page++;
         }
         return true;
     }
-    
+
     if (e.key==teka.KEY_UP) {
         if (this.page>0) {
             this.page--;
         }
         return true;
     }
-    
+
     return false;
 };
 

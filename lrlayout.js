@@ -72,7 +72,7 @@ teka.LRLayout.prototype.arrangeTools = function(g) {
                                               y,
                                               this.width-metrics.width-this.gap,
                                               this.height-y);
-    
+
     if (metrics.scale<18) {
         return false;
     }

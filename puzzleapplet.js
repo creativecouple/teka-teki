@@ -234,7 +234,7 @@ teka.PuzzleApplet.prototype.paintLogo = function()
 teka.PuzzleApplet.prototype.init = function()
 {
     if (this.values_.FILE===false) {
-        setError('Missing filename.');
+        teka.setError('Missing filename.');
         this.paint();
         return;
     }
@@ -243,7 +243,7 @@ teka.PuzzleApplet.prototype.init = function()
         this.puzzleViewer =
             new teka.viewer[this.type][this.typeToViewer(this.type)](this.psdata);
         if (this.puzzleViewer===undefined || this.puzzleViewer===false) {
-            setError('Puzzleviewer cannot be loaded - '+this.type);
+            teka.setError('Puzzleviewer cannot be loaded - '+this.type);
             this.paint();
             return;
         }
@@ -307,7 +307,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
             this.paint();
             return;
         }
-        
+
         var psdata = new teka.PSData(res.responseText);
         if (psdata.failed()) {
             teka.setError('parsing psdata failed: '+res.responseText);
@@ -328,7 +328,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
             this.paint();
             return;
         }
-        
+
         this.psdata = psdata;
         this.type = type;
 
@@ -337,7 +337,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
     res.send();
 };
 
-/** 
+/**
  * Checks, if type is a valid puzzletype, that is, a type,
  * where a viewer exists. We use this, to prevent loading arbitrary
  * code with crafted files.
@@ -345,13 +345,13 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
 teka.PuzzleApplet.prototype.correctType = function(type)
 {
     var whitelist = ['kropki'];
-    
+
     for (var i=0;i<whitelist.length;i++) {
         if (whitelist[i]===type) {
             return true;
         }
     }
-    
+
     return false;
 };
 
@@ -485,10 +485,10 @@ teka.PuzzleApplet.prototype.initInstructions = function()
         teka.setError('wrong type in example: '+type);
         return;
     }
-    
+
     var ex = new teka.viewer[this.type][this.typeToViewer(this.type)](psdata);
     if (ex===undefined || ex===false) {
-        setError('example cannot be loaded - '+this.type);
+        teka.setError('example cannot be loaded - '+this.type);
         return;
     }
     ex.setTextParameter(this.values_.TEXT_COLOR,
@@ -527,7 +527,7 @@ teka.PuzzleApplet.prototype.paint = function()
         this.paintError();
         return;
     }
-    
+
     this.image.save();
     this.head.translate(this.image);
     this.head.clip(this.image);
@@ -576,7 +576,7 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         this.paint();
         return;
     }
-    
+
     this.canvas.focus();
 
     if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
@@ -664,9 +664,9 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
 {
     if (teka.error) {
         this.paint();
-        return;
+        return true;
     }
-    
+
     if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
             this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
         this.puzzleViewer.clearError();
@@ -679,9 +679,9 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
     if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
         return true;
     }
-    
+
     var myEvent = teka.normalizeKeyEvent(e);
-    
+
     if (this.showInstructions) {
         if (this.instructions.processKeyEvent(myEvent)) {
             this.paint();
@@ -690,7 +690,7 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
         }
         return true;
     }
-    
+
     if (this.layout.processKeyEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
