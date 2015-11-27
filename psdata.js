@@ -32,7 +32,7 @@ teka.PSData = function(psdata)
 
     psdata = "\n"+psdata.substring(p1+2,p2).trim();
     var d = psdata.split("\n/");
-    
+
     var d_length = d.length;
     for (var i=0;i<d_length;i++) {
         var p = d[i].indexOf(" ");
