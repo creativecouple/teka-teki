@@ -134,7 +134,7 @@ teka.TextTool.prototype.wrapText = function(g)
             }
         }
 
-        if (ch<=this.height || this.printTextHeight<=9) {
+        if (ch<=this.height || this.printTextHeight<=this.textHeight*0.75) {
             break;
         }
 

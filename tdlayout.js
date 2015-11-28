@@ -76,7 +76,7 @@ teka.TDLayout.prototype.arrangeTools = function(g)
     this.tools[0].setExtent(0,0,this.width,this.height-this.bestheight-this.gap);
     var metrics = this.tools[0].setMetrics(g);
 
-    if (metrics.scale<18) {
+    if (metrics.scale<1.5*this.textHeight) {
         return false;
     }
 

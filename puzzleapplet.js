@@ -388,6 +388,8 @@ teka.PuzzleApplet.prototype.addLayout = function(tools)
     var lr = new teka.LRLayout();
     lr.setExtent(margin,margin+headPlusGap,
                  width-2*margin,height-2*margin-headPlusGap);
+    lr.setTextParameter(this.values_.TEXT_COLOR,
+                        this.values_.TEXT_HEIGHT);
     lr.setTools(tools);
     lr.setGap(this.values_.GAP);
     var lr_scale = lr.arrangeTools(this.image);
@@ -395,6 +397,8 @@ teka.PuzzleApplet.prototype.addLayout = function(tools)
     var td = new teka.TDLayout();
     td.setExtent(margin,margin+headPlusGap,
                  width-2*margin,height-2*margin-headPlusGap);
+    td.setTextParameter(this.values_.TEXT_COLOR,
+                        this.values_.TEXT_HEIGHT);
     td.setTools(tools);
     td.setGap(this.values_.GAP);
     var td_scale = td.arrangeTools(this.image);
