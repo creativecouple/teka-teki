@@ -143,6 +143,7 @@ teka.viewer.kropki.KropkiViewer.prototype.reset = function()
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             this.f[i][j] = 0;
+            this.c[i][j] = 0;
         }
     }
 };
@@ -169,7 +170,7 @@ teka.viewer.kropki.KropkiViewer.prototype.copyColor = function(color)
     }
 };
 
-/** Delete alle digits with color. */
+/** Delete all digits with color. */
 teka.viewer.kropki.KropkiViewer.prototype.clearColor = function(color)
 {
     for (var i=0;i<this.X;i++) {

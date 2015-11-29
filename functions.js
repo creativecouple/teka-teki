@@ -68,7 +68,7 @@ teka.normalizeKeyEvent = function(e)
     if (ret.key==59) {
         ret.key = 186;
     }
-    if (ret.key==61) {
+    if (ret.key==61 || ret.key==171) {
         ret.key = 187;
     }
     if (ret.key==173) {
@@ -252,6 +252,8 @@ teka.KEY_9 = 57;
 teka.KEY_SPACE = 32;
 teka.KEY_HASH = 163; // Maybe not browser or keyboard compatible...
 teka.KEY_COMMA = 188;
+teka.KEY_DOT = 190;
+teka.KEY_SLASH = 191;
 teka.KEY_F1 = 112;
 teka.KEY_F2 = 113;
 teka.KEY_F3 = 114;
@@ -267,3 +269,10 @@ teka.KEY_F12 = 123;
 teka.KEY_ENTER = 13;
 teka.KEY_PAGE_UP = 33;
 teka.KEY_PAGE_DOWN = 34;
+teka.KEY_PLUS = 187;
+teka.KEY_MINUS = 189;
+teka.KEY_A = 65;
+teka.KEY_N = 78;
+teka.KEY_Q = 81;
+teka.KEY_S = 83;
+teka.KEY_W = 87;

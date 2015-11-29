@@ -146,5 +146,28 @@ teka.dictionary = {
     kropki_not_twice: 'Keines der beiden markierten Felder enthält das Doppelte des anderen.',
     kropki_digits: 'Ziffern von 1 bis {1}.',
 
+    magnets: 'Magnetplatten',
+    magnets_instructions: 'Füllen Sie das Diagramm mit magnetischen und neutralen '
+        +'(=schwarzen) Platten. Jede Magnetplatte hat zwei Pole (+ und -). '
+        +'Zwei Hälften mit gleichen Polen dürfen nicht waagerecht oder senkrecht '
+        +'benachbart sein. Die Zahlen an den Rändern geben an, wie viele Plus- '
+        +'und Minuspole in der entsprechenden Zeile oder Spalte vorkommen.',
+    magnets_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Pluspol\n2. Klick: Minuspol\n3. Klick: Neutrale Platte\n'
+        +'4. Klick: Plusminusplatte\n5. Klick: Feldinhalt löschen (weiß)\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'+/Q: Pluspol\n-/W: Minuspol\nN,A und /: Neutrale Platte\n. und #,S und *: '
+        +'Plusminusplatte\n'
+        +'Leertaste: Feldinhalt löschen\n\n'
+        +'Plusminusplatten werden automatisch zu einer richtigen Magnetplatte, wenn sie '
+        +'eine solche berühren.',
+    magnets_empty: 'Die markierte Magnetplatte ist leer.',
+    magnets_unique_symbol: 'Die markierte Magnetplatte ist noch nicht eindeutig.',
+    magnets_equal_poles: 'An der markierten Stelle berühren sich zwei gleiche Pole.',
+    magnets_row_plus: 'In der markierten Zeile stimmt die Anzahl der Pluspole nicht.',
+    magnets_row_minus: 'In der markierten Zeile stimmt die Anzahl der Minuspole nicht.',
+    magnets_column_plus: 'In der markierten Spalte stimmt die Anzahl der Pluspole nicht.',
+    magnets_column_minus: 'In der markierten Spalte stimmt die Anzahl der Minuspole nicht.',
+
     dummy_to_avoid_comma_bug: ''
 };
