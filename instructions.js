@@ -180,7 +180,7 @@ teka.Instructions.prototype.paint = function(g)
 
         this.exampleViewer.addSolution();
         g.save();
-        g.translate(this.width-this.imageWidth,this.imageHeight+this.gap);
+        g.translate(this.width-this.imageWidth,Math.floor(this.imageHeight+this.gap));
         this.exampleViewer.paint(g);
         g.restore();
         this.exampleViewer.reset();
