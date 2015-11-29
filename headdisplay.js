@@ -26,6 +26,7 @@ teka.HeadDisplay = function()
     teka.Display.call(this);
 
     this.title = 'Teka-Teki';
+    this.prefix = false;
 };
 teka.extend(teka.HeadDisplay,teka.Display);
 
@@ -46,6 +47,14 @@ teka.HeadDisplay.prototype.setTitle = function(title)
 };
 
 /**
+ * Sets the title. It will be used the next time, print() is called.
+ */
+teka.HeadDisplay.prototype.setPrefix = function(prefix)
+{
+    this.prefix = prefix;
+};
+
+/**
  * Prints the title.
  * The parameter g is an CanvasRenderingContext2D which is assumed
  * to be translated to the origin of this display.
@@ -56,5 +65,6 @@ teka.HeadDisplay.prototype.paint = function(g)
     g.textBaseline = 'middle';
     g.fillStyle = this.textcolor;
     g.font = 'bold '+this.height+'px "URW Chancery L",sans-serif';
-    g.fillText(this.title,this.width/2,this.height/2);
+    g.fillText((this.prefix!==false?this.prefix+': ':'')+this.title,
+               this.width/2,this.height/2);
 };

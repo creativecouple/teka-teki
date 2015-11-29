@@ -22,7 +22,7 @@
 teka.Display = function()
 {
     this.textcolor = '#000';
-    this.textheight = 12;
+    this.textHeight = 12;
     this.top = 0;
     this.left = 0;
     this.width = 100;
@@ -35,7 +35,7 @@ teka.Display = function()
 teka.Display.prototype.setTextParameter = function(color, height)
 {
     this.textcolor = color;
-    this.textheight = height;
+    this.textHeight = height;
 };
 
 /**

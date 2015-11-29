@@ -368,12 +368,12 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
  */
 teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
 {
-    this.scale = Math.floor(Math.min((this.width-3)/this.X,(this.height-3-this.textheight-2)/this.X));
+    this.scale = Math.floor(Math.min((this.width-3)/this.X,(this.height-3-this.textHeight-2)/this.X));
     var realwidth = this.X * this.scale + 3;
-    var realheight = this.X * this.scale + 3 + this.textheight+2;
+    var realheight = this.X * this.scale + 3 + this.textHeight+2;
 
     this.bottomText = teka.translate('kropki_digits',[this.X]);
-    g.font = 'bold '+this.textheight+'px sans-serif';
+    g.font = 'bold '+this.textHeight+'px sans-serif';
     var textwidth = g.measureText(this.bottomText).width+1;
     realwidth = Math.max(realwidth,textwidth);
 
@@ -499,7 +499,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.fillStyle = this.textcolor;
-    g.font = 'bold '+this.textheight+'px sans-serif';
+    g.font = 'bold '+this.textHeight+'px sans-serif';
     g.fillText(this.bottomText,1,X*S+5);
 
     if (this.mode==teka.viewer.Defaults.NORMAL) {
