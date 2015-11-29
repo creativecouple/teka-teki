@@ -87,6 +87,9 @@ teka.Defaults.GAP = 20;
 /** Height of the head display. */
 teka.Defaults.HEAD_HEIGHT = 20;
 
+/** Prefix to be displayed in front of the name of the puzzle. */
+teka.Defaults.HEAD_PREFIX = false;
+
 /** The colors to use for the buttons. */
 teka.Defaults.BUTTON_COLORS = {
     TEXT: '#FFF',
@@ -430,6 +433,7 @@ teka.PuzzleApplet.prototype.initPuzzleViewer = function()
 teka.PuzzleApplet.prototype.initHead = function(title)
 {
     this.head.setTitle(title);
+    this.head.setPrefix(this.values_.HEAD_PREFIX);
     this.head.setTextParameter(this.values_.TEXT_COLOR,
                                     this.values_.TEXT_HEIGHT);
     this.head.setExtent(this.values_.MARGIN,
