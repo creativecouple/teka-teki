@@ -269,6 +269,7 @@ teka.ColorTool.prototype.processKeyEvent = function(e)
  */
 teka.ColorTool.prototype.getButton = function(xc,yc)
 {
+    xc -= this.delta;
     for (var i=0;i<3;i++) {
         for (var j=0;j<this.colorname.length;j++) {
             if (xc>=i*(this.buttonWidth+this.gap)

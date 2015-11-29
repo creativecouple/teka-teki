@@ -435,7 +435,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.paint = function(g)
             g.fillRect(i*S+0.5,(2+j)*S+0.5,S+1,S+1);
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             g.fillStyle = '#fff';
@@ -486,7 +486,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.paint = function(g)
     g.strokeRect(0.5,0.5,(X+2)*S,(Y+2)*S);
     teka.drawLine(g,0,2*S+0.5,(X+2)*S,2*S+0.5);
     teka.drawLine(g,2*S+0.5,0,2*S+0.5,(Y+2)*S);
-    
+
     g.lineWidth = 1;
     teka.drawLine(g,S+1,S+1,(X+2)*S+1,S+1);
     teka.drawLine(g,S+1,S+1,S+1,(Y+2)*S+1);
@@ -542,7 +542,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.paint = function(g)
             g.strokeRect(S*(this.x+2)+5,S*(this.y+2)+5,S-8,S-8);
         }
     }
-    
+
     g.restore();
 };
 
