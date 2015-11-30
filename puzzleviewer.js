@@ -222,3 +222,27 @@ teka.viewer.PuzzleViewer.prototype.getNr = function(c,x,y,d)
         }
     return val;
 };
+
+/**
+ * Reads a number of d digits from ascii art array c at
+ * positon x,y vertically. Returns false, if no number is found.
+ */
+teka.viewer.PuzzleViewer.prototype.getVNr = function(c,x,y,d)
+{
+    var val = false;
+    for (var i=0;i<d;i++)
+        {
+            var ch = c[x][y+i].charCodeAt(0);
+            if (ch==' '.charCodeAt(0)) {
+                continue;
+            }
+            if (val===false) {
+                val=0;
+            }
+            val = val*10;
+            if (ch>='0'.charCodeAt(0) && ch<='9'.charCodeAt(0)) {
+                val += (ch-'0'.charCodeAt(0));
+            }
+        }
+    return val;
+};

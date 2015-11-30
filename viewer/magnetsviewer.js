@@ -25,7 +25,9 @@ teka.viewer.magnets.Defaults = {
     NEUTRAL: 3,
     MAGNET: 4,
     TOP: 1,
-    LEFT: 2
+    LEFT: 2,
+    BOTTOM: 3,
+    RIGHT: 4
 };
 
 /** Constructor */
@@ -45,7 +47,9 @@ teka.viewer.magnets.MagnetsViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
-    this.asciiToData(data.get('puzzle'));
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
     this.solution = this.asciiToSolution(data.get('solution'));
 
     this.f = teka.new_array([this.X,this.Y],0);
@@ -56,7 +60,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii)
+teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -67,7 +71,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii)
     this.puzzle = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            switch (c[2*i+3][2*j+3]) {
+            switch (c[2*i+2*d+1][2*j+2*d+1]) {
               case '+': this.puzzle[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
               case '-': this.puzzle[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
               case '#': this.puzzle[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
@@ -79,32 +83,40 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii)
     this.magnets = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i+4][2*j+3]==' ') {
+            if (c[2*i+2*d+2][2*j+2*d+1]==' ') {
                 this.magnets[i][j] = teka.viewer.magnets.Defaults.LEFT;
-            } else if (c[2*i+3][2*j+4]==' ') {
+                this.magnets[i+1][j] = teka.viewer.magnets.Defaults.RIGHT;
+            } else if (c[2*i+2*d+1][2*j+2*d+2]==' ') {
                 this.magnets[i][j] = teka.viewer.magnets.Defaults.TOP;
+                this.magnets[i][j+1] = teka.viewer.magnets.Defaults.BOTTOM;
             }
         }
     }
 
-    this.leftdata = teka.new_array([2,this.Y],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (this.magnets[i][j]===0) {
+                this.puzzle[i][j] = teka.viewer.magnets.Defaults.NEUTRAL;
+            }
+        }
+    }
+
+    this.leftdata = teka.new_array([2,this.Y],-1);
     for (var i=0;i<2;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[i][2*j+3]==' ') {
-                this.leftdata[i][j] = -1;
-            } else {
-                this.leftdata[i][j] = c[i][2*j+3].charCodeAt(0)-'0'.charCodeAt(0);
+            var nr = this.getNr(c,i*d,2*j+2*d+1,d);
+            if (nr!==false) {
+                this.leftdata[i][j] = nr;
             }
         }
     }
 
-    this.topdata = teka.new_array([this.X,2],0);
+    this.topdata = teka.new_array([this.X,2],-1);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<2;j++) {
-            if (c[2*i+3][j]==' ') {
-                this.topdata[i][j] = -1;
-            } else {
-                this.topdata[i][j] = c[2*i+3][j].charCodeAt(0)-'0'.charCodeAt(0);
+            var nr = this.getVNr(c,2*i+2*d+1,j*d,d);
+            if (nr!==false) {
+                this.topdata[i][j] = nr;
             }
         }
     }
@@ -531,6 +543,9 @@ teka.viewer.magnets.MagnetsViewer.prototype.paint = function(g)
             }
             if (this.magnets[i][j]==teka.viewer.magnets.Defaults.TOP) {
                 g.strokeRect((2+i)*S+1,(2+j)*S+1,S,2*S);
+            }
+            if (this.magnets[i][j]===0) {
+                g.strokeRect((2+i)*S+1,(2+j)*S+1,S,S);
             }
         }
     }
