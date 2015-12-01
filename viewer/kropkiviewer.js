@@ -405,11 +405,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
         for (var j=0;j<X;j++) {
             if (this.mode>=teka.viewer.Defaults.BLINK_START
                 && this.mode<=teka.viewer.Defaults.BLINK_END) {
-                g.fillStyle = this.solved_color[
-                                  Math.round(Math.abs(this.mode+(i+3)*this.mode%(j+1)
-                                  +(j+1)*(j+4)*(9-this.mode)%(i+1)
-                                  +this.f[i][j]+i+(X+1)*j))%8
-                              ];
+                g.fillStyle = this.getBlinkColor(i,j,X,this.f[i][j]);
             } else if (this.error[i][j]===true) {
                 g.fillStyle = '#f00';
             } else {

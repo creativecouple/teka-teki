@@ -169,5 +169,23 @@ teka.dictionary = {
     magnets_column_plus: 'In der markierten Spalte stimmt die Anzahl der Pluspole nicht.',
     magnets_column_minus: 'In der markierten Spalte stimmt die Anzahl der Minuspole nicht.',
 
+    starbattle: 'Doppelstern',
+    starbattle_instructions: 'Tragen Sie in das Diagramm Sterne so ein, dass sich '
+        +'in jeder Zeile, jeder Spalte und jedem fettumrandeten Gebiet genau so '
+        +'viele Sterne befinden wie unter dem Rätsel angegeben ist. '
+        +'Die Sterne haben jeweils die Größe eines Kästchens und dürfen einander '
+        +'nicht berühren, auch nicht diagonal.',
+    starbattle_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Stern\n2. Klick: Leerfeld (markiert durch einen Strich)\n'
+        +'3. Klick: Feldinhalt löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Stern\n-, / und W: Leerfeld (markiert durch einen Strich)\n'
+        +'Leertaste: Feldinhalt löschen',
+    starbattle_stars: 'Anzahl der Sterne: {1}',
+    starbattle_touch: 'Die beiden markierten Sterne berühren sich.',
+    starbattle_row: 'In der markierten Zeile stimmt die Anzahl der Sterne nicht.',
+    starbattle_column: 'In der markierten Spalte stimmt die Anzahl der Sterne nicht.',
+    starbattle_area: 'Im markierten Gebiet stimmt die Anzahl der Sterne nicht.',
+    
     dummy_to_avoid_comma_bug: ''
 };

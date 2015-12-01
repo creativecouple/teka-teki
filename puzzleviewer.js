@@ -115,6 +115,19 @@ teka.viewer.PuzzleViewer.prototype.getColorString = function(color)
     return this.colortool.getColorString(color);
 };
 
+teka.viewer.PuzzleViewer.prototype.getBlinkColor = function(x, y, size, val)
+{
+    var tmp = this.mode
+        +(x+3)*this.mode%(y+1)
+        +(y+1)*(y+4)*(9-this.mode)%(x+1)
+        +val+x+y*(size+1);
+    
+    tmp = Math.floor(Math.abs(tmp)%8);
+    
+    return this.solved_color[tmp];
+};
+
+
 //////////////////////////////////////////////////////////////////
 
 /** Abstract function. Init the viewer with a PSData object. */
@@ -245,4 +258,36 @@ teka.viewer.PuzzleViewer.prototype.getVNr = function(c,x,y,d)
             }
         }
     return val;
+};
+
+/**
+ * Draw a star at position x,y.
+ */
+teka.viewer.PuzzleViewer.prototype.drawStar = function(g, x, y)
+{
+    g.save();
+    g.translate(x,y);
+    g.beginPath();
+    var first = true;
+    
+    for (var i=0;i<10;i+=2) {
+        var w1 = Math.PI/5*i;
+        var w2 = Math.PI/5*(i+1);
+        var x1 = Math.sin(w1)*0.45*this.scale;
+        var y1 = -Math.cos(w1)*0.45*this.scale;
+        var x2 = Math.sin(w2)*0.18*this.scale;
+        var y2 = -Math.cos(w2)*0.18*this.scale;
+        
+        if (first) {
+            g.moveTo(x1,y1);
+            first = false;
+        } else {
+            g.lineTo(x1,y1);
+        }
+        g.lineTo(x2,y2);
+    }
+    
+    g.closePath();
+    g.fill();
+    g.restore();
 };

@@ -364,7 +364,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
  */
 teka.PuzzleApplet.prototype.correctType = function(type)
 {
-    var whitelist = ['kropki','magnets'];
+    var whitelist = ['kropki','magnets','starbattle'];
 
     for (var i=0;i<whitelist.length;i++) {
         if (whitelist[i]===type) {

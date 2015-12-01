@@ -451,8 +451,9 @@ teka.viewer.magnets.MagnetsViewer.prototype.paint = function(g)
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             g.fillStyle = '#fff';
-            if (this.mode>=0) {
-                g.fillStyle = this.solved_color[Math.abs((this.mode+(i+3)*this.mode%(j+1)+(j+1)*(j+4)*(9-this.mode)%(i+1)+this.f[i][j]+i+(X+1)*j)%8)];
+            if (this.mode>=teka.viewer.Defaults.BLINK_START
+               && this.mode<=teka.viewer.Defaults.BLINK_END) {
+                g.fillStyle = this.getBlinkColor(i,j,X,this.f[i][j]);
             }
             if (this.magnets[i][j]==teka.viewer.magnets.Defaults.LEFT) {
                 g.fillRect((2+i)*S+0.5,(2+j)*S+0.5,2*S+1,S+1);
