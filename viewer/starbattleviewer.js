@@ -40,9 +40,10 @@ teka.extend(teka.viewer.starbattle.StarbattleViewer,teka.viewer.PuzzleViewer);
 teka.viewer.starbattle.StarbattleViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('size'),10);
-    this.count = data.get('count');
-    this.count = this.count===false?2:parseInt(data.get('count'),10);
+    this.stars = data.get('stars');
+    this.stars = this.stars===false?2:parseInt(data.get('stars'),10);
     this.asciiToData(data.get('puzzle'));
+    this.asciiToSolution(data.get('solution'));
     
     this.f = teka.new_array([this.X,this.X],0);
     this.c = teka.new_array([this.X,this.X],0);
@@ -59,11 +60,31 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
     var c = this.asciiToArray(ascii);
     
     this.puzzle = teka.new_array([this.X,this.X],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            if (c[2*i+1][2*j+1].charCodeAt(0)=='#'.charCodeAt(0)) {
+                this.puzzle[i][j] = -1;
+            }
+        }
+    }
+    
     var nr=0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             if (this.puzzle[i][j]==0) {
                 this.fillArea(c,i,j,++nr);
+            }
+        }
+    }
+    
+    this.cells = teka.new_array([this.X,this.X],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            if (c[2*i+1][2*j+1].charCodeAt(0)=='-'.charCodeAt(0)) {
+                this.cells[i][j] = teka.viewer.starbattle.Defaults.EMPTY;
+            }
+            if (c[2*i+1][2*j+1].charCodeAt(0)=='*'.charCodeAt(0)) {
+                this.cells[i][j] = teka.viewer.starbattle.Defaults.STAR;
             }
         }
     }
@@ -74,12 +95,23 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
             this.black[i][j] = c[2*i+1][2*j+1].charCodeAt(0)=='#'.charCodeAt(0);
         }
     }
+};
+
+/** Read solution from ascii art. */
+teka.viewer.starbattle.StarbattleViewer.prototype.asciiToSolution = function(ascii)
+{
+    if (ascii===false) {
+        return;
+    }
     
-    // to be improved...
+    var c = this.asciiToArray(ascii);
+    
     this.solution = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            this.solution[i][j] = c[2*i+1][2*j+1].charCodeAt(0)=='*'.charCodeAt(0)?teka.viewer.starbattle.Defaults.STAR:teka.viewer.starbattle.Defaults.NONE;
+            this.solution[i][j] = c[i][j].charCodeAt(0)=='*'.charCodeAt(0)?
+                teka.viewer.starbattle.Defaults.STAR:
+                teka.viewer.starbattle.Defaults.NONE;
         }
     }
 };
@@ -124,13 +156,10 @@ teka.viewer.starbattle.StarbattleViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.starbattle.StarbattleViewer.prototype.getExample = function()
 {
-    return '/type (starbattle)\n/sol false\n/size 8'
-        +'\n/puzzle [ (+-+-+-+-+-+-+-+-+) (|        *|  *  |) (+-+ + +-+ + +-+-+)'
-        +' (|*|  *| | | |   |) (+ +-+-+ +-+ + + +) (|   |   |*| |*  |)'
-        +' (+ + + + + + + + +) (|*  |*  | | |   |) (+ +-+ + + + + + +)'
-        +' (| |     | |*|  *|) (+ + + +-+ + + + +) (| |*  |*  | |   |)'
-        +' (+-+ +-+ + +-+-+-+) (|   | |   |*   *|) (+-+-+ +-+-+ + + +)'
-        +' (|  *   *  |     |) (+-+-+-+-+-+-+-+-+) ]';
+    return '/type (starbattle)\n/sol false\n/size 5\n/stars 1\n/puzzle ['
+        +' (+-+-+-+-+-+) (| |       |) (+ +-+-+-+ +) (|   |   | |) (+-+ +-+ +-+)'
+        +' (| |   |   |) (+ +-+-+-+ +) (| |     | |) (+ +-+-+ +-+) (|     |   |)'
+        +' (+-+-+-+-+-+) ]\n/solution [ (   * ) ( *   ) (    *) (  *  ) (*    ) ]';
 };
 
 //////////////////////////////////////////////////////////////////
@@ -213,11 +242,17 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
 {
     var X = this.X;
 
-    // Remove hidden stars from black cells
+    // Do some cleanup
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.black[i][j]) {
                 this.f[i][j] = 0;
+            }
+            if (this.cells[i][j]==teka.viewer.starbattle.Defaults.EMPTY) {
+                this.f[i][j] = teka.viewer.starbattle.Defaults.EMPTY;
+            }
+            if (this.cells[i][j]==teka.viewer.starbattle.Defaults.STAR) {
+                this.f[i][j] = teka.viewer.starbattle.Defaults.STAR;
             }
         }
     }
@@ -225,14 +260,14 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
     // Do stars touch?
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.f[i][j]==1) {
+            if (this.f[i][j]==teka.viewer.starbattle.Defaults.STAR) {
                 for (var ii=-1;ii<=1;ii++) {
                     for (var jj=-1;jj<=1;jj++) {
                         if (ii!=0 || jj!=0) {
                             if (i+ii<0 || i+ii>=X || j+jj<0 || j+jj>=X) {
                                 continue;
                             }
-                            if (this.f[i+ii][j+jj]==1) {
+                            if (this.f[i+ii][j+jj]==teka.viewer.starbattle.Defaults.STAR) {
                                 this.error[i+ii][j+jj] = true;
                                 this.error[i][j] = true;
                                 return 'starbattle_touch';
@@ -248,11 +283,11 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
     for (var j=0;j<X;j++) {
         var az = 0;
         for (var i=0;i<X;i++) {
-            if (this.f[i][j]==1) {
+            if (this.f[i][j]==teka.viewer.starbattle.Defaults.STAR) {
                 az++;
             }
         }
-        if (az!=this.count) {
+        if (az!=this.stars) {
             for (var i=0;i<X;i++) {
                 this.error[i][j] = true;
             }
@@ -264,11 +299,11 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
     for (var i=0;i<X;i++) {
         var az = 0;
         for (var j=0;j<X;j++) {
-            if (this.f[i][j]==1) {
+            if (this.f[i][j]==teka.viewer.starbattle.Defaults.STAR) {
                 az++;
             }
         }
-        if (az!=this.count) {
+        if (az!=this.stars) {
             for (var j=0;j<X;j++) {
                 this.error[i][j] = true;
             }
@@ -281,12 +316,12 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
         var az = 0;
         for (var i=0;i<X;i++) {
             for (var j=0;j<X;j++) {
-                if (this.puzzle[i][j]==k && this.f[i][j]==1) {
+                if (this.puzzle[i][j]==k && this.f[i][j]==teka.viewer.starbattle.Defaults.STAR) {
                     az++;
                 }
             }
         }
-        if (az!=this.count) {
+        if (az!=this.stars) {
             for (var i=0;i<X;i++) {
                 for (var j=0;j<X;j++) {
                     if (this.puzzle[i][j]==k) {
@@ -323,7 +358,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.setMetrics = function(g)
     var realwidth = this.X * this.scale + 3;
     var realheight = this.X * this.scale + 3 + this.textHeight+2;
     
-    this.bottomText = teka.translate('starbattle_stars',[this.count]);
+    this.bottomText = teka.translate('starbattle_stars',[this.stars]);
     g.font = 'bold '+this.textHeight+'px sans-serif';
     var textwidth = g.measureText(this.bottomText).width+1;
     realwidth = Math.max(realwidth,textwidth);
@@ -402,10 +437,22 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
     
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            g.fillStyle = this.getColorString(this.c[i][j]);
+            if (this.cells[i][j]==teka.viewer.starbattle.Defaults.STAR) {
+                g.fillStyle = '#000';
+                this.drawStar(g,i*S+S/2+1,j*S+S/2+S/15+1);
+                continue;
+            }
+            if (this.cells[i][j]==teka.viewer.starbattle.Defaults.EMPTY) {
+                g.strokeStyle = '#000';
+                teka.drawLine(g,i*S+S/4+1,Math.floor(j*S+S/2+1),
+                              (i+1)*S-S/4+1,Math.floor(j*S+S/2+1));
+                continue;
+            } 
             if (this.f[i][j]==teka.viewer.starbattle.Defaults.STAR) {
+                g.fillStyle = this.getColorString(this.c[i][j]);
                 this.drawStar(g,i*S+S/2+1,j*S+S/2+S/15+1);
             } else if (this.f[i][j]==teka.viewer.starbattle.Defaults.EMPTY) {
+                g.strokeStyle = this.getColorString(this.c[i][j]);
                 teka.drawLine(g,i*S+S/4+1,Math.floor(j*S+S/2+1),
                               (i+1)*S-S/4+1,Math.floor(j*S+S/2+1));
             }
