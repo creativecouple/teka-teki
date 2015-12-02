@@ -46,7 +46,7 @@ teka.viewer.kropki.KropkiViewer.prototype.initData = function(data)
     var digits = data.get('digits');
     digits = digits===false?1:parseInt(data.get('digits'),10);
     this.asciiToData(data.get('puzzle'),digits);
-    this.solution = this.asciiToSolution(data.get('solution'),digits);
+    this.asciiToSolution(data.get('solution'),digits);
 
     this.f = teka.new_array([this.X,this.X],0);
     this.c = teka.new_array([this.X,this.X],0);
@@ -99,19 +99,17 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
 teka.viewer.kropki.KropkiViewer.prototype.asciiToSolution = function(ascii,d)
 {
     if (ascii===false) {
-        return null;
+        return;
     }
 
     var c = this.asciiToArray(ascii);
 
-    var erg = teka.new_array([this.X,this.X],0);
+    this.solution = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            erg[i][j] = this.getNr(c,d*i,j,d);
+            this.solution[i][j] = this.getNr(c,d*i,j,d);
         }
     }
-
-    return erg;
 };
 
 /** Add solution. */

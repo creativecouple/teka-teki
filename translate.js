@@ -186,6 +186,30 @@ teka.dictionary = {
     starbattle_row: 'In der markierten Zeile stimmt die Anzahl der Sterne nicht.',
     starbattle_column: 'In der markierten Spalte stimmt die Anzahl der Sterne nicht.',
     starbattle_area: 'Im markierten Gebiet stimmt die Anzahl der Sterne nicht.',
+
+    tapa: 'Tapa',
+    tapa_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass alle schwarzen '
+        +'Felder waagerecht oder senkrecht zusammenhängen und kein 2x2-Feld '
+        +'komplett geschwärzt ist. Felder mit Zahlen dürfen dabei grundsätzlich '
+        +'nicht geschwärzt werden.\n\n'
+        +'Für die Felder, die Zahlen enthalten, gilt: '
+        +'Betrachtet man die Nachbarfelder dieses Feldes einmal im Kreis herum, so '
+        +'erhält man eine Folge von schwarzen und weißen Feldern. Die Zahlen geben '
+        +'die Längen der Schwarzblöcke in dieser Sequenz wieder, wobei jede Zahl zu '
+        +'genau einem Block gehört und die Reihenfolge nicht bekannt ist.\n\n'
+        +'Für eine korrekte Lösung sind nur die schwarzen Felder relevant. '
+        +'Die weißen Felder können mit einem Kreuz markiert oder leer sein.',
+    tapa_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Schwarzes Feld\n2. Klick: Weißes Feld (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n'
+        +'In einem Feld mit Vorgaben führt der erste Klick zu einem '
+        +'Kreuz und der zweite löscht dieses wieder.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n\n'
+        +'In einem Feld mit Vorgaben führen #, * und Q zu einem Kreuz und die Leertaste '
+        +'löscht dieses wieder.',
+    tapa_2x2: 'Die vier markierten Felder bilden ein volles 2x2-Gebiet.',
+    tapa_wrong_numbers: 'Im markierten Feld stimmen die Zahlen nicht.',
+    tapa_not_connected: 'Die markierten Felder hängen nicht mit dem Rest der Schwarzfelder zusammen.',
     
     dummy_to_avoid_comma_bug: ''
 };
