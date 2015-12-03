@@ -68,6 +68,8 @@ teka.dictionary = {
     duration_hours: 'Ihre Zeit war {1} Stunden, {2} Minuten und {3} Sekunden.',
     duration_days: 'Ihre Zeit war {1} Tage, {2} Stunden, {3} Minuten und {4} Sekunden.',
     error: 'Leider ist ein unerwarteter Fehler aufgetreten.',
+    failed_attempt: 'Sie hatten einen Fehlversuch.',
+    failed_attempts: 'Sie hatten {1} Fehlversuche.',
     green: 'grün',
     green_a: 'grünen',
     instructions: 'Anleitung',
