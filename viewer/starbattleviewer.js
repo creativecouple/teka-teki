@@ -44,7 +44,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.initData = function(data)
     this.stars = this.stars===false?2:parseInt(data.get('stars'),10);
     this.asciiToData(data.get('puzzle'));
     this.asciiToSolution(data.get('solution'));
-    
+
     this.f = teka.new_array([this.X,this.X],0);
     this.c = teka.new_array([this.X,this.X],0);
     this.error = teka.new_array([this.X,this.X],false);
@@ -56,9 +56,9 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
     if (ascii===false) {
         return;
     }
-    
+
     var c = this.asciiToArray(ascii);
-    
+
     this.puzzle = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -67,7 +67,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-    
+
     var nr=0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -76,7 +76,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-    
+
     this.cells = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -88,7 +88,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-    
+
     this.black = teka.new_array([this.X,this.X],false);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -103,9 +103,9 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToSolution = function(asc
     if (ascii===false) {
         return;
     }
-    
+
     var c = this.asciiToArray(ascii);
-    
+
     this.solution = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -126,7 +126,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.fillArea = function(c, x, y, n
         return;
     }
     this.puzzle[x][y] = nr;
-    
+
     if (c[2*x+2][2*y+1]==' ') {
         this.fillArea(c,x+1,y,nr);
     }
@@ -220,14 +220,14 @@ teka.viewer.starbattle.StarbattleViewer.prototype.saveState = function()
             c[i][j] = this.c[i][j];
         }
     }
-        
+
     return { f:f, c:c };
 };
 
 /** Load state. */
 teka.viewer.starbattle.StarbattleViewer.prototype.loadState = function(state)
 {
-    for (var i=0;i<this.X;i++) {    
+    for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             this.f[i][j] = state.f[i][j];
             this.c[i][j] = state.c[i][j];
@@ -256,7 +256,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
             }
         }
     }
-    
+
     // Do stars touch?
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
@@ -278,7 +278,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
             }
         }
     }
-    
+
     // Check number of stars in a row.
     for (var j=0;j<X;j++) {
         var az = 0;
@@ -294,7 +294,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
             return 'starbattle_row';
         }
     }
-    
+
     // Check number of stars in a column.
     for (var i=0;i<X;i++) {
         var az = 0;
@@ -310,7 +310,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
             return 'starbattle_column';
         }
     }
-    
+
     // Check number of stars in an area.
     for (var k=1;k<=X;k++) {
         var az = 0;
@@ -332,7 +332,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.check = function()
             return 'starbattle_area';
         }
     }
-    
+
     return true;
 };
 
@@ -357,12 +357,12 @@ teka.viewer.starbattle.StarbattleViewer.prototype.setMetrics = function(g)
     this.scale = Math.floor(Math.min((this.width-3)/this.X,(this.height-3-this.textHeight-2)/this.X));
     var realwidth = this.X * this.scale + 3;
     var realheight = this.X * this.scale + 3 + this.textHeight+2;
-    
+
     this.bottomText = teka.translate('starbattle_stars',[this.stars]);
     g.font = 'bold '+this.textHeight+'px sans-serif';
     var textwidth = g.measureText(this.bottomText).width+1;
     realwidth = Math.max(realwidth,textwidth);
-    
+
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.round((this.height-realheight)/2)+0.5;
 
@@ -381,7 +381,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
 
     g.fillStyle = '#fff';
     g.fillRect(1,1,X*S,X*S);
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.mode>=teka.viewer.Defaults.BLINK_START
@@ -395,13 +395,13 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
             g.fillRect(i*S+1,j*S+1,S,S);
         }
     }
-    
+
     g.fillStyle = '#000';
     for (var i=0;i<=X;i++) {
         teka.drawLine(g,1,i*S+1,X*S+1,i*S+1);
         teka.drawLine(g,i*S+1,1,i*S+1,X*S+1);
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.black[i][j]) {
@@ -414,10 +414,10 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
     g.lineWidth = 3;
     g.strokeRect(1,1,X*S,X*S);
     g.restore();
-    
+
     g.save();
     g.lineWidth = 3;
-    
+
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {
             if (this.puzzle[i][j]!=this.puzzle[i+1][j]) {
@@ -425,7 +425,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
             if (this.puzzle[i][j]!=this.puzzle[i][j+1]) {
@@ -434,7 +434,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
         }
     }
     g.restore();
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.cells[i][j]==teka.viewer.starbattle.Defaults.STAR) {
@@ -447,7 +447,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
                 teka.drawLine(g,i*S+S/4+1,Math.floor(j*S+S/2+1),
                               (i+1)*S-S/4+1,Math.floor(j*S+S/2+1));
                 continue;
-            } 
+            }
             if (this.f[i][j]==teka.viewer.starbattle.Defaults.STAR) {
                 g.fillStyle = this.getColorString(this.c[i][j]);
                 this.drawStar(g,i*S+S/2+1,j*S+S/2+S/15+1);
@@ -458,7 +458,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.fillStyle = this.textcolor;
@@ -484,10 +484,10 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processMouseMovedEvent = funct
 
     var oldx = this.x;
     var oldy = this.y;
-    
+
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
-    
+
     if (this.x<0) {
         this.x=0;
     }
@@ -500,7 +500,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processMouseMovedEvent = funct
     if (this.y>this.X-1) {
         this.y=this.X-1;
     }
-    
+
     return this.x!=oldx || this.y!=oldy;
 };
 
@@ -508,13 +508,13 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processMouseMovedEvent = funct
 teka.viewer.starbattle.StarbattleViewer.prototype.processMousePressedEvent = function(xc, yc)
 {
     var erg = this.processMouseMovedEvent(xc,yc);
-    
+
     if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) {
         return erg;
     }
-    
+
     this.set(this.x,this.y,(this.f[this.x][this.y]+1)%3);
-    
+
     return true;
 };
 
@@ -545,7 +545,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processKeyEvent = function(e)
         }
         return true;
     }
-    
+
     if (this.x<0 || this.x>=this.X || this.y<0 && this.y>=this.X) {
         return false;
     }
@@ -554,17 +554,17 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processKeyEvent = function(e)
         this.set(this.x,this.y,1);
         return true;
     }
-    
+
     if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
         this.set(this.x,this.y,2);
         return true;
     }
-    
+
     if (e.key==teka.KEY_SPACE) {
         this.set(this.x,this.y,0);
         return true;
     }
-    
+
     return false;
 };
 
@@ -579,4 +579,3 @@ teka.viewer.starbattle.StarbattleViewer.prototype.set = function(x, y, value)
     this.f[x][y] = value;
     this.c[x][y] = this.color;
 };
-

@@ -210,6 +210,6 @@ teka.dictionary = {
     tapa_2x2: 'Die vier markierten Felder bilden ein volles 2x2-Gebiet.',
     tapa_wrong_numbers: 'Im markierten Feld stimmen die Zahlen nicht.',
     tapa_not_connected: 'Die markierten Felder hängen nicht mit dem Rest der Schwarzfelder zusammen.',
-    
+
     dummy_to_avoid_comma_bug: ''
 };

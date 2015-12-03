@@ -121,9 +121,9 @@ teka.viewer.PuzzleViewer.prototype.getBlinkColor = function(x, y, size, val)
         +(x+3)*this.mode%(y+1)
         +(y+1)*(y+4)*(9-this.mode)%(x+1)
         +val+x+y*(size+1);
-    
+
     tmp = Math.floor(Math.abs(tmp)%8);
-    
+
     return this.solved_color[tmp];
 };
 
@@ -269,7 +269,7 @@ teka.viewer.PuzzleViewer.prototype.drawStar = function(g, x, y)
     g.translate(x,y);
     g.beginPath();
     var first = true;
-    
+
     for (var i=0;i<10;i+=2) {
         var w1 = Math.PI/5*i;
         var w2 = Math.PI/5*(i+1);
@@ -277,7 +277,7 @@ teka.viewer.PuzzleViewer.prototype.drawStar = function(g, x, y)
         var y1 = -Math.cos(w1)*0.45*this.scale;
         var x2 = Math.sin(w2)*0.18*this.scale;
         var y2 = -Math.cos(w2)*0.18*this.scale;
-        
+
         if (first) {
             g.moveTo(x1,y1);
             first = false;
@@ -286,7 +286,7 @@ teka.viewer.PuzzleViewer.prototype.drawStar = function(g, x, y)
         }
         g.lineTo(x2,y2);
     }
-    
+
     g.closePath();
     g.fill();
     g.restore();

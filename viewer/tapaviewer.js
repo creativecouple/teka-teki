@@ -42,7 +42,8 @@ teka.viewer.tapa.TapaViewer.prototype.initData = function(data)
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
     this.asciiToData(data.get('puzzle'));
-    
+    this.asciiToSolution(data.get('solution'));
+
     this.f = teka.new_array([this.X,this.Y],0);
     this.c = teka.new_array([this.X,this.Y],0);
     this.error = teka.new_array([this.X,this.Y],false);
@@ -54,13 +55,13 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
     if (ascii===false) {
         return;
     }
-    
+
     var c = this.asciiToArray(ascii);
-    
+
     this.puzzle = teka.new_array([this.X,this.Y,4],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i][2*j].charCodeAt(0)>='1'.charCodeAt(0) 
+            if (c[2*i][2*j].charCodeAt(0)>='1'.charCodeAt(0)
                 && c[2*i][2*j].charCodeAt(0)<='8'.charCodeAt(0)) {
                 this.puzzle[i][j][0] = c[2*i][2*j].charCodeAt(0)-'0'.charCodeAt(0);
                 this.puzzle[i][j][1] = c[2*i+1][2*j].charCodeAt(0)==' '.charCodeAt(0)?0:(c[2*i+1][2*j].charCodeAt(0)-'0'.charCodeAt(0));
@@ -69,11 +70,33 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-    
+
+    this.cells = teka.new_array([this.X,this.X],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            if (c[2*i][2*j].charCodeAt(0)=='-'.charCodeAt(0)) {
+                this.cells[i][j] = teka.viewer.tapa.Defaults.EMPTY;
+            }
+            if (c[2*i][2*j].charCodeAt(0)=='#'.charCodeAt(0)) {
+                this.cells[i][j] = teka.viewer.tapa.Defaults.BLACK;
+            }
+        }
+    }
+};
+
+/** Import solution */
+teka.viewer.tapa.TapaViewer.prototype.asciiToSolution = function(ascii)
+{
+    if (ascii===false) {
+        return;
+    }
+
+    var c = this.asciiToArray(ascii);
+
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.solution[i][j] = c[2*i][2*j].charCodeAt(0)=='#'.charCodeAt(0)?teka.viewer.tapa.Defaults.BLACK:teka.viewer.tapa.Defaults.NONE;
+            this.solution[i][j] = c[i][j].charCodeAt(0)=='#'.charCodeAt(0)?teka.viewer.tapa.Defaults.BLACK:teka.viewer.tapa.Defaults.NONE;
         }
     }
 };
@@ -93,9 +116,12 @@ teka.viewer.tapa.TapaViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.tapa.TapaViewer.prototype.getExample = function()
 {
-    return '/type (tapa)\n/sol false\n/X 5\n/Y 5'
-        +'\n/puzzle [ (####  4 ##) (####    ##) (31########) (  ########) (##  ##  ##)'
-        +' (##  ##  ##) (########11) (########  ) (##5 ##3   ) (##  ##    ) ]';
+    return '/type (tapa)\n/sol false\n/X 6\n/Y 6\n/puzzle [ (            )'
+        +' (            ) (    11  51  ) (    11      ) (            )'
+        +' (            ) (    22      ) (    1       ) (        7   )'
+        +' (            ) (2           ) (            ) ]\n/solution ['
+        +' (## ###) (#    #) (## # #) (#  ###) (###  #) (  ####) ]';
+
 };
 
 //////////////////////////////////////////////////////////////////
@@ -187,15 +213,21 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
             if (this.puzzle[i][j][0]!=0) {
                 check[i][j] = teka.viewer.tapa.Defaults.NONE;
             }
+            if (this.cells[i][j]==teka.viewer.tapa.Defaults.EMPTY) {
+                check[i][j] = teka.viewer.tapa.Defaults.EMPTY;
+            }
+            if (this.cells[i][j]==teka.viewer.tapa.Defaults.BLACK) {
+                check[i][j] = teka.viewer.tapa.Defaults.BLACK;
+            }
         }
     }
-    
+
     // Check for 2x2-squares
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            if (check[i][j]==teka.viewer.tapa.Defaults.BLACK 
-                && check[i+1][j]==teka.viewer.tapa.Defaults.BLACK 
-                && check[i][j+1]==teka.viewer.tapa.Defaults.BLACK 
+            if (check[i][j]==teka.viewer.tapa.Defaults.BLACK
+                && check[i+1][j]==teka.viewer.tapa.Defaults.BLACK
+                && check[i][j+1]==teka.viewer.tapa.Defaults.BLACK
                 && check[i+1][j+1]==teka.viewer.tapa.Defaults.BLACK) {
                 this.error[i][j] = true;
                 this.error[i+1][j] = true;
@@ -206,7 +238,7 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
         }
     }
 
-    
+
     // The possible sets of values given
     var tab1 = ['0','1','2','3','4','5','6','7','8',
                 '11','21','22','31','32','33','41','42','51',
@@ -224,7 +256,7 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
         15,16,17,7,2,3,10,4,10,12,11,5,10,12,19,15,11,13,13,6,10,12,19,15,19,21,
         20,17,11,13,20,16,13,14,16,7,3,4,12,5,12,15,13,6,12,15,21,17,13,16,14,7,
         4,5,15,6,15,17,16,7,5,6,17,7,6,7,7,8];
-    
+
     // Checking if the numbers are correct
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -286,10 +318,10 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
     if (xc==-1) {
         return true;
     }
-    
+
     var mark = teka.new_array([this.X,this.Y],false);
     this.fill(mark,xc,yc,check);
-    
+
     var ok = true;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -299,11 +331,11 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
             }
         }
     }
-    
+
     if (!ok) {
         return 'tapa_not_connected';
     }
-    
+
     return true;
 };
 
@@ -319,7 +351,7 @@ teka.viewer.tapa.TapaViewer.prototype.fill = function(mark, x, y, check)
     if (check[x][y]!=teka.viewer.tapa.Defaults.BLACK) {
         return;
     }
-    
+
     mark[x][y] = true;
     this.fill(mark,x+1,y,check);
     this.fill(mark,x-1,y,check);
@@ -348,13 +380,13 @@ teka.viewer.tapa.TapaViewer.prototype.setMetrics = function(g)
     this.scale = Math.floor(Math.min((this.width-5)/this.X,(this.height-5)/this.Y));
     var realwidth = this.X*this.scale+5;
     var realheight = this.Y*this.scale+5;
-    
+
     this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.round((this.height-realheight)/2)+0.5;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round(2*this.scale/5)+'px sans-serif',this.scale);
-    
+
     if (realwidth>this.width || realheight>this.height) this.scale=false;
     return {width:realwidth,height:realheight,scale:this.scale};
 };
@@ -385,22 +417,22 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
             g.fillRect(i*S+2,j*S+2,S,S);
         }
     }
-    
-    g.fillStyle = '#000';
-    for (var i=0;i<=X;i++) {
-        teka.drawLine(g,i*S+2,2,i*S+2,Y*S+2);
-    }
-    for (var i=0;i<=Y;i++) {
-        teka.drawLine(g,2,i*S+2,X*S+2,i*S+2);
-    }
-    
-    g.strokeRect(0,0,X*S+4,Y*S+4);
-    g.strokeRect(1,1,X*S+2,Y*S+2);
-    
+
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
+            if (this.cells[i][j]==teka.viewer.tapa.Defaults.BLACK) {
+                g.fillStyle = '#000';
+                g.fillRect(i*S+2,j*S+2,S,S);
+                continue;
+            }
+            if (this.cells[i][j]==teka.viewer.tapa.Defaults.EMPTY) {
+                g.strokeStyle = '#000';
+                teka.drawLine(g,i*S+S/4+2,j*S+S/4+2,(i+1)*S-S/4+2,(j+1)*S-S/4+2);
+                teka.drawLine(g,(i+1)*S-S/4+2,j*S+S/4+2,i*S+S/4+2,(j+1)*S-S/4+2);
+                continue;
+            }
             if (this.puzzle[i][j][0]==0) {
                 if (this.f[i][j]==teka.viewer.tapa.Defaults.NONE) {
                     continue;
@@ -417,7 +449,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
                 }
                 continue;
             }
-            
+
             g.fillStyle = '#000';
             g.strokeStyle = '#000';
             if (this.puzzle[i][j][1]==0) {
@@ -451,7 +483,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
             g.fillText(this.puzzle[i][j][3],i*S+2+S/2,j*S+2+S/2+S/4+S/16+this.font.delta);
         }
     }
-    
+
     g.save();
     g.lineWidth = 3;
     for (var i=0;i<X;i++) {
@@ -465,12 +497,23 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
     }
     g.restore();
 
+    g.fillStyle = '#000';
+    for (var i=0;i<=X;i++) {
+        teka.drawLine(g,i*S+2,2,i*S+2,Y*S+2);
+    }
+    for (var i=0;i<=Y;i++) {
+        teka.drawLine(g,2,i*S+2,X*S+2,i*S+2);
+    }
+
+    g.strokeRect(0,0,X*S+4,Y*S+4);
+    g.strokeRect(1,1,X*S+2,Y*S+2);
+
     g.strokeStyle = '#f00';
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeRect(this.x*S+5,this.y*S+5,S-6,S-6);
         g.strokeRect(this.x*S+6,this.y*S+6,S-8,S-8);
     }
-    
+
     g.restore();
 };
 
@@ -505,18 +548,18 @@ teka.viewer.tapa.TapaViewer.prototype.processMouseMovedEvent = function(xc, yc)
 teka.viewer.tapa.TapaViewer.prototype.processMousePressedEvent = function(xc, yc)
 {
     var erg = this.processMouseMovedEvent(xc,yc);
-    
+
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
     }
-    
+
     if (this.puzzle[this.x][this.y][0]!=0) {
         this.set(this.x,this.y,1-this.f[this.x][this.y]);
         return true;
     }
-    
+
     this.set(this.x,this.y,(this.f[this.x][this.y]+1)%3);
-    
+
     return true;
 };
 
@@ -551,7 +594,7 @@ teka.viewer.tapa.TapaViewer.prototype.processKeyEvent = function(e)
     if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.Y) {
         return false;
     }
-    
+
     if (this.puzzle[this.x][this.y][0]!=0) {
         if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
             this.set(this.x,this.y,1);
@@ -573,7 +616,7 @@ teka.viewer.tapa.TapaViewer.prototype.processKeyEvent = function(e)
         this.set(this.x,this.y,teka.viewer.tapa.Defaults.BLACK);
         return true;
     }
-    
+
     if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
         this.set(this.x,this.y,teka.viewer.tapa.Defaults.EMPTY);
         return true;
@@ -593,4 +636,3 @@ teka.viewer.tapa.TapaViewer.prototype.set = function(x, y, value)
     this.f[x][y] = value;
     this.c[x][y] = this.color;
 };
-
