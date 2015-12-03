@@ -121,6 +121,9 @@ teka.Defaults.COLORTOOL_COLORS = {
 /** The maximum level to use in the cases tool. */
 teka.Defaults.MAX_LEVEL = 12;
 
+/** Set to true, if the time measurment should be done. */
+teka.Defaults.TAKE_TIME = true;
+
 /** The name of the file to load. Has to be overridden. */
 teka.Defaults.FILE = false;
 
@@ -300,6 +303,11 @@ teka.PuzzleApplet.prototype.init = function()
                                      this.keyPressedListener.bind(this),
                                      false);
         this.canvas.focus();
+        
+        if (this.values_.TAKE_TIME===true) {
+            this.timer_stop = false;
+            this.timer_start = new Date().getTime();
+        }
     }));
 };
 
@@ -762,11 +770,41 @@ teka.PuzzleApplet.prototype.check = function()
         return;
     }
 
-    this.setText(teka.translate('congratulations'),false);
+    if (this.values_.TAKE_TIME===true && this.timer_stop===false) {
+        this.timer_stop = new Date().getTime();
+    }
+    var duration = Math.floor((this.timer_stop-this.timer_start)/1000);
+    var result = teka.translate('congratulations');
+    if (this.values_.TAKE_TIME===true) {
+        result += ' '+this.niceTime(duration);
+    }
+    
+    this.setText(result,false);
     this.puzzleViewer.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
 
     setTimeout(this.blink.bind(this),300);
+};
+
+/** Converts duration d, given in seconds, into a human readable format. */
+teka.PuzzleApplet.prototype.niceTime = function(d)
+{
+    if (d<60) {
+        return teka.translate('duration_seconds',[d]);
+    }
+    var sec = d%60;
+    d = Math.floor(d/60);
+    if (d<60) {
+        return teka.translate('duration_minutes',[d,sec]);
+    }
+    var min = d%60;
+    d = Math.floor(d/60);
+    if (d<24) {
+        return teka.translate('duration_hours',[d,min,sec]);
+    }
+    var hrs = d%24;
+    d = Math.floor(d/24);
+    return teka.translate('duration_days',[d,hrs,min,sec]);
 };
 
 /**
