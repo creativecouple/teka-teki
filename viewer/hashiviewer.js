@@ -22,7 +22,9 @@ teka.viewer.hashi.Defaults = {
     WAAG1: 1,
     WAAG2: 2,
     SENK1: 3,
-    SENK2: 4
+    SENK2: 4,
+    
+    UNKNOWN: -1
 };
 
 /** Constructor */
@@ -43,13 +45,14 @@ teka.viewer.hashi.HashiViewer.prototype.initData = function(data)
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
     this.asciiToData(data.get('puzzle'));
+    this.asciiToSolution(data.get('solution'));
     
     this.f = teka.new_array([this.X,this.Y],0);
     this.c = teka.new_array([this.X,this.Y],0);
     this.error = teka.new_array([this.X,this.Y],false);
 };
 
-/** import_puzzle */
+/** Read puzzle from ascii art. */
 teka.viewer.hashi.HashiViewer.prototype.asciiToData = function(ascii)
 {
     if (ascii===false) {
@@ -59,29 +62,54 @@ teka.viewer.hashi.HashiViewer.prototype.asciiToData = function(ascii)
     var c = this.asciiToArray(ascii);
     
     this.puzzle = teka.new_array([this.X,this.Y],0);
+    this.bridges = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i+1][2*j+1].charCodeAt(0)>='1'.charCodeAt(0) && 
-                c[2*i+1][2*j+1].charCodeAt(0)<='8'.charCodeAt(0)) {
-                this.puzzle[i][j] = c[2*i+1][2*j+1].charCodeAt(0)-'0'.charCodeAt(0);
+            if (c[i][j].charCodeAt(0)>='1'.charCodeAt(0) && 
+                c[i][j].charCodeAt(0)<='8'.charCodeAt(0)) {
+                this.puzzle[i][j] = c[i][j].charCodeAt(0)-'0'.charCodeAt(0);
+            }
+            if (c[i][j].charCodeAt(0)=='?'.charCodeAt(0)) {
+                this.puzzle[i][j] = teka.viewer.hashi.Defaults.UNKNOWN;
+            }
+            if (c[i][j].charCodeAt(0)=='-'.charCodeAt(0)) {
+                this.bridges[i][j] = teka.viewer.hashi.Defaults.WAAG1;
+            }
+            if (c[i][j].charCodeAt(0)=='='.charCodeAt(0)) {
+                this.bridges[i][j] = teka.viewer.hashi.Defaults.WAAG2;
+            }
+            if (c[i][j].charCodeAt(0)=='|'.charCodeAt(0)) {
+                this.bridges[i][j] = teka.viewer.hashi.Defaults.SENK1;
+            }
+            if (c[i][j].charCodeAt(0)=='H'.charCodeAt(0)) {
+                this.bridges[i][j] = teka.viewer.hashi.Defaults.SENK2;
             }
         }
     }
+}
 
-    // to be improved...
+/** Read solution from ascii art. */
+teka.viewer.hashi.HashiViewer.prototype.asciiToSolution = function(ascii)
+{
+    if (ascii===false) {
+        return;
+    }
+    
+    var c = this.asciiToArray(ascii);
+    
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i+1][2*j+1].charCodeAt(0)=='-'.charCodeAt(0)) {
+            if (c[i][j].charCodeAt(0)=='-'.charCodeAt(0)) {
                 this.solution[i][j] = teka.viewer.hashi.Defaults.WAAG1;
             }
-            if (c[2*i+1][2*j+1].charCodeAt(0)=='='.charCodeAt(0)) {
+            if (c[i][j].charCodeAt(0)=='='.charCodeAt(0)) {
                 this.solution[i][j] = teka.viewer.hashi.Defaults.WAAG2;
             }
-            if (c[2*i+1][2*j+1].charCodeAt(0)=='|'.charCodeAt(0)) {
+            if (c[i][j].charCodeAt(0)=='|'.charCodeAt(0)) {
                 this.solution[i][j] = teka.viewer.hashi.Defaults.SENK1;
             }
-            if (c[2*i+1][2*j+1].charCodeAt(0)=='H'.charCodeAt(0)) {
+            if (c[i][j].charCodeAt(0)=='H'.charCodeAt(0)) {
                 this.solution[i][j] = teka.viewer.hashi.Defaults.SENK2;
             }
         }
@@ -120,6 +148,8 @@ teka.viewer.hashi.HashiViewer.prototype.reset = function()
             this.c[i][j] = 0;
         }
     }
+
+    this.addBridges();
 };
 
 /** Reset the error marks. */
@@ -192,6 +222,8 @@ teka.viewer.hashi.HashiViewer.prototype.check = function()
     var sx = -1;
     var sy = -1;
     
+    this.addBridges();
+    
     // Check number of bridges leaving an island
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
@@ -211,7 +243,7 @@ teka.viewer.hashi.HashiViewer.prototype.check = function()
     // Check if all islands are connected.
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.puzzle[i][j]>0) {
+            if (this.puzzle[i][j]!==0) {
                 this.error[i][j] = true;
             }
         }
@@ -347,7 +379,7 @@ teka.viewer.hashi.HashiViewer.prototype.paint = function(g)
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]===0) {
                 g.strokeStyle = this.getColorString(this.c[i][j]);
-                switch (this.f[i][j]) {
+                switch (this.bridges[i][j]!==0?this.bridges[i][j]:this.f[i][j]) {
                   case teka.viewer.hashi.Defaults.WAAG1:
                     teka.drawLine(g,i*S-2,Math.floor(j*S+1+S/2),i*S+4+S,Math.floor(j*S+1+S/2));
                     break;
@@ -372,7 +404,7 @@ teka.viewer.hashi.HashiViewer.prototype.paint = function(g)
     g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.puzzle[i][j]>0) {
+            if (this.puzzle[i][j]!==0) {
                 if (this.mode>=teka.viewer.Defaults.BLINK_START
                     && this.mode<=teka.viewer.Defaults.BLINK_END) {
                     g.fillStyle = this.getBlinkColor(i,j,X,this.f[i][j]);
@@ -386,9 +418,11 @@ teka.viewer.hashi.HashiViewer.prototype.paint = function(g)
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,i*S+S/2+1,j*S+S/2+1,(S-6)/2,0,2*Math.PI);
                 
-                g.fillStyle='#000';
-                g.font = this.font.font;
-                g.fillText(this.puzzle[i][j],i*S+S/2,j*S+S/2+this.font.delta);
+                if (this.puzzle[i][j]>0) {
+                    g.fillStyle='#000';
+                    g.font = this.font.font;
+                    g.fillText(this.puzzle[i][j],i*S+S/2,j*S+S/2+this.font.delta);
+                }
                 
                 if (this.f[i][j]==1) {
                     g.strokeStyle = this.getColorString(this.c[i][j]);
@@ -449,7 +483,7 @@ teka.viewer.hashi.HashiViewer.prototype.processMousePressedEvent = function(xc, 
         return erg;
     }
     
-    if (this.puzzle[this.x][this.y]>0) {
+    if (this.puzzle[this.x][this.y]!==0) {
         this.set(this.x,this.y,1-this.f[this.x][this.y]);
         return true;
     }
@@ -501,7 +535,7 @@ teka.viewer.hashi.HashiViewer.prototype.processKeyEvent = function(e)
         return false;
     }
 
-    if (this.puzzle[this.x][this.y]>0) {
+    if (this.puzzle[this.x][this.y]!==0) {
         if (e.key==teka.KEY_SPACE) {
             this.set(this.x,this.y,0);
         } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
@@ -555,6 +589,7 @@ teka.viewer.hashi.HashiViewer.prototype.processKeyEvent = function(e)
 /** removeBridge */
 teka.viewer.hashi.HashiViewer.prototype.removeBridge = function(x, y)
 {
+    this.addBridges();
     if (this.f[x][y]==0) {
         return true;
     }
@@ -595,6 +630,7 @@ teka.viewer.hashi.HashiViewer.prototype.removeSenk = function(x, y)
 /** setBridge */
 teka.viewer.hashi.HashiViewer.prototype.setBridge = function(x, y, type)
 {
+    this.addBridges();
     if (type==0) {
         return true;
     }
@@ -658,6 +694,18 @@ teka.viewer.hashi.HashiViewer.prototype.setSenk = function(x, y, type)
     }
     
     return true;
+};
+
+/** Add all given bridges to f. */
+teka.viewer.hashi.HashiViewer.prototype.addBridges = function()
+{
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (this.bridges[i][j]!==0) {
+                this.f[i][j] = this.bridges[i][j];
+            }
+        }
+    }
 };
 
 /** Sets the value of a cell, if the color fits. */
