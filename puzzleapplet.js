@@ -369,7 +369,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
         this.psdata = psdata;
         this.type = type;
 
-        teka.addScript('viewer/'+type+'viewer.js',teka.myBind(this,callback));
+        teka.addScript('viewer/'+type+'.js',teka.myBind(this,callback));
     });
     res.send();
 };
