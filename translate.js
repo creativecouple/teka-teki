@@ -217,5 +217,32 @@ teka.dictionary = {
     tapa_wrong_numbers: 'Im markierten Feld stimmen die Zahlen nicht.',
     tapa_not_connected: 'Die markierten Felder hängen nicht mit dem Rest der Schwarzfelder zusammen.',
 
+    hashi: 'Hashi',
+    hashi_instructions: 'Verbinden Sie die Inseln so durch Brücken, dass jede Insel '
+        +'von jeder anderen aus erreichbar ist. Die Brücken dürfen dabei '
+        +'nur waagerecht oder senkrecht gebaut werden und nicht über andere '
+        +'Brücken oder Inseln hinweggehen. Zwischen zwei Inseln dürfen sich '
+        +'maximal zwei Brücken befinden. Die Zahlen in den Inseln geben an, '
+        +'wie viele Brücken von dieser Insel aus wegführen.\n\n'
+        +'Für eine korrekte Lösung müssen nur die Brücken eingezeichnet werden.',
+    hashi_usage: 'Bedienung mit der Maus:\n\n'
+        +'Brücken:\n'
+        +'1. Klick: Eine waagerechte Brücke; 2. Klick: Zwei waagerechte Brücken\n'
+        +'3. Klick: Eine senkrechte Brücke; 4. Klick: Zwei senkrechte Brücken\n'
+        +'5. Klick: Feldinhalt löschen\nBrücken, die nicht gebaut werden können '
+        +'werden dabei übersprungen\n'
+        +'Inseln:\n'
+        +'1. Klick: Markieren\n2. Klick: Markierung löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Brücken:\n'
+        +'w: Eine waagerechte Brücke; Shift-W oder e: zwei waagerechte Brücken\n'
+        +'s: Eine senkrechte Brücke; Shift-S oder d: zwei senkrechte Brücken\n'
+        +'Ist bereits die entsprechende Brücke eingezeichnet wird eine zweite '
+        +'Brücke dazu beziehungsweise eine weniger eingezeichnet.\n'
+        +'Inseln:\n'
+        +'#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
+    hashi_wrong_bridges: 'In der markierten Insel stimmt die Anzahl der Brücken nicht.',
+    hashi_not_connected: 'Die markierten Inseln hängen nicht mit dem Rest zusammen.',
+    
     dummy_to_avoid_comma_bug: ''
 };
