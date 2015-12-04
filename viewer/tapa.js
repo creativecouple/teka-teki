@@ -61,12 +61,12 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
     this.puzzle = teka.new_array([this.X,this.Y,4],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i][2*j].charCodeAt(0)>='1'.charCodeAt(0)
-                && c[2*i][2*j].charCodeAt(0)<='8'.charCodeAt(0)) {
-                this.puzzle[i][j][0] = c[2*i][2*j].charCodeAt(0)-'0'.charCodeAt(0);
-                this.puzzle[i][j][1] = c[2*i+1][2*j].charCodeAt(0)==' '.charCodeAt(0)?0:(c[2*i+1][2*j].charCodeAt(0)-'0'.charCodeAt(0));
-                this.puzzle[i][j][2] = c[2*i][2*j+1].charCodeAt(0)==' '.charCodeAt(0)?0:(c[2*i][2*j+1].charCodeAt(0)-'0'.charCodeAt(0));
-                this.puzzle[i][j][3] = c[2*i+1][2*j+1].charCodeAt(0)==' '.charCodeAt(0)?0:(c[2*i+1][2*j+1].charCodeAt(0)-'0'.charCodeAt(0));
+            if (c[2*i][2*j]>=teka.ord('1')
+                && c[2*i][2*j]<=teka.ord('8')) {
+                this.puzzle[i][j][0] = c[2*i][2*j]-teka.ord('0');
+                this.puzzle[i][j][1] = c[2*i+1][2*j]==teka.ord(' ')?0:(c[2*i+1][2*j]-teka.ord('0'));
+                this.puzzle[i][j][2] = c[2*i][2*j+1]==teka.ord(' ')?0:(c[2*i][2*j+1]-teka.ord('0'));
+                this.puzzle[i][j][3] = c[2*i+1][2*j+1]==teka.ord(' ')?0:(c[2*i+1][2*j+1]-teka.ord('0'));
             }
         }
     }
@@ -74,10 +74,10 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
     this.cells = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (c[2*i][2*j].charCodeAt(0)=='-'.charCodeAt(0)) {
+            if (c[2*i][2*j]==teka.ord('-')) {
                 this.cells[i][j] = teka.viewer.tapa.Defaults.EMPTY;
             }
-            if (c[2*i][2*j].charCodeAt(0)=='#'.charCodeAt(0)) {
+            if (c[2*i][2*j]==teka.ord('#')) {
                 this.cells[i][j] = teka.viewer.tapa.Defaults.BLACK;
             }
         }
@@ -96,7 +96,7 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToSolution = function(ascii)
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.solution[i][j] = c[i][j].charCodeAt(0)=='#'.charCodeAt(0)?teka.viewer.tapa.Defaults.BLACK:teka.viewer.tapa.Defaults.NONE;
+            this.solution[i][j] = c[i][j]==teka.ord('#')?teka.viewer.tapa.Defaults.BLACK:teka.viewer.tapa.Defaults.NONE;
         }
     }
 };

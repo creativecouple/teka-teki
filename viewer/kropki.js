@@ -75,9 +75,9 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
     this.lrdots = teka.new_array([this.X-1,this.X],teka.viewer.kropki.Defaults.NONE);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.X;j++) {
-            if (c[(d+1)*(i+1)][2*j+1].charCodeAt(0)=='O'.charCodeAt(0)) {
+            if (c[(d+1)*(i+1)][2*j+1]==teka.ord('O')) {
                 this.lrdots[i][j] = teka.viewer.kropki.Defaults.EMPTY;
-            } else if (c[(d+1)*(i+1)][2*j+1].charCodeAt(0)=='*'.charCodeAt(0)) {
+            } else if (c[(d+1)*(i+1)][2*j+1]==teka.ord('*')) {
                 this.lrdots[i][j] = teka.viewer.kropki.Defaults.FULL;
             }
         }
@@ -86,9 +86,9 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
     this.uddots = teka.new_array([this.X,this.X-1],teka.viewer.kropki.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X-1;j++) {
-            if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2].charCodeAt(0)=='O'.charCodeAt(0)) {
+            if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2]==teka.ord('O')) {
                 this.uddots[i][j] = teka.viewer.kropki.Defaults.EMPTY;
-            } else if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2].charCodeAt(0)=='*'.charCodeAt(0)) {
+            } else if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2]==teka.ord('*')) {
                 this.uddots[i][j] = teka.viewer.kropki.Defaults.FULL;
             }
         }

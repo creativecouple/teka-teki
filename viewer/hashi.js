@@ -65,23 +65,23 @@ teka.viewer.hashi.HashiViewer.prototype.asciiToData = function(ascii)
     this.bridges = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[i][j].charCodeAt(0)>='1'.charCodeAt(0) && 
-                c[i][j].charCodeAt(0)<='8'.charCodeAt(0)) {
-                this.puzzle[i][j] = c[i][j].charCodeAt(0)-'0'.charCodeAt(0);
+            if (c[i][j]>=teka.ord('1') && 
+                c[i][j]<=teka.ord('8')) {
+                this.puzzle[i][j] = c[i][j]-teka.ord('0');
             }
-            if (c[i][j].charCodeAt(0)=='?'.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('?')) {
                 this.puzzle[i][j] = teka.viewer.hashi.Defaults.UNKNOWN;
             }
-            if (c[i][j].charCodeAt(0)=='-'.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('-')) {
                 this.bridges[i][j] = teka.viewer.hashi.Defaults.WAAG1;
             }
-            if (c[i][j].charCodeAt(0)=='='.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('=')) {
                 this.bridges[i][j] = teka.viewer.hashi.Defaults.WAAG2;
             }
-            if (c[i][j].charCodeAt(0)=='|'.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('|')) {
                 this.bridges[i][j] = teka.viewer.hashi.Defaults.SENK1;
             }
-            if (c[i][j].charCodeAt(0)=='H'.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('H')) {
                 this.bridges[i][j] = teka.viewer.hashi.Defaults.SENK2;
             }
         }
@@ -100,16 +100,16 @@ teka.viewer.hashi.HashiViewer.prototype.asciiToSolution = function(ascii)
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[i][j].charCodeAt(0)=='-'.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('-')) {
                 this.solution[i][j] = teka.viewer.hashi.Defaults.WAAG1;
             }
-            if (c[i][j].charCodeAt(0)=='='.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('=')) {
                 this.solution[i][j] = teka.viewer.hashi.Defaults.WAAG2;
             }
-            if (c[i][j].charCodeAt(0)=='|'.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('|')) {
                 this.solution[i][j] = teka.viewer.hashi.Defaults.SENK1;
             }
-            if (c[i][j].charCodeAt(0)=='H'.charCodeAt(0)) {
+            if (c[i][j]==teka.ord('H')) {
                 this.solution[i][j] = teka.viewer.hashi.Defaults.SENK2;
             }
         }

@@ -72,9 +72,9 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
             switch (c[2*i+2*d+1][2*j+2*d+1]) {
-              case '+': this.puzzle[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
-              case '-': this.puzzle[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
-              case '#': this.puzzle[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
+              case teka.ord('+'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
+              case teka.ord('-'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
+              case teka.ord('#'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
               default: this.puzzle[i][j] = teka.viewer.magnets.Defaults.NONE;
             }
         }
@@ -83,10 +83,10 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
     this.magnets = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i+2*d+2][2*j+2*d+1]==' ') {
+            if (c[2*i+2*d+2][2*j+2*d+1]==teka.ord(' ')) {
                 this.magnets[i][j] = teka.viewer.magnets.Defaults.LEFT;
                 this.magnets[i+1][j] = teka.viewer.magnets.Defaults.RIGHT;
-            } else if (c[2*i+2*d+1][2*j+2*d+2]==' ') {
+            } else if (c[2*i+2*d+1][2*j+2*d+2]==teka.ord(' ')) {
                 this.magnets[i][j] = teka.viewer.magnets.Defaults.TOP;
                 this.magnets[i][j+1] = teka.viewer.magnets.Defaults.BOTTOM;
             }
@@ -135,9 +135,9 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToSolution = function(ascii)
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
             switch (c[i][j]) {
-              case '+': h[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
-              case '-': h[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
-              case '#': h[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
+              case teka.ord('+'): h[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
+              case teka.ord('-'): h[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
+              case teka.ord('#'): h[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
               default: h[i][j] = teka.viewer.magnets.Defaults.NONE;
             }
         }

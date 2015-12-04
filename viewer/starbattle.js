@@ -62,7 +62,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
     this.puzzle = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (c[2*i+1][2*j+1].charCodeAt(0)=='#'.charCodeAt(0)) {
+            if (c[2*i+1][2*j+1]==teka.ord('#')) {
                 this.puzzle[i][j] = -1;
             }
         }
@@ -80,10 +80,10 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
     this.cells = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (c[2*i+1][2*j+1].charCodeAt(0)=='-'.charCodeAt(0)) {
+            if (c[2*i+1][2*j+1]==teka.ord('-')) {
                 this.cells[i][j] = teka.viewer.starbattle.Defaults.EMPTY;
             }
-            if (c[2*i+1][2*j+1].charCodeAt(0)=='*'.charCodeAt(0)) {
+            if (c[2*i+1][2*j+1]==teka.ord('*')) {
                 this.cells[i][j] = teka.viewer.starbattle.Defaults.STAR;
             }
         }
@@ -92,7 +92,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
     this.black = teka.new_array([this.X,this.X],false);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            this.black[i][j] = c[2*i+1][2*j+1].charCodeAt(0)=='#'.charCodeAt(0);
+            this.black[i][j] = c[2*i+1][2*j+1]==teka.ord('#');
         }
     }
 };
@@ -109,7 +109,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToSolution = function(asc
     this.solution = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            this.solution[i][j] = c[i][j].charCodeAt(0)=='*'.charCodeAt(0)?
+            this.solution[i][j] = c[i][j]==teka.ord('*')?
                 teka.viewer.starbattle.Defaults.STAR:
                 teka.viewer.starbattle.Defaults.NONE;
         }
