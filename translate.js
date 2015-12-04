@@ -243,6 +243,35 @@ teka.dictionary = {
         +'#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
     hashi_wrong_bridges: 'In der markierten Insel stimmt die Anzahl der Brücken nicht.',
     hashi_not_connected: 'Die markierten Inseln hängen nicht mit dem Rest zusammen.',
+
+    japanese_sums: 'Japanische Summen',
+    japanese_sums_instructions: 'Schwärzen Sie einige Felder im Diagramm und tragen Sie in die '
+        +'restlichen Felder die angegebenen Zahlen so ein, dass in keiner '
+        +'Zeile oder Spalte eine Ziffer mehrfach vorkommt. Die Zahlen am '
+        +'Rand geben in der richtigen Reihenfolge die Summen von Blöcken '
+        +'aufeinanderfolgender Ziffern (ohne Schwarzfeld dazwischen) an. '
+        +'Auch einzelne Ziffern werden hier angegeben. '
+        +'Steht am Rand nichts, so ist über die entsprechenden Zeile oder Spalte nichts bekannt.\n\n'
+        +'Für eine korrekte Lösung müssen zusätzlich zu allen Zahlen auch '
+        +'alle Schwarzfelder eingezeichnet sein.',
+    japanese_sums_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick zeichnet einen Kreis in das Feld ein. Dieser bedeutet, '
+        +'dass es sich um ein Zahlenfeld handelt. Der nächste Klick trägt ein '
+        +'Schwarzfeld ein. Danach folgen die Zahlen von 1 bis zur Maximalzahl '
+        +'und mit dem nächsten Klick wird der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'. oder O: Als Zahlenfeld markieren (wird als Kreis dargestellt)\n'
+        +'X, B oder S: Schwarzfeld\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
     
     dummy_to_avoid_comma_bug: ''
 };

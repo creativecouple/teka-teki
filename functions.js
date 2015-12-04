@@ -138,6 +138,12 @@ teka.extend = function(child,parent)
     child.prototype.constructor = child;
 };
 
+/** Return ascii-index of a character (= string of length 1) */
+teka.ord = function(c)
+{
+    return c.charCodeAt(0);
+};
+
 /**
  * Creates a new array with dimensions given in dims, filled with the
  * value val.

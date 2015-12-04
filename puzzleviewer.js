@@ -205,7 +205,7 @@ teka.viewer.PuzzleViewer.prototype.asciiToArray = function(ascii)
 
     for (var j=0;j<hoehe;j++) {
         for (var i=0;i<breite;i++) {
-            c[i][j] = s.charAt(i+breite*j);
+            c[i][j] = s.charAt(i+breite*j).charCodeAt(0);
         }
     }
 
@@ -221,16 +221,16 @@ teka.viewer.PuzzleViewer.prototype.getNr = function(c,x,y,d)
     var val = false;
     for (var i=0;i<d;i++)
         {
-            var ch = c[x+i][y].charCodeAt(0);
-            if (ch==' '.charCodeAt(0)) {
+            var ch = c[x+i][y];
+            if (ch==teka.ord(' ')) {
                 continue;
             }
             if (val===false) {
                 val=0;
             }
             val = val*10;
-            if (ch>='0'.charCodeAt(0) && ch<='9'.charCodeAt(0)) {
-                val += (ch-'0'.charCodeAt(0));
+            if (ch>=teka.ord('0') && ch<=teka.ord('9')) {
+                val += (ch-teka.ord('0'));
             }
         }
     return val;
@@ -245,16 +245,16 @@ teka.viewer.PuzzleViewer.prototype.getVNr = function(c,x,y,d)
     var val = false;
     for (var i=0;i<d;i++)
         {
-            var ch = c[x][y+i].charCodeAt(0);
-            if (ch==' '.charCodeAt(0)) {
+            var ch = c[x][y+i];
+            if (ch==teka.ord(' ')) {
                 continue;
             }
             if (val===false) {
                 val=0;
             }
             val = val*10;
-            if (ch>='0'.charCodeAt(0) && ch<='9'.charCodeAt(0)) {
-                val += (ch-'0'.charCodeAt(0));
+            if (ch>=teka.ord('0') && ch<=teka.ord('9')) {
+                val += (ch-teka.ord('0'));
             }
         }
     return val;
