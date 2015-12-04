@@ -151,13 +151,14 @@ teka.PuzzleApplet = function(options)
         this.setOptions(options);
     }
 
+    this.showStart = this.values_.TAKE_TIME===true;
     this.showInstructions = false;
     this.canvas = this.addCanvas();
     this.image = this.canvas.getContext('2d');
 
     this.paintLogo();
 
-    this.correctLang();
+    this.correctLanguage();
 
     teka.addScript('language/'+this.values_.LANGUAGE+'.js', teka.myBind(this,function() {
         setTimeout(this.init.bind(this),this.values_.LOGO_WAIT);
@@ -165,7 +166,7 @@ teka.PuzzleApplet = function(options)
 };
 
 /** Check's if the given language is defined. */
-teka.PuzzleApplet.prototype.correctLang = function()
+teka.PuzzleApplet.prototype.correctLanguage = function()
 {
     var whitelist = ['de','en'];
 
@@ -284,6 +285,9 @@ teka.PuzzleApplet.prototype.init = function()
         this.casesTool = new teka.CasesTool();
         this.textTool = new teka.TextTool();
         this.instructions = new teka.Instructions();
+        if (this.values_.TAKE_TIME===true) {
+            this.start_screen = new teka.StartScreen();
+        }
 
         this.initPuzzleViewer();
         this.initHead(teka.translate(this.type));
@@ -292,6 +296,9 @@ teka.PuzzleApplet.prototype.init = function()
         this.initCasesTool();
         this.initTextTool();
         this.initInstructions();
+        if (this.values_.TAKE_TIME===true) {
+            this.initStartScreen();
+        }
 
         this.addLayout([this.puzzleViewer,
                         this.buttonTool,
@@ -546,6 +553,21 @@ teka.PuzzleApplet.prototype.initInstructions = function()
     this.instructions.setEvent(this.setInstructions.bind(this));
 };
 
+/** Initializes the start screen. */
+teka.PuzzleApplet.prototype.initStartScreen = function()
+{
+    this.start_screen.setButtonParameter(this.values_.BUTTON_COLORS,
+                                         this.values_.BUTTON_HEIGHT);
+    this.start_screen.setGraphics(this.image);
+    this.start_screen.setGap(this.values_.GAP);
+    this.start_screen.setExtent(this.values_.MARGIN,
+                                this.values_.MARGIN+this.values_.HEAD_HEIGHT+
+                                    this.values_.GAP,
+                                this.canvas.width-2*this.values_.MARGIN,
+                                this.canvas.height-this.values_.HEAD_HEIGHT-
+                                    2*this.values_.MARGIN-this.values_.GAP);
+};
+
 /** Converts the type to the name of the corresponding viewer. */
 teka.PuzzleApplet.prototype.typeToViewer = function(type)
 {
@@ -585,6 +607,15 @@ teka.PuzzleApplet.prototype.paint = function()
         return;
     }
 
+    if (this.showStart) {
+        this.image.save();
+        this.start_screen.translate(this.image);
+        this.start_screen.clip(this.image);
+        this.start_screen.paint(this.image);
+        this.image.restore();
+        return;
+    }
+    
     this.image.save();
     this.layout.translate(this.image);
     this.layout.clip(this.image);
