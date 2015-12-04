@@ -124,8 +124,8 @@ teka.Defaults.MAX_LEVEL = 12;
 /** Set to true, if the time measurment should be done. */
 teka.Defaults.TAKE_TIME = false;
 
-/** 
- * Set to true, if failed attempts should be counted. 
+/**
+ * Set to true, if failed attempts should be counted.
  * Failed attempts are only counted, when time is taken.
  * Therefore teka.Defaults.TAKE_TIME must be true too, to
  * count failed attempt.
@@ -311,7 +311,7 @@ teka.PuzzleApplet.prototype.init = function()
                                      this.keyPressedListener.bind(this),
                                      false);
         this.canvas.focus();
-        
+
         if (this.values_.TAKE_TIME===true) {
             this.failed_attempts = 0;
             this.timer_stop = false;
@@ -786,13 +786,13 @@ teka.PuzzleApplet.prototype.check = function()
     if (this.values_.TAKE_TIME===true && this.timer_stop===false) {
         this.timer_stop = new Date().getTime();
     }
-    
+
     var duration = Math.floor((this.timer_stop-this.timer_start)/1000);
-    
+
     var result = teka.translate('congratulations');
     if (this.values_.TAKE_TIME===true) {
         result += '\n'+this.niceTime(duration);
-        
+
         if (this.values_.COUNT_FAILED_ATTEMPTS===true && this.failed_attempts>0) {
             result += ' '+
                 (this.failed_attempts==1
@@ -800,7 +800,7 @@ teka.PuzzleApplet.prototype.check = function()
                     :teka.translate('failed_attempts',[this.failed_attempts]));
         }
     }
-    
+
     this.setText(result,false);
     this.puzzleViewer.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();

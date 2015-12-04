@@ -527,17 +527,17 @@ teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,y
     this.xm = xc-this.scale*this.x;
     this.ym = yc-this.scale*this.y;
 
-    if (this.x<0) { 
-        this.x=0; 
+    if (this.x<0) {
+        this.x=0;
     }
-    if (this.y<0) { 
-        this.y=0; 
+    if (this.y<0) {
+        this.y=0;
     }
-    if (this.x>this.X-1) { 
-        this.x=this.X-1; 
+    if (this.x>this.X-1) {
+        this.x=this.X-1;
     }
-    if (this.y>this.X-1) { 
-        this.y=this.X-1; 
+    if (this.y>this.X-1) {
+        this.y=this.X-1;
     }
 
     var oldexp = this.exp;

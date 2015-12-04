@@ -272,6 +272,6 @@ teka.dictionary = {
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
         +'und ausschalten.',
-    
+
     dummy_to_avoid_comma_bug: ''
 };
