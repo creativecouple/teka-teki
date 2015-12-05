@@ -43,6 +43,15 @@ teka.extend(teka.Tool,teka.Display);
  */
 teka.Tool.prototype.setButtonParameter = function(colors,height)
 {
+    this.setButtonParameter_(colors,height);
+};
+
+/**
+ * Used to overwrite the function in a descendant, as javascript
+ * does not provide real inheritance.
+ */
+teka.Tool.prototype.setButtonParameter_ = function(colors,height)
+{
     if (colors.TEXT!==undefined) {
         this.colorText = colors.TEXT;
     }

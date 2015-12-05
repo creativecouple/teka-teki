@@ -105,6 +105,19 @@ teka.myBind = function(ptr,fn)
     return fn.bind(ptr);
 };
 
+/** Converts some HTML entities to their normal counterpart. */
+teka.convertEntities = function(s)
+{
+    s = s.replace('&auml;','ä');
+    s = s.replace('&ouml;','ö');
+    s = s.replace('&uuml;','ü');
+    s = s.replace('&Auml;','Ä');
+    s = s.replace('&Ouml;','Ö');
+    s = s.replace('&Uuml;','Ü');
+    s = s.replace('&szlig;','ß');
+    return s;
+};
+
 /** Sets the error, if none has been set yet. */
 teka.setError = function(val)
 {
