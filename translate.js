@@ -102,13 +102,26 @@ teka.dictionary = {
     level: 'Stufe: {1}',
     load_state: 'Kehrt zum zuvor gespeicherten Zustand zurück.',
     next: 'Weiter',
+    no_properties: 'Keine bekannten Eigenschaften',
     orange: 'orange',
     orange_a: 'orangenen',
     pink: 'rosa',
     pink_a: 'rosafarbigen',
     problem: 'Aufgabe',
+    properties: 'Eigenschaften',
     save_state: 'Speichert den aktuellen Zustand.',
     set_color: 'Setzt die Stiftfarbe auf {1}.',
+    solving_on_time: 'Rätsellösen auf Zeit',
+    start: 'Starten',
+    start_text: 'Bei diesem Rätsel wird die Zeit gestoppt, die Sie zum Lösen '
+        +'benötigen. Die Zeitmessung beginnt in dem Moment, wo sie auf "Starten" '
+        +'klicken, und endet, sobald sie erfolgreich auf "Testen" geklickt haben.\n'
+        +'Bevor sie starten, haben sie die Möglichkeit ein paar Dinge im Voraus '
+        +'über das Rätsel zu erfahren: Die Rätselart steht bereits oben auf dieser '
+        +'Seite. Rechts unten sind möglicherweise weitere Eigenschaften des Rätsels, '
+        +'wie beispielsweise dessen Größe, angegeben. Sie können auch auf '
+        +'\"Anleitung\" klicken. Dort erfahren Sie die Regeln des Rätsels, sowie '
+        +'die Bedienung des Applets bei diesem speziellen Rätsel.',
     turkey: 'türkis',
     turkey_a: 'türkisfarbigen',
     undo: 'Rückgängig',
@@ -142,6 +155,7 @@ teka.dictionary = {
         +'und ausschalten.\n\n\n'
         +'Hinweis: Der Expertenmodus kann nur genutzt werden, wenn das Kropki '
         +'maximal 9 Ziffern enthält.',
+    kropki_prop_size: 'Größe {1}',
     kropki_unique_symbol: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     kropki_empty: 'Das markierte Feld ist leer.',
     kropki_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',

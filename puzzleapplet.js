@@ -124,13 +124,24 @@ teka.Defaults.MAX_LEVEL = 12;
 /** Set to true, if the time measurment should be done. */
 teka.Defaults.TAKE_TIME = false;
 
-/** 
- * Set to true, if failed attempts should be counted. 
+/**
+ * Set to true, if failed attempts should be counted.
  * Failed attempts are only counted, when time is taken.
- * Therefore teka.Defaults.TAKE_TIME must be true too, to
+ * Therefore teka.Defaults. TAKE_TIME must be true too, to
  * count failed attempt.
  */
 teka.Defaults.COUNT_FAILED_ATTEMPTS = false;
+
+/**
+ * The properties shown on the start screen can be
+ * eighter automatically derived by the puzzle viewer or
+ * be set, using the description-key of the spf-file.
+ * To use the later one, set this variable to true.
+ *
+ * Note: When using the values of the description-key,
+ * the properties cannot be automatically translated.
+ */
+teka.Defaults.CUSTOM_PROPERTIES = false;
 
 /** The name of the file to load. Has to be overridden. */
 teka.Defaults.FILE = false;
@@ -151,13 +162,14 @@ teka.PuzzleApplet = function(options)
         this.setOptions(options);
     }
 
+    this.showStart = this.values_.TAKE_TIME===true;
     this.showInstructions = false;
     this.canvas = this.addCanvas();
     this.image = this.canvas.getContext('2d');
 
     this.paintLogo();
 
-    this.correctLang();
+    this.correctLanguage();
 
     teka.addScript('language/'+this.values_.LANGUAGE+'.js', teka.myBind(this,function() {
         setTimeout(this.init.bind(this),this.values_.LOGO_WAIT);
@@ -165,7 +177,7 @@ teka.PuzzleApplet = function(options)
 };
 
 /** Check's if the given language is defined. */
-teka.PuzzleApplet.prototype.correctLang = function()
+teka.PuzzleApplet.prototype.correctLanguage = function()
 {
     var whitelist = ['de','en'];
 
@@ -284,6 +296,9 @@ teka.PuzzleApplet.prototype.init = function()
         this.casesTool = new teka.CasesTool();
         this.textTool = new teka.TextTool();
         this.instructions = new teka.Instructions();
+        if (this.values_.TAKE_TIME===true) {
+            this.start_screen = new teka.StartScreen();
+        }
 
         this.initPuzzleViewer();
         this.initHead(teka.translate(this.type));
@@ -292,6 +307,9 @@ teka.PuzzleApplet.prototype.init = function()
         this.initCasesTool();
         this.initTextTool();
         this.initInstructions();
+        if (this.values_.TAKE_TIME===true) {
+            this.initStartScreen();
+        }
 
         this.addLayout([this.puzzleViewer,
                         this.buttonTool,
@@ -311,12 +329,6 @@ teka.PuzzleApplet.prototype.init = function()
                                      this.keyPressedListener.bind(this),
                                      false);
         this.canvas.focus();
-        
-        if (this.values_.TAKE_TIME===true) {
-            this.failed_attempts = 0;
-            this.timer_stop = false;
-            this.timer_start = new Date().getTime();
-        }
     }));
 };
 
@@ -546,6 +558,50 @@ teka.PuzzleApplet.prototype.initInstructions = function()
     this.instructions.setEvent(this.setInstructions.bind(this));
 };
 
+/** Initializes the start screen. */
+teka.PuzzleApplet.prototype.initStartScreen = function()
+{
+    this.start_screen.setButtonParameter(this.values_.BUTTON_COLORS,
+                                         this.values_.BUTTON_HEIGHT);
+    this.start_screen.setProperties(this.values_.CUSTOM_PROPERTIES===true
+        ?this.descriptionToProperties(this.psdata.get('description'))
+        :this.puzzleViewer.getProperties());
+    this.start_screen.setGraphics(this.image);
+    this.start_screen.setGap(this.values_.GAP);
+    this.start_screen.setExtent(this.values_.MARGIN,
+                                this.values_.MARGIN+this.values_.HEAD_HEIGHT+
+                                    this.values_.GAP,
+                                this.canvas.width-2*this.values_.MARGIN,
+                                this.canvas.height-this.values_.HEAD_HEIGHT-
+                                    2*this.values_.MARGIN-this.values_.GAP);
+    this.start_screen.setEvents(this.setInstructions.bind(this),
+                                this.start.bind(this));
+};
+
+/** Converts the description of an spf file to a properties list. */
+teka.PuzzleApplet.prototype.descriptionToProperties = function(descr)
+{
+    if (descr===false) {
+        return [];
+    }
+
+    var erg = [];
+    while (true) {
+        var start = descr.indexOf('(');
+        if (start==-1) {
+            break;
+        }
+        var end = descr.indexOf(')');
+        if (end<start) {
+            return [];
+        }
+        erg.push(teka.convertEntities(descr.substr(start+1,end-start-1)));
+        descr = descr.substr(end+1);
+    }
+
+    return erg;
+};
+
 /** Converts the type to the name of the corresponding viewer. */
 teka.PuzzleApplet.prototype.typeToViewer = function(type)
 {
@@ -581,6 +637,15 @@ teka.PuzzleApplet.prototype.paint = function()
         this.instructions.translate(this.image);
         this.instructions.clip(this.image);
         this.instructions.paint(this.image);
+        this.image.restore();
+        return;
+    }
+
+    if (this.showStart) {
+        this.image.save();
+        this.start_screen.translate(this.image);
+        this.start_screen.clip(this.image);
+        this.start_screen.paint(this.image);
         this.image.restore();
         return;
     }
@@ -638,6 +703,14 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         return;
     }
 
+    if (this.showStart) {
+        if (this.start_screen.processMouseMovedEvent(x-this.start_screen.left,
+                                                     y-this.start_screen.top)) {
+            this.paint();
+        }
+        return;
+    }
+
     var paint = false;
     if (this.layout.inExtent(x,y)) {
         if (this.layout.processMouseMovedEvent(x-this.layout.left,
@@ -688,6 +761,14 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
         return;
     }
 
+    if (this.showStart) {
+        if (this.start_screen.processMousePressedEvent(x-this.start_screen.left,
+                                                       y-this.start_screen.top)) {
+            this.paint();
+        }
+        return;
+    }
+
     var paint = false;
     if (this.layout.inExtent(x,y)) {
         if (this.layout.processMousePressedEvent(x-this.layout.left,
@@ -733,6 +814,15 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
         return true;
     }
 
+    if (this.showStart) {
+        if (this.start_screen.processKeyEvent(myEvent)) {
+            this.paint();
+            teka.stopPropagation(e);
+            return false;
+        }
+        return true;
+    }
+
     if (this.layout.processKeyEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
@@ -762,6 +852,16 @@ teka.PuzzleApplet.prototype.setInstructions = function(val)
     this.paint();
 };
 
+/** Removes the startscreen and starts the timer. */
+teka.PuzzleApplet.prototype.start = function()
+{
+    this.showStart = false;
+
+    this.failed_attempts = 0;
+    this.timer_stop = false;
+    this.timer_start = new Date().getTime();
+};
+
 /**
  * Checks, if the puzzle has been solved correctly. If not,
  * the reason will be displayed in the texttool and as red
@@ -785,13 +885,13 @@ teka.PuzzleApplet.prototype.check = function()
     if (this.values_.TAKE_TIME===true && this.timer_stop===false) {
         this.timer_stop = new Date().getTime();
     }
-    
+
     var duration = Math.floor((this.timer_stop-this.timer_start)/1000);
-    
+
     var result = teka.translate('congratulations');
     if (this.values_.TAKE_TIME===true) {
         result += '\n'+this.niceTime(duration);
-        
+
         if (this.values_.COUNT_FAILED_ATTEMPTS===true && this.failed_attempts>0) {
             result += ' '+
                 (this.failed_attempts==1
@@ -799,7 +899,7 @@ teka.PuzzleApplet.prototype.check = function()
                     :teka.translate('failed_attempts',[this.failed_attempts]));
         }
     }
-    
+
     this.setText(result,false);
     this.puzzleViewer.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();

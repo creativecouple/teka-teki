@@ -115,6 +115,13 @@ teka.viewer.PuzzleViewer.prototype.getColorString = function(color)
     return this.colortool.getColorString(color);
 };
 
+/**
+ * Returns one of the colors, that appear, when the puzzle blinks.
+ * The function, to calculated, is based on four values taken from
+ * the puzzle: x and y position, size of the puzzle and the value
+ * at the position. The result ist not random, but may look like to
+ * the user.
+ */
 teka.viewer.PuzzleViewer.prototype.getBlinkColor = function(x, y, size, val)
 {
     var tmp = this.mode
@@ -127,6 +134,14 @@ teka.viewer.PuzzleViewer.prototype.getBlinkColor = function(x, y, size, val)
     return this.solved_color[tmp];
 };
 
+/**
+ * Returns the properties of the puzzle. To be overridden by the
+ * concret puzzles.
+ */
+teka.viewer.PuzzleViewer.prototype.getProperties = function()
+{
+    return [];
+};
 
 //////////////////////////////////////////////////////////////////
 
