@@ -317,13 +317,7 @@ teka.PuzzleApplet.prototype.init = function()
         this.canvas.addEventListener('keydown',
                                      this.keyPressedListener.bind(this),
                                      false);
-        this.canvas.focus();
-        
-        if (this.values_.TAKE_TIME===true) {
-            this.failed_attempts = 0;
-            this.timer_stop = false;
-            this.timer_start = new Date().getTime();
-        }
+        this.canvas.focus();        
     }));
 };
 
@@ -566,6 +560,8 @@ teka.PuzzleApplet.prototype.initStartScreen = function()
                                 this.canvas.width-2*this.values_.MARGIN,
                                 this.canvas.height-this.values_.HEAD_HEIGHT-
                                     2*this.values_.MARGIN-this.values_.GAP);
+    this.start_screen.setEvents(this.setInstructions.bind(this),
+                                this.start.bind(this));
 };
 
 /** Converts the type to the name of the corresponding viewer. */
@@ -669,6 +665,14 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         return;
     }
 
+    if (this.showStart) {
+        if (this.start_screen.processMouseMovedEvent(x-this.start_screen.left,
+                                                     y-this.start_screen.top)) {
+            this.paint();
+        }
+        return;
+    }
+    
     var paint = false;
     if (this.layout.inExtent(x,y)) {
         if (this.layout.processMouseMovedEvent(x-this.layout.left,
@@ -719,6 +723,14 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
         return;
     }
 
+    if (this.showStart) {
+        if (this.start_screen.processMousePressedEvent(x-this.start_screen.left,
+                                                       y-this.start_screen.top)) {
+            this.paint();
+        }
+        return;
+    }
+    
     var paint = false;
     if (this.layout.inExtent(x,y)) {
         if (this.layout.processMousePressedEvent(x-this.layout.left,
@@ -764,6 +776,15 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
         return true;
     }
 
+    if (this.showStart) {
+        if (this.start_screen.processKeyEvent(myEvent)) {
+            this.paint();
+            teka.stopPropagation(e);
+            return false;
+        }
+        return true;
+    }
+    
     if (this.layout.processKeyEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
@@ -791,6 +812,16 @@ teka.PuzzleApplet.prototype.setInstructions = function(val)
 {
     this.showInstructions = val;
     this.paint();
+};
+
+/** Removes the startscreen and starts the timer. */
+teka.PuzzleApplet.prototype.start = function()
+{
+    this.showStart = false;
+
+    this.failed_attempts = 0;
+    this.timer_stop = false;
+    this.timer_start = new Date().getTime();
 };
 
 /**
