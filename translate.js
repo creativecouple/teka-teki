@@ -272,6 +272,14 @@ teka.dictionary = {
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
         +'und ausschalten.',
+    japanese_sums_digits: 'Zahlen von 1 bis {1}.',
+    japanese_sums_empty: 'Das markierte Feld ist leer.',
+    japanese_sums_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    japanese_sums_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',
+    japanese_sums_column_duplicate: 'Die markierten Zahlen kommen in der Spalte doppelt vor.',
+    japanese_sums_row_count: 'In der markierten Zeile stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
+    japanese_sums_column_count: 'In der markierten Spalte stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
+    japanese_sums_sum_wrong: 'Die markierten Zahlen ergeben nicht die entsprechende Summe am Rand.',
 
     dummy_to_avoid_comma_bug: ''
 };
