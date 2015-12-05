@@ -48,6 +48,25 @@ teka.StartScreen = function()
 };
 teka.extend(teka.StartScreen,teka.Tool);
 
+/** Set text to display at the left. */
+teka.StartScreen.prototype.setText = function(text)
+{
+    this.text = text;
+};
+
+/** Sets the properties to display at bottom right. */
+teka.StartScreen.prototype.setProperties = function(properties)
+{
+    this.properties = properties;
+};
+
+/**
+ * Set colors and height of buttons.
+ * Calls the function in the 'superclass'. As this concept does
+ * not exist in javascript, the superclass 'tool' contains
+ * two versions of setButtonParameter, the one without _ to be 
+ * overridden, the other one to be used here.
+ */
 teka.StartScreen.prototype.setButtonParameter = function(colors,height)
 {
     this.setButtonParameter_(colors,height);
@@ -120,11 +139,8 @@ teka.StartScreen.prototype.getTitleFont = function()
 
 // ToDo:
 // a) setProperties
-// b) setMainText
-// c) beides geeignet umbrechen
-// d) Fehlermeldung, falls Platz nicht reicht
-// e) Mouse-Events
-// f) Key-Events
+// c) geeignet umbrechen
+// d) ggfs. Fehlermeldung, falls Platz nicht reicht
 
 //////////////////////////////////////////////////////////////////
 
@@ -162,7 +178,7 @@ teka.StartScreen.prototype.paint = function(g)
         g.fillText(teka.translate('no_properties'),0,2);
     } else {
         for (var i=0;i<this.properties.length;i++) {
-            g.fillText(properties[i],0,2);
+            g.fillText('*** '+this.properties[i]+' ***',0,2);
             g.translate(0,this.textHeight+2);
         }
     }
@@ -221,6 +237,44 @@ teka.StartScreen.prototype.processMousePressedEvent = function(xc,yc)
     }
 
     return true;
+};
+
+/** Handle keydown event */
+teka.StartScreen.prototype.processKeyEvent = function(e)
+{
+    if (e.key==teka.KEY_DOWN) {
+        if (this.activeButton===false) {
+            this.activeButton = this.buttonText.length-1;
+        } else if (this.activeButton<this.buttonText.length-1) {
+            this.activeButton++;
+        }
+        return true;
+    }
+
+    if (e.key==teka.KEY_UP) {
+        if (this.activeButton===false) {
+            this.activeButton = 0;
+        } else if (this.activeButton>0) {
+            this.activeButton--;
+        }
+        return true;
+    }
+
+    if (e.key==teka.KEY_ENTER) {
+        if (this.activeButton===0) {
+            if (this.events[0]!==false) {
+                this.events[0](true);
+            }
+        }
+        if (this.activeButton===1) {
+            if (this.events[1]!==false) {
+                this.events[1]();
+            }
+        }
+        return true;
+    }
+
+    return false;
 };
 
 //////////////////////////////////////////////////////////////////

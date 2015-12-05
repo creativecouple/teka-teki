@@ -127,10 +127,21 @@ teka.Defaults.TAKE_TIME = false;
 /** 
  * Set to true, if failed attempts should be counted. 
  * Failed attempts are only counted, when time is taken.
- * Therefore teka.Defaults.TAKE_TIME must be true too, to
+ * Therefore teka.Defaults. TAKE_TIME must be true too, to
  * count failed attempt.
  */
 teka.Defaults.COUNT_FAILED_ATTEMPTS = false;
+
+/**
+ * The properties shown on the start screen can be
+ * eighter automatically derived by the puzzle viewer or
+ * be set, using the description-key of the spf-file.
+ * To use the later one, set this variable to true.
+ * 
+ * Note: When using the values of the description-key,
+ * the properties cannot be automatically translated.
+ */
+teka.Defaults.CUSTOM_PROPERTIES = false;
 
 /** The name of the file to load. Has to be overridden. */
 teka.Defaults.FILE = false;
@@ -552,6 +563,9 @@ teka.PuzzleApplet.prototype.initStartScreen = function()
 {
     this.start_screen.setButtonParameter(this.values_.BUTTON_COLORS,
                                          this.values_.BUTTON_HEIGHT);
+    this.start_screen.setProperties(this.values_.CUSTOM_PROPERTIES===true
+        ?this.descriptionToProperties(this.psdata.get('description'))
+        :this.puzzleViewer.getProperties());
     this.start_screen.setGraphics(this.image);
     this.start_screen.setGap(this.values_.GAP);
     this.start_screen.setExtent(this.values_.MARGIN,
@@ -562,6 +576,32 @@ teka.PuzzleApplet.prototype.initStartScreen = function()
                                     2*this.values_.MARGIN-this.values_.GAP);
     this.start_screen.setEvents(this.setInstructions.bind(this),
                                 this.start.bind(this));
+};
+
+/** Converts the description of an spf file to a properties list. */
+teka.PuzzleApplet.prototype.descriptionToProperties = function(descr)
+{
+    if (descr===false) {
+        return [];
+    }
+
+    var c = 0;
+    var erg = [];
+    while (true) {
+        if (++c>100) break;
+        var start = descr.indexOf('(');
+        if (start==-1) {
+            break;
+        }
+        var end = descr.indexOf(')');
+        if (end<start) {
+            return [];
+        }
+        erg.push(teka.convertEntities(descr.substr(start+1,end-start-1)));
+        descr = descr.substr(end+1);
+    }
+
+    return erg;
 };
 
 /** Converts the type to the name of the corresponding viewer. */

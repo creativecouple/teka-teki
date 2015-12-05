@@ -133,6 +133,11 @@ teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
         +'/solution [ (1243) (4312) (3124) (2431) ]';
 };
 
+teka.viewer.kropki.KropkiViewer.prototype.getProperties = function()
+{
+    return [teka.translate('kropki_prop_size',[this.X+'x'+this.X])];
+};
+
 //////////////////////////////////////////////////////////////////
 
 /** Reset the whole diagram. */
