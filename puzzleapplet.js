@@ -124,8 +124,8 @@ teka.Defaults.MAX_LEVEL = 12;
 /** Set to true, if the time measurment should be done. */
 teka.Defaults.TAKE_TIME = false;
 
-/** 
- * Set to true, if failed attempts should be counted. 
+/**
+ * Set to true, if failed attempts should be counted.
  * Failed attempts are only counted, when time is taken.
  * Therefore teka.Defaults. TAKE_TIME must be true too, to
  * count failed attempt.
@@ -137,7 +137,7 @@ teka.Defaults.COUNT_FAILED_ATTEMPTS = false;
  * eighter automatically derived by the puzzle viewer or
  * be set, using the description-key of the spf-file.
  * To use the later one, set this variable to true.
- * 
+ *
  * Note: When using the values of the description-key,
  * the properties cannot be automatically translated.
  */
@@ -328,7 +328,7 @@ teka.PuzzleApplet.prototype.init = function()
         this.canvas.addEventListener('keydown',
                                      this.keyPressedListener.bind(this),
                                      false);
-        this.canvas.focus();        
+        this.canvas.focus();
     }));
 };
 
@@ -585,10 +585,8 @@ teka.PuzzleApplet.prototype.descriptionToProperties = function(descr)
         return [];
     }
 
-    var c = 0;
     var erg = [];
     while (true) {
-        if (++c>100) break;
         var start = descr.indexOf('(');
         if (start==-1) {
             break;
@@ -651,7 +649,7 @@ teka.PuzzleApplet.prototype.paint = function()
         this.image.restore();
         return;
     }
-    
+
     this.image.save();
     this.layout.translate(this.image);
     this.layout.clip(this.image);
@@ -712,7 +710,7 @@ teka.PuzzleApplet.prototype.mouseMovedListener = function(e)
         }
         return;
     }
-    
+
     var paint = false;
     if (this.layout.inExtent(x,y)) {
         if (this.layout.processMouseMovedEvent(x-this.layout.left,
@@ -770,7 +768,7 @@ teka.PuzzleApplet.prototype.mousePressedListener = function(e)
         }
         return;
     }
-    
+
     var paint = false;
     if (this.layout.inExtent(x,y)) {
         if (this.layout.processMousePressedEvent(x-this.layout.left,
@@ -824,7 +822,7 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
         }
         return true;
     }
-    
+
     if (this.layout.processKeyEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
@@ -887,13 +885,13 @@ teka.PuzzleApplet.prototype.check = function()
     if (this.values_.TAKE_TIME===true && this.timer_stop===false) {
         this.timer_stop = new Date().getTime();
     }
-    
+
     var duration = Math.floor((this.timer_stop-this.timer_start)/1000);
-    
+
     var result = teka.translate('congratulations');
     if (this.values_.TAKE_TIME===true) {
         result += '\n'+this.niceTime(duration);
-        
+
         if (this.values_.COUNT_FAILED_ATTEMPTS===true && this.failed_attempts>0) {
             result += ' '+
                 (this.failed_attempts==1
@@ -901,7 +899,7 @@ teka.PuzzleApplet.prototype.check = function()
                     :teka.translate('failed_attempts',[this.failed_attempts]));
         }
     }
-    
+
     this.setText(result,false);
     this.puzzleViewer.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();

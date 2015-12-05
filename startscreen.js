@@ -30,18 +30,18 @@ teka.StartScreen = function()
     ];
 
     this.properties = [];
-    
+
     this.buttonWidth = 50;
     this.gap = 5;
     this.rightWidth = 100;
     this.bottomHeight = 100;
     this.deltaButtonX = 0;
     this.deltaButtonY = 0;
-    
+
     this.text = teka.translate('start_text');
     this.wrapped_text = false;
     this.printTextHeight = 12;
-    
+
     this.graphics = null;
     this.events = [false,false];
     this.activeButton = false;
@@ -64,7 +64,7 @@ teka.StartScreen.prototype.setProperties = function(properties)
  * Set colors and height of buttons.
  * Calls the function in the 'superclass'. As this concept does
  * not exist in javascript, the superclass 'tool' contains
- * two versions of setButtonParameter, the one without _ to be 
+ * two versions of setButtonParameter, the one without _ to be
  * overridden, the other one to be used here.
  */
 teka.StartScreen.prototype.setButtonParameter = function(colors,height)
@@ -104,7 +104,7 @@ teka.StartScreen.prototype.setExtent = function(left,top,width,height)
 
     this.rightWidth = Math.floor(0.382*(width-this.gap));
     this.bottomHeight = Math.floor(0.5*(height-this.gap));
-    
+
     this.initButtons();
     this.initText();
 };
@@ -116,9 +116,9 @@ teka.StartScreen.prototype.initButtons = function()
     for (var i=0;i<this.buttonText.length;i++) {
         width = Math.max(width,this.graphics.measureText(this.buttonText[i]).width);
     }
-    
+
     this.buttonWidth = width+100;
-    
+
     this.deltaButtonX = Math.floor((this.rightWidth-this.buttonWidth)/2);
     var tmp = this.buttonText.length*this.buttonHeight+
         (this.buttonText.length-1)*this.gap;
@@ -137,11 +137,6 @@ teka.StartScreen.prototype.getTitleFont = function()
     return 'bold '+this.textHeight+'px sans-serif';
 };
 
-// ToDo:
-// a) setProperties
-// c) geeignet umbrechen
-// d) ggfs. Fehlermeldung, falls Platz nicht reicht
-
 //////////////////////////////////////////////////////////////////
 
 /** Paints the start screen. */
@@ -150,7 +145,7 @@ teka.StartScreen.prototype.paint = function(g)
     // buttons at top right
     g.save();
     g.translate(this.width-this.rightWidth,0);
-    
+
     g.translate(this.deltaButtonX,this.deltaButtonY);
 
     for (var i=0;i<this.buttonText.length;i++) {
@@ -164,16 +159,16 @@ teka.StartScreen.prototype.paint = function(g)
     // properties at bottom right
     g.save();
     g.translate(this.width-this.rightWidth,this.height-this.bottomHeight);
-    
+
     g.fillStyle = this.textcolor;
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.font = this.getTitleFont();
     g.fillText(teka.translate('properties'),0,2);
-    
+
     g.translate(0,2*this.textHeight);
     g.font = 'italic '+this.getTextFont();
-    
+
     if (this.properties.length===0) {
         g.fillText(teka.translate('no_properties'),0,2);
     } else {
@@ -191,10 +186,10 @@ teka.StartScreen.prototype.paint = function(g)
     g.textBaseline = 'top';
     g.font = this.getTitleFont();
     g.fillText(teka.translate('solving_on_time'),0,2);
-    
+
     g.translate(0,3*this.textHeight);
     g.font = this.getTextFont(this.printTextHeight);
-    
+
     var y = 2;
     for (var i=0;i<this.wrapped_text.length;i++) {
         if (this.wrapped_text[i]===null) {
@@ -204,7 +199,7 @@ teka.StartScreen.prototype.paint = function(g)
             y+=this.printTextHeight+2;
         }
     }
-    
+
     g.restore();
 };
 
@@ -286,7 +281,7 @@ teka.StartScreen.prototype.getButton = function(xc,yc)
 {
     xc -= this.deltaButtonX+(this.width-this.rightWidth);
     yc -= this.deltaButtonY;
-    
+
     for (var i=0;i<this.buttonText.length;i++) {
         if (xc>=0 && xc<=this.buttonWidth &&
             yc>=i*(this.buttonHeight+this.gap) &&
@@ -294,7 +289,7 @@ teka.StartScreen.prototype.getButton = function(xc,yc)
             return i;
         }
     }
-    
+
     return false;
 };
 
