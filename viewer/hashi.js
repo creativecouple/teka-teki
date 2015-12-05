@@ -17,7 +17,7 @@
 /** Add own namespace to avoid conflicts. */
 teka.viewer.hashi = {};
 
-/** Some constants, used for the dots. */
+/** Some constants. */
 teka.viewer.hashi.Defaults = {
     WAAG1: 1,
     WAAG2: 2,
@@ -135,6 +135,12 @@ teka.viewer.hashi.HashiViewer.prototype.getExample = function()
         +'\n/puzzle [ (+-+-+-+-+-+-+) (|1   1      |) (+|+ +|+ + + +) (||   | 2---2|)'
         +' (+|+ +|+|+ +|+) (|4---4 |   ||) (+H+ +H+|+ +|+) (|H   H 2---4|) (+H+ +H+ + +H+)'
         +' (|H   H     H|) (+H+ +H+ + +H+) (|4===5-----3|) (+-+-+-+-+-+-+) ]';
+};
+
+/** Returns a list of automatically generated properties. */
+teka.viewer.hashi.HashiViewer.prototype.getProperties = function()
+{
+    return [teka.translate('hashi_prop_size',[this.X+'x'+this.Y])];
 };
 
 //////////////////////////////////////////////////////////////////

@@ -17,7 +17,7 @@
 /** Add own namespace to avoid conflicts. */
 teka.viewer.kropki = {};
 
-/** Some constants, used for the dots. */
+/** Some constants. */
 teka.viewer.kropki.Defaults = {
     NONE: 0,
     EMPTY: 1,
@@ -133,6 +133,7 @@ teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
         +'/solution [ (1243) (4312) (3124) (2431) ]';
 };
 
+/** Returns a list of automatically generated properties. */
 teka.viewer.kropki.KropkiViewer.prototype.getProperties = function()
 {
     return [teka.translate('kropki_prop_size',[this.X+'x'+this.X])];

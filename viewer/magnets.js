@@ -17,7 +17,7 @@
 /** Add own namespace to avoid conflicts. */
 teka.viewer.magnets = {};
 
-/** Some constants, used for the dots. */
+/** Some constants. */
 teka.viewer.magnets.Defaults = {
     NONE: 0,
     PLUS: 1,
@@ -168,16 +168,10 @@ teka.viewer.magnets.MagnetsViewer.prototype.getExample = function()
         +'/solution [ (##-+) (##+-) (+###) (-+-#) ]';
 };
 
-/** getUsage */
-teka.viewer.magnets.MagnetsViewer.prototype.getUsage = function()
+/** Returns a list of automatically generated properties. */
+teka.viewer.magnets.MagnetsViewer.prototype.getProperties = function()
 {
-    return 'Bedienung mit der Maus:\n\n'
-        +'1. Klick: Pluspol\n2. Klick: Minuspol\n3. Klick: Neutrale Platte\n4. Klick: Plusminusplatte\n5. Klick: Feldinhalt löschen (weiß)\n\n\n'
-        +'Bedienung mit der Tastatur:\n\n'
-        +'+/Q: Pluspol\n-/W: Minuspol\nN,A und /: Neutrale Platte\n. und #,S und *: Plusminusplatte\n'
-        +'Leertaste: Feldinhalt löschen\n\n'
-        +'Plusminusplatten werden automatisch zu einer richtigen Magnetplatte, wenn sie '
-        +'eine solche berühren.';
+    return [teka.translate('magnets_prop_size',[this.X+'x'+this.Y])];
 };
 
 //////////////////////////////////////////////////////////////////

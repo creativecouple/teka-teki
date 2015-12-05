@@ -17,7 +17,7 @@
 /** Add own namespace to avoid conflicts. */
 teka.viewer.tapa = {};
 
-/** Some constants, used for the dots. */
+/** Some constants. */
 teka.viewer.tapa.Defaults = {
     NONE: 0,
     BLACK: 1,
@@ -49,7 +49,7 @@ teka.viewer.tapa.TapaViewer.prototype.initData = function(data)
     this.error = teka.new_array([this.X,this.Y],false);
 };
 
-/** import_puzzle */
+/** Read puzzle from ascii art. */
 teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
 {
     if (ascii===false) {
@@ -84,7 +84,7 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
     }
 };
 
-/** Import solution */
+/** Read solution from ascii art. */
 teka.viewer.tapa.TapaViewer.prototype.asciiToSolution = function(ascii)
 {
     if (ascii===false) {
@@ -121,7 +121,12 @@ teka.viewer.tapa.TapaViewer.prototype.getExample = function()
         +' (            ) (    22      ) (    1       ) (        7   )'
         +' (            ) (2           ) (            ) ]\n/solution ['
         +' (## ###) (#    #) (## # #) (#  ###) (###  #) (  ####) ]';
+};
 
+/** Returns a list of automatically generated properties. */
+teka.viewer.tapa.TapaViewer.prototype.getProperties = function()
+{
+    return [teka.translate('tapa_prop_size',[this.X+'x'+this.Y])];
 };
 
 //////////////////////////////////////////////////////////////////
