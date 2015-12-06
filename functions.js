@@ -151,6 +151,12 @@ teka.extend = function(child,parent)
     child.prototype.constructor = child;
 };
 
+/** Return ascii-index of a character (= string of length 1) */
+teka.ord = function(c)
+{
+    return c.charCodeAt(0);
+};
+
 /**
  * Creates a new array with dimensions given in dims, filled with the
  * value val.
@@ -297,9 +303,12 @@ teka.KEY_PAGE_DOWN = 34;
 teka.KEY_PLUS = 187;
 teka.KEY_MINUS = 189;
 teka.KEY_A = 65;
+teka.KEY_B = 66;
 teka.KEY_D = 68;
 teka.KEY_E = 69;
 teka.KEY_N = 78;
+teka.KEY_O = 79;
 teka.KEY_Q = 81;
 teka.KEY_S = 83;
 teka.KEY_W = 87;
+teka.KEY_X = 88;

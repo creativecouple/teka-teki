@@ -17,7 +17,7 @@
 /** Add own namespace to avoid conflicts. */
 teka.viewer.kropki = {};
 
-/** Some constants, used for the dots. */
+/** Some constants. */
 teka.viewer.kropki.Defaults = {
     NONE: 0,
     EMPTY: 1,
@@ -75,9 +75,9 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
     this.lrdots = teka.new_array([this.X-1,this.X],teka.viewer.kropki.Defaults.NONE);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.X;j++) {
-            if (c[(d+1)*(i+1)][2*j+1].charCodeAt(0)=='O'.charCodeAt(0)) {
+            if (c[(d+1)*(i+1)][2*j+1]==teka.ord('O')) {
                 this.lrdots[i][j] = teka.viewer.kropki.Defaults.EMPTY;
-            } else if (c[(d+1)*(i+1)][2*j+1].charCodeAt(0)=='*'.charCodeAt(0)) {
+            } else if (c[(d+1)*(i+1)][2*j+1]==teka.ord('*')) {
                 this.lrdots[i][j] = teka.viewer.kropki.Defaults.FULL;
             }
         }
@@ -86,9 +86,9 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
     this.uddots = teka.new_array([this.X,this.X-1],teka.viewer.kropki.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X-1;j++) {
-            if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2].charCodeAt(0)=='O'.charCodeAt(0)) {
+            if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2]==teka.ord('O')) {
                 this.uddots[i][j] = teka.viewer.kropki.Defaults.EMPTY;
-            } else if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2].charCodeAt(0)=='*'.charCodeAt(0)) {
+            } else if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2]==teka.ord('*')) {
                 this.uddots[i][j] = teka.viewer.kropki.Defaults.FULL;
             }
         }
@@ -133,6 +133,7 @@ teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
         +'/solution [ (1243) (4312) (3124) (2431) ]';
 };
 
+/** Returns a list of automatically generated properties. */
 teka.viewer.kropki.KropkiViewer.prototype.getProperties = function()
 {
     return [teka.translate('kropki_prop_size',[this.X+'x'+this.X])];
@@ -532,17 +533,17 @@ teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,y
     this.xm = xc-this.scale*this.x;
     this.ym = yc-this.scale*this.y;
 
-    if (this.x<0) { 
-        this.x=0; 
+    if (this.x<0) {
+        this.x=0;
     }
-    if (this.y<0) { 
-        this.y=0; 
+    if (this.y<0) {
+        this.y=0;
     }
-    if (this.x>this.X-1) { 
-        this.x=this.X-1; 
+    if (this.x>this.X-1) {
+        this.x=this.X-1;
     }
-    if (this.y>this.X-1) { 
-        this.y=this.X-1; 
+    if (this.y>this.X-1) {
+        this.y=this.X-1;
     }
 
     var oldexp = this.exp;

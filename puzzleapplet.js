@@ -381,7 +381,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
         this.psdata = psdata;
         this.type = type;
 
-        teka.addScript('viewer/'+type+'viewer.js',teka.myBind(this,callback));
+        teka.addScript('viewer/'+type+'.js',teka.myBind(this,callback));
     });
     res.send();
 };
@@ -393,7 +393,8 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
  */
 teka.PuzzleApplet.prototype.correctType = function(type)
 {
-    var whitelist = ['hashi','kropki','magnets','starbattle','tapa'];
+    var whitelist = ['hashi','japanese_sums','kropki','magnets','starbattle',
+                     'tapa'];
 
     for (var i=0;i<whitelist.length;i++) {
         if (whitelist[i]===type) {

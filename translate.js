@@ -155,7 +155,7 @@ teka.dictionary = {
         +'und ausschalten.\n\n\n'
         +'Hinweis: Der Expertenmodus kann nur genutzt werden, wenn das Kropki '
         +'maximal 9 Ziffern enthält.',
-    kropki_prop_size: 'Größe {1}',
+    kropki_prop_size: 'Größe {1}.',
     kropki_unique_symbol: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     kropki_empty: 'Das markierte Feld ist leer.',
     kropki_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',
@@ -181,6 +181,7 @@ teka.dictionary = {
         +'Leertaste: Feldinhalt löschen\n\n'
         +'Plusminusplatten werden automatisch zu einer richtigen Magnetplatte, wenn sie '
         +'eine solche berühren.',
+    magnets_prop_size: 'Größe {1}.',
     magnets_empty: 'Die markierte Magnetplatte ist leer.',
     magnets_unique_symbol: 'Die markierte Magnetplatte ist noch nicht eindeutig.',
     magnets_equal_poles: 'An der markierten Stelle berühren sich zwei gleiche Pole.',
@@ -201,6 +202,7 @@ teka.dictionary = {
         +'Bedienung mit der Tastatur:\n\n'
         +'#, * und Q: Stern\n-, / und W: Leerfeld (markiert durch einen Strich)\n'
         +'Leertaste: Feldinhalt löschen',
+    starbattle_prop_size: 'Größe {1}.',
     starbattle_stars: 'Anzahl der Sterne: {1}',
     starbattle_touch: 'Die beiden markierten Sterne berühren sich.',
     starbattle_row: 'In der markierten Zeile stimmt die Anzahl der Sterne nicht.',
@@ -227,6 +229,7 @@ teka.dictionary = {
         +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n\n'
         +'In einem Feld mit Vorgaben führen #, * und Q zu einem Kreuz und die Leertaste '
         +'löscht dieses wieder.',
+    tapa_prop_size: 'Größe {1}.',
     tapa_2x2: 'Die vier markierten Felder bilden ein volles 2x2-Gebiet.',
     tapa_wrong_numbers: 'Im markierten Feld stimmen die Zahlen nicht.',
     tapa_not_connected: 'Die markierten Felder hängen nicht mit dem Rest der Schwarzfelder zusammen.',
@@ -255,8 +258,47 @@ teka.dictionary = {
         +'Brücke dazu beziehungsweise eine weniger eingezeichnet.\n'
         +'Inseln:\n'
         +'#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
+    hashi_sums_prop_size: 'Größe {1}.',
     hashi_wrong_bridges: 'In der markierten Insel stimmt die Anzahl der Brücken nicht.',
     hashi_not_connected: 'Die markierten Inseln hängen nicht mit dem Rest zusammen.',
-    
+
+    japanese_sums: 'Japanische Summen',
+    japanese_sums_instructions: 'Schwärzen Sie einige Felder im Diagramm und tragen Sie in die '
+        +'restlichen Felder die angegebenen Zahlen so ein, dass in keiner '
+        +'Zeile oder Spalte eine Ziffer mehrfach vorkommt. Die Zahlen am '
+        +'Rand geben in der richtigen Reihenfolge die Summen von Blöcken '
+        +'aufeinanderfolgender Ziffern (ohne Schwarzfeld dazwischen) an. '
+        +'Auch einzelne Ziffern werden hier angegeben. '
+        +'Steht am Rand nichts, so ist über die entsprechenden Zeile oder Spalte nichts bekannt.\n\n'
+        +'Für eine korrekte Lösung müssen zusätzlich zu allen Zahlen auch '
+        +'alle Schwarzfelder eingezeichnet sein.',
+    japanese_sums_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick zeichnet einen Kreis in das Feld ein. Dieser bedeutet, '
+        +'dass es sich um ein Zahlenfeld handelt. Der nächste Klick trägt ein '
+        +'Schwarzfeld ein. Danach folgen die Zahlen von 1 bis zur Maximalzahl '
+        +'und mit dem nächsten Klick wird der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'. oder O: Als Zahlenfeld markieren (wird als Kreis dargestellt)\n'
+        +'X, B oder S: Schwarzfeld\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    japanese_sums_prop_size: 'Größe {1}.',
+    japanese_sums_digits: 'Zahlen von 1 bis {1}.',
+    japanese_sums_empty: 'Das markierte Feld ist leer.',
+    japanese_sums_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    japanese_sums_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',
+    japanese_sums_column_duplicate: 'Die markierten Zahlen kommen in der Spalte doppelt vor.',
+    japanese_sums_row_count: 'In der markierten Zeile stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
+    japanese_sums_column_count: 'In der markierten Spalte stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
+    japanese_sums_sum_wrong: 'Die markierten Zahlen ergeben nicht die entsprechende Summe am Rand.',
+
     dummy_to_avoid_comma_bug: ''
 };
