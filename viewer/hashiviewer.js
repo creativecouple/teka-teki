@@ -19,10 +19,10 @@ teka.viewer.hashi = {};
 
 /** Some constants, used for the dots. */
 teka.viewer.hashi.Defaults = {
-    WAAG1: 1,
-    WAAG2: 2,
-    SENK1: 3,
-    SENK2: 4,
+    HORIZONTAL_1: 1,
+    HORIZONTAL_2: 2,
+    VERTICAL_1: 3,
+    VERTICAL_2: 4,
     
     UNKNOWN: -1
 };
@@ -73,16 +73,16 @@ teka.viewer.hashi.HashiViewer.prototype.asciiToData = function(ascii)
                 this.puzzle[i][j] = teka.viewer.hashi.Defaults.UNKNOWN;
             }
             if (c[i][j].charCodeAt(0)=='-'.charCodeAt(0)) {
-                this.bridges[i][j] = teka.viewer.hashi.Defaults.WAAG1;
+                this.bridges[i][j] = teka.viewer.hashi.Defaults.HORIZONTAL_1;
             }
             if (c[i][j].charCodeAt(0)=='='.charCodeAt(0)) {
-                this.bridges[i][j] = teka.viewer.hashi.Defaults.WAAG2;
+                this.bridges[i][j] = teka.viewer.hashi.Defaults.HORIZONTAL_2;
             }
             if (c[i][j].charCodeAt(0)=='|'.charCodeAt(0)) {
-                this.bridges[i][j] = teka.viewer.hashi.Defaults.SENK1;
+                this.bridges[i][j] = teka.viewer.hashi.Defaults.VERTICAL_1;
             }
             if (c[i][j].charCodeAt(0)=='H'.charCodeAt(0)) {
-                this.bridges[i][j] = teka.viewer.hashi.Defaults.SENK2;
+                this.bridges[i][j] = teka.viewer.hashi.Defaults.VERTICAL_2;
             }
         }
     }
@@ -101,16 +101,16 @@ teka.viewer.hashi.HashiViewer.prototype.asciiToSolution = function(ascii)
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
             if (c[i][j].charCodeAt(0)=='-'.charCodeAt(0)) {
-                this.solution[i][j] = teka.viewer.hashi.Defaults.WAAG1;
+                this.solution[i][j] = teka.viewer.hashi.Defaults.HORIZONTAL_1;
             }
             if (c[i][j].charCodeAt(0)=='='.charCodeAt(0)) {
-                this.solution[i][j] = teka.viewer.hashi.Defaults.WAAG2;
+                this.solution[i][j] = teka.viewer.hashi.Defaults.HORIZONTAL_2;
             }
             if (c[i][j].charCodeAt(0)=='|'.charCodeAt(0)) {
-                this.solution[i][j] = teka.viewer.hashi.Defaults.SENK1;
+                this.solution[i][j] = teka.viewer.hashi.Defaults.VERTICAL_1;
             }
             if (c[i][j].charCodeAt(0)=='H'.charCodeAt(0)) {
-                this.solution[i][j] = teka.viewer.hashi.Defaults.SENK2;
+                this.solution[i][j] = teka.viewer.hashi.Defaults.VERTICAL_2;
             }
         }
     }
@@ -266,30 +266,30 @@ teka.viewer.hashi.HashiViewer.prototype.countIsland = function(x, y)
 {
     var az = 0;
     if (x>0) {
-        if (this.f[x-1][y]==teka.viewer.hashi.Defaults.WAAG1) {
+        if (this.f[x-1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_1) {
             az++;
-        } else if (this.f[x-1][y]==teka.viewer.hashi.Defaults.WAAG2) {
+        } else if (this.f[x-1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_2) {
             az+=2;
         }
     }
     if (x<this.X-1) {
-        if (this.f[x+1][y]==teka.viewer.hashi.Defaults.WAAG1) {
+        if (this.f[x+1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_1) {
             az++;
-        } else if (this.f[x+1][y]==teka.viewer.hashi.Defaults.WAAG2) {
+        } else if (this.f[x+1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_2) {
             az+=2;
         }
     }
     if (y>0) {
-        if (this.f[x][y-1]==teka.viewer.hashi.Defaults.SENK1) {
+        if (this.f[x][y-1]==teka.viewer.hashi.Defaults.VERTICAL_1) {
             az++;
-        } else if (this.f[x][y-1]==teka.viewer.hashi.Defaults.SENK2) {
+        } else if (this.f[x][y-1]==teka.viewer.hashi.Defaults.VERTICAL_2) {
             az+=2;
         }
     }
     if (y<this.Y-1) {
-        if (this.f[x][y+1]==teka.viewer.hashi.Defaults.SENK1) {
+        if (this.f[x][y+1]==teka.viewer.hashi.Defaults.VERTICAL_1) {
             az++;
-        } else if (this.f[x][y+1]==teka.viewer.hashi.Defaults.SENK2) {
+        } else if (this.f[x][y+1]==teka.viewer.hashi.Defaults.VERTICAL_2) {
             az+=2;
         }
     }
@@ -303,28 +303,28 @@ teka.viewer.hashi.HashiViewer.prototype.fill = function(x, y)
         return;
     }
     this.error[x][y] = false;
-    if (x>0 && (this.f[x-1][y]==teka.viewer.hashi.Defaults.WAAG1 || this.f[x-1][y]==teka.viewer.hashi.Defaults.WAAG2)) {
+    if (x>0 && (this.f[x-1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_1 || this.f[x-1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_2)) {
         var xc = x-1;
         while (this.puzzle[xc][y]==0) {
             xc--;
         }
         this.fill(xc,y);
     }
-    if (x<this.X-1 && (this.f[x+1][y]==teka.viewer.hashi.Defaults.WAAG1 || this.f[x+1][y]==teka.viewer.hashi.Defaults.WAAG2)) {
+    if (x<this.X-1 && (this.f[x+1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_1 || this.f[x+1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_2)) {
         var xc = x+1;
         while (this.puzzle[xc][y]==0) {
             xc++;
         }
         this.fill(xc,y);
     }
-    if (y>0 && (this.f[x][y-1]==teka.viewer.hashi.Defaults.SENK1 || this.f[x][y-1]==teka.viewer.hashi.Defaults.SENK2)) {
+    if (y>0 && (this.f[x][y-1]==teka.viewer.hashi.Defaults.VERTICAL_1 || this.f[x][y-1]==teka.viewer.hashi.Defaults.VERTICAL_2)) {
         var yc = y-1;
         while (this.puzzle[x][yc]==0) {
             yc--;
         }
         this.fill(x,yc);
     }
-    if (y<this.Y-1 && (this.f[x][y+1]==teka.viewer.hashi.Defaults.SENK1 || this.f[x][y+1]==teka.viewer.hashi.Defaults.SENK2)) {
+    if (y<this.Y-1 && (this.f[x][y+1]==teka.viewer.hashi.Defaults.VERTICAL_1 || this.f[x][y+1]==teka.viewer.hashi.Defaults.VERTICAL_2)) {
         var yc = y+1;
         while (this.puzzle[x][yc]==0) {
             yc++;
@@ -351,12 +351,13 @@ teka.viewer.hashi.HashiViewer.prototype.fill = function(x, y)
  */
 teka.viewer.hashi.HashiViewer.prototype.setMetrics = function(g)
 {
-    this.scale = Math.floor(Math.min((this.width-3)/this.X,(this.height-3)/this.Y));
-    var realwidth = this.X*this.scale+3;
-    var realheight = this.Y*this.scale+3;
+    this.scale = Math.floor(Math.min((this.width-1)/this.X,
+                                     (this.height-1)/this.Y));
+    var realwidth = this.X*this.scale+1;
+    var realheight = this.Y*this.scale+1;
     
-    this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
-    this.deltaY = Math.round((this.height-realheight)/2)+0.5;
+    this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
+    this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     
@@ -372,27 +373,28 @@ teka.viewer.hashi.HashiViewer.prototype.paint = function(g)
     var S = this.scale;
 
     g.save();
-    g.translate(this.deltaX,this.deltaY);
+    g.translate(this.deltaX+1,this.deltaY+1);
 
+    // paint the bridges - bridges stick out at either side, to assure overlapping
     g.lineWidth = 3;
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]===0) {
                 g.strokeStyle = this.getColorString(this.c[i][j]);
                 switch (this.bridges[i][j]!==0?this.bridges[i][j]:this.f[i][j]) {
-                  case teka.viewer.hashi.Defaults.WAAG1:
-                    teka.drawLine(g,i*S-2,Math.floor(j*S+1+S/2),i*S+4+S,Math.floor(j*S+1+S/2));
+                  case teka.viewer.hashi.Defaults.HORIZONTAL_1:
+                    teka.drawLine(g,i*S-1,Math.floor(j*S+S/2),(i+1)*S+1,Math.floor(j*S+S/2));
                     break;
-                  case teka.viewer.hashi.Defaults.WAAG2:
-                    teka.drawLine(g,i*S-2,Math.floor(j*S+3+S/2),i*S+4+S,Math.floor(j*S+3+S/2));
-                    teka.drawLine(g,i*S-2,Math.floor(j*S-1+S/2),i*S+4+S,Math.floor(j*S-1+S/2));
+                  case teka.viewer.hashi.Defaults.HORIZONTAL_2:
+                    teka.drawLine(g,i*S-1,Math.floor(j*S+S/2+3),(i+1)*S+1,Math.floor(j*S+S/2+3));
+                    teka.drawLine(g,i*S-1,Math.floor(j*S+S/2-3),(i+1)*S+1,Math.floor(j*S+S/2-3));
                     break;
-                  case teka.viewer.hashi.Defaults.SENK1:
-                    teka.drawLine(g,Math.floor(i*S+1+S/2),j*S-2,Math.floor(i*S+1+S/2),j*S+4+S);
+                  case teka.viewer.hashi.Defaults.VERTICAL_1:
+                    teka.drawLine(g,Math.floor(i*S+S/2),j*S,Math.floor(i*S+S/2),(j+1)*S);
                     break;
-                  case teka.viewer.hashi.Defaults.SENK2:
-                    teka.drawLine(g,Math.floor(i*S-1+S/2),j*S-2,Math.floor(i*S-1+S/2),j*S+4+S);
-                    teka.drawLine(g,Math.floor(i*S+3+S/2),j*S-2,Math.floor(i*S+3+S/2),j*S+4+S);
+                  case teka.viewer.hashi.Defaults.VERTICAL_2:
+                    teka.drawLine(g,Math.floor(i*S+S/2+3),j*S,Math.floor(i*S+S/2+3),(j+1)*S);
+                    teka.drawLine(g,Math.floor(i*S+S/2-3),j*S,Math.floor(i*S+S/2-3),(j+1)*S);
                     break;
                 }
             }
@@ -400,23 +402,19 @@ teka.viewer.hashi.HashiViewer.prototype.paint = function(g)
     }
     g.lineWidth = 1;
     
+    // paint the islands
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]!==0) {
-                if (this.mode>=teka.viewer.Defaults.BLINK_START
-                    && this.mode<=teka.viewer.Defaults.BLINK_END) {
-                    g.fillStyle = this.getBlinkColor(i,j,X,this.f[i][j]);
-                } else if (this.error[i][j]) {
-                    g.fillStyle = '#f00';
-                } else {
-                    g.fillStyle = '#fff';
-                }
+                g.fillStyle = this.isBlinking()?
+                    this.getBlinkColor(i,j,X,this.f[i][j]):
+                    (this.error[i][j]?'#f00':'#fff');
                 
-                teka.fillOval(g,i*S+S/2+1,j*S+S/2+1,(S-6)/2,0,2*Math.PI);
+                teka.fillOval(g,i*S+S/2,j*S+S/2,S/2);
                 g.strokeStyle = '#000';
-                teka.strokeOval(g,i*S+S/2+1,j*S+S/2+1,(S-6)/2,0,2*Math.PI);
+                teka.strokeOval(g,i*S+S/2,j*S+S/2,S/2);
                 
                 if (this.puzzle[i][j]>0) {
                     g.fillStyle='#000';
@@ -426,18 +424,21 @@ teka.viewer.hashi.HashiViewer.prototype.paint = function(g)
                 
                 if (this.f[i][j]==1) {
                     g.strokeStyle = this.getColorString(this.c[i][j]);
-                    teka.drawLine(g,i*S+2+S/2-S/4,j*S+2+S/2-S/4,i*S+2+S/2+S/4,j*S+2+S/2+S/4);
-                    teka.drawLine(g,i*S+2+S/2+S/4,j*S+2+S/2-S/4,i*S+2+S/2-S/4,j*S+2+S/2+S/4);
+                    g.lineWidth = 2;
+                    teka.drawLine(g,i*S+S/4,j*S+S/4,(i+1)*S-S/4,(j+1)*S-S/4);
+                    teka.drawLine(g,(i+1)*S-S/4,j*S+S/4,i*S+S/4,(j+1)*S-S/4);
+                    g.lineWidth = 1;
                 }
             }
         }
     }
     
+    // paint the cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
-        g.strokeStyle = '#f00';
         if (this.x>=0 && this.x<=X && this.y>=0 && this.y<=Y) {
-            g.strokeRect(S*this.x+4,S*this.y+4,S-6,S-6);
-            g.strokeRect(S*this.x+5,S*this.y+5,S-8,S-8);
+            g.strokeStyle = '#f00';
+            g.lineWidth = 2;
+            g.strokeRect(S*this.x+3.5,S*this.y+3.5,S-7,S-7);
         }
     }
     
@@ -550,34 +551,48 @@ teka.viewer.hashi.HashiViewer.prototype.processKeyEvent = function(e)
     }
 
     if (e.key==teka.KEY_W || e.key==teka.KEY_E) {
-        var h = this.f[this.x][this.y];
-        var lines = e.key==teka.KEY_W?teka.viewer.hashi.Defaults.WAAG1:teka.viewer.hashi.Defaults.WAAG2;
-        if (h==lines) {
-            lines = (lines==teka.viewer.hashi.Defaults.WAAG1)?teka.viewer.hashi.Defaults.WAAG2:teka.viewer.hashi.Defaults.WAAG1;
+        var tmp = this.f[this.x][this.y];
+        
+        var lines = e.key==teka.KEY_W?
+            teka.viewer.hashi.Defaults.HORIZONTAL_1:
+            teka.viewer.hashi.Defaults.HORIZONTAL_2;
+        if (tmp==lines) {
+            lines = lines==teka.viewer.hashi.Defaults.HORIZONTAL_1?
+                teka.viewer.hashi.Defaults.HORIZONTAL_2:
+                teka.viewer.hashi.Defaults.HORIZONTAL_1;
         }
+        
         if (!this.removeBridge(this.x,this.y)) {
             return false;
         }
         if (!this.setBridge(this.x,this.y,lines)) {
-            this.setBridge(this.x,this.y,h);
+            this.setBridge(this.x,this.y,tmp);
             return false;
         }
+        
         return true;
     }
     
     if (e.key==teka.KEY_S || e.key==teka.KEY_D) {
-        var h = this.f[this.x][this.y];
-        var lines = e.key==teka.KEY_S?teka.viewer.hashi.Defaults.SENK1:teka.viewer.hashi.Defaults.SENK2;
-        if (h==lines) {
-            lines = (lines==teka.viewer.hashi.Defaults.SENK1)?teka.viewer.hashi.Defaults.SENK2:teka.viewer.hashi.Defaults.SENK1;
+        var tmp = this.f[this.x][this.y];
+        
+        var lines = e.key==teka.KEY_S?
+            teka.viewer.hashi.Defaults.VERTICAL_1:
+            teka.viewer.hashi.Defaults.VERTICAL_2;
+        if (tmp==lines) {
+            lines = lines==teka.viewer.hashi.Defaults.VERTICAL_1?
+                teka.viewer.hashi.Defaults.VERTICAL_2:
+                teka.viewer.hashi.Defaults.VERTICAL_1;
         }
+        
         if (!this.removeBridge(this.x,this.y)) {
             return false;
         }
         if (!this.setBridge(this.x,this.y,lines)) {
-            this.setBridge(this.x,this.y,h);
+            this.setBridge(this.x,this.y,tmp);
             return false;
         }
+        
         return true;
     }
     
@@ -586,48 +601,60 @@ teka.viewer.hashi.HashiViewer.prototype.processKeyEvent = function(e)
 
 //////////////////////////////////////////////////////////////////
 
-/** removeBridge */
+/** 
+ * Try to remove bridge. This fails, ifthe color of the bridge is 
+ * not the actual color.
+ */
 teka.viewer.hashi.HashiViewer.prototype.removeBridge = function(x, y)
 {
     this.addBridges();
     if (this.f[x][y]==0) {
         return true;
     }
+    
     if (this.c[x][y]!=this.color) {
         return false;;
     }
-    if (this.f[x][y]==teka.viewer.hashi.Defaults.WAAG1 
-        || this.f[x][y]==teka.viewer.hashi.Defaults.WAAG2) {
-        this.removeWaag(x,y);
+    
+    if (this.f[x][y]==teka.viewer.hashi.Defaults.HORIZONTAL_1 
+        || this.f[x][y]==teka.viewer.hashi.Defaults.HORIZONTAL_2) {
+        this.removeHorizontal(x,y);
     } else {
-        this.removeSenk(x,y);
+        this.removeVertical(x,y);
     }
+    
     return true;
 };
 
-/** removeWaag */
-teka.viewer.hashi.HashiViewer.prototype.removeWaag = function(x, y)
+/** Remove a horizontal bridge */
+teka.viewer.hashi.HashiViewer.prototype.removeHorizontal = function(x, y)
 {
+    // find left end of the bridge
     while (x>0 && this.puzzle[x-1][y]==0) {
         x--;
     }
+    
+    // remove, till we reach the right end
     while (x<this.X && this.puzzle[x][y]==0) {
         this.f[x++][y] = 0;
     }
 };
 
-/** removeSenk */
-teka.viewer.hashi.HashiViewer.prototype.removeSenk = function(x, y)
+/** Remove a vertical bridge */
+teka.viewer.hashi.HashiViewer.prototype.removeVertical = function(x, y)
 {
+    // find top end of the bridge
     while (y>0 && this.puzzle[x][y-1]==0) {
         y--;
     }
+    
+    // remove, till we reach the bottom end
     while (y<this.Y && this.puzzle[x][y]==0) {
         this.f[x][y++] = 0;
     }
 };
 
-/** setBridge */
+/** Try to set a bridge. Returns true if it was successful. */
 teka.viewer.hashi.HashiViewer.prototype.setBridge = function(x, y, type)
 {
     this.addBridges();
@@ -635,32 +662,41 @@ teka.viewer.hashi.HashiViewer.prototype.setBridge = function(x, y, type)
         return true;
     }
     
-    if (type==teka.viewer.hashi.Defaults.WAAG1 || type==teka.viewer.hashi.Defaults.WAAG2) {
-        return this.setWaag(x,y,type);
-    } else {
-        return this.setSenk(x,y,type);
-    }
+    return type==teka.viewer.hashi.Defaults.HORIZONTAL_1 
+        || type==teka.viewer.hashi.Defaults.HORIZONTAL_2?
+        this.setHorizontal(x,y,type):
+        this.setVertical(x,y,type);
 };
 
-/** setWaag */
-teka.viewer.hashi.HashiViewer.prototype.setWaag = function(x, y, type)
+/** Set a horizontal bridge */
+teka.viewer.hashi.HashiViewer.prototype.setHorizontal = function(x, y, type)
 {
+    // find left end of the bridge
     while (x>0 && this.puzzle[x-1][y]==0) {
         x--;
     }
+    
+    // if there is no left end, we are done
     if (x==0) {
         return false;
     }
+    
     var sx = x;
     while (x<this.X && this.puzzle[x][y]==0) {
+        
+        // if there is a crossing bridge, we are done
         if (this.f[x][y]!=0) {
             return false;
         }
         x++;
     }
+    
+    // if there is no right end, we are done
     if (x==this.X) {
         return false;
     }
+    
+    // draw the bridge
     for (var i=sx;i<x;i++) {
         this.f[i][y] = type;
         this.c[i][y] = this.color;
@@ -669,25 +705,35 @@ teka.viewer.hashi.HashiViewer.prototype.setWaag = function(x, y, type)
     return true;
 };
 
-/** setSenk */
-teka.viewer.hashi.HashiViewer.prototype.setSenk = function(x, y, type)
+/** Set a vertical bridge */
+teka.viewer.hashi.HashiViewer.prototype.setVertical = function(x, y, type)
 {
+    // find top end of the bridge
     while (y>0 && this.puzzle[x][y-1]==0) {
         y--;
     }
+    
+    // if there is no top end, we are done
     if (y==0) {
         return false;
     }
+    
     var sy = y;
     while (y<this.Y && this.puzzle[x][y]==0) {
+        
+        // if there is a crossing bridge, we are done
         if (this.f[x][y]!=0) {
             return false;
         }
         y++;
     }
+    
+    // if there is no bottom end, we are done
     if (y==this.Y) {
         return false;
     }
+    
+    // draw the bridge
     for (var j=sy;j<y;j++) {
         this.f[x][j] = type;
         this.c[x][j] = this.color;

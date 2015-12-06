@@ -186,6 +186,12 @@ teka.drawLine = function(g,x1,y1,x2,y2)
  */
 teka.fillOval = function(g,x,y,r,start,end)
 {
+    if (start===undefined) {
+        start = 0;
+    }
+    if (end===undefined) {
+        end = 2*Math.PI;
+    }
     g.beginPath();
     g.arc(x,y,r,start,end);
     g.fill();
@@ -197,6 +203,12 @@ teka.fillOval = function(g,x,y,r,start,end)
  */
 teka.strokeOval = function(g,x,y,scale,start,end)
 {
+    if (start===undefined) {
+        start = 0;
+    }
+    if (end===undefined) {
+        end = 2*Math.PI;
+    }
     g.beginPath();
     g.arc(x,y,scale,start,end);
     g.stroke();

@@ -115,6 +115,13 @@ teka.viewer.PuzzleViewer.prototype.getColorString = function(color)
     return this.colortool.getColorString(color);
 };
 
+/** Are we blinking, due to correctly solved puzzle? */
+teka.viewer.PuzzleViewer.prototype.isBlinking = function()
+{
+    return this.mode>=teka.viewer.Defaults.BLINK_START
+        && this.mode<=teka.viewer.Defaults.BLINK_END;
+};
+
 /**
  * Returns one of the colors, that appear, when the puzzle blinks.
  * The function, to calculated, is based on four values taken from
