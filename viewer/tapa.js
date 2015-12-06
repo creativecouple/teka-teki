@@ -56,17 +56,18 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
         return;
     }
 
-    var c = this.asciiToArray(ascii);
+    var grid = this.asciiToArray(ascii);
 
     this.puzzle = teka.new_array([this.X,this.Y,4],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i][2*j]>=teka.ord('1')
-                && c[2*i][2*j]<=teka.ord('8')) {
-                this.puzzle[i][j][0] = c[2*i][2*j]-teka.ord('0');
-                this.puzzle[i][j][1] = c[2*i+1][2*j]==teka.ord(' ')?0:(c[2*i+1][2*j]-teka.ord('0'));
-                this.puzzle[i][j][2] = c[2*i][2*j+1]==teka.ord(' ')?0:(c[2*i][2*j+1]-teka.ord('0'));
-                this.puzzle[i][j][3] = c[2*i+1][2*j+1]==teka.ord(' ')?0:(c[2*i+1][2*j+1]-teka.ord('0'));
+            if (grid[2*i][2*j]>=teka.ord('1')
+                && grid[2*i][2*j]<=teka.ord('8')) {
+                this.puzzle[i][j][0] = grid[2*i][2*j]-teka.ord('0');
+                this.puzzle[i][j][1] = grid[2*i+1][2*j]==teka.ord(' ')?0:(grid[2*i+1][2*j]-teka.ord('0'));
+                this.puzzle[i][j][2] = grid[2*i][2*j+1]==teka.ord(' ')?0:(grid[2*i][2*j+1]-teka.ord('0'));
+                this.puzzle[i][j][3] = grid[2*i+1][2*j+1]==teka.ord(' ')?0:(grid[2*i+1][2*j+1]-teka.ord('0'));
+                this.puzzle[i][j].sort(function(a,b){return b-a});
             }
         }
     }
@@ -74,10 +75,10 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
     this.cells = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (c[2*i][2*j]==teka.ord('-')) {
+            if (grid[2*i][2*j]==teka.ord('-')) {
                 this.cells[i][j] = teka.viewer.tapa.Defaults.EMPTY;
             }
-            if (c[2*i][2*j]==teka.ord('#')) {
+            if (grid[2*i][2*j]==teka.ord('#')) {
                 this.cells[i][j] = teka.viewer.tapa.Defaults.BLACK;
             }
         }
@@ -91,12 +92,12 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToSolution = function(ascii)
         return;
     }
 
-    var c = this.asciiToArray(ascii);
+    var grid = this.asciiToArray(ascii);
 
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.solution[i][j] = c[i][j]==teka.ord('#')?teka.viewer.tapa.Defaults.BLACK:teka.viewer.tapa.Defaults.NONE;
+            this.solution[i][j] = grid[i][j]==teka.ord('#')?teka.viewer.tapa.Defaults.BLACK:teka.viewer.tapa.Defaults.NONE;
         }
     }
 };
@@ -243,7 +244,6 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
         }
     }
 
-
     // The possible sets of values given
     var tab1 = ['0','1','2','3','4','5','6','7','8',
                 '11','21','22','31','32','33','41','42','51',
@@ -293,12 +293,14 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
                 if (i>0 && j>0 && check[i-1][j-1]==teka.viewer.tapa.Defaults.BLACK) {
                     h+=128;
                 }
+
                 var h2 = '';
                 for (var k=0;k<4;k++) {
                     if (this.puzzle[i][j][k]!=0) {
                         h2+=this.puzzle[i][j][k];
                     }
                 }
+
                 if (tab1[tab2[h]]!==h2) {
                     this.error[i][j] = true;
                     return 'tapa_wrong_numbers';
@@ -358,6 +360,7 @@ teka.viewer.tapa.TapaViewer.prototype.fill = function(mark, x, y, check)
     }
 
     mark[x][y] = true;
+
     this.fill(mark,x+1,y,check);
     this.fill(mark,x-1,y,check);
     this.fill(mark,x,y+1,check);
@@ -386,8 +389,8 @@ teka.viewer.tapa.TapaViewer.prototype.setMetrics = function(g)
     var realwidth = this.X*this.scale+5;
     var realheight = this.Y*this.scale+5;
 
-    this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
-    this.deltaY = Math.round((this.height-realheight)/2)+0.5;
+    this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
+    this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round(2*this.scale/5)+'px sans-serif',this.scale);
@@ -404,22 +407,17 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
     var S = this.scale;
 
     g.save();
-    g.translate(this.deltaX,this.deltaY);
+    g.translate(this.deltaX+2,this.deltaY+2);
 
     g.fillStyle = '#fff';
-    g.fillRect(2,2,S*X,S*Y);
+    g.fillRect(0,0,S*X,S*Y);
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.mode>=teka.viewer.Defaults.BLINK_START
-                && this.mode<=teka.viewer.Defaults.BLINK_END) {
-                g.fillStyle = this.getBlinkColor(i,j,X,this.f[i][j]);
-            } else if (this.error[i][j]) {
-                g.fillStyle = '#f00';
-            } else {
-                g.fillStyle = '#fff';
-            }
-            g.fillRect(i*S+2,j*S+2,S,S);
+            g.fillStyle = this.isBlinking()?
+                this.getBlinkColor(i,j,X,this.f[i][j]):
+                (this.error[i][j]?'#f00':'#fff');
+            g.fillRect(i*S,j*S,S,S);
         }
     }
 
@@ -429,29 +427,38 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
         for (var j=0;j<Y;j++) {
             if (this.cells[i][j]==teka.viewer.tapa.Defaults.BLACK) {
                 g.fillStyle = '#000';
-                g.fillRect(i*S+2,j*S+2,S,S);
+                g.fillRect(i*S,j*S,S,S);
                 continue;
             }
+
             if (this.cells[i][j]==teka.viewer.tapa.Defaults.EMPTY) {
                 g.strokeStyle = '#000';
-                teka.drawLine(g,i*S+S/4+2,j*S+S/4+2,(i+1)*S-S/4+2,(j+1)*S-S/4+2);
-                teka.drawLine(g,(i+1)*S-S/4+2,j*S+S/4+2,i*S+S/4+2,(j+1)*S-S/4+2);
+                g.lineWidth = 2;
+                teka.drawLine(g,i*S+S/4,j*S+S/4,(i+1)*S-S/4,(j+1)*S-S/4);
+                teka.drawLine(g,(i+1)*S-S/4,j*S+S/4,i*S+S/4,(j+1)*S-S/4);
+                g.lineWidth = 1;
                 continue;
             }
+
             if (this.puzzle[i][j][0]==0) {
                 if (this.f[i][j]==teka.viewer.tapa.Defaults.NONE) {
                     continue;
                 }
+
                 if (this.f[i][j]==teka.viewer.tapa.Defaults.EMPTY) {
                     g.strokeStyle = this.getColorString(this.c[i][j]);
-                    teka.drawLine(g,i*S+S/4+2,j*S+S/4+2,(i+1)*S-S/4+2,(j+1)*S-S/4+2);
-                    teka.drawLine(g,(i+1)*S-S/4+2,j*S+S/4+2,i*S+S/4+2,(j+1)*S-S/4+2);
+                    g.lineWidth = 2;
+                    teka.drawLine(g,i*S+S/4,j*S+S/4,(i+1)*S-S/4,(j+1)*S-S/4);
+                    teka.drawLine(g,(i+1)*S-S/4,j*S+S/4,i*S+S/4,(j+1)*S-S/4);
+                    g.lineWidth = 1;
                     continue;
                 }
+
                 if (!this.error[i][j]) {
                     g.fillStyle = this.getColorString(this.c[i][j]);
-                    g.fillRect(i*S+2,j*S+2,S,S);
+                    g.fillRect(i*S,j*S,S,S);
                 }
+
                 continue;
             }
 
@@ -459,64 +466,67 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
             g.strokeStyle = '#000';
             if (this.puzzle[i][j][1]==0) {
                 g.font = this.font.font;
-                g.fillText(this.puzzle[i][j][0],i*S+2+S/2,j*S+2+S/2+this.font.delta);
+                g.fillText(this.puzzle[i][j][0],i*S+S/2,j*S+S/2+this.font.delta);
                 continue;
             }
+
             if (this.puzzle[i][j][2]==0) {
-                teka.drawLine(g,i*S+S+2,j*S+2,i*S+2,j*S+S+2);
+                teka.drawLine(g,i*S+S,j*S,i*S,j*S+S);
                 g.font = this.smallfont.font;
-                g.fillText(this.puzzle[i][j][0],i*S+2+S/2-S/4,j*S+2+S/2-S/4+this.font.delta);
-                g.fillText(this.puzzle[i][j][1],i*S+2+S/2+S/4,j*S+2+S/2+S/4+this.font.delta);
+                g.fillText(this.puzzle[i][j][0],i*S+S/2-S/4,j*S+S/2-S/4+this.font.delta);
+                g.fillText(this.puzzle[i][j][1],i*S+S/2+S/4,j*S+S/2+S/4+this.font.delta);
                 continue;
             }
+
             if (this.puzzle[i][j][3]==0) {
-                teka.drawLine(g,i*S+2,j*S+2,i*S+S/2+2,j*S+S/2+2);
-                teka.drawLine(g,i*S+S+2,j*S+2,i*S+S/2+2,j*S+S/2+2);
-                teka.drawLine(g,i*S+S/2+2,j*S+S+2,i*S+S/2+2,j*S+S/2+2);
+                teka.drawLine(g,i*S,j*S,i*S+S/2,j*S+S/2);
+                teka.drawLine(g,i*S+S,j*S,i*S+S/2,j*S+S/2);
+                teka.drawLine(g,i*S+S/2,j*S+S,i*S+S/2,j*S+S/2);
                 g.font = this.smallfont.font;
-                g.fillText(this.puzzle[i][j][0],i*S+2+S/2,j*S+2+S/2-S/4-S/16+this.font.delta);
-                g.fillText(this.puzzle[i][j][1],i*S+2+S/2-S/4,j*S+2+S/2+S/4-S/8+this.font.delta);
-                g.fillText(this.puzzle[i][j][2],i*S+2+S/2+S/4,j*S+2+S/2+S/4-S/8+this.font.delta);
+                g.fillText(this.puzzle[i][j][0],i*S+S/2,j*S+S/2-S/4-S/16+this.font.delta);
+                g.fillText(this.puzzle[i][j][1],i*S+S/2-S/4,j*S+S/2+S/4-S/8+this.font.delta);
+                g.fillText(this.puzzle[i][j][2],i*S+S/2+S/4,j*S+S/2+S/4-S/8+this.font.delta);
                 continue;
             }
-            teka.drawLine(g,i*S+S+2,j*S+2,i*S+2,j*S+S+2);
-            teka.drawLine(g,i*S+2,j*S+2,i*S+S+2,j*S+S+2);
+
+            teka.drawLine(g,i*S,j*S,(i+1)*S,(j+1)*S);
+            teka.drawLine(g,(i+1)*S,j*S,i*S,(j+1)*S);
             g.font = this.smallfont.font;
-            g.fillText(this.puzzle[i][j][0],i*S+2+S/2-S/4-S/16,j*S+2+S/2+this.font.delta);
-            g.fillText(this.puzzle[i][j][1],i*S+2+S/2,j*S+2+S/2-S/4-S/16+this.font.delta);
-            g.fillText(this.puzzle[i][j][2],i*S+2+S/2+S/4+S/16,j*S+2+S/2+this.font.delta);
-            g.fillText(this.puzzle[i][j][3],i*S+2+S/2,j*S+2+S/2+S/4+S/16+this.font.delta);
+            g.fillText(this.puzzle[i][j][0],i*S+S/2-S/4-S/16,j*S+S/2+this.font.delta);
+            g.fillText(this.puzzle[i][j][1],i*S+S/2,j*S+S/2-S/4-S/16+this.font.delta);
+            g.fillText(this.puzzle[i][j][2],i*S+S/2+S/4+S/16,j*S+S/2+this.font.delta);
+            g.fillText(this.puzzle[i][j][3],i*S+S/2,j*S+S/2+S/4+S/16+this.font.delta);
         }
     }
 
-    g.save();
     g.lineWidth = 3;
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j][0]!=0 && this.f[i][j]==1) {
                 g.strokeStyle = this.getColorString(this.c[i][j]);
-                teka.drawLine(g,2+i*S+S/2-S/4,2+j*S+S/2-S/4,2+i*S+S/2+S/4,2+j*S+S/2+S/4);
-                teka.drawLine(g,2+i*S+S/2+S/4,2+j*S+S/2-S/4,2+i*S+S/2-S/4,2+j*S+S/2+S/4);
+                teka.drawLine(g,i*S+S/2-S/4,j*S+S/2-S/4,i*S+S/2+S/4,j*S+S/2+S/4);
+                teka.drawLine(g,i*S+S/2+S/4,j*S+S/2-S/4,i*S+S/2-S/4,j*S+S/2+S/4);
             }
         }
     }
-    g.restore();
+    g.lineWidth = 1;
 
     g.fillStyle = '#000';
     for (var i=0;i<=X;i++) {
-        teka.drawLine(g,i*S+2,2,i*S+2,Y*S+2);
+        teka.drawLine(g,i*S,0,i*S,Y*S);
     }
     for (var i=0;i<=Y;i++) {
-        teka.drawLine(g,2,i*S+2,X*S+2,i*S+2);
+        teka.drawLine(g,0,i*S,X*S,i*S);
     }
 
-    g.strokeRect(0,0,X*S+4,Y*S+4);
-    g.strokeRect(1,1,X*S+2,Y*S+2);
+    g.lineWidth = 3;
+    g.strokeRect(-1,-1,X*S+2,Y*S+2);
+    g.lineWidth = 1;
 
-    g.strokeStyle = '#f00';
     if (this.mode==teka.viewer.Defaults.NORMAL) {
-        g.strokeRect(this.x*S+5,this.y*S+5,S-6,S-6);
-        g.strokeRect(this.x*S+6,this.y*S+6,S-8,S-8);
+        g.strokeStyle = '#f00';
+        g.lineWidth = 2;
+        g.strokeRect(this.x*S+3.5,this.y*S+3.5,S-7,S-7);
     }
 
     g.restore();
@@ -532,8 +542,10 @@ teka.viewer.tapa.TapaViewer.prototype.processMouseMovedEvent = function(xc, yc)
 
     var oldx = this.x;
     var oldy = this.y;
+
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
+
     if (this.x<0) {
         this.x=0;
     }
@@ -546,6 +558,7 @@ teka.viewer.tapa.TapaViewer.prototype.processMouseMovedEvent = function(xc, yc)
     if (this.y>=this.Y) {
         this.y=this.Y-1;
     }
+
     return this.x!=oldx || this.y!=oldy;
 };
 
