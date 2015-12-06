@@ -24,6 +24,7 @@ teka.viewer.magnets.Defaults = {
     MINUS: 2,
     NEUTRAL: 3,
     MAGNET: 4,
+
     TOP: 1,
     LEFT: 2,
     BOTTOM: 3,
@@ -66,12 +67,12 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
         return;
     }
 
-    var c = this.asciiToArray(ascii);
+    var grid = this.asciiToArray(ascii);
 
     this.puzzle = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            switch (c[2*i+2*d+1][2*j+2*d+1]) {
+            switch (grid[2*i+2*d+1][2*j+2*d+1]) {
               case teka.ord('+'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
               case teka.ord('-'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
               case teka.ord('#'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
@@ -83,7 +84,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
     this.magnets = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i+2*d+2][2*j+2*d+1]==teka.ord(' ')) {
+            if (grid[2*i+2*d+2][2*j+2*d+1]==teka.ord(' ')) {
                 this.magnets[i][j] = teka.viewer.magnets.Defaults.LEFT;
                 this.magnets[i+1][j] = teka.viewer.magnets.Defaults.RIGHT;
             } else if (c[2*i+2*d+1][2*j+2*d+2]==teka.ord(' ')) {
@@ -104,7 +105,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
     this.leftdata = teka.new_array([2,this.Y],-1);
     for (var i=0;i<2;i++) {
         for (var j=0;j<this.Y;j++) {
-            var nr = this.getNr(c,i*d,2*j+2*d+1,d);
+            var nr = this.getNr(grid,i*d,2*j+2*d+1,d);
             if (nr!==false) {
                 this.leftdata[i][j] = nr;
             }
@@ -114,7 +115,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
     this.topdata = teka.new_array([this.X,2],-1);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<2;j++) {
-            var nr = this.getVNr(c,2*i+2*d+1,j*d,d);
+            var nr = this.getVNr(grid,2*i+2*d+1,j*d,d);
             if (nr!==false) {
                 this.topdata[i][j] = nr;
             }
@@ -129,12 +130,12 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToSolution = function(ascii)
         return null;
     }
 
-    var c = this.asciiToArray(ascii);
+    var grid = this.asciiToArray(ascii);
 
     var h = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            switch (c[i][j]) {
+            switch (grid[i][j]) {
               case teka.ord('+'): h[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
               case teka.ord('-'): h[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
               case teka.ord('#'): h[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
@@ -267,10 +268,10 @@ teka.viewer.magnets.MagnetsViewer.prototype.check = function()
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (check[i][j]===teka.viewer.magnets.Defaults.NONE) {
-                this.set_error(i,j);
+                this.setError(i,j);
                 return 'magnets_empty';
             } else if (check[i][j]==teka.viewer.magnets.Defaults.MAGNET) {
-                this.set_error(i,j);
+                this.setError(i,j);
                 return 'magnets_unique_symbol';
             }
         }
@@ -398,8 +399,8 @@ teka.viewer.magnets.MagnetsViewer.prototype.setMetrics = function(g)
     var realwidth = (this.X+2) * this.scale + 3;
     var realheight = (this.Y+2) * this.scale + 3;
 
-    this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
-    this.deltaY = Math.round((this.height-realheight)/2)+0.5;
+    this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
+    this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
 
@@ -415,55 +416,75 @@ teka.viewer.magnets.MagnetsViewer.prototype.paint = function(g)
     var S = this.scale;
 
     g.save();
-    g.translate(this.deltaX,this.deltaY);
+    g.translate(this.deltaX+1,this.deltaY+1);
 
     g.fillStyle = '#fff';
     g.fillRect(0,0,(X+2)*S,(Y+2)*S);
 
+    // fill background of top
     for (var i=0;i<X;i++) {
         for (var j=0;j<2;j++) {
-            if (this.error_top[i][j]) {
-                g.fillStyle = '#f00';
-            } else {
-                g.fillStyle = '#fff';
-            }
-            g.fillRect((2+i)*S+0.5,j*S+0.5,S+1,S+1);
+            g.fillStyle = this.error_top[i][j]?'#f00':'#fff';
+            g.fillRect((2+i)*S,j*S,S,S);
         }
     }
 
+    // fill background of left
     for (var i=0;i<2;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.error_left[i][j]) {
-                g.fillStyle = '#f00';
-            } else {
-                g.fillStyle = '#fff';
-            }
-            g.fillRect(i*S+0.5,(2+j)*S+0.5,S+1,S+1);
+            g.fillStyle = this.error_left[i][j]?'#f00':'#fff';
+            g.fillRect(i*S,(2+j)*S,S,S);
         }
     }
 
+    // fill background of center
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            g.fillStyle = '#fff';
-            if (this.mode>=teka.viewer.Defaults.BLINK_START
-               && this.mode<=teka.viewer.Defaults.BLINK_END) {
-                g.fillStyle = this.getBlinkColor(i,j,X,this.f[i][j]);
-            }
+            g.fillStyle = this.isBlinking()?
+                this.getBlinkColor(i,j,X,this.f[i][j]):
+                '#fff';
+
             if (this.magnets[i][j]==teka.viewer.magnets.Defaults.LEFT) {
-                g.fillRect((2+i)*S+0.5,(2+j)*S+0.5,2*S+1,S+1);
+                g.fillRect((2+i)*S,(2+j)*S,2*S,S);
             } else if (this.magnets[i][j]==teka.viewer.magnets.Defaults.TOP) {
-                g.fillRect((2+i)*S+0.5,(2+j)*S+0.5,S+1,2*S+1);
+                g.fillRect((2+i)*S,(2+j)*S,S,2*S);
             }
         }
     }
 
+    // paint top numbers
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillStyle = '#000';
+    g.font = this.font.font;
+    for (var i=0;i<X;i++) {
+        if (this.topdata[i][0]!=-1) {
+            g.fillText(this.topdata[i][0],(2+i)*S+S/2,S/2+this.font.delta);
+        }
+        if (this.topdata[i][1]!=-1) {
+            g.fillText(this.topdata[i][1],(2+i)*S+S/2,S+S/2+this.font.delta);
+        }
+    }
+
+    // paint left numbers
+    for (var j=0;j<Y;j++) {
+        if (this.leftdata[0][j]!=-1) {
+            g.fillText(this.leftdata[0][j],S/2,(2+j)*S+S/2+this.font.delta);
+        }
+        if (this.leftdata[1][j]!=-1) {
+            g.fillText(this.leftdata[1][j],S+S/2,(2+j)*S+S/2+this.font.delta);
+        }
+    }
+
+    // paint center
     var ff = this.flood();
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.error[i][j]) {
                 g.fillStyle = '#f00';
-                g.fillRect((2+i)*S+0.5,(2+j)*S+0.5,S+1,S+1);
+                g.fillRect((2+i)*S-0.5,(2+j)*S-0.5,S+1,S+1);
             }
+
             if (this.puzzle[i][j]>0) {
                 g.strokeStyle = '#000';
                 g.fillStyle = '#000';
@@ -471,85 +492,68 @@ teka.viewer.magnets.MagnetsViewer.prototype.paint = function(g)
                 g.strokeStyle = this.getColorString(this.c[i][j]);
                 g.fillStyle = this.getColorString(this.c[i][j]);
             }
+
             switch (this.puzzle[i][j]>0?this.puzzle[i][j]:ff[i][j]) {
               case teka.viewer.magnets.Defaults.PLUS:
-                this.drawPlus(g,1+(2+i)*S,1+(2+j)*S);
+                this.drawPlus(g,(2+i)*S,(2+j)*S);
                 break;
               case teka.viewer.magnets.Defaults.MINUS:
-                this.drawMinus(g,1+(2+i)*S,1+(2+j)*S);
+                this.drawMinus(g,(2+i)*S,(2+j)*S);
                 break;
               case teka.viewer.magnets.Defaults.NEUTRAL:
-                g.fillRect((2+i)*S+0.5,(2+j)*S+0.5,S+1,S+1);
+                if (!this.error[i][j]) {
+                    g.fillRect((2+i)*S-0.5,(2+j)*S-0.5,S+1,S+1);
+                }
                 break;
               case teka.viewer.magnets.Defaults.MAGNET:
-                this.drawPlusMinus(g,1+(2+i)*S,1+(2+j)*S);
+                this.drawPlusMinus(g,(2+i)*S,(2+j)*S);
                 break;
             }
         }
     }
 
+    this.drawPlus(g,0,0);
+    this.drawMinus(g,S,S);
+
+    // paint grid
     g.strokeStyle = '#000';
-    g.lineWidth = 2;
-    g.strokeRect(0.5,0.5,(X+2)*S,(Y+2)*S);
-    teka.drawLine(g,0,2*S+0.5,(X+2)*S,2*S+0.5);
-    teka.drawLine(g,2*S+0.5,0,2*S+0.5,(Y+2)*S);
+    g.lineWidth = 3;
+    g.strokeRect(0,0,(X+2)*S,(Y+2)*S);
+    teka.drawLine(g,0,2*S,(X+2)*S,2*S);
+    teka.drawLine(g,2*S,0,2*S,(Y+2)*S);
 
     g.lineWidth = 1;
-    teka.drawLine(g,S+1,S+1,(X+2)*S+1,S+1);
-    teka.drawLine(g,S+1,S+1,S+1,(Y+2)*S+1);
+    teka.drawLine(g,S,S,(X+2)*S,S);
+    teka.drawLine(g,S,S,S,(Y+2)*S);
 
     for (var i=1;i<X;i++) {
-        teka.drawLine(g,(i+2)*S+1,0,(i+2)*S+1,2*S+1);
+        teka.drawLine(g,(i+2)*S,0,(i+2)*S,2*S);
     }
     for (var i=1;i<Y;i++) {
-        teka.drawLine(g,0,(i+2)*S+1,2*S+1,(i+2)*S+1);
-    }
-
-    this.drawPlus(g,1,1);
-    this.drawMinus(g,S+1,S+1);
-
-    g.textAlign = 'center';
-    g.textBaseline = 'middle';
-    g.fillStyle = '#000';
-    g.font = this.font.font;
-    for (var i=0;i<X;i++) {
-        if (this.topdata[i][0]!=-1) {
-            g.fillText(this.topdata[i][0],1+(2+i)*S+S/2,1+S/2+this.font.delta);
-        }
-        if (this.topdata[i][1]!=-1) {
-            g.fillText(this.topdata[i][1],1+(2+i)*S+S/2,1+S+S/2+this.font.delta);
-        }
-    }
-
-    for (var j=0;j<Y;j++) {
-        if (this.leftdata[0][j]!=-1) {
-            g.fillText(this.leftdata[0][j],1+S/2,1+(2+j)*S+S/2+this.font.delta);
-        }
-        if (this.leftdata[1][j]!=-1) {
-            g.fillText(this.leftdata[1][j],1+S+S/2,1+(2+j)*S+S/2+this.font.delta);
-        }
+        teka.drawLine(g,0,(i+2)*S,2*S,(i+2)*S);
     }
 
     g.strokeStyle = '#000';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.magnets[i][j]==teka.viewer.magnets.Defaults.LEFT) {
-                g.strokeRect((2+i)*S+1,(2+j)*S+1,2*S,S);
+                g.strokeRect((2+i)*S,(2+j)*S,2*S,S);
             }
             if (this.magnets[i][j]==teka.viewer.magnets.Defaults.TOP) {
-                g.strokeRect((2+i)*S+1,(2+j)*S+1,S,2*S);
+                g.strokeRect((2+i)*S,(2+j)*S,S,2*S);
             }
             if (this.magnets[i][j]===0) {
-                g.strokeRect((2+i)*S+1,(2+j)*S+1,S,S);
+                g.strokeRect((2+i)*S,(2+j)*S,S,S);
             }
         }
     }
 
+    // paint cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
-        g.strokeStyle = '#f00';
         if (this.x>=0 && this.x<X && this.y>=0 && this.y<Y) {
-            g.strokeRect(S*(this.x+2)+4,S*(this.y+2)+4,S-6,S-6);
-            g.strokeRect(S*(this.x+2)+5,S*(this.y+2)+5,S-8,S-8);
+            g.strokeStyle = '#f00';
+            g.lineWidth = 2;
+            g.strokeRect(S*(this.x+2)+3.5,S*(this.y+2)+3.5,S-7,S-7);
         }
     }
 
@@ -618,10 +622,13 @@ teka.viewer.magnets.MagnetsViewer.prototype.processMouseMovedEvent = function(xc
 teka.viewer.magnets.MagnetsViewer.prototype.processMousePressedEvent = function(xc, yc)
 {
     var erg = this.processMouseMovedEvent(xc,yc);
+
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
     }
+
     this.set(this.x,this.y,(this.f[this.x][this.y]+1)%5);
+
     return true;
 };
 
@@ -704,33 +711,47 @@ teka.viewer.magnets.MagnetsViewer.prototype.set = function(x, y, value)
     }
 
     if (this.magnets[x][y]==teka.viewer.magnets.Defaults.LEFT) {
-        this.f[x+1][y] = value; this.c[x+1][y] = this.color; return;
+        this.f[x+1][y] = value;
+        this.c[x+1][y] = this.color;
+        return;
     }
+
     if (this.magnets[x][y]==teka.viewer.magnets.Defaults.TOP) {
-        this.f[x][y+1] = value; this.c[x][y+1] = this.color; return;
+        this.f[x][y+1] = value;
+        this.c[x][y+1] = this.color;
+        return;
     }
+
     if (x>0 && this.magnets[x-1][y]==teka.viewer.magnets.Defaults.LEFT) {
-        this.f[x-1][y] = value; this.c[x-1][y] = this.color; return;
+        this.f[x-1][y] = value;
+        this.c[x-1][y] = this.color;
+        return;
     }
+
     if (y>0 && this.magnets[x][y-1]==teka.viewer.magnets.Defaults.TOP) {
-        this.f[x][y-1] = value; this.c[x][y-1] = this.color; return;
+        this.f[x][y-1] = value;
+        this.c[x][y-1] = this.color;
+        return;
     }
 };
 
 /** When a magnet plate is set for error, color the whole plate. */
-teka.viewer.magnets.MagnetsViewer.prototype.set_error = function(x, y)
+teka.viewer.magnets.MagnetsViewer.prototype.setError = function(x, y)
 {
     this.error[x][y] = true;
 
     if (this.magnets[x][y]==teka.viewer.magnets.Defaults.LEFT) {
         this.error[x+1][y] = true;
     }
+
     if (this.magnets[x][y]==teka.viewer.magnets.Defaults.TOP) {
         this.error[x][y+1] = true;
     }
+
     if (x>0 && this.magnets[x-1][y]==teka.viewer.magnets.Defaults.LEFT) {
         this.error[x-1][y] = true;
     }
+
     if (y>0 && this.magnets[x][y-1]==teka.viewer.magnets.Defaults.TOP) {
         this.error[x][y-1] = true;
     }
@@ -769,9 +790,11 @@ teka.viewer.magnets.MagnetsViewer.prototype.fill = function(f, x, y, value)
     if (x<0 || x>=this.X || y<0 || y>=this.Y) {
         return;
     }
+
     if (f[x][y]!=teka.viewer.magnets.Defaults.MAGNET) {
         return;
     }
+
     f[x][y] = value;
 
     this.fill(f,x-1,y,3-value);
