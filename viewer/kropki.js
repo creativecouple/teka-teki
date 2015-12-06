@@ -60,12 +60,12 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
         return;
     }
 
-    var c = this.asciiToArray(ascii);
+    var grid = this.asciiToArray(ascii);
 
     this.puzzle = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            var nr = this.getNr(c,(d+1)*i+1,2*j+1,d);
+            var nr = this.getNr(grid,(d+1)*i+1,2*j+1,d);
             if (nr!==false) {
                 this.puzzle[i][j] = nr;
             }
@@ -75,9 +75,9 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
     this.lrdots = teka.new_array([this.X-1,this.X],teka.viewer.kropki.Defaults.NONE);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.X;j++) {
-            if (c[(d+1)*(i+1)][2*j+1]==teka.ord('O')) {
+            if (grid[(d+1)*(i+1)][2*j+1]==teka.ord('O')) {
                 this.lrdots[i][j] = teka.viewer.kropki.Defaults.EMPTY;
-            } else if (c[(d+1)*(i+1)][2*j+1]==teka.ord('*')) {
+            } else if (grid[(d+1)*(i+1)][2*j+1]==teka.ord('*')) {
                 this.lrdots[i][j] = teka.viewer.kropki.Defaults.FULL;
             }
         }
@@ -86,9 +86,9 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToData = function(ascii,d)
     this.uddots = teka.new_array([this.X,this.X-1],teka.viewer.kropki.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X-1;j++) {
-            if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2]==teka.ord('O')) {
+            if (grid[(d+1)*i+Math.ceil((d+1)/2)][2*j+2]==teka.ord('O')) {
                 this.uddots[i][j] = teka.viewer.kropki.Defaults.EMPTY;
-            } else if (c[(d+1)*i+Math.ceil((d+1)/2)][2*j+2]==teka.ord('*')) {
+            } else if (grid[(d+1)*i+Math.ceil((d+1)/2)][2*j+2]==teka.ord('*')) {
                 this.uddots[i][j] = teka.viewer.kropki.Defaults.FULL;
             }
         }
@@ -102,12 +102,12 @@ teka.viewer.kropki.KropkiViewer.prototype.asciiToSolution = function(ascii,d)
         return;
     }
 
-    var c = this.asciiToArray(ascii);
+    var grid = this.asciiToArray(ascii);
 
     this.solution = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            this.solution[i][j] = this.getNr(c,d*i,j,d);
+            this.solution[i][j] = this.getNr(grid,d*i,j,d);
         }
     }
 };
@@ -288,26 +288,30 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         for (var j=0;j<X;j++) {
             switch (this.lrdots[i][j]) {
               case teka.viewer.kropki.Defaults.NONE:
-                if (check[i][j]==2*check[i+1][j] || check[i+1][j]==2*check[i][j]) {
+                if (check[i][j]==2*check[i+1][j]
+                    || check[i+1][j]==2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
                     return 'kropki_twice';
                 }
-                if (check[i][j]==check[i+1][j]+1 || check[i+1][j]==check[i][j]+1) {
+                if (check[i][j]==check[i+1][j]+1
+                    || check[i+1][j]==check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
                     return 'kropki_neighbours';
                 }
                 break;
               case teka.viewer.kropki.Defaults.EMPTY:
-                if (check[i][j]!=check[i+1][j]+1 && check[i+1][j]!=check[i][j]+1) {
+                if (check[i][j]!=check[i+1][j]+1
+                    && check[i+1][j]!=check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
                     return 'kropki_no_neighbours';
                 }
                 break;
               case teka.viewer.kropki.Defaults.FULL:
-                if (check[i][j]!=2*check[i+1][j] && check[i+1][j]!=2*check[i][j]) {
+                if (check[i][j]!=2*check[i+1][j]
+                    && check[i+1][j]!=2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i+1][j] = true;
                     return 'kropki_not_twice';
@@ -322,26 +326,30 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
         for (var j=0;j<X-1;j++) {
             switch (this.uddots[i][j]) {
               case teka.viewer.kropki.Defaults.NONE:
-                if (check[i][j]==2*check[i][j+1] || check[i][j+1]==2*check[i][j]) {
+                if (check[i][j]==2*check[i][j+1]
+                    || check[i][j+1]==2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
                     return 'kropki_twice';
                 }
-                if (check[i][j]==check[i][j+1]+1 || check[i][j+1]==check[i][j]+1) {
+                if (check[i][j]==check[i][j+1]+1
+                    || check[i][j+1]==check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
                     return 'kropki_neighbours';
                 }
                 break;
               case teka.viewer.kropki.Defaults.EMPTY:
-                if (check[i][j]!=check[i][j+1]+1 && check[i][j+1]!=check[i][j]+1) {
+                if (check[i][j]!=check[i][j+1]+1
+                    && check[i][j+1]!=check[i][j]+1) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
                     return 'kropki_no_neightbours';
                 }
                 break;
               case teka.viewer.kropki.Defaults.FULL:
-                if (check[i][j]!=2*check[i][j+1] && check[i][j+1]!=2*check[i][j]) {
+                if (check[i][j]!=2*check[i][j+1]
+                    && check[i][j+1]!=2*check[i][j]) {
                     this.error[i][j] = true;
                     this.error[i][j+1] = true;
                     return 'kropki_not_twice';
@@ -372,7 +380,8 @@ teka.viewer.kropki.KropkiViewer.prototype.check = function()
  */
 teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
 {
-    this.scale = Math.floor(Math.min((this.width-3)/this.X,(this.height-3-this.textHeight-2)/this.X));
+    this.scale = Math.floor(Math.min((this.width-3)/this.X,
+                                     (this.height-3-(this.textHeight+2))/this.X));
     var realwidth = this.X * this.scale + 3;
     var realheight = this.X * this.scale + 3 + this.textHeight+2;
 
@@ -381,8 +390,8 @@ teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
     var textwidth = g.measureText(this.bottomText).width+1;
     realwidth = Math.max(realwidth,textwidth);
 
-    this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
-    this.deltaY = Math.round((this.height-realheight)/2)+0.5;
+    this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
+    this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.boldfont = teka.getFontData('bold '+Math.round(this.scale/2)+'px sans-serif',this.scale);
@@ -392,124 +401,137 @@ teka.viewer.kropki.KropkiViewer.prototype.setMetrics = function(g)
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 
-/**
- * Paints the diagram. */
+/** Paints the diagram. */
 teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 {
     var X = this.X;
     var S = this.scale;
 
     g.save();
-    g.translate(this.deltaX,this.deltaY);
+    g.translate(this.deltaX+1,this.deltaY+1);
 
-    g.fillStyle = '#ffffff';
-    g.fillRect(1,1,X*S,X*S);
+    g.fillStyle = '#fff';
+    g.fillRect(0,0,X*S+1,X*S+1);
 
+    // paint the background of the cells
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.mode>=teka.viewer.Defaults.BLINK_START
-                && this.mode<=teka.viewer.Defaults.BLINK_END) {
-                g.fillStyle = this.getBlinkColor(i,j,X,this.f[i][j]);
-            } else if (this.error[i][j]===true) {
-                g.fillStyle = '#f00';
-            } else {
-                g.fillStyle = '#fff';
-            }
-            g.fillRect(i*S+1,j*S+1,S,S);
+            g.fillStyle = this.isBlinking()?
+                this.getBlinkColor(i,j,X,this.f[i][j]):
+                (this.error[i][j]?'#f00':'#fff');
+            g.fillRect(i*S,j*S,S,S);
         }
     }
 
-    g.strokeStyle = '#000000';
-    for (var i=0;i<=X;i++) {
-        teka.drawLine(g,1,i*S+1,X*S+1,i*S+1);
-        teka.drawLine(g,i*S+1,1,i*S+1,X*S+1);
-    }
-    g.strokeRect(2,2,X*S-2,X*S-2);
-    g.strokeRect(0,0,X*S+2,X*S+2);
+    // paint the grid
+    g.strokeStyle = '#000';
+    g.lineWidth = 3;
+    g.strokeRect(0,0,X*S,X*S);
+    g.lineWidth = 1;
 
+    for (var i=1;i<X;i++) {
+        teka.drawLine(g,0,i*S,X*S,i*S);
+        teka.drawLine(g,i*S,0,i*S,X*S);
+    }
+
+    // paint the dots on vertical lines
+    g.strokeStyle='#000';
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {
             if (this.lrdots[i][j]==teka.viewer.kropki.Defaults.EMPTY) {
-                g.fillStyle='#ffffff';
-                teka.fillOval(g,(i+1)*S+1,j*S+S/2+1,S/8,0,2*Math.PI);
-                g.strokeStyle='#000000';
-                teka.strokeOval(g,(i+1)*S+1,j*S+S/2+1,S/8,0,2*Math.PI);
+                g.fillStyle='#fff';
+                teka.fillOval(g,(i+1)*S,j*S+S/2,S/8);
+                teka.strokeOval(g,(i+1)*S,j*S+S/2,S/8);
             } else if (this.lrdots[i][j]==teka.viewer.kropki.Defaults.FULL) {
-                g.fillStyle='#000000';
-                teka.fillOval(g,(i+1)*S+1,j*S+S/2+1,S/8,0,2*Math.PI);
+                g.fillStyle='#000';
+                teka.fillOval(g,(i+1)*S,j*S+S/2,S/8);
             }
         }
     }
 
+    // paint the dots on horizontal lines
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
             if (this.uddots[i][j]==teka.viewer.kropki.Defaults.EMPTY) {
-                g.fillStyle='#ffffff';
-                teka.fillOval(g,i*S+S/2+1,(j+1)*S+1,S/8,0,2*Math.PI);
-                g.strokeStyle='#000000';
-                teka.strokeOval(g,i*S+S/2+1,(j+1)*S+1,S/8,0,2*Math.PI);
+                g.fillStyle='#fff';
+                teka.fillOval(g,i*S+S/2,(j+1)*S,S/8);
+                teka.strokeOval(g,i*S+S/2,(j+1)*S,S/8);
             } else if (this.uddots[i][j]==teka.viewer.kropki.Defaults.FULL) {
-                g.fillStyle='#000000';
-                teka.fillOval(g,i*S+S/2+1,(j+1)*S+1,S/8,0,2*Math.PI);
+                g.fillStyle='#000';
+                teka.fillOval(g,i*S+S/2,(j+1)*S,S/8);
             }
         }
     }
 
+    // paint the content of the cells
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
+            // given numbers
             if (this.puzzle[i][j]!==0) {
-                g.textAlign = 'center';
-                g.textBaseline = 'middle';
                 g.fillStyle = '#000';
                 g.font = this.boldfont.font;
-                g.fillText(this.puzzle[i][j],1+i*S+S/2,1+j*S+S/2+this.boldfont.delta);
+                g.fillText(this.puzzle[i][j],i*S+S/2,j*S+S/2+this.boldfont.delta);
                 continue;
             }
+
+            // empty?
             if (this.f[i][j]==teka.viewer.kropki.Defaults.NONE) {
                 continue;
             }
+
+            // normal numbers
+            g.fillStyle = this.getColorString(this.c[i][j]);
             if (this.f[i][j]<1000) {
-                g.textAlign = 'center';
-                g.textBaseline = 'middle';
-                g.fillStyle = this.getColorString(this.c[i][j]);
                 g.font = this.font.font;
-                g.fillText(this.f[i][j],1+i*S+S/2,1+j*S+S/2+this.font.delta);
+                g.fillText(this.f[i][j],i*S+S/2,j*S+S/2+this.font.delta);
                 continue;
             }
 
-            g.textAlign = 'center';
-            g.textBaseline = 'middle';
-            g.fillStyle = this.getColorString(this.c[i][j]);
+            // numbers in expert mode
             g.font = this.smallfont.font;
             for (var k=1;k<=9;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
-                    g.fillText(''+k,1+S*i+((k-1)%3+1)*S/4,1+S*j+Math.floor((k-1)/3+1)*S/4+this.smallfont.delta);
+                    g.fillText(k,
+                               S*i+((k-1)%3+1)*S/4,
+                               S*j+Math.floor((k-1)/3+1)*S/4+this.smallfont.delta);
                 }
             }
 
-            teka.drawLine(g,1+S*i+3*S/8,1+S*j+S/8,1+S*i+3*S/8,1+S*(j+1)-S/8);
-            teka.drawLine(g,1+S*(i+1)-3*S/8,1+S*j+S/8,1+S*(i+1)-3*S/8,1+S*(j+1)-S/8);
-            teka.drawLine(g,1+S*i+S/8,1+S*j+3*S/8,1+S*(i+1)-S/8,1+S*j+3*S/8);
-            teka.drawLine(g,1+S*i+S/8,1+S*(j+1)-3*S/8,1+S*(i+1)-S/8,1+S*(j+1)-3*S/8);
-            teka.drawLine(g,(i+1)*S+3-S/8,(j+1)*S+3-S/8,(i+1)*S-2,(j+1)*S-2);
-            teka.drawLine(g,(i+1)*S+3-S/8,(j+1)*S-2,(i+1)*S-2,(j+1)*S+3-S/8);
+            // expert grid
+            g.strokeStyle = '#000';
+            teka.drawLine(g,S*i+3*S/8,S*j+S/8,S*i+3*S/8,S*(j+1)-S/8);
+            teka.drawLine(g,S*(i+1)-3*S/8,S*j+S/8,S*(i+1)-3*S/8,S*(j+1)-S/8);
+            teka.drawLine(g,S*i+S/8,S*j+3*S/8,S*(i+1)-S/8,S*j+3*S/8);
+            teka.drawLine(g,S*i+S/8,S*(j+1)-3*S/8,S*(i+1)-S/8,S*(j+1)-3*S/8);
+
+            // little x
+            teka.drawLine(g,(i+1)*S-S/8-2,(j+1)*S-S/8-2,(i+1)*S-2,(j+1)*S-2);
+            teka.drawLine(g,(i+1)*S-S/8-2,(j+1)*S-2,(i+1)*S-2,(j+1)*S-S/8-2);
         }
     }
 
+    // paint text below the grid
     g.textAlign = 'left';
     g.textBaseline = 'top';
     g.fillStyle = this.textcolor;
     g.font = 'bold '+this.textHeight+'px sans-serif';
-    g.fillText(this.bottomText,1,X*S+5);
+    g.fillText(this.bottomText,0,X*S+4);
 
+    // paint cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
-        g.strokeStyle='#ff0000';
+        g.strokeStyle='#f00';
         if (this.exp) {
-            teka.drawLine(g,(this.x+1)*S+3-S/8,(this.y+1)*S+3-S/8,(this.x+1)*S-2,(this.y+1)*S-2);
-            teka.drawLine(g,(this.x+1)*S+3-S/8,(this.y+1)*S-2,(this.x+1)*S-2,(this.y+1)*S+3-S/8);
+            teka.drawLine(g,
+                          (this.x+1)*S-S/8-2,(this.y+1)*S-S/8-2,
+                          (this.x+1)*S-2,(this.y+1)*S-2);
+            teka.drawLine(g,
+                          (this.x+1)*S-S/8-2,(this.y+1)*S-2,
+                          (this.x+1)*S-2,(this.y+1)*S-S/8-2);
         } else {
-            g.strokeRect(S*this.x+4,S*this.y+4,S-6,S-6);
-            g.strokeRect(S*this.x+5,S*this.y+5,S-8,S-8);
+            g.lineWidth = 2;
+            g.strokeRect(S*this.x+3.5,S*this.y+3.5,S-7,S-7);
         }
     }
 
@@ -558,10 +580,7 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc
 {
     var erg = this.processMouseMovedEvent(xc,yc);
 
-    xc = xc-this.deltaX-1;
-    yc = yc-this.deltaY-1;
-
-    if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) {
+    if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.X) {
         return erg;
     }
 
@@ -584,10 +603,10 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc
         }
 
         this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000);
+        return true;
     }
-    else {
-        this.set(this.x,this.y,(this.f[this.x][this.y]+1) % (this.X+1));
-    }
+
+    this.set(this.x,this.y,(this.f[this.x][this.y]+1) % (this.X+1));
 
     return true;
 };
@@ -626,21 +645,29 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(e)
         return false;
     }
 
-    if (e.key>=teka.KEY_0 && e.key<=teka.KEY_9) {
-        if (this.f[this.x][this.y]<1000) {
-            if (this.f[this.x][this.y]>0 && this.f[this.x][this.y]*10+(e.key-teka.KEY_0)<=this.X) {
-                this.set(this.x,this.y,this.f[this.x][this.y]*10+(e.key-teka.KEY_0));
-            } else if (e.key>=teka.KEY_1 && e.key-teka.KEY_0<=this.X) {
-                this.set(this.x,this.y,e.key-teka.KEY_0);
-            }
-        } else {
-            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<(e.key-teka.KEY_0)))+1000);
-        }
+    if (e.key==teka.KEY_SPACE) {
+        this.set(this.x,this.y,0);
         return true;
     }
 
-    if (e.key==teka.KEY_SPACE) {
-        this.set(this.x,this.y,0);
+    if (e.key>=teka.KEY_0 && e.key<=teka.KEY_9) {
+
+        var val = e.key-teka.KEY_0;
+
+        if (val>this.X) {
+            return false;
+        }
+
+        if (this.f[this.x][this.y]<1000) {
+            if (this.f[this.x][this.y]>0 &&
+                this.f[this.x][this.y]*10+(e.key-teka.KEY_0)<=this.X) {
+                this.set(this.x,this.y,this.f[this.x][this.y]*10+val);
+            } else if (e.key>=teka.KEY_1) {
+                this.set(this.x,this.y,val);
+            }
+        } else {
+            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<val))+1000);
+        }
         return true;
     }
 
@@ -661,12 +688,12 @@ teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(e)
 //////////////////////////////////////////////////////////////////
 
 /** Sets the value of a cell, if the color fits. */
-teka.viewer.kropki.KropkiViewer.prototype.set = function(x,y,val)
+teka.viewer.kropki.KropkiViewer.prototype.set = function(x,y,value)
 {
     if (this.f[x][y]!=0 && this.c[x][y]!=this.color) {
         return;
     }
-    this.f[x][y] = val;
+    this.f[x][y] = value;
     this.c[x][y] = this.color;
 };
 
