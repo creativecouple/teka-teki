@@ -85,10 +85,10 @@ teka.Display.prototype.translate = function(g)
 teka.Display.prototype.clip = function(g)
 {
     g.beginPath();
-    g.moveTo(0,0);
-    g.lineTo(this.width,0);
-    g.lineTo(this.width,this.height);
-    g.lineTo(0,this.height);
+    g.moveTo(-0.5,-0.5);
+    g.lineTo(this.width+1,-0.5);
+    g.lineTo(this.width+1,this.height+1);
+    g.lineTo(-0.5,this.height+1);
     g.closePath();
     g.clip();
 };
