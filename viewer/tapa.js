@@ -412,6 +412,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
     g.fillStyle = '#fff';
     g.fillRect(0,0,S*X,S*Y);
 
+    // paint background of the cells
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             g.fillStyle = this.isBlinking()?
@@ -421,6 +422,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
         }
     }
 
+    // paint the content of the cells
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
@@ -499,6 +501,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
         }
     }
 
+    // paint crosses, if hints are crossed
     g.lineWidth = 3;
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
@@ -511,6 +514,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
     }
     g.lineWidth = 1;
 
+    // paint grid
     g.fillStyle = '#000';
     for (var i=0;i<=X;i++) {
         teka.drawLine(g,i*S,0,i*S,Y*S);
@@ -523,6 +527,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
     g.strokeRect(-1,-1,X*S+2,Y*S+2);
     g.lineWidth = 1;
 
+    // paint cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle = '#f00';
         g.lineWidth = 2;
