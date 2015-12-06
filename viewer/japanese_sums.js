@@ -268,36 +268,44 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.check = function()
     var X = this.X;
     var Y = this.Y;
 
+    // copy to check, removing expert mode and other fancy stuff
     var check = teka.new_array([X,Y],0);
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]!=0) {
-                if (this.puzzle[i][j]==-1) {
-                    check[i][j] = teka.viewer.japanese_sums.Defaults.BLOCK;
-                } else {
-                    check[i][j] = this.puzzle[i][j];
-                }
+                check[i][j] = this.puzzle[i][j]==-1?
+                    teka.viewer.japanese_sums.Defaults.BLOCK:
+                    this.puzzle[i][j];
                 continue;
             }
 
             if (this.f[i][j]==0 || this.f[i][j]==1000) {
                 this.error[i][j] = true;
                 return 'japanese_sums_empty';
-            } else if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.BLOCK || (this.f[i][j]>=1 && this.f[i][j]<=this.MAX)) {
+            }
+
+            if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.BLOCK
+                || (this.f[i][j]>=1 && this.f[i][j]<=this.MAX)) {
                 check[i][j] = this.f[i][j];
-            } else if (this.f[i][j]>=1000) {
+                continue;
+            }
+
+            if (this.f[i][j]>=1000) {
                 check[i][j] = this.getExpert(this.f[i][j]);
                 if (check[i][j]<1 || check[i][j]>this.MAX) {
                     this.error[i][j] = true;
                     return 'japanese_sums_not_unique';
                 }
-            } else if (this.f[i][j]>100) {
+                continue;
+            }
+
+            if (this.f[i][j]>100) {
                 var min = this.f[i][j]%10;
-                var max = ((this.f[i][j]-100)/10);
+                var max = Math.floor((this.f[i][j]-100)/10);
                 if (min==0 && max==1) {
                     min = 1;
                 }
-                if (min==MAX && max==0) {
+                if (min==this.MAX && max==0) {
                     max = this.MAX;
                 }
                 if (min!=max) {
@@ -305,10 +313,11 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.check = function()
                     return 'japanese_sums_not_unique';
                 }
                 check[i][j] = min;
-            } else {
-                this.error[i][j] = true;
-                return 'japanese_sums_not_unique';
+                continue;
             }
+
+            this.error[i][j] = true;
+            return 'japanese_sums_not_unique';
         }
     }
 
@@ -330,6 +339,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.check = function()
         }
     }
 
+    // check for same digits in column
     for (var i=0;i<X;i++) {
         var da = teka.new_array([this.MAX+1],false);
         for (var j=0;j<Y;j++) {
@@ -347,19 +357,21 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.check = function()
         }
     }
 
+    // check if horizontal sums are correct
     for (var j=0;j<Y;j++) {
         if (!this.left_empty[j]) {
-            var erg = this.checkWaagSums(j,check);
-            if (erg!=null) {
+            var erg = this.checkHorizontalSums(j,check);
+            if (erg!==null) {
                 return erg;
             }
         }
     }
 
+    // check if vertical sums are correct
     for (var i=0;i<X;i++) {
         if (!this.top_empty[i]) {
-            var erg = this.checkSenkSums(i,check);
-            if (erg!=null) {
+            var erg = this.checkVerticalSums(i,check);
+            if (erg!==null) {
                 return erg;
             }
         }
@@ -368,15 +380,12 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.check = function()
     return true;
 };
 
-/** checkWaagSums */
-teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkWaagSums = function(y, f)
+/** check horizontal sums */
+teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkHorizontalSums = function(y, f)
 {
     var sp = teka.new_array([this.L],0);
     var ep = teka.new_array([this.L],0);
-    var sums = teka.new_array([this.L],0);
-    for (var i=0;i<this.L;i++) {
-        sums[i] = -1;
-    }
+    var sums = teka.new_array([this.L],-1);
 
     var wrong_count = false;
 
@@ -392,10 +401,12 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkWaagSums = function
             sums[az]=0;
             sp[az] = i;
         }
+
         if (f[i][y]!=teka.viewer.japanese_sums.Defaults.BLOCK) {
             sums[az]+=f[i][y];
             ep[az] = i;
         }
+
         lastblack = f[i][y]==teka.viewer.japanese_sums.Defaults.BLOCK;
     }
 
@@ -405,6 +416,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkWaagSums = function
             wrong_count = true;
         }
     }
+
     if (wrong_count) {
         for (var k=0;k<this.X;k++) {
             this.error[k][y] = true;
@@ -425,15 +437,12 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkWaagSums = function
     return null;
 };
 
-/** checkSenkSums */
-teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkSenkSums = function(x, f)
+/** check vertical sums */
+teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkVerticalSums = function(x, f)
 {
     var sp = teka.new_array([this.T],0);
     var ep = teka.new_array([this.T],0);
-    var sums = teka.new_array([this.T],0);
-    for (var i=0;i<this.T;i++) {
-        sums[i] = -1;
-    }
+    var sums = teka.new_array([this.T],-1);
 
     var wrong_count = false;
 
@@ -449,10 +458,12 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkSenkSums = function
             sums[az]=0;
             sp[az] = j;
         }
+
         if (f[x][j]!=teka.viewer.japanese_sums.Defaults.BLOCK) {
             sums[az]+=f[x][j];
             ep[az] = j;
         }
+
         lastblack = f[x][j]==teka.viewer.japanese_sums.Defaults.BLOCK;
     }
 
@@ -462,6 +473,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkSenkSums = function
             wrong_count = true;
         }
     }
+
     if (wrong_count) {
         for (var k=0;k<this.Y;k++) {
             this.error[x][k] = true;
@@ -500,7 +512,8 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.checkSenkSums = function
  */
 teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.setMetrics = function(g)
 {
-    this.scale = Math.floor(Math.min((this.width-2)/(this.X+this.L),(this.height-2-this.textHeight-2)/(this.Y+this.T)));
+    this.scale = Math.floor(Math.min((this.width-2)/(this.X+this.L),
+                                     (this.height-2-(this.textHeight+2))/(this.Y+this.T)));
     var realwidth = (this.X+this.L)*this.scale+2;
     var realheight = (this.Y+this.T)*this.scale+2+this.textHeight+2;
 
@@ -509,11 +522,12 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.setMetrics = function(g)
     var textwidth = g.measureText(this.bottomText).width+1;
     realwidth = Math.max(realwidth,this.scale*this.L+textwidth);
 
-    this.deltaX = Math.round((this.width-realwidth)/2)+0.5;
-    this.deltaY = Math.round((this.height-realheight)/2)+0.5;
+    this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
+    this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.boldfont = teka.getFontData('bold '+Math.round(this.scale/2)+'px sans-serif',this.scale);
+    this.mediumfont = teka.getFontData(Math.round(this.scale/3)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round((this.scale-6)/4)+'px sans-serif',this.scale);
 
     if (realwidth>this.width || realheight>this.height) this.scale=false;
@@ -526,131 +540,146 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
     var X = this.X;
     var Y = this.Y;
     var S = this.scale;
+    var L = this.L;
+    var T = this.T;
 
     g.save();
     g.translate(this.deltaX,this.deltaY);
 
     g.fillStyle = '#fff';
-    g.fillRect(this.L*S,this.T*S,X*S,Y*S);
+    g.fillRect(L*S,T*S,X*S,Y*S);
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.mode>=teka.viewer.Defaults.BLINK_START
-                && this.mode<=teka.viewer.Defaults.BLINK_END) {
-                g.fillStyle = this.getBlinkColor(i,j,X,this.f[i][j]);
-            } else if (this.error[i][j]) {
-                g.fillStyle = '#f00';
-            } else {
-                g.fillStyle = '#fff';
-            }
-            g.fillRect((i+this.L)*S,(j+this.T)*S,S,S);
+            g.fillStyle = this.isBlinking()?
+                this.getBlinkColor(i,j,X,this.f[i][j]):
+                (this.error[i][j]?'#f00':'#fff');
+            g.fillRect((i+L)*S,(j+T)*S,S,S);
         }
     }
 
     g.strokeStyle = '#000';
     for (var i=0;i<=X;i++) {
-        teka.drawLine(g,(this.L+i)*S,this.T*S,(this.L+i)*S,(this.T+Y)*S);
+        teka.drawLine(g,(L+i)*S,T*S,(L+i)*S,(T+Y)*S);
     }
     for (var j=0;j<=Y;j++) {
-        teka.drawLine(g,this.L*S,(this.T+j)*S,(this.L+X)*S,(this.T+j)*S);
+        teka.drawLine(g,L*S,(T+j)*S,(L+X)*S,(T+j)*S);
     }
 
-    teka.drawLine(g,this.L*S-1,this.T*S-1,this.L*S-1,(this.T+Y)*S);
-    teka.drawLine(g,this.L*S-1,this.T*S-1,(this.L+X)*S,this.T*S-1);
-    teka.drawLine(g,(this.L+X)*S+1,this.T*S-1,(this.L+X)*S+1,(this.T+Y)*S+1);
-    teka.drawLine(g,this.L*S-1,(this.T+Y)*S+1,(this.L+X)*S+1,(this.T+Y)*S+1);
+    g.lineWidth = 2;
+    g.strokeRect(S*L-0.5,S*T-0.5,X*S+1,Y*S+1);
+    g.lineWidth = 1;
 
-    g.fillStyle = '#000';
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     g.font = this.font.font;
-    for (var i=0;i<this.L;i++) {
+    for (var i=0;i<L;i++) {
         for (var j=0;j<Y;j++) {
             if (this.leftdata[i][j]!=-1) {
                 if (this.left_error[i][j]) {
                     g.fillStyle = '#f00';
-                    teka.fillOval(g,i*S+S/2,(j+this.T)*S+S/2,S/4,0,2*Math.PI);
+                    teka.fillOval(g,i*S+S/2,(j+T)*S+S/2,S/4);
                     g.strokeStyle = '#000';
-                    teka.strokeOval(g,i*S+S/2,(j+this.T)*S+S/2,S/4,0,2*Math.PI);
-                    g.fillStyle = '#000';
+                    teka.strokeOval(g,i*S+S/2,(j+T)*S+S/2,S/4);
                 }
 
-                g.fillText(this.leftdata[i][j],i*S+S/2,(j+this.T)*S+S/2+this.font.delta);
+                g.fillStyle = '#000';
+                g.fillText(this.leftdata[i][j],i*S+S/2,(j+T)*S+S/2+this.font.delta);
             }
         }
     }
 
     for (var i=0;i<X;i++) {
-        for (var j=0;j<this.T;j++) {
+        for (var j=0;j<T;j++) {
             if (this.topdata[i][j]!=-1) {
                 if (this.top_error[i][j]) {
                     g.fillStyle = '#f00';
-                    teka.fillOval(g,(this.L+i)*S+S/4,j*S+S/4,S/2,0,2*Math.PI);
+                    teka.fillOval(g,(L+i)*S+S/4,j*S+S/4,S/2);
                     g.strokeStyle = '#000';
-                    teka.strokeOval(g,(this.L+i)*S+S/4,j*S+S/4,S/2,0,2*Math.PI);
+                    teka.strokeOval(g,(L+i)*S+S/4,j*S+S/4,S/2);
                 }
 
-                g.fillText(this.topdata[i][j],(this.L+i)*S+S/2,j*S+S/2+this.font.delta);
+                g.fillStyle = '#000';
+                g.fillText(this.topdata[i][j],(L+i)*S+S/2,j*S+S/2+this.font.delta);
             }
         }
     }
 
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]!=0) {
                 g.fillStyle = '#000';
+
                 if (this.puzzle[i][j]==-1) {
-                    g.fillRect((this.L+i)*S,(this.T+j)*S,S,S);
+                    g.fillRect((L+i)*S,(T+j)*S,S,S);
                 } else {
-                    g.fillStyle = '#000';
-                    g.textAlign = 'center';
-                    g.textBaseline = 'middle';
                     g.font = this.boldfont.font;
-                    g.fillText(this.puzzle[i][j],(i+this.L)*S+S/2,(j+this.T)*S+S/2+this.boldfont.delta);
+                    g.fillText(this.puzzle[i][j],(i+L)*S+S/2,(j+T)*S+S/2+this.boldfont.delta);
                 }
+                continue;
+            }
+
+            if (this.f[i][j]===teka.viewer.japanese_sums.Defaults.EMPTY) {
                 continue;
             }
 
             g.fillStyle = this.getColorString(this.c[i][j]);
             g.strokeStyle = this.getColorString(this.c[i][j]);
+
             if (this.f[i][j]>0 && this.f[i][j]<10) {
-                g.textAlign = 'center';
-                g.textBaseline = 'middle';
                 g.font = this.font.font;
-                g.fillText(this.f[i][j],(i+this.L)*S+S/2,(j+this.T)*S+S/2+this.font.delta);
-            }  else if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.BLOCK && !this.error[i][j]) {
-                g.fillRect((this.L+i)*S,(this.T+j)*S,S,S);
-            }  else if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.DIGIT) {
-                teka.strokeOval(g,(this.L+i)*S+S/2,(this.T+j)*S+S/2,S/2,0,2*Math.PI);
-            } /* else if (this.f[i][j]>=100 && this.f[i][j]<1000) {
-                var a = (this.f[i][j]-100)%10;
-                var b = (this.f[i][j]-100)/10;
-                String hh = (a==0?'?':(''+a))+'-'+(b==0?'?':(''+b));
-                g.setFont(fo_mittel);
-                g.fillStyle = (ColorTool.colors[this.c[i][j]]);
-                g.drawString(hh,S*(this.L+i)+(S-fm_mittel.stringWidth(hh))/2,S*(this.T+j)+(S+fm_mittel.getAscent()-fm_mittel.getDescent())/2);
-                g.setFont(fo_gross);
-            } else if (this.f[i][j]>=1000) {
-                g.setFont(fo_klein);
-                for (var k=1;k<=9;k++) {
-                    var da = ((this.f[i][j]-1000)&(1<<k))!=0;
-                    if (da) {
-                        String hh = ''+k;
-                        g.fillStyle = (ColorTool.colors[this.c[i][j]]);
-                        g.drawString(hh,
-                        S*(i+this.L)+S/6-fm_klein.stringWidth(hh)/2+((k-1)%3)*S/3+1,
-                        S*(j+this.T)+S/6+(fm_klein.getAscent()-fm_klein.getDescent())/2+((k-1)/3)*S/3+1);
-                    }
-                }
-                g.fillStyle = ('#888');
-                teka.drawLine(g,S*(i+this.L)+3,S*(j+this.T)+S/3,S*(i+this.L)+S-3,S*(j+this.T)+S/3);
-                teka.drawLine(g,S*(i+this.L)+3,S*(j+this.T)+2*S/3,S*(i+this.L)+S-3,S*(j+this.T)+2*S/3);
-                teka.drawLine(g,S*(i+this.L)+S/3,S*(j+this.T)+3,S*(i+this.L)+S/3,S*(j+this.T)+S-3);
-                teka.drawLine(g,S*(i+this.L)+2*S/3,S*(j+this.T)+3,S*(i+this.L)+2*S/3,S*(j+this.T)+S-3);
-                teka.drawLine(g,(this.L+i+1)*S+3-S/8,(this.T+j+1)*S+3-S/8,(this.L+i+1)*S-2,(this.T+j+1)*S-2);
-                teka.drawLine(g,(this.L+i+1)*S+3-S/8,(this.T+j+1)*S-2,(this.L+i+1)*S-2,(this.T+j+1)*S+3-S/8);
+                g.fillText(this.f[i][j],(i+L)*S+S/2,(j+T)*S+S/2+this.font.delta);
+                continue;
             }
-             */
+
+            if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.BLOCK && !this.error[i][j]) {
+                g.fillRect((L+i)*S,(T+j)*S,S,S);
+                continue;
+            }
+
+            if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.DIGIT) {
+                teka.strokeOval(g,(L+i)*S+S/2,(T+j)*S+S/2,S/2);
+                continue;
+            }
+
+            if (this.f[i][j]>=100 && this.f[i][j]<1000) {
+                var a = (this.f[i][j]-100)%10;
+                var b = Math.floor((this.f[i][j]-100)/10);
+                var tmp = (a==0?'?':a)+'-'+(b==0?'?':b);
+
+                g.fillStyle = this.getColorString(this.c[i][j]);
+                g.font = this.mediumfont.font;
+                g.fillText(tmp,S*(L+i)+S/2,S*(T+j)+S/2+this.mediumfont.delta);
+                continue;
+            }
+
+            g.save();
+            g.translate(S*L,S*T);
+
+            // numbers in expert mode
+            g.font = this.smallfont.font;
+            for (var k=1;k<=9;k++) {
+                if (((this.f[i][j]-1000)&(1<<k))!=0) {
+                    g.fillText(k,
+                               S*i+((k-1)%3+1)*S/4,
+                               S*j+Math.floor((k-1)/3+1)*S/4+this.smallfont.delta);
+                }
+            }
+
+            // expert grid
+            g.strokeStyle = '#000';
+            teka.drawLine(g,S*i+3*S/8,S*j+S/8,S*i+3*S/8,S*(j+1)-S/8);
+            teka.drawLine(g,S*(i+1)-3*S/8,S*j+S/8,S*(i+1)-3*S/8,S*(j+1)-S/8);
+            teka.drawLine(g,S*i+S/8,S*j+3*S/8,S*(i+1)-S/8,S*j+3*S/8);
+            teka.drawLine(g,S*i+S/8,S*(j+1)-3*S/8,S*(i+1)-S/8,S*(j+1)-3*S/8);
+
+            // little x
+            teka.drawLine(g,(i+1)*S-S/8-2,(j+1)*S-S/8-2,(i+1)*S-2,(j+1)*S-2);
+            teka.drawLine(g,(i+1)*S-S/8-2,(j+1)*S-2,(i+1)*S-2,(j+1)*S-S/8-2);
+
+            g.restore();
         }
     }
 
@@ -658,16 +687,17 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
     g.textBaseline = 'top';
     g.fillStyle = this.textcolor;
     g.font = 'bold '+this.textHeight+'px sans-serif';
-    g.fillText(this.bottomText,this.L*S+1,(Y+this.T)*S+5);
+    g.fillText(this.bottomText,L*S,(Y+T)*S+4);
 
+    // paint cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle = '#f00';
         if (this.exp) {
-            teka.drawLine(g,(this.L+this.x+1)*S+3-S/8,(this.T+this.y+1)*S+3-S/8,(this.L+this.x+1)*S-2,(this.T+this.y+1)*S-2);
-            teka.drawLine(g,(this.L+this.x+1)*S+3-S/8,(this.T+this.y+1)*S-2,(this.L+this.x+1)*S-2,(this.T+this.y+1)*S+3-S/8);
+            teka.drawLine(g,(L+this.x+1)*S-S/8-2,(T+this.y+1)*S-S/8-2,(L+this.x+1)*S-2,(T+this.y+1)*S-2);
+            teka.drawLine(g,(L+this.x+1)*S-S/8-2,(T+this.y+1)*S-2,(L+this.x+1)*S-2,(T+this.y+1)*S-S/8-2);
         } else {
-            g.strokeRect(S*(this.x+this.L)+2,S*(this.y+this.T)+2,S-4,S-4);
-            g.strokeRect(S*(this.x+this.L)+3,S*(this.y+this.T)+3,S-6,S-6);
+            g.lineWidth = 2;
+            g.strokeRect(S*(this.x+L)+3.5,S*(this.y+T)+3.5,S-7,S-7);
         }
     }
 
@@ -721,18 +751,18 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousePressedEvent
 
     if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
         if (this.f[this.x][this.y]<1000) {
-            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]),false);
+            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
         } else {
-            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]),false);
+            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
         }
         return true;
     }
 
     if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<1000) {
         if (this.xm<this.scale/2) {
-            this.set(this.x,this.y,(((this.f[this.x][this.y]-100)%10)+1)%(this.MAX+1)+((this.f[this.x][this.y]-100)/10*10)+100,false);
+            this.set(this.x,this.y,(((this.f[this.x][this.y]-100)%10)+1)%(this.MAX+1)+((this.f[this.x][this.y]-100)/10*10)+100);
         } else {
-            this.set(this.x,this.y,((((this.f[this.x][this.y]-100)/10)+1)%(this.MAX+1))*10+((this.f[this.x][this.y]-100)%10)+100,false);
+            this.set(this.x,this.y,((((this.f[this.x][this.y]-100)/10)+1)%(this.MAX+1))*10+((this.f[this.x][this.y]-100)%10)+100);
         }
         return true;
     }
@@ -743,18 +773,18 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousePressedEvent
         if (nr<1 || nr>this.MAX) {
             return erg;
         }
-        this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000,false);
+        this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000);
         return true;
     }
 
     if (this.f[this.x][this.y]==0) {
-        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.DIGIT,false);
+        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.DIGIT);
     } else if (this.f[this.x][this.y]==teka.viewer.japanese_sums.Defaults.DIGIT) {
-        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.BLOCK,false);
+        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.BLOCK);
     } else if (this.f[this.x][this.y]==teka.viewer.japanese_sums.Defaults.BLOCK) {
-        this.set(this.x,this.y,1,false);
+        this.set(this.x,this.y,1);
     } else {
-        this.set(this.x,this.y,(this.f[this.x][this.y]+1)%(this.MAX+1),false);
+        this.set(this.x,this.y,(this.f[this.x][this.y]+1)%(this.MAX+1));
     }
 
     return true;
@@ -795,65 +825,65 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processKeyEvent = functi
     }
 
     if (e.key==teka.KEY_SPACE) {
-        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.EMPTY,false);
+        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.EMPTY);
         return true;
     }
 
     if (e.key==teka.KEY_X || e.key==teka.KEY_B || e.key==teka.KEY_S) {
-        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.BLOCK,false);
+        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.BLOCK);
         return true;
     }
 
     if (e.key==teka.KEY_DOT || e.key==teka.KEY_O) {
-        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.DIGIT,false);
+        this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.DIGIT);
         return true;
     }
 
     if (e.key>=teka.KEY_1 && e.key<=teka.KEY_9) {
-        if (e.key<=teka.KEY_0+this.MAX) {
-            this.set(this.x,this.y,e.key-teka.KEY_0,false);
+        var val = e.key-teka.KEY_0;
+        if (val<=this.MAX) {
+            if (this.f[this.x][this.y]>=1000) {
+                this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<val))+1000);
+            } else if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<110) {
+                this.set(this.x,this.y,this.f[this.x][this.y]+10*val);
+            } else {
+                this.set(this.x,this.y,val);
+            }
         }
         return true;
     }
 
-    /*
-    } else if (ch>='1' && ch<'1'+this.MAX) {
-        if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<110) {
-            this.set(this.x,this.y,this.f[this.x][this.y]+10*(ch-'0'));
-        } else if (this.f[this.x][this.y]>=1000) {
-            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<(ch-'0')))+1000);
-        } else {
-            this.set(this.x,this.y,ch-'0');
-        }
-    } else if (ch=='-') {
+    if (e.key==teka.KEY_MINUS) {
         if (this.f[this.x][this.y]<100 && this.f[this.x][this.y]>=0) {
             this.set(this.x,this.y,100+this.f[this.x][this.y]);
         } else {
             this.set(this.x,this.y,100);
         }
-    } else if (ch=='#' || ch==',') {
-        if (this.f[this.x][this.y]<1000) {
-            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]),true);
-        } else {
-            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]),true);
-        }
+        return true;
     }
-     */
-    return true;
+
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_COMMA) {
+        if (this.f[this.x][this.y]<1000) {
+            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
+        } else {
+            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
+        }
+        return true;
+    }
+
+    return false;
 };
 
 //////////////////////////////////////////////////////////////////
 
 /** Sets the value of a cell, if the color fits. */
-teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.set = function(x, y, w, force)
+teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.set = function(x, y, value)
 {
-    if (!force && this.f[x][y]!=0 && this.c[x][y]!=this.color) {
+    if (this.f[x][y]!=0 && this.f[x][y]!=1000 && this.c[x][y]!=this.color) {
         return;
     }
-    if (!force || this.f[x][y]==0) {
-        this.c[x][y] = this.color;
-    }
-    this.f[x][y] = w;
+    this.f[x][y] = value;
+    this.c[x][y] = this.color;
 };
 
 /** Converts from normal mode to expert mode. */
