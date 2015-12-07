@@ -264,12 +264,13 @@ teka.dictionary = {
 
     japanese_sums: 'Japanische Summen',
     japanese_sums_instructions: 'Schwärzen Sie einige Felder im Diagramm und tragen Sie in die '
-        +'restlichen Felder die angegebenen Zahlen so ein, dass in keiner '
+        +'restlichen Felder die angegebenen Ziffern so ein, dass in keiner '
         +'Zeile oder Spalte eine Ziffer mehrfach vorkommt. Die Zahlen am '
         +'Rand geben in der richtigen Reihenfolge die Summen von Blöcken '
         +'aufeinanderfolgender Ziffern (ohne Schwarzfeld dazwischen) an. '
-        +'Auch einzelne Ziffern werden hier angegeben. '
-        +'Steht am Rand nichts, so ist über die entsprechenden Zeile oder Spalte nichts bekannt.\n\n'
+        +'Auch einzelne Ziffern werden hier angegeben. Ein Fragezeichen steht '
+        +'für eine unbekannte Zahl. Steht am Rand nichts, so ist über die '
+        +'entsprechenden Zeile oder Spalte nichts bekannt.\n\n'
         +'Für eine korrekte Lösung müssen zusätzlich zu allen Zahlen auch '
         +'alle Schwarzfelder eingezeichnet sein.',
     japanese_sums_usage: 'Bedienung mit der Maus:\n\n'
