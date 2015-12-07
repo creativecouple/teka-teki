@@ -562,6 +562,8 @@ teka.PuzzleApplet.prototype.initInstructions = function()
 /** Initializes the start screen. */
 teka.PuzzleApplet.prototype.initStartScreen = function()
 {
+    this.start_screen.setTextParameter(this.values_.TEXT_COLOR,
+                                       this.values_.TEXT_HEIGHT);
     this.start_screen.setButtonParameter(this.values_.BUTTON_COLORS,
                                          this.values_.BUTTON_HEIGHT);
     this.start_screen.setProperties(this.values_.CUSTOM_PROPERTIES===true
