@@ -156,7 +156,8 @@ teka.StartScreen.prototype.paint = function(g)
     for (var i=0;i<this.buttonText.length;i++) {
         this.paintButton(g,0,i*(this.buttonHeight+this.gap),
                          this.buttonWidth,this.buttonHeight,
-                         this.activeButton===i?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
+                         this.events[i]===false?this.BUTTON_DEACTIVATED:
+                         (this.activeButton===i?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE),
                          this.buttonText[i]);
     }
     g.restore();
