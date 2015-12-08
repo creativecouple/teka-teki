@@ -227,7 +227,7 @@ teka.viewer.PuzzleViewer.prototype.asciiToArray = function(ascii)
 
     for (var j=0;j<hoehe;j++) {
         for (var i=0;i<breite;i++) {
-            c[i][j] = s.charAt(i+breite*j).charCodeAt(0);
+            c[i][j] = s.charCodeAt(i+breite*j);
         }
     }
 

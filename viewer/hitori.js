@@ -67,11 +67,11 @@ teka.viewer.hitori.HitoriViewer.prototype.asciiToData = function(ascii,d)
     this.MAX = 0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (grid[i*d+d-1][j]=='#'.charCodeAt(0)) {
+            if (grid[i*d+d-1][j]==teka.ord('#')) {
                 this.puzzle[i][j] = teka.viewer.hitori.Defaults.FILLED;
                 continue;
             }
-            if (grid[i*d+d-1][j]==' '.charCodeAt(0)) {
+            if (grid[i*d+d-1][j]==teka.ord(' ')) {
                 this.puzzle[i][j] = teka.viewer.hitori.Defaults.EMPTY;
                 continue;
             }
@@ -95,7 +95,7 @@ teka.viewer.hitori.HitoriViewer.prototype.asciiToSolution = function(ascii)
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.solution[i][j] = grid[i][j]=='#'.charCodeAt(0)?
+            this.solution[i][j] = grid[i][j]==teka.ord('#')?
                 teka.viewer.hitori.Defaults.BLACK:
                 teka.viewer.hitori.Defaults.NONE;
         }
