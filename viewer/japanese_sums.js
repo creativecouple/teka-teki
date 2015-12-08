@@ -69,20 +69,17 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.asciiToData = function(a
         return;
     }
 
-    var c = this.asciiToArray(ascii);
+    var grid = this.asciiToArray(ascii);
 
     this.topdata = teka.new_array([this.X,this.T],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.T;j++) {
-            if (c[2*this.L+2+2*i][j]==teka.ord(' ')) {
+            if (grid[2*this.L+2+2*i][j]==teka.ord(' ')) {
                 this.topdata[i][j] = -1;
-            } else if (c[2*this.L+2+2*i][j]==teka.ord('?')) {
+            } else if (grid[2*this.L+2+2*i][j]==teka.ord('?')) {
                 this.topdata[i][j] = teka.viewer.japanese_sums.Defaults.QUESTIONMARK;
-            } else if (c[2*this.L+1+2*i][j]==teka.ord(' ')) {
-                this.topdata[i][j] = c[2*this.L+2+2*i][j]-teka.ord('0');
             } else {
-                this.topdata[i][j] = c[2*this.L+2+2*i][j]-teka.ord('0')
-                                 +10*(c[2*this.L+1+2*i][j]-teka.ord('0'));
+                this.topdata[i][j] = this.getNr(grid,2*this.L+1+2*i,j,2);
             }
         }
     }
@@ -99,15 +96,12 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.asciiToData = function(a
     this.leftdata = teka.new_array([this.L,this.Y],0);
     for (var i=0;i<this.L;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*i+1][this.T+1+j]==teka.ord(' ')) {
+            if (grid[2*i+1][this.T+1+j]==teka.ord(' ')) {
                 this.leftdata[i][j] = -1;
-            } else if (c[2*i+1][this.T+1+j]==teka.ord('?')) {
+            } else if (grid[2*i+1][this.T+1+j]==teka.ord('?')) {
                 this.leftdata[i][j] = teka.viewer.japanese_sums.Defaults.QUESTIONMARK;
-            } else if (c[2*i][this.T+1+j]==teka.ord(' ')) {
-                this.leftdata[i][j] = c[2*i+1][this.T+1+j]-teka.ord('0');
             } else {
-                this.leftdata[i][j] = c[2*i+1][this.T+1+j]-teka.ord('0')
-                                  +10*(c[2*i][this.T+1+j]-teka.ord('0'));
+                this.leftdata[i][j] = this.getNr(grid,2*i,this.T+1+j,2);
             }
         }
     }
@@ -124,16 +118,13 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.asciiToData = function(a
     this.puzzle = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (c[2*this.L+2*i+2][this.T+1+j]==teka.ord('#')) {
+            if (grid[2*this.L+2*i+2][this.T+1+j]==teka.ord('#')) {
                 this.puzzle[i][j] = -1;
-            } else if (c[2*this.L+2*i+2][this.T+1+j]==teka.ord(' ')
-                       || c[2*this.L+2*i+2][this.T+1+j]==teka.ord('.')) {
+            } else if (grid[2*this.L+2*i+2][this.T+1+j]==teka.ord(' ')
+                       || grid[2*this.L+2*i+2][this.T+1+j]==teka.ord('.')) {
                 this.puzzle[i][j] = 0;
-            } else if (c[2*this.L+2*i+1][this.T+1+j]==teka.ord(' ')) {
-                this.puzzle[i][j] = c[2*this.L+2*i+2][this.T+1+j]-teka.ord('0');
             } else {
-                this.puzzle[i][j] = c[2*this.L+2*i+2][this.T+1+j]-teka.ord('0')
-                                    +10*(c[2*this.L+2*i+1][this.T+1+j]-teka.ord('0'));
+                this.puzzle[i][j] = this.getNr(grid,2*this.L+2*i+1,this.T+1+j,2);
             }
         }
     }
@@ -146,14 +137,14 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.asciiToSolution = functi
         return;
     }
 
-    var c = this.asciiToArray(ascii);
+    var grid = this.asciiToArray(ascii);
 
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.solution[i][j] = c[i][j]==teka.ord('#')
+            this.solution[i][j] = grid[i][j]==teka.ord('#')
                 ?teka.viewer.japanese_sums.Defaults.BLOCK
-                :(c[i][j]-teka.ord('0'));
+                :(grid[i][j]-teka.ord('0'));
         }
     }
 };
