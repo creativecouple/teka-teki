@@ -577,8 +577,8 @@ teka.PuzzleApplet.prototype.initStartScreen = function()
                                 this.canvas.width-2*this.values_.MARGIN,
                                 this.canvas.height-this.values_.HEAD_HEIGHT-
                                     2*this.values_.MARGIN-this.values_.GAP);
-    this.start_screen.setEvents(this.setInstructions.bind(this),
-                                this.start.bind(this));
+    this.start_screen.setEvents([this.setInstructions.bind(this),
+                                this.start.bind(this)]);
 };
 
 /** Converts the description of an spf file to a properties list. */

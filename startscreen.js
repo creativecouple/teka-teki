@@ -91,10 +91,9 @@ teka.StartScreen.prototype.setGap = function(gap) {
 };
 
 /** Sets the event which toggles the display of instructions. */
-teka.StartScreen.prototype.setEvents = function(setInstructions,start)
+teka.StartScreen.prototype.setEvents = function(events)
 {
-    this.events[0] = setInstructions;
-    this.events[1] = start;
+    this.events = events;
 };
 
 /**
