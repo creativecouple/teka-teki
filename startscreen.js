@@ -60,6 +60,12 @@ teka.StartScreen.prototype.setProperties = function(properties)
     this.properties = properties;
 };
 
+/** Sets the text on the buttons. */
+teka.StartScreen.prototype.setButtonText = function(buttonText)
+{
+    this.buttonText = buttonText;
+};
+
 /**
  * Set colors and height of buttons.
  * Calls the function in the 'superclass'. As this concept does
