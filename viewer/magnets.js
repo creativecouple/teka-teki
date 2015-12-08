@@ -512,6 +512,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.paint = function(g)
         }
     }
 
+    g.strokeStyle = '#000';
     this.drawPlus(g,0,0);
     this.drawMinus(g,S,S);
 
