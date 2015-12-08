@@ -127,7 +127,7 @@ teka.viewer.tapa.TapaViewer.prototype.getExample = function()
 /** Returns a list of automatically generated properties. */
 teka.viewer.tapa.TapaViewer.prototype.getProperties = function()
 {
-    return [teka.translate('tapa_prop_size',[this.X+'x'+this.Y])];
+    return [teka.translate('generic_size',[this.X+'x'+this.Y])];
 };
 
 //////////////////////////////////////////////////////////////////

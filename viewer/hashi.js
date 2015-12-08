@@ -139,7 +139,7 @@ teka.viewer.hashi.HashiViewer.prototype.getExample = function()
 /** Returns a list of automatically generated properties. */
 teka.viewer.hashi.HashiViewer.prototype.getProperties = function()
 {
-    return [teka.translate('hashi_prop_size',[this.X+'x'+this.Y])];
+    return [teka.translate('generic_size',[this.X+'x'+this.Y])];
 };
 
 //////////////////////////////////////////////////////////////////

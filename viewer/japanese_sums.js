@@ -182,7 +182,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.getExample = function()
 /** Returns a list of automatically generated properties. */
 teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.getProperties = function()
 {
-    return [teka.translate('japanese_sums_prop_size',[this.X+'x'+this.Y]),
+    return [teka.translate('generic_size',[this.X+'x'+this.Y]),
             teka.translate('japanese_sums_digits',[this.MAX])];
 };
 

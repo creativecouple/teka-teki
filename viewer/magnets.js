@@ -172,7 +172,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.getExample = function()
 /** Returns a list of automatically generated properties. */
 teka.viewer.magnets.MagnetsViewer.prototype.getProperties = function()
 {
-    return [teka.translate('magnets_prop_size',[this.X+'x'+this.Y])];
+    return [teka.translate('generic_size',[this.X+'x'+this.Y])];
 };
 
 //////////////////////////////////////////////////////////////////

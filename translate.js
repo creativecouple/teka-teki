@@ -130,6 +130,8 @@ teka.dictionary = {
     usage: 'Bedienung',
     usage_applet: 'Allgemein',
 
+    generic_size: 'Größe {1}.',
+    
     kropki: 'Kropki',
     kropki_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
         +'dass jede Zahl in jeder Zeile und jeder Spalte genau einmal vorkommt.\n\n'
@@ -156,7 +158,6 @@ teka.dictionary = {
         +'und ausschalten.\n\n\n'
         +'Hinweis: Der Expertenmodus kann nur genutzt werden, wenn das Kropki '
         +'maximal 9 Ziffern enthält.',
-    kropki_prop_size: 'Größe {1}.',
     kropki_unique_symbol: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     kropki_empty: 'Das markierte Feld ist leer.',
     kropki_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',
@@ -182,7 +183,6 @@ teka.dictionary = {
         +'Leertaste: Feldinhalt löschen\n\n'
         +'Plusminusplatten werden automatisch zu einer richtigen Magnetplatte, wenn sie '
         +'eine solche berühren.',
-    magnets_prop_size: 'Größe {1}.',
     magnets_empty: 'Die markierte Magnetplatte ist leer.',
     magnets_unique_symbol: 'Die markierte Magnetplatte ist noch nicht eindeutig.',
     magnets_equal_poles: 'An der markierten Stelle berühren sich zwei gleiche Pole.',
@@ -203,7 +203,6 @@ teka.dictionary = {
         +'Bedienung mit der Tastatur:\n\n'
         +'#, * und Q: Stern\n-, / und W: Leerfeld (markiert durch einen Strich)\n'
         +'Leertaste: Feldinhalt löschen',
-    starbattle_prop_size: 'Größe {1}.',
     starbattle_stars: 'Anzahl der Sterne: {1}',
     starbattle_touch: 'Die beiden markierten Sterne berühren sich.',
     starbattle_row: 'In der markierten Zeile stimmt die Anzahl der Sterne nicht.',
@@ -230,7 +229,6 @@ teka.dictionary = {
         +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n\n'
         +'In einem Feld mit Vorgaben führen #, * und Q zu einem Kreuz und die Leertaste '
         +'löscht dieses wieder.',
-    tapa_prop_size: 'Größe {1}.',
     tapa_2x2: 'Die vier markierten Felder bilden ein volles 2x2-Gebiet.',
     tapa_wrong_numbers: 'Im markierten Feld stimmen die Zahlen nicht.',
     tapa_not_connected: 'Die markierten Felder hängen nicht mit dem Rest der Schwarzfelder zusammen.',
@@ -259,7 +257,6 @@ teka.dictionary = {
         +'Brücke dazu beziehungsweise eine weniger eingezeichnet.\n'
         +'Inseln:\n'
         +'#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
-    hashi_sums_prop_size: 'Größe {1}.',
     hashi_wrong_bridges: 'In der markierten Insel stimmt die Anzahl der Brücken nicht.',
     hashi_not_connected: 'Die markierten Inseln hängen nicht mit dem Rest zusammen.',
 
@@ -292,7 +289,6 @@ teka.dictionary = {
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
         +'und ausschalten.',
-    japanese_sums_prop_size: 'Größe {1}.',
     japanese_sums_digits: 'Zahlen von 1 bis {1}.',
     japanese_sums_empty: 'Das markierte Feld ist leer.',
     japanese_sums_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
@@ -302,5 +298,20 @@ teka.dictionary = {
     japanese_sums_column_count: 'In der markierten Spalte stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
     japanese_sums_sum_wrong: 'Die markierten Zahlen ergeben nicht die entsprechende Summe am Rand.',
 
+    hitori: 'Hitori',
+    hitori_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass in den '
+        +'verbleibenden Feldern jede Zahl in jeder Zeile und jeder Spalte nur '
+        +'maximal einmal vorkommt. Alle ungeschwärzten Felder müssen miteinander '
+        +'verbunden sein (das heißt, die Schwarzfelder dürfen das Rätsel nicht '
+        +'in zwei Teile teilen). Zudem dürfen keine zwei Schwarzfelder benachbart sein.\n\n'
+        +'Für eine korrekte Lösung werden nur die Schwarzfelder gewertet.',
+    hitori_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Schwarzes Feld\n2. Klick: Weißes Feld (markiert durch einen Kreis)\n3. Klick: Feldinhalt löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch einen Kreis)\nLeertaste: Feldinhalt löschen',
+    hitori_neighbours: 'Die markierten schwarzen Felder sind benachbart.',
+    hitori_same_numbers: 'In den markierten Feldern befindet sich die gleiche Zahl.',
+    hitori_not_connected: 'Die markierten Felder sind nicht mit dem Rest der weißen Felder verbunden.',
+    
     dummy_to_avoid_comma_bug: ''
 };

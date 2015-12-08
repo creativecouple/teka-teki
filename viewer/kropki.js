@@ -136,7 +136,7 @@ teka.viewer.kropki.KropkiViewer.prototype.getExample = function()
 /** Returns a list of automatically generated properties. */
 teka.viewer.kropki.KropkiViewer.prototype.getProperties = function()
 {
-    return [teka.translate('kropki_prop_size',[this.X+'x'+this.X])];
+    return [teka.translate('generic_size',[this.X+'x'+this.X])];
 };
 
 //////////////////////////////////////////////////////////////////
