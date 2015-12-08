@@ -131,7 +131,7 @@ teka.dictionary = {
     usage_applet: 'Allgemein',
 
     generic_size: 'Größe {1}.',
-    
+
     kropki: 'Kropki',
     kropki_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
         +'dass jede Zahl in jeder Zeile und jeder Spalte genau einmal vorkommt.\n\n'
@@ -312,6 +312,6 @@ teka.dictionary = {
     hitori_neighbours: 'Die markierten schwarzen Felder sind benachbart.',
     hitori_same_numbers: 'In den markierten Feldern befindet sich die gleiche Zahl.',
     hitori_not_connected: 'Die markierten Felder sind nicht mit dem Rest der weißen Felder verbunden.',
-    
+
     dummy_to_avoid_comma_bug: ''
 };

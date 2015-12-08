@@ -21,7 +21,10 @@ teka.viewer.hitori = {};
 teka.viewer.hitori.Defaults = {
     NONE: 0,
     BLACK: 1,
-    WHITE: 2
+    WHITE: 2,
+
+    FILLED: -1,
+    EMPTY: -2
 };
 
 /** Constructor */
@@ -41,34 +44,40 @@ teka.viewer.hitori.HitoriViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
-    this.asciiToData(data.get('puzzle'));
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
     this.asciiToSolution(data.get('solution'));
-    
+
     this.f = teka.new_array([this.X,this.Y],0);
     this.c = teka.new_array([this.X,this.Y],0);
     this.error = teka.new_array([this.X,this.Y],false);
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.hitori.HitoriViewer.prototype.asciiToData = function(ascii)
+teka.viewer.hitori.HitoriViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.puzzle = teka.new_array([this.X,this.Y],0);
     this.MAX = 0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            var nr = grid[2*i+1][j]-'0'.charCodeAt(0);
-            if (grid[2*i][j]!=' '.charCodeAt(0)) {
-                nr+=10*(grid[2*i][j]-'0'.charCodeAt(0));
+            if (grid[i*d+d-1][j]=='#'.charCodeAt(0)) {
+                this.puzzle[i][j] = teka.viewer.hitori.Defaults.FILLED;
+                continue;
             }
-            this.puzzle[i][j] = nr;
-            if (nr>this.MAX) {
-                this.MAX = nr;
+            if (grid[i*d+d-1][j]==' '.charCodeAt(0)) {
+                this.puzzle[i][j] = teka.viewer.hitori.Defaults.EMPTY;
+                continue;
+            }
+            this.puzzle[i][j] = this.getNr(grid,i*d,j,d);
+            if (this.puzzle[i][j]>this.MAX) {
+                this.MAX = this.puzzle[i][j];
             }
         }
     }
@@ -80,15 +89,15 @@ teka.viewer.hitori.HitoriViewer.prototype.asciiToSolution = function(ascii)
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
             this.solution[i][j] = grid[i][j]=='#'.charCodeAt(0)?
                 teka.viewer.hitori.Defaults.BLACK:
-                teka.viewer.hitori.Defaults.WHITE;
+                teka.viewer.hitori.Defaults.NONE;
         }
     }
 };
@@ -109,8 +118,8 @@ teka.viewer.hitori.HitoriViewer.prototype.addSolution = function()
 teka.viewer.hitori.HitoriViewer.prototype.getExample = function()
 {
     return '/format 1\n/type (hitori)\n/sol false\n/X 4\n/Y 4\n'
-        +'/puzzle [ ( 3 1 4 2) ( 3 2 1 3) ( 2 3 1 4) ( 4 4 1 2) ]\n'
-        +'/solution [ (...#) (#.#.) (....) (#.#.) ]';
+        +'/puzzle [ (144 ) (1 1 ) (  2 ) (332#) ]\n'
+        +'/solution [ (..#.) (#...) (..#.) (#..#) ]';
 };
 
 /** Returns a list of automatically generated properties. */
@@ -199,10 +208,18 @@ teka.viewer.hitori.HitoriViewer.prototype.check = function()
 {
     var X = this.X;
     var Y = this.Y;
-    
+
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.f[i][j]==teka.viewer.hitori.Defaults.BLACK && 
+            if (this.puzzle[i][j]==teka.viewer.hitori.Defaults.FILLED) {
+                this.f[i][j] = teka.viewer.hitori.Defaults.BLACK;
+            }
+        }
+    }
+
+    for (var i=0;i<X-1;i++) {
+        for (var j=0;j<Y;j++) {
+            if (this.f[i][j]==teka.viewer.hitori.Defaults.BLACK &&
                 this.f[i+1][j]==teka.viewer.hitori.Defaults.BLACK) {
                 this.error[i][j] = true;
                 this.error[i+1][j] = true;
@@ -210,10 +227,10 @@ teka.viewer.hitori.HitoriViewer.prototype.check = function()
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
-            if (this.f[i][j]==teka.viewer.hitori.Defaults.BLACK && 
+            if (this.f[i][j]==teka.viewer.hitori.Defaults.BLACK &&
                 this.f[i][j+1]==teka.viewer.hitori.Defaults.BLACK) {
                 this.error[i][j] = true;
                 this.error[i][j+1] = true;
@@ -221,13 +238,13 @@ teka.viewer.hitori.HitoriViewer.prototype.check = function()
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         if (!this.checkDouble(i,0,0,1)) {
             return 'hitori_same_numbers';
         }
     }
-    
+
     for (var j=0;j<Y;j++) {
         if (!this.checkDouble(0,j,1,0)) {
             return 'hitori_same_numbers';
@@ -236,7 +253,7 @@ teka.viewer.hitori.HitoriViewer.prototype.check = function()
 
     var mark = teka.new_array([X,Y],false);
     this.fill(this.f[0][0]==teka.viewer.hitori.Defaults.BLACK?1:0,0,mark);
-    
+
     var wrong = false;
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
@@ -249,7 +266,7 @@ teka.viewer.hitori.HitoriViewer.prototype.check = function()
     if (wrong) {
         return 'hitori_not_connected';
     }
-    
+
     return true;
 };
 
@@ -257,9 +274,14 @@ teka.viewer.hitori.HitoriViewer.prototype.check = function()
 teka.viewer.hitori.HitoriViewer.prototype.checkDouble = function(x, y, dx, dy)
 {
     var used = teka.new_array([this.MAX+1],false);
-    
+
     while (x<this.X && y<this.Y) {
         if (this.f[x][y]!=teka.viewer.hitori.Defaults.BLACK) {
+            if (this.puzzle[x][y]<0) {
+                x+=dx;
+                y+=dy;
+                continue;
+            }
             if (used[this.puzzle[x][y]]) {
                 var h = this.puzzle[x][y];
                 while(x>=0 && y>=0) {
@@ -271,13 +293,13 @@ teka.viewer.hitori.HitoriViewer.prototype.checkDouble = function(x, y, dx, dy)
                 }
                 return false;
             }
-            
+
             used[this.puzzle[x][y]] = true;
         }
         x+=dx;
         y+=dy;
     }
-    
+
     return true;
 };
 
@@ -287,17 +309,17 @@ teka.viewer.hitori.HitoriViewer.prototype.fill = function(x, y, mark)
     if (x<0 || y<0 || x>=this.X || y>=this.Y) {
         return;
     }
-    
+
     if (mark[x][y]) {
         return;
     }
-    
+
     if (this.f[x][y]==teka.viewer.hitori.Defaults.BLACK) {
         return;
     }
-    
+
     mark[x][y] = true;
-    
+
     this.fill(x+1,y,mark);
     this.fill(x-1,y,mark);
     this.fill(x,y+1,mark);
@@ -322,16 +344,16 @@ teka.viewer.hitori.HitoriViewer.prototype.fill = function(x, y, mark)
  */
 teka.viewer.hitori.HitoriViewer.prototype.setMetrics = function(g)
 {
-    this.scale = Math.round(Math.min((this.width-3)/this.X,
+    this.scale = Math.floor(Math.min((this.width-3)/this.X,
                                      (this.height-3)/this.Y));
     var realwidth = this.X*this.scale+3;
     var realheight = this.Y*this.scale+3;
-    
+
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
-    
+
     if (realwidth>this.width || realheight>this.height) this.scale=false;
     return {width:realwidth,height:realheight,scale:this.scale};
 };
@@ -349,6 +371,7 @@ teka.viewer.hitori.HitoriViewer.prototype.paint = function(g)
     g.fillStyle = '#fff';
     g.fillRect(0,0,S*X,S*Y);
 
+    // paint background of the cells
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             g.fillStyle = this.isBlinking()?
@@ -357,16 +380,24 @@ teka.viewer.hitori.HitoriViewer.prototype.paint = function(g)
             g.fillRect(i*S,j*S,S,S);
         }
     }
-    
+
+    // paint content of the cells
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (!this.error[i][j] || this.f[i][j]!=teka.viewer.hitori.Defaults.BLACK) {
+            if (!this.error[i][j]
+                && this.puzzle[i][j]==teka.viewer.hitori.Defaults.FILLED) {
+                g.fillStyle = '#000';
+                g.fillRect(i*S,j*S,S,S);
+            }
+
+            if (this.puzzle[i][j]>=0) {
                 g.fillStyle = '#000';
                 g.font = this.font.font;
                 g.fillText(this.puzzle[i][j],i*S+S/2,j*S+S/2+this.font.delta);
             }
+
             g.fillStyle = this.getColorString(this.c[i][j]);
             if (this.f[i][j]==teka.viewer.hitori.Defaults.WHITE) {
                 teka.strokeOval(g,i*S+S/2,j*S+S/2,S/2);
@@ -375,7 +406,8 @@ teka.viewer.hitori.HitoriViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
+    // paint grid
     g.strokeStyle = '#000';
     for (var i=0;i<=X;i++) {
         teka.drawLine(g,i*S,0,i*S,Y*S);
@@ -383,18 +415,18 @@ teka.viewer.hitori.HitoriViewer.prototype.paint = function(g)
     for (var i=0;i<=Y;i++) {
         teka.drawLine(g,0,i*S,X*S,i*S);
     }
-    
+
     g.lineWidth = 3;
     g.strokeRect(0,0,X*S,Y*S);
     g.lineWidth = 1;
-    
+
     // paint cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle = '#f00';
         g.lineWidth = 2;
         g.strokeRect(this.x*S+3.5,this.y*S+3.5,S-7,S-7);
     }
-    
+
     g.restore();
 };
 
@@ -408,10 +440,10 @@ teka.viewer.hitori.HitoriViewer.prototype.processMouseMovedEvent = function(xc, 
 
     var oldx = this.x;
     var oldy = this.y;
-    
+
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
-    
+
     if (this.x<0) {
         this.x=0;
     }
@@ -424,7 +456,7 @@ teka.viewer.hitori.HitoriViewer.prototype.processMouseMovedEvent = function(xc, 
     if (this.y>=this.Y-1) {
         this.y=this.Y-1;
     }
-    
+
     return this.x!=oldx || this.y!=oldy;
 };
 
@@ -432,13 +464,13 @@ teka.viewer.hitori.HitoriViewer.prototype.processMouseMovedEvent = function(xc, 
 teka.viewer.hitori.HitoriViewer.prototype.processMousePressedEvent = function(xc, yc)
 {
     var erg = this.processMouseMovedEvent(xc,yc);
-    
+
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
     }
-    
+
     this.set(this.x,this.y,(this.f[this.x][this.y]+1)%3);
-    
+
     return true;
 };
 
@@ -488,7 +520,7 @@ teka.viewer.hitori.HitoriViewer.prototype.processKeyEvent = function(e)
         this.set(this.x,this.y,teka.viewer.hitori.Defaults.BLACK);
         return true;
     }
-    
+
     return false;
 };
 
@@ -501,4 +533,3 @@ teka.viewer.hitori.HitoriViewer.prototype.set = function(x, y, value)
     this.f[x][y] = value;
     this.c[x][y] = this.color;
 };
-
