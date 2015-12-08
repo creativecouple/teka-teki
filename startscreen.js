@@ -232,7 +232,7 @@ teka.StartScreen.prototype.processMousePressedEvent = function(xc,yc)
         }
     }
 
-    for (int i=1;i<this.buttonText.length;i++) {
+    for (var i=1;i<this.buttonText.length;i++) {
         if (this.activeButton===i) {
             if (this.events[i]!==false) {
                 this.events[i]();
