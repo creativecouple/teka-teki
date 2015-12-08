@@ -87,7 +87,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
             if (grid[2*i+2*d+2][2*j+2*d+1]==teka.ord(' ')) {
                 this.magnets[i][j] = teka.viewer.magnets.Defaults.LEFT;
                 this.magnets[i+1][j] = teka.viewer.magnets.Defaults.RIGHT;
-            } else if (c[2*i+2*d+1][2*j+2*d+2]==teka.ord(' ')) {
+            } else if (grid[2*i+2*d+1][2*j+2*d+2]==teka.ord(' ')) {
                 this.magnets[i][j] = teka.viewer.magnets.Defaults.TOP;
                 this.magnets[i][j+1] = teka.viewer.magnets.Defaults.BOTTOM;
             }
