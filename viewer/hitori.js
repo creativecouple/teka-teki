@@ -354,7 +354,9 @@ teka.viewer.hitori.HitoriViewer.prototype.setMetrics = function(g)
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
 
-    if (realwidth>this.width || realheight>this.height) this.scale=false;
+    if (realwidth>this.width || realheight>this.height) {
+        this.scale=false;
+    }
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 

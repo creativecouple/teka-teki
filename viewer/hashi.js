@@ -86,7 +86,7 @@ teka.viewer.hashi.HashiViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-}
+};
 
 /** Read solution from ascii art. */
 teka.viewer.hashi.HashiViewer.prototype.asciiToSolution = function(ascii)
@@ -322,7 +322,7 @@ teka.viewer.hashi.HashiViewer.prototype.fill = function(x, y)
     if (x>0 && (this.f[x-1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_1
                 || this.f[x-1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_2)) {
         var xc = x-1;
-        while (this.puzzle[xc][y]==0) {
+        while (this.puzzle[xc][y]===0) {
             xc--;
         }
         this.fill(xc,y);
@@ -331,7 +331,7 @@ teka.viewer.hashi.HashiViewer.prototype.fill = function(x, y)
     if (x<this.X-1 && (this.f[x+1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_1
                        || this.f[x+1][y]==teka.viewer.hashi.Defaults.HORIZONTAL_2)) {
         var xc = x+1;
-        while (this.puzzle[xc][y]==0) {
+        while (this.puzzle[xc][y]===0) {
             xc++;
         }
         this.fill(xc,y);
@@ -340,7 +340,7 @@ teka.viewer.hashi.HashiViewer.prototype.fill = function(x, y)
     if (y>0 && (this.f[x][y-1]==teka.viewer.hashi.Defaults.VERTICAL_1
                 || this.f[x][y-1]==teka.viewer.hashi.Defaults.VERTICAL_2)) {
         var yc = y-1;
-        while (this.puzzle[x][yc]==0) {
+        while (this.puzzle[x][yc]===0) {
             yc--;
         }
         this.fill(x,yc);
@@ -349,7 +349,7 @@ teka.viewer.hashi.HashiViewer.prototype.fill = function(x, y)
     if (y<this.Y-1 && (this.f[x][y+1]==teka.viewer.hashi.Defaults.VERTICAL_1
                        || this.f[x][y+1]==teka.viewer.hashi.Defaults.VERTICAL_2)) {
         var yc = y+1;
-        while (this.puzzle[x][yc]==0) {
+        while (this.puzzle[x][yc]===0) {
             yc++;
         }
         this.fill(x,yc);
@@ -384,7 +384,9 @@ teka.viewer.hashi.HashiViewer.prototype.setMetrics = function(g)
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
 
-    if (realwidth>this.width || realheight>this.height) this.scale=false;
+    if (realwidth>this.width || realheight>this.height) {
+        this.scale=false;
+    }
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 
@@ -643,12 +645,12 @@ teka.viewer.hashi.HashiViewer.prototype.processKeyEvent = function(e)
 teka.viewer.hashi.HashiViewer.prototype.removeBridge = function(x, y)
 {
     this.addBridges();
-    if (this.f[x][y]==0) {
+    if (this.f[x][y]===0) {
         return true;
     }
 
     if (this.c[x][y]!=this.color) {
-        return false;;
+        return false;
     }
 
     if (this.f[x][y]==teka.viewer.hashi.Defaults.HORIZONTAL_1
@@ -665,12 +667,12 @@ teka.viewer.hashi.HashiViewer.prototype.removeBridge = function(x, y)
 teka.viewer.hashi.HashiViewer.prototype.removeHorizontal = function(x, y)
 {
     // find left end of the bridge
-    while (x>0 && this.puzzle[x-1][y]==0) {
+    while (x>0 && this.puzzle[x-1][y]===0) {
         x--;
     }
 
     // remove, till we reach the right end
-    while (x<this.X && this.puzzle[x][y]==0) {
+    while (x<this.X && this.puzzle[x][y]===0) {
         this.f[x++][y] = 0;
     }
 };
@@ -679,12 +681,12 @@ teka.viewer.hashi.HashiViewer.prototype.removeHorizontal = function(x, y)
 teka.viewer.hashi.HashiViewer.prototype.removeVertical = function(x, y)
 {
     // find top end of the bridge
-    while (y>0 && this.puzzle[x][y-1]==0) {
+    while (y>0 && this.puzzle[x][y-1]===0) {
         y--;
     }
 
     // remove, till we reach the bottom end
-    while (y<this.Y && this.puzzle[x][y]==0) {
+    while (y<this.Y && this.puzzle[x][y]===0) {
         this.f[x][y++] = 0;
     }
 };
@@ -693,7 +695,7 @@ teka.viewer.hashi.HashiViewer.prototype.removeVertical = function(x, y)
 teka.viewer.hashi.HashiViewer.prototype.setBridge = function(x, y, type)
 {
     this.addBridges();
-    if (type==0) {
+    if (type===0) {
         return true;
     }
 
@@ -707,20 +709,20 @@ teka.viewer.hashi.HashiViewer.prototype.setBridge = function(x, y, type)
 teka.viewer.hashi.HashiViewer.prototype.setHorizontal = function(x, y, type)
 {
     // find left end of the bridge
-    while (x>0 && this.puzzle[x-1][y]==0) {
+    while (x>0 && this.puzzle[x-1][y]===0) {
         x--;
     }
 
     // if there is no left end, we are done
-    if (x==0) {
+    if (x===0) {
         return false;
     }
 
     var sx = x;
-    while (x<this.X && this.puzzle[x][y]==0) {
+    while (x<this.X && this.puzzle[x][y]===0) {
 
         // if there is a crossing bridge, we are done
-        if (this.f[x][y]!=0) {
+        if (this.f[x][y]!==0) {
             return false;
         }
         x++;
@@ -744,20 +746,20 @@ teka.viewer.hashi.HashiViewer.prototype.setHorizontal = function(x, y, type)
 teka.viewer.hashi.HashiViewer.prototype.setVertical = function(x, y, type)
 {
     // find top end of the bridge
-    while (y>0 && this.puzzle[x][y-1]==0) {
+    while (y>0 && this.puzzle[x][y-1]===0) {
         y--;
     }
 
     // if there is no top end, we are done
-    if (y==0) {
+    if (y===0) {
         return false;
     }
 
     var sy = y;
-    while (y<this.Y && this.puzzle[x][y]==0) {
+    while (y<this.Y && this.puzzle[x][y]===0) {
 
         // if there is a crossing bridge, we are done
-        if (this.f[x][y]!=0) {
+        if (this.f[x][y]!==0) {
             return false;
         }
         y++;

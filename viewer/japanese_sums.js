@@ -288,7 +288,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.check = function()
                 continue;
             }
 
-            if (this.f[i][j]==0 || this.f[i][j]==1000) {
+            if (this.f[i][j]===0 || this.f[i][j]==1000) {
                 this.error[i][j] = true;
                 return 'japanese_sums_empty';
             }
@@ -311,10 +311,10 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.check = function()
             if (this.f[i][j]>100) {
                 var min = this.f[i][j]%10;
                 var max = Math.floor((this.f[i][j]-100)/10);
-                if (min==0 && max==1) {
+                if (min===0 && max===1) {
                     min = 1;
                 }
-                if (min==this.MAX && max==0) {
+                if (min===this.MAX && max===0) {
                     max = this.MAX;
                 }
                 if (min!=max) {
@@ -541,7 +541,9 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.setMetrics = function(g)
     this.mediumfont = teka.getFontData(Math.round(this.scale/3)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round((this.scale-6)/4)+'px sans-serif',this.scale);
 
-    if (realwidth>this.width || realheight>this.height) this.scale=false;
+    if (realwidth>this.width || realheight>this.height) {
+        this.scale=false;
+    }
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 
@@ -595,7 +597,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
                 }
 
                 var text = this.leftdata[i][j]==teka.viewer.japanese_sums.Defaults.QUESTIONMARK?
-                    '?':this.leftdata[i][j]
+                    '?':this.leftdata[i][j];
                 g.fillStyle = '#000';
                 g.fillText(text,i*S+S/2,(j+T)*S+S/2+this.font.delta);
             }
@@ -613,7 +615,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
                 }
 
                 var text = this.topdata[i][j]==teka.viewer.japanese_sums.Defaults.QUESTIONMARK?
-                    '?':this.topdata[i][j]
+                    '?':this.topdata[i][j];
                 g.fillStyle = '#000';
                 g.fillText(text,(L+i)*S+S/2,j*S+S/2+this.font.delta);
             }
@@ -652,8 +654,9 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
             }
 
             if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.BLOCK) {
-                if (!this.error[i][j])
+                if (!this.error[i][j]) {
                     g.fillRect((L+i)*S,(T+j)*S,S,S);
+                }
                 continue;
             }
 
@@ -665,7 +668,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
             if (this.f[i][j]>=100 && this.f[i][j]<1000) {
                 var a = (this.f[i][j]-100)%10;
                 var b = Math.floor((this.f[i][j]-100)/10);
-                var tmp = (a==0?'?':a)+'-'+(b==0?'?':b);
+                var tmp = (a===0?'?':a)+'-'+(b===0?'?':b);
 
                 g.fillStyle = this.getColorString(this.c[i][j]);
                 g.font = this.mediumfont.font;
@@ -795,7 +798,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousePressedEvent
         return true;
     }
 
-    if (this.f[this.x][this.y]==0) {
+    if (this.f[this.x][this.y]===0) {
         this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.DIGIT);
     } else if (this.f[this.x][this.y]==teka.viewer.japanese_sums.Defaults.DIGIT) {
         this.set(this.x,this.y,teka.viewer.japanese_sums.Defaults.BLOCK);
@@ -918,7 +921,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.setExpert = function(h)
     }
     var a = (h-100)%10;
     var b = (h-100)/10;
-    if (b==0) {
+    if (b===0) {
         b=this.MAX;
     }
     if (a>b) {
@@ -950,13 +953,13 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.getExpert = function(h)
             }
         }
     }
-    if (min==10 && max==0) {
+    if (min===10 && max===0) {
         return 0;
     }
-    if (min==max) {
+    if (min===max) {
         return min;
     }
-    if (min==1 && max==this.MAX) {
+    if (min===1 && max===this.MAX) {
         return teka.viewer.japanese_sums.Defaults.DIGIT;
     }
     return 100+10*max+min;

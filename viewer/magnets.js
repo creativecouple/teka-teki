@@ -76,7 +76,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToData = function(ascii,d)
               case teka.ord('+'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
               case teka.ord('-'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
               case teka.ord('#'): this.puzzle[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
-              default: this.puzzle[i][j] = teka.viewer.magnets.Defaults.NONE;
+              default: this.puzzle[i][j] = teka.viewer.magnets.Defaults.NONE; break;
             }
         }
     }
@@ -139,7 +139,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.asciiToSolution = function(ascii)
               case teka.ord('+'): h[i][j] = teka.viewer.magnets.Defaults.PLUS; break;
               case teka.ord('-'): h[i][j] = teka.viewer.magnets.Defaults.MINUS; break;
               case teka.ord('#'): h[i][j] = teka.viewer.magnets.Defaults.NEUTRAL; break;
-              default: h[i][j] = teka.viewer.magnets.Defaults.NONE;
+              default: h[i][j] = teka.viewer.magnets.Defaults.NONE; break;
             }
         }
     }
@@ -404,7 +404,9 @@ teka.viewer.magnets.MagnetsViewer.prototype.setMetrics = function(g)
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
 
-    if (realwidth>this.width || realheight>this.height) this.scale=false;
+    if (realwidth>this.width || realheight>this.height) {
+        this.scale=false;
+    }
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 

@@ -67,7 +67,7 @@ teka.viewer.tapa.TapaViewer.prototype.asciiToData = function(ascii)
                 this.puzzle[i][j][1] = grid[2*i+1][2*j]==teka.ord(' ')?0:(grid[2*i+1][2*j]-teka.ord('0'));
                 this.puzzle[i][j][2] = grid[2*i][2*j+1]==teka.ord(' ')?0:(grid[2*i][2*j+1]-teka.ord('0'));
                 this.puzzle[i][j][3] = grid[2*i+1][2*j+1]==teka.ord(' ')?0:(grid[2*i+1][2*j+1]-teka.ord('0'));
-                this.puzzle[i][j].sort(function(a,b){return b-a});
+                this.puzzle[i][j].sort(function(a,b){return b-a;});
             }
         }
     }
@@ -312,12 +312,13 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
     // Find a blackend cell
     var xc = -1;
     var yc = -1;
-    outer: for (var i=0;i<X;i++)
-    for (var j=0;j<Y;j++) {
-        if (check[i][j]==teka.viewer.tapa.Defaults.BLACK) {
-            xc = i;
-            yc = j;
-            break outer;
+    outer: for (var i=0;i<X;i++) {
+        for (var j=0;j<Y;j++) {
+            if (check[i][j]==teka.viewer.tapa.Defaults.BLACK) {
+                xc = i;
+                yc = j;
+                break outer;
+            }
         }
     }
 
@@ -395,7 +396,9 @@ teka.viewer.tapa.TapaViewer.prototype.setMetrics = function(g)
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round(2*this.scale/5)+'px sans-serif',this.scale);
 
-    if (realwidth>this.width || realheight>this.height) this.scale=false;
+    if (realwidth>this.width || realheight>this.height) {
+        this.scale=false;
+    }
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 
@@ -442,7 +445,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
                 continue;
             }
 
-            if (this.puzzle[i][j][0]==0) {
+            if (this.puzzle[i][j][0]===0) {
                 if (this.f[i][j]==teka.viewer.tapa.Defaults.NONE) {
                     continue;
                 }
@@ -466,13 +469,13 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
 
             g.fillStyle = '#000';
             g.strokeStyle = '#000';
-            if (this.puzzle[i][j][1]==0) {
+            if (this.puzzle[i][j][1]===0) {
                 g.font = this.font.font;
                 g.fillText(this.puzzle[i][j][0],i*S+S/2,j*S+S/2+this.font.delta);
                 continue;
             }
 
-            if (this.puzzle[i][j][2]==0) {
+            if (this.puzzle[i][j][2]===0) {
                 teka.drawLine(g,i*S+S,j*S,i*S,j*S+S);
                 g.font = this.smallfont.font;
                 g.fillText(this.puzzle[i][j][0],i*S+S/2-S/4,j*S+S/2-S/4+this.font.delta);
@@ -480,7 +483,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
                 continue;
             }
 
-            if (this.puzzle[i][j][3]==0) {
+            if (this.puzzle[i][j][3]===0) {
                 teka.drawLine(g,i*S,j*S,i*S+S/2,j*S+S/2);
                 teka.drawLine(g,i*S+S,j*S,i*S+S/2,j*S+S/2);
                 teka.drawLine(g,i*S+S/2,j*S+S,i*S+S/2,j*S+S/2);

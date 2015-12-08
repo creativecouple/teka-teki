@@ -71,7 +71,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.asciiToData = function(ascii)
     var nr=0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (this.puzzle[i][j]==0) {
+            if (this.puzzle[i][j]===0) {
                 this.fillArea(grid,i,j,++nr);
             }
         }
@@ -375,7 +375,9 @@ teka.viewer.starbattle.StarbattleViewer.prototype.setMetrics = function(g)
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
 
-    if (realwidth>this.width || realheight>this.height) this.scale=false;
+    if (realwidth>this.width || realheight>this.height) {
+        this.scale=false;
+    }
     return {width:realwidth,height:realheight,scale:this.scale};
 };
 
