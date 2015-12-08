@@ -72,6 +72,7 @@ teka.dictionary = {
     failed_attempts: 'Sie hatten {1} Fehlversuche.',
     green: 'grün',
     green_a: 'grünen',
+    init: 'Initialisieren',
     instructions: 'Anleitung',
     instructions_descr: 'Zeigt die Aufgabenstellung und eine Anleitung zur Bedienung dieses Applets an.',
     instructions_global: 'Testen (Strg-Enter): Wenn Sie auf diesen Button klicken, überprüft '
