@@ -212,9 +212,9 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
     var Y = this.Y;
 
     // Copy to array check, setting places with given numbers to 0
-    var check = teka.new_array([this.X,this.Y],0);
-    for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.Y;j++) {
+    var check = teka.new_array([X,Y],0);
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<Y;j++) {
             check[i][j] = this.f[i][j];
             if (this.puzzle[i][j][0]!=0) {
                 check[i][j] = teka.viewer.tapa.Defaults.NONE;
@@ -229,8 +229,8 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
     }
 
     // Check for 2x2-squares
-    for (var i=0;i<this.X-1;i++) {
-        for (var j=0;j<this.Y-1;j++) {
+    for (var i=0;i<X-1;i++) {
+        for (var j=0;j<Y-1;j++) {
             if (check[i][j]==teka.viewer.tapa.Defaults.BLACK
                 && check[i+1][j]==teka.viewer.tapa.Defaults.BLACK
                 && check[i][j+1]==teka.viewer.tapa.Defaults.BLACK
@@ -263,8 +263,8 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
         4,5,15,6,15,17,16,7,5,6,17,7,6,7,7,8];
 
     // Checking if the numbers are correct
-    for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.Y;j++) {
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j][0]!=0) {
                 // calculate a value from the 8 touching cells,
                 // starting at the top and proceeding clockwise.
@@ -272,19 +272,19 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
                 if (j>0 && check[i][j-1]==teka.viewer.tapa.Defaults.BLACK) {
                     h+=1;
                 }
-                if (i<this.X-1 && j>0 && check[i+1][j-1]==teka.viewer.tapa.Defaults.BLACK) {
+                if (i<X-1 && j>0 && check[i+1][j-1]==teka.viewer.tapa.Defaults.BLACK) {
                     h+=2;
                 }
-                if (i<this.X-1 && check[i+1][j]==teka.viewer.tapa.Defaults.BLACK) {
+                if (i<X-1 && check[i+1][j]==teka.viewer.tapa.Defaults.BLACK) {
                     h+=4;
                 }
-                if (i<this.X-1 && j<this.Y-1 && check[i+1][j+1]==teka.viewer.tapa.Defaults.BLACK) {
+                if (i<X-1 && j<Y-1 && check[i+1][j+1]==teka.viewer.tapa.Defaults.BLACK) {
                     h+=8;
                 }
-                if (j<this.Y-1 && check[i][j+1]==teka.viewer.tapa.Defaults.BLACK) {
+                if (j<Y-1 && check[i][j+1]==teka.viewer.tapa.Defaults.BLACK) {
                     h+=16;
                 }
-                if (i>0 && j<this.Y-1 && check[i-1][j+1]==teka.viewer.tapa.Defaults.BLACK) {
+                if (i>0 && j<Y-1 && check[i-1][j+1]==teka.viewer.tapa.Defaults.BLACK) {
                     h+=32;
                 }
                 if (i>0 && check[i-1][j]==teka.viewer.tapa.Defaults.BLACK) {
@@ -312,8 +312,8 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
     // Find a blackend cell
     var xc = -1;
     var yc = -1;
-    outer: for (var i=0;i<this.X;i++)
-    for (var j=0;j<this.Y;j++) {
+    outer: for (var i=0;i<X;i++)
+    for (var j=0;j<Y;j++) {
         if (check[i][j]==teka.viewer.tapa.Defaults.BLACK) {
             xc = i;
             yc = j;
@@ -326,12 +326,12 @@ teka.viewer.tapa.TapaViewer.prototype.check = function()
         return true;
     }
 
-    var mark = teka.new_array([this.X,this.Y],false);
+    var mark = teka.new_array([X,Y],false);
     this.fill(mark,xc,yc,check);
 
     var ok = true;
-    for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.Y;j++) {
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<Y;j++) {
             if (check[i][j]==teka.viewer.tapa.Defaults.BLACK && !mark[i][j]) {
                 this.error[i][j] = true;
                 ok = false;
