@@ -121,3 +121,9 @@ teka.Display.prototype.processKeyEvent = function(e)
 {
     return false;
 };
+
+/** An eventhandler for keydown. Does nothing. */
+teka.Display.prototype.processKeyUpEvent = function(e)
+{
+    return false;
+};

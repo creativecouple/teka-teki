@@ -313,5 +313,22 @@ teka.dictionary = {
     hitori_same_numbers: 'In den markierten Feldern befindet sich die gleiche Zahl.',
     hitori_not_connected: 'Die markierten Felder sind nicht mit dem Rest der weißen Felder verbunden.',
 
+    masyu: 'Masyu',
+    masyu_instructions: 'Zeichnen Sie in das Rätsel einen Rundweg ein, der durch jedes Feld mit einem'
+        +' Kreis hindurchgeht und in den Feldern im 90°-Winkel abbiegen kann.'
+        +' In Feldern mit einem schwarzen Kreis muss er dabei im 90°-Winkel'
+        +' abbiegen und in beiden Richtungen im nächsten Feld geradeaus'
+        +' hindurchgehen. Durch Felder mit einem weißen Kreis muss er geradeaus'
+        +' hindurchgehen und in mindestens einem der beiden Nachbarfelder im'
+        +' 90°-Winkel abbiegen.',
+    masyu_usage: 'Bedienung mit der Maus:\n\n'
+        +'Ziehen Sie bei gedrückter Maustaste von einem Feld zum Nachbarfeld, um eine Linie zu zeichnen. '
+        +'Wiederholen Sie diesen Prozess, um zu markieren, dass die entsprechende Linie nicht vorhanden ist (markiert durch ein Kreuz) '
+        +'und wiederholen Sie diesen Prozess erneut, um wieder alles zu löschen.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Bewegen Sie den Curser bei gedrückter SHIFT-Taste um eine Linie zu zeichnen. '
+        +'Wiederholen Sie diesen Prozess um zu markieren, dass die entsprechende Linie nicht vorhanden ist (markiert durch ein Kreuz) '
+        +'und wiederholen Sie diesen Prozess erneut, um wieder alles zu löschen.',
+    
     dummy_to_avoid_comma_bug: ''
 };

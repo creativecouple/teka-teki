@@ -328,6 +328,9 @@ teka.PuzzleApplet.prototype.init = function()
         this.canvas.addEventListener('keydown',
                                      this.keyPressedListener.bind(this),
                                      false);
+        this.canvas.addEventListener('keyup',
+                                     this.keyUpListener.bind(this),
+                                     false);
         this.canvas.focus();
     }));
 };
@@ -394,7 +397,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
 teka.PuzzleApplet.prototype.correctType = function(type)
 {
     var whitelist = ['hashi','hitori','japanese_sums','kropki','magnets',
-                     'starbattle','tapa'];
+                     'masyu','starbattle','tapa'];
 
     for (var i=0;i<whitelist.length;i++) {
         if (whitelist[i]===type) {
@@ -827,6 +830,38 @@ teka.PuzzleApplet.prototype.keyPressedListener = function(e)
     }
 
     if (this.layout.processKeyEvent(myEvent)) {
+        this.paint();
+        teka.stopPropagation(e);
+        return false;
+    }
+
+    this.canvas.focus();
+    return true;
+};
+
+/** Eventhandler for keyup events. */
+teka.PuzzleApplet.prototype.keyUpListener = function(e)
+{
+    if (teka.error) {
+        this.paint();
+        return true;
+    }
+
+    if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
+        return true;
+    }
+
+    var myEvent = teka.normalizeKeyEvent(e);
+
+    if (this.showInstructions) {
+        return true;
+    }
+
+    if (this.showStart) {
+        return true;
+    }
+
+    if (this.layout.processKeyUpEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
         return false;

@@ -106,3 +106,16 @@ teka.Layout.prototype.processKeyEvent = function(e)
 
     return paint;
 };
+
+/** Handles keyup events by sending them to the tools. */
+teka.Layout.prototype.processKeyUpEvent = function(e)
+{
+    var paint = false;
+    for (var i=0;i<this.tools.length;i++) {
+        if (this.tools[i].processKeyUpEvent(e)) {
+            paint = true;
+        }
+    }
+
+    return paint;
+};

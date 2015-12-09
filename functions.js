@@ -312,3 +312,4 @@ teka.KEY_Q = 81;
 teka.KEY_S = 83;
 teka.KEY_W = 87;
 teka.KEY_X = 88;
+teka.KEY_SHIFT = 16;
