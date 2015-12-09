@@ -158,7 +158,7 @@ teka.ColorTool.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.ColorTool.prototype.processMouseMovedEvent = function(xc,yc)
+teka.ColorTool.prototype.processMousemoveEvent = function(xc,yc)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===false) {
@@ -193,7 +193,7 @@ teka.ColorTool.prototype.processMouseMovedEvent = function(xc,yc)
 };
 
 /** Handle mousedown event */
-teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
+teka.ColorTool.prototype.processMousedownEvent = function(xc,yc)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===false) {
@@ -234,7 +234,7 @@ teka.ColorTool.prototype.processMousePressedEvent = function(xc,yc)
  * do not have more than 12 function keys. Anyway, I cannot imagine,
  * that having more than 8 colors is useful.
  */
-teka.ColorTool.prototype.processKeyEvent = function(e)
+teka.ColorTool.prototype.processKeydownEvent = function(e)
 {
     if (e.key>=teka.KEY_F5 && e.key<=teka.KEY_F12) {
         var y = e.key-teka.KEY_F5;

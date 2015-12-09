@@ -41,7 +41,7 @@ teka.viewer.Defaults = {
         '#101010','#303030','#505050','#707070',
         '#909090','#A0A0A0','#B0B0B0','#C0C0C0'
     ],
-    
+
     NOTHING: 0,
     PRESSED: 1,
     DRAGGED: 2
@@ -71,7 +71,7 @@ teka.viewer.PuzzleViewer = function(data)
 
     this.color = 0;
     this.colortool = false;
-    
+
     this.state = teka.viewer.Defaults.NOTHING;
     this.startx = false;
     this.starty = false;

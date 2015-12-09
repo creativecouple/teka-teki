@@ -543,7 +543,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.tapa.TapaViewer.prototype.processMouseMovedEvent = function(xc, yc)
+teka.viewer.tapa.TapaViewer.prototype.processMousemoveEvent = function(xc, yc)
 {
     xc = xc-this.deltaX-3;
     yc = yc-this.deltaY-3;
@@ -571,9 +571,9 @@ teka.viewer.tapa.TapaViewer.prototype.processMouseMovedEvent = function(xc, yc)
 };
 
 /** Handles mousedown event. */
-teka.viewer.tapa.TapaViewer.prototype.processMousePressedEvent = function(xc, yc)
+teka.viewer.tapa.TapaViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    var erg = this.processMouseMovedEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc);
 
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
@@ -590,7 +590,7 @@ teka.viewer.tapa.TapaViewer.prototype.processMousePressedEvent = function(xc, yc
 };
 
 /** Handles keydown event. */
-teka.viewer.tapa.TapaViewer.prototype.processKeyEvent = function(e)
+teka.viewer.tapa.TapaViewer.prototype.processKeydownEvent = function(e)
 {
     if (e.key==teka.KEY_DOWN) {
         if (this.y<this.Y-1) {

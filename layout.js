@@ -51,7 +51,7 @@ teka.Layout.prototype.paint = function(g)
 };
 
 /** Handles mousemove events by sending them to the tools. */
-teka.Layout.prototype.processMouseMovedEvent = function(xc,yc)
+teka.Layout.prototype.processMousemoveEvent = function(xc,yc)
 {
     var paint = false;
     for (var i=1;i<this.tools.length;i++) {
@@ -62,8 +62,8 @@ teka.Layout.prototype.processMouseMovedEvent = function(xc,yc)
 
     for (var i=0;i<this.tools.length;i++) {
         if (this.tools[i].inExtent(xc,yc)) {
-            if (this.tools[i].processMouseMovedEvent(xc-this.tools[i].left,
-                                                     yc-this.tools[i].top)) {
+            if (this.tools[i].processMousemoveEvent(xc-this.tools[i].left,
+                                                    yc-this.tools[i].top)) {
                 paint = true;
             }
         }
@@ -73,13 +73,13 @@ teka.Layout.prototype.processMouseMovedEvent = function(xc,yc)
 };
 
 /** Handles mousedown events by sending them to the tools. */
-teka.Layout.prototype.processMousePressedEvent = function(xc,yc)
+teka.Layout.prototype.processMousedownEvent = function(xc,yc)
 {
     var paint = false;
     for (var i=0;i<this.tools.length;i++) {
         if (this.tools[i].inExtent(xc,yc)) {
-            if (this.tools[i].processMousePressedEvent(xc-this.tools[i].left,
-                                                       yc-this.tools[i].top)) {
+            if (this.tools[i].processMousedownEvent(xc-this.tools[i].left,
+                                                    yc-this.tools[i].top)) {
                 paint = true;
             }
         }
@@ -89,7 +89,7 @@ teka.Layout.prototype.processMousePressedEvent = function(xc,yc)
 };
 
 /** Handles keydown events by sending them to the tools. */
-teka.Layout.prototype.processKeyEvent = function(e)
+teka.Layout.prototype.processKeydownEvent = function(e)
 {
     var paint = false;
     for (var i=1;i<this.tools.length;i++) {
@@ -99,7 +99,7 @@ teka.Layout.prototype.processKeyEvent = function(e)
     }
 
     for (var i=0;i<this.tools.length;i++) {
-        if (this.tools[i].processKeyEvent(e)) {
+        if (this.tools[i].processKeydownEvent(e)) {
             paint = true;
         }
     }
@@ -108,11 +108,11 @@ teka.Layout.prototype.processKeyEvent = function(e)
 };
 
 /** Handles keyup events by sending them to the tools. */
-teka.Layout.prototype.processKeyUpEvent = function(e)
+teka.Layout.prototype.processKeyupEvent = function(e)
 {
     var paint = false;
     for (var i=0;i<this.tools.length;i++) {
-        if (this.tools[i].processKeyUpEvent(e)) {
+        if (this.tools[i].processKeyupEvent(e)) {
             paint = true;
         }
     }

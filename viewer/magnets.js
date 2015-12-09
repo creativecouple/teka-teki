@@ -594,7 +594,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.drawPlusMinus = function(g, x, y)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.magnets.MagnetsViewer.prototype.processMouseMovedEvent = function(xc, yc)
+teka.viewer.magnets.MagnetsViewer.prototype.processMousemoveEvent = function(xc, yc)
 {
     xc = xc-this.deltaX-1;
     yc = yc-this.deltaY-1;
@@ -622,9 +622,9 @@ teka.viewer.magnets.MagnetsViewer.prototype.processMouseMovedEvent = function(xc
 };
 
 /** Handles mousedown event. */
-teka.viewer.magnets.MagnetsViewer.prototype.processMousePressedEvent = function(xc, yc)
+teka.viewer.magnets.MagnetsViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    var erg = this.processMouseMovedEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc);
 
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
@@ -636,7 +636,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.processMousePressedEvent = function(
 };
 
 /** Handles keydown event. */
-teka.viewer.magnets.MagnetsViewer.prototype.processKeyEvent = function(e)
+teka.viewer.magnets.MagnetsViewer.prototype.processKeydownEvent = function(e)
 {
     if (e.key==teka.KEY_DOWN) {
         if (this.y<this.Y-1) {

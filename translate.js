@@ -329,6 +329,6 @@ teka.dictionary = {
         +'Bewegen Sie den Curser bei gedrückter SHIFT-Taste um eine Linie zu zeichnen. '
         +'Wiederholen Sie diesen Prozess um zu markieren, dass die entsprechende Linie nicht vorhanden ist (markiert durch ein Kreuz) '
         +'und wiederholen Sie diesen Prozess erneut, um wieder alles zu löschen.',
-    
+
     dummy_to_avoid_comma_bug: ''
 };

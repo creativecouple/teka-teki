@@ -543,7 +543,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,yc)
+teka.viewer.kropki.KropkiViewer.prototype.processMousemoveEvent = function(xc,yc)
 {
     xc = xc-this.deltaX-1;
     yc = yc-this.deltaY-1;
@@ -578,9 +578,9 @@ teka.viewer.kropki.KropkiViewer.prototype.processMouseMovedEvent = function(xc,y
 };
 
 /** Handles mousedown event. */
-teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc,yc)
+teka.viewer.kropki.KropkiViewer.prototype.processMousedownEvent = function(xc,yc)
 {
-    var erg = this.processMouseMovedEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc);
 
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.X) {
         return erg;
@@ -614,7 +614,7 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousePressedEvent = function(xc
 };
 
 /** Handles keydown event. */
-teka.viewer.kropki.KropkiViewer.prototype.processKeyEvent = function(e)
+teka.viewer.kropki.KropkiViewer.prototype.processKeydownEvent = function(e)
 {
     this.exp = false;
 

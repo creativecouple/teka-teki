@@ -105,25 +105,31 @@ teka.Display.prototype.paint = function(g)
 };
 
 /** An eventhandler for mousemove. Does nothing. */
-teka.Display.prototype.processMouseMovedEvent = function(xc,yc)
+teka.Display.prototype.processMousemoveEvent = function(xc,yc)
 {
     return false;
 };
 
 /** An eventhandler for mousedown. Does nothing. */
-teka.Display.prototype.processMousePressedEvent = function(xc,yc)
+teka.Display.prototype.processMousedownEvent = function(xc,yc)
+{
+    return false;
+};
+
+/** An eventhandler for mouseup. Does nothing. */
+teka.Display.prototype.processMouseupEvent = function(xc,yc)
 {
     return false;
 };
 
 /** An eventhandler for keydown. Does nothing. */
-teka.Display.prototype.processKeyEvent = function(e)
+teka.Display.prototype.processKeydownEvent = function(e)
 {
     return false;
 };
 
 /** An eventhandler for keydown. Does nothing. */
-teka.Display.prototype.processKeyUpEvent = function(e)
+teka.Display.prototype.processKeyupEvent = function(e)
 {
     return false;
 };

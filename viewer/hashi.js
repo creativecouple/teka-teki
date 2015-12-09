@@ -485,7 +485,7 @@ teka.viewer.hashi.HashiViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.hashi.HashiViewer.prototype.processMouseMovedEvent = function(xc, yc)
+teka.viewer.hashi.HashiViewer.prototype.processMousemoveEvent = function(xc, yc)
 {
     xc = xc-this.deltaX-1;
     yc = yc-this.deltaY-1;
@@ -513,9 +513,9 @@ teka.viewer.hashi.HashiViewer.prototype.processMouseMovedEvent = function(xc, yc
 };
 
 /** Handles mousedown event. */
-teka.viewer.hashi.HashiViewer.prototype.processMousePressedEvent = function(xc, yc)
+teka.viewer.hashi.HashiViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    var erg = this.processMouseMovedEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc);
 
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
@@ -542,7 +542,7 @@ teka.viewer.hashi.HashiViewer.prototype.processMousePressedEvent = function(xc, 
 };
 
 /** Handles keydown event. */
-teka.viewer.hashi.HashiViewer.prototype.processKeyEvent = function(e)
+teka.viewer.hashi.HashiViewer.prototype.processKeydownEvent = function(e)
 {
     if (e.key==teka.KEY_DOWN) {
         if (this.y<this.Y-1) {

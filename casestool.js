@@ -117,7 +117,7 @@ teka.CasesTool.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
+teka.CasesTool.prototype.processMousemoveEvent = function(xc,yc)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===-1) {
@@ -142,7 +142,7 @@ teka.CasesTool.prototype.processMouseMovedEvent = function(xc,yc)
 };
 
 /** Handle mousedown event */
-teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
+teka.CasesTool.prototype.processMousedownEvent = function(xc,yc)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===-1) {
@@ -167,7 +167,7 @@ teka.CasesTool.prototype.processMousePressedEvent = function(xc,yc)
 };
 
 /** Handle keydown event */
-teka.CasesTool.prototype.processKeyEvent = function(e)
+teka.CasesTool.prototype.processKeydownEvent = function(e)
 {
     if (e.key==teka.KEY_PAGE_UP) {
         if (this.stack.length<this.maxLevel) {

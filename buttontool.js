@@ -92,7 +92,7 @@ teka.ButtonTool.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
+teka.ButtonTool.prototype.processMousemoveEvent = function(xc,yc)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===-1) {
@@ -107,7 +107,7 @@ teka.ButtonTool.prototype.processMouseMovedEvent = function(xc,yc)
 };
 
 /** Handle mousedown event */
-teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
+teka.ButtonTool.prototype.processMousedownEvent = function(xc,yc)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===-1) {
@@ -126,7 +126,7 @@ teka.ButtonTool.prototype.processMousePressedEvent = function(xc,yc)
 };
 
 /** Handle keydown event */
-teka.ButtonTool.prototype.processKeyEvent = function(e)
+teka.ButtonTool.prototype.processKeydownEvent = function(e)
 {
     if (e.key==teka.KEY_ENTER && e.ctrl===true) {
         if (this.events[0]!==false) {

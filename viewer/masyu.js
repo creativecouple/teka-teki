@@ -42,7 +42,7 @@ teka.viewer.masyu.MasyuViewer.prototype.initData = function(data)
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
     this.asciiToData(data.get('puzzle'));
-    
+
     this.fr = teka.new_array([this.X-1,this.Y],0);
     this.fu = teka.new_array([this.X,this.Y-1],0);
     this.cr = teka.new_array([this.X-1,this.Y],0);
@@ -56,9 +56,9 @@ teka.viewer.masyu.MasyuViewer.prototype.asciiToData = function(ascii)
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.puzzle = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -75,14 +75,14 @@ teka.viewer.masyu.MasyuViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-    
+
     sr = teka.new_array([this.X-1,this.Y],0);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
             sr[i][j] = grid[2*i+2][2*j+1]==teka.ord('-')?1:0;
         }
     }
-    
+
     su = teka.new_array([this.X,this.Y-1],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
@@ -266,7 +266,7 @@ teka.viewer.masyu.MasyuViewer.prototype.check = function()
             }
         }
     }
-    
+
     var mark = teka.new_array([X,Y],false);
     for (var i=X-1;i>=0;i--) {
         for (var j=Y-1;j>=0;j--) {
@@ -448,7 +448,7 @@ teka.viewer.masyu.MasyuViewer.prototype.setMetrics = function(g)
                                      (this.height-3)/this.Y));
     var realwidth = this.X*this.scale+3;
     var realheight = this.Y*this.scale+3;
-    
+
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
 
@@ -470,24 +470,24 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
 
     g.fillStyle = '#fff';
     g.fillRect(0,0,S*X,S*Y);
-    
+
     g.fillStyle = '#0f0';
     g.fillRect(-10,-10,this.width+20,this.height+20);
     g.fillStyle = '#f00';
     var realwidth = this.X*this.scale+3;
     var realheight = this.Y*this.scale+3;
     g.fillRect(-1,-1,realwidth,realheight);
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             g.fillStyle = this.isBlinking()?
                 this.getBlinkColor(i,j,X,this.f[i][j]):
                 (this.error[i][j]?'#f00':'#fff');
-            
+
             g.fillRect(i*S,j*S,S,S);
         }
     }
-    
+
     g.strokeStyle = '#000';
     for (var i=0;i<=X;i++) {
         teka.drawLine(g,i*S,0,i*S,Y*S);
@@ -495,7 +495,7 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
     for (var i=0;i<=Y;i++) {
         teka.drawLine(g,0,i*S,X*S,i*S);
     }
-    
+
     g.lineWidth = 3;
     g.strokeRect(0,0,X*S,Y*S);
     g.lineWidth = 1;
@@ -513,7 +513,7 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
     g.lineCap = 'square';
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
@@ -533,7 +533,7 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
             g.strokeStyle = this.getColorString(this.cu[i][j]);
@@ -565,24 +565,24 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
             g.fillRect(Math.floor(this.x*S+S/2)-3.5,Math.floor(this.y*S+S/2)-3.5,7,7);
         }
     }
-    
+
     g.restore();
 };
 
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.masyu.MasyuViewer.prototype.processMouseMovedEvent = function(xc, yc)
+teka.viewer.masyu.MasyuViewer.prototype.processMousemoveEvent = function(xc, yc)
 {
     xc = xc-this.deltaX-1;
     yc = yc-this.deltaY-1;
 
     var oldx = this.x;
     var oldy = this.y;
-    
+
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
-    
+
     if (this.x<0) {
         this.x=0;
     }
@@ -595,19 +595,19 @@ teka.viewer.masyu.MasyuViewer.prototype.processMouseMovedEvent = function(xc, yc
     if (this.y>=this.Y) {
         this.y=this.Y-1;
     }
-    
+
     return this.x!=oldx || this.y!=oldy;
 };
 
 /** Handles mousedown event. */
-teka.viewer.masyu.MasyuViewer.prototype.processMousePressedEvent = function(xc, yc)
+teka.viewer.masyu.MasyuViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    this.processMouseMovedEvent(xc,yc);
-    
+    this.processMousemoveEvent(xc,yc);
+
     this.startx = this.x;
     this.starty = this.y;
     this.state = teka.viewer.Defaults.PRESSED;
-    
+
     return true;
 };
 
@@ -615,7 +615,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processMousePressedEvent = function(xc, 
 teka.viewer.masyu.MasyuViewer.prototype.processMouseReleasedEvent = function(xc, yc)
 {
     this.processMouseMovedEvent(xc,yc);
-    
+
     this.state = teka.viewer.Defaults.NOTHING;
     return true;
 };
@@ -628,17 +628,17 @@ teka.viewer.masyu.MasyuViewer.prototype.processMouseDraggedEvent = function(xc, 
     }
 
     var erg = this.processMouseMovedEvent(xc,yc);
-    
+
     var sx = this.startx;
     var sy = this.starty;
     this.startx = this.x;
     this.starty = this.y;
-    
-    
+
+
     if (this.x==sx && this.y==sy) {
         return erg;
     }
-    
+
     if (this.x==sx) {
         var delta = sy<this.y?1:-1;
         for (var j=sy;j!=this.y;j+=delta) {
@@ -646,7 +646,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processMouseDraggedEvent = function(xc, 
         }
         return true;
     }
-    
+
     if (this.y==sy) {
         var delta = sx<this.x?1:-1;
         for (var i=sx;i!=this.x;i+=delta) {
@@ -654,16 +654,16 @@ teka.viewer.masyu.MasyuViewer.prototype.processMouseDraggedEvent = function(xc, 
         }
         return true;
     }
-    
+
     return erg;
 };
 
 /** Handles keydown event. */
-teka.viewer.masyu.MasyuViewer.prototype.processKeyEvent = function(e)
+teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
 {
     this.state = e.shift?teka.viewer.Defaults.PRESSED:
         teka.viewer.Defaults.NOTHING;
-    
+
     if (e.key==teka.KEY_DOWN) {
         if (this.y<this.Y-1) {
             if (e.shift) {
@@ -704,12 +704,12 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeyEvent = function(e)
     if (e.key==teka.KEY_SHIFT) {
         return true;
     }
-    
+
     return false;
 };
 
 /** Handles keyup event. */
-teka.viewer.masyu.MasyuViewer.prototype.processKeyUpEvent = function(e)
+teka.viewer.masyu.MasyuViewer.prototype.processKeyupEvent = function(e)
 {
     if (e.key==teka.KEY_SHIFT) {
         this.state = teka.viewer.Defaults.NOTHING;
@@ -737,11 +737,11 @@ teka.viewer.masyu.MasyuViewer.prototype.setr = function(x, y, value)
     if (x<0 || x>=this.X-1 || y<0 || y>=this.Y) {
         return;
     }
-    
+
     if (this.fr[x][y]!=0 && this.cr[x][y]!=this.color) {
         return;
     }
-    
+
     this.fr[x][y] = value;
     this.cr[x][y] = this.color;
 };
@@ -752,11 +752,11 @@ teka.viewer.masyu.MasyuViewer.prototype.setu = function(x, y, value)
     if (x<0 || x>=this.X || y<0 || y>=this.Y-1) {
         return;
     }
-    
+
     if (this.fu[x][y]!=0 && this.cu[x][y]!=this.color) {
         return;
     }
-    
+
     this.fu[x][y] = value;
     this.cu[x][y] = this.color;
 };
@@ -768,14 +768,13 @@ teka.viewer.masyu.MasyuViewer.prototype.get = function(x, y, horizontal)
         if (x<0 || x>=this.X-1 || y<0 || y>=this.Y) {
             return 0;
         }
-        
+
         return this.fr[x][y];
-    } 
-    
+    }
+
     if (x<0 || x>=this.X || y<0 || y>=this.Y-1) {
         return 0;
     }
-    
+
     return this.fu[x][y];
 };
-

@@ -210,7 +210,7 @@ teka.StartScreen.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.StartScreen.prototype.processMouseMovedEvent = function(xc,yc)
+teka.StartScreen.prototype.processMousemoveEvent = function(xc,yc)
 {
     var last = this.activeButton;
     this.activeButton = this.getButton(xc,yc);
@@ -218,7 +218,7 @@ teka.StartScreen.prototype.processMouseMovedEvent = function(xc,yc)
 };
 
 /** Handle mousedown event */
-teka.StartScreen.prototype.processMousePressedEvent = function(xc,yc)
+teka.StartScreen.prototype.processMousedownEvent = function(xc,yc)
 {
     var last = this.activeButton;
     this.activeButton = this.getButton(xc,yc);
@@ -244,7 +244,7 @@ teka.StartScreen.prototype.processMousePressedEvent = function(xc,yc)
 };
 
 /** Handle keydown event */
-teka.StartScreen.prototype.processKeyEvent = function(e)
+teka.StartScreen.prototype.processKeydownEvent = function(e)
 {
     if (e.key==teka.KEY_DOWN) {
         if (this.activeButton===false) {
