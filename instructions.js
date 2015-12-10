@@ -254,7 +254,7 @@ teka.Instructions.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.Instructions.prototype.processMousemoveEvent = function(xc,yc)
+teka.Instructions.prototype.processMousemoveEvent = function(xc,yc,pressed)
 {
     var last = this.activeButton;
     this.activeButton = this.getButton(xc,yc);

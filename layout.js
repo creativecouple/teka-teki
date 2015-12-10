@@ -51,7 +51,7 @@ teka.Layout.prototype.paint = function(g)
 };
 
 /** Handles mousemove events by sending them to the tools. */
-teka.Layout.prototype.processMousemoveEvent = function(xc,yc)
+teka.Layout.prototype.processMousemoveEvent = function(xc,yc,pressed)
 {
     var paint = false;
     for (var i=1;i<this.tools.length;i++) {
@@ -63,7 +63,9 @@ teka.Layout.prototype.processMousemoveEvent = function(xc,yc)
     for (var i=0;i<this.tools.length;i++) {
         if (this.tools[i].inExtent(xc,yc)) {
             if (this.tools[i].processMousemoveEvent(xc-this.tools[i].left,
-                                                    yc-this.tools[i].top)) {
+                                                    yc-this.tools[i].top,
+                                                    pressed))
+{
                 paint = true;
             }
         }
@@ -80,6 +82,22 @@ teka.Layout.prototype.processMousedownEvent = function(xc,yc)
         if (this.tools[i].inExtent(xc,yc)) {
             if (this.tools[i].processMousedownEvent(xc-this.tools[i].left,
                                                     yc-this.tools[i].top)) {
+                paint = true;
+            }
+        }
+    }
+
+    return paint;
+};
+
+/** Handles mousedown events by sending them to the tools. */
+teka.Layout.prototype.processMouseupEvent = function(xc,yc)
+{
+    var paint = false;
+    for (var i=0;i<this.tools.length;i++) {
+        if (this.tools[i].inExtent(xc,yc)) {
+            if (this.tools[i].processMouseupEvent(xc-this.tools[i].left,
+                                                  yc-this.tools[i].top)) {
                 paint = true;
             }
         }

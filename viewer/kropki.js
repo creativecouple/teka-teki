@@ -543,7 +543,7 @@ teka.viewer.kropki.KropkiViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.kropki.KropkiViewer.prototype.processMousemoveEvent = function(xc,yc)
+teka.viewer.kropki.KropkiViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     xc = xc-this.deltaX-1;
     yc = yc-this.deltaY-1;
@@ -580,7 +580,7 @@ teka.viewer.kropki.KropkiViewer.prototype.processMousemoveEvent = function(xc,yc
 /** Handles mousedown event. */
 teka.viewer.kropki.KropkiViewer.prototype.processMousedownEvent = function(xc,yc)
 {
-    var erg = this.processMousemoveEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc,false);
 
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.X) {
         return erg;

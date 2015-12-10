@@ -329,6 +329,13 @@ teka.dictionary = {
         +'Bewegen Sie den Curser bei gedrückter SHIFT-Taste um eine Linie zu zeichnen. '
         +'Wiederholen Sie diesen Prozess um zu markieren, dass die entsprechende Linie nicht vorhanden ist (markiert durch ein Kreuz) '
         +'und wiederholen Sie diesen Prozess erneut, um wieder alles zu löschen.',
+    masyu_deadend: 'Im markierten Feld befindet sich eine Sackgasse.',
+    masyu_junction: 'Im markierten Feld stoßen drei Linien zusammen.',
+    masyu_crossing: 'Im markierten Feld befindet sich eine Kreuzung.',
+    masyu_circle_missing: 'Der Weg geht nicht durch das markierte Feld mit Kreis.',
+    masyu_white_circle: 'Im markierten Feld darf der Weg nicht abbiegen, muss aber in einem der beiden Nachbarfelder abbiegen.',
+    masyu_black_circle: 'Im markierten Feld muss der Weg abbiegen, und in beiden Richtungen danach geradeaus weiter gehen.',
+    masyu_not_connected: 'Der markierte Rundweg hängt nicht mit dem Rest des Weges zusammen.',
 
     dummy_to_avoid_comma_bug: ''
 };

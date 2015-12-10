@@ -210,7 +210,7 @@ teka.StartScreen.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.StartScreen.prototype.processMousemoveEvent = function(xc,yc)
+teka.StartScreen.prototype.processMousemoveEvent = function(xc,yc,pressed)
 {
     var last = this.activeButton;
     this.activeButton = this.getButton(xc,yc);

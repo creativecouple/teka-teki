@@ -117,7 +117,7 @@ teka.CasesTool.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.CasesTool.prototype.processMousemoveEvent = function(xc,yc)
+teka.CasesTool.prototype.processMousemoveEvent = function(xc,yc,pressed)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===-1) {

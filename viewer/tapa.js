@@ -543,7 +543,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.tapa.TapaViewer.prototype.processMousemoveEvent = function(xc, yc)
+teka.viewer.tapa.TapaViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     xc = xc-this.deltaX-3;
     yc = yc-this.deltaY-3;
@@ -573,7 +573,7 @@ teka.viewer.tapa.TapaViewer.prototype.processMousemoveEvent = function(xc, yc)
 /** Handles mousedown event. */
 teka.viewer.tapa.TapaViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    var erg = this.processMousemoveEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc,false);
 
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;

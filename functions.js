@@ -42,6 +42,20 @@ teka.normalizeMouseEvent = function(e)
     };
 };
 
+teka.buttonPressed = function(e)
+{
+    if (e.buttons!==undefined) {
+        return e.buttons>0;
+    }
+    if (e.button!==undefined) {
+        return e.button>0;
+    }
+    if (e.which!==undefined) {
+        return e.which>0;
+    }
+    return false;
+};
+
 /**
  * Calculates the value of the key.
  * Should work in all supported browsers.

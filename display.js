@@ -105,7 +105,7 @@ teka.Display.prototype.paint = function(g)
 };
 
 /** An eventhandler for mousemove. Does nothing. */
-teka.Display.prototype.processMousemoveEvent = function(xc,yc)
+teka.Display.prototype.processMousemoveEvent = function(xc,yc,pressed)
 {
     return false;
 };

@@ -158,7 +158,7 @@ teka.ColorTool.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.ColorTool.prototype.processMousemoveEvent = function(xc,yc)
+teka.ColorTool.prototype.processMousemoveEvent = function(xc,yc,pressed)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===false) {

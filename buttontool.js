@@ -92,7 +92,7 @@ teka.ButtonTool.prototype.paint = function(g)
 };
 
 /** Handle mousemove event */
-teka.ButtonTool.prototype.processMousemoveEvent = function(xc,yc)
+teka.ButtonTool.prototype.processMousemoveEvent = function(xc,yc,pressed)
 {
     this.activeButton = this.getButton(xc,yc);
     if (this.activeButton===-1) {

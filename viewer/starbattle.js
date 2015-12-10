@@ -497,7 +497,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.starbattle.StarbattleViewer.prototype.processMousemoveEvent = function(xc, yc)
+teka.viewer.starbattle.StarbattleViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     xc = xc-this.deltaX-1;
     yc = yc-this.deltaY-1;
@@ -527,7 +527,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processMousemoveEvent = functi
 /** Handles mousedown event. */
 teka.viewer.starbattle.StarbattleViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    var erg = this.processMousemoveEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc,false);
 
     if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) {
         return erg;

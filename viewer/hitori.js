@@ -435,7 +435,7 @@ teka.viewer.hitori.HitoriViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.hitori.HitoriViewer.prototype.processMousemoveEvent = function(xc, yc)
+teka.viewer.hitori.HitoriViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     xc = xc-this.deltaX-1;
     yc = yc-this.deltaY-1;
@@ -465,7 +465,7 @@ teka.viewer.hitori.HitoriViewer.prototype.processMousemoveEvent = function(xc, y
 /** Handles mousedown event. */
 teka.viewer.hitori.HitoriViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    var erg = this.processMousemoveEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc,false);
 
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
@@ -513,7 +513,7 @@ teka.viewer.hitori.HitoriViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
+    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_SLASH || e.key==teka.KEY_W) {
         this.set(this.x,this.y,teka.viewer.hitori.Defaults.WHITE);
         return true;
     }

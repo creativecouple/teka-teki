@@ -321,3 +321,67 @@ teka.viewer.PuzzleViewer.prototype.drawStar = function(g, x, y)
     g.fill();
     g.restore();
 };
+
+/**
+ *
+ */
+teka.viewer.PuzzleViewer.prototype.normalizeCoordinates = function(xc,yc)
+{
+    xc -= this.deltaX+this.borderX;
+    yc -= this.deltaY+this.borderY;    
+    
+    var x = Math.floor(xc/this.scale);
+    var y = Math.floor(yc/this.scale);
+
+    var xm = Math.floor(xc)-this.scale*x;
+    var ym = Math.floor(yc)-this.scale*y;
+    
+    var center = false;
+    if (xm>this.scale/8 && xm<this.scale-this.scale/8 &&
+        ym>this.scale/8 && ym<this.scale-this.scale/8) {
+        center = true;
+    }
+    
+    var left = false;
+    var right = false;
+    var top = false;
+    var bottom = false;    
+    if (xm<ym) {
+        if (this.scale-xm<ym) {
+            bottom = true;
+        } else {
+            left = true;
+        }
+    } else {
+        if (this.scale-xm<ym) {
+            right = true;
+        } else {
+            top = true;
+        }
+    }
+    
+    var bottomleft = false;
+    var bottomright = false;
+    var topleft = false;
+    var topright = false;
+    if (xm<this.scale/8 && ym<this.scale/8) {
+        topleft = true;
+    }
+    if (xm>this.scale-this.scale/8 && ym<this.scale/8) {
+        topright = true;
+    }
+    if (xm<this.scale/8 && ym>this.scale-this.scale/8) {
+        bottomleft = true;
+    }
+    if (xm>this.scale-this.scale/8 && ym>this.scale-this.scale/8) {
+        bottomright = true;
+    }
+    
+    return { x:x, y:y, 
+             xm:xm, ym:ym,
+             center:center,
+             left:left, right:right, top:top, bottom:bottom ,
+             bottomleft: bottomleft, bottomright:bottomright,
+             topleft:topleft, topright:topright
+    };
+};

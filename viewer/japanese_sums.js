@@ -719,7 +719,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousemoveEvent = function(xc, yc)
+teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     xc = xc-this.deltaX;
     yc = yc-this.deltaY;
@@ -755,7 +755,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousemoveEvent = 
 /** Handles mousedown event. */
 teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    var erg = this.processMousemoveEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc,false);
 
     if (xc<this.L*this.scale || yc<this.T*this.scale || xc>=(this.X+this.L)*this.scale || yc>=(this.Y+this.T)*this.scale) {
         return erg;
