@@ -134,7 +134,7 @@ teka.dictionary = {
     generic_size: 'Größe {1}.',
 
     kakuro: 'Kakuro',
-    kakuro_instruction: 'Füllen Sie das Rätsel wie ein Kreuzworträtsel aus. Verwenden Sie'
+    kakuro_instructions: 'Füllen Sie das Rätsel wie ein Kreuzworträtsel aus. Verwenden Sie'
         +' dabei an Stelle der Buchstaben die Ziffern von 1 bis 9. Die Beschreibung'
         +' eines \'Wortes\' gibt die Summe der Ziffern in diesem \'Wort\' an.'
         +' Innerhalb eines \'Wortes\' darf keine Ziffer doppelt vorkommen.',
