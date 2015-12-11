@@ -23,7 +23,7 @@ teka.viewer.masyu.Defaults = {
     EMPTY: 1,
     FULL: 2,
     BLACK: 3,
-    
+
     CELL: 0,
     H_EDGE: 1,
     V_EDGE: 2
@@ -87,18 +87,24 @@ teka.viewer.masyu.MasyuViewer.prototype.asciiToData = function(ascii)
             }
         }
     }
-    
+
     this.pr = teka.new_array([this.X-1,this.Y],0);
-    for (var i=0;i<this.X-1;i++)
-        for (var j=0;j<this.Y;j++)
-            if (grid[2*i+2][2*j+1]==teka.ord('-'))
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (grid[2*i+2][2*j+1]==teka.ord('-')) {
                 this.pr[i][j]=1;
-    
+            }
+        }
+    }
+
     this.pd = teka.new_array([this.X,this.Y-1],0);
-    for (var i=0;i<this.X;i++)
-        for (var j=0;j<this.Y-1;j++)
-            if (grid[2*i+1][2*j+2]==teka.ord('|'))
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            if (grid[2*i+1][2*j+2]==teka.ord('|')) {
                 this.pd[i][j]=1;
+            }
+        }
+    }
 };
 
 /** Read solution from ascii art. */
@@ -307,10 +313,39 @@ teka.viewer.masyu.MasyuViewer.prototype.check = function()
 {
     var X = this.X;
     var Y = this.Y;
-    
+
+    // create a clean solution from user input and givens
+    var checkr = teka.new_array([this.X-1,this.Y],0);
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            checkr[i][j] = this.fr[i][j]==1?1:0;
+            if (this.pr[i][j]===1) {
+                checkr[i][j] = 1;
+            }
+            if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.BLACK ||
+                this.puzzle[i+1][j]==teka.viewer.masyu.Defaults.BLACK) {
+                checkr[i][j] = 0;
+            }
+        }
+    }
+
+    var checkd = teka.new_array([this.X,this.Y-1],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            checkd[i][j] = this.fd[i][j]==1?1:0;
+            if (this.pd[i][j]===1) {
+                checkd[i][j] = 1;
+            }
+            if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.BLACK ||
+                this.puzzle[i][j+1]==teka.viewer.masyu.Defaults.BLACK) {
+                checkd[i][j] = 0;
+            }
+        }
+    }
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            var h = this.countLines(i,j);
+            var h = this.countLines(i,j,checkr,checkd);
             if (h!=0 && h!=2) {
                 this.error[i][j] = true;
                 switch (h) {
@@ -318,186 +353,197 @@ teka.viewer.masyu.MasyuViewer.prototype.check = function()
                   case 3: return 'masyu_junction';
                   case 4: return 'masyu_crossing';
                 }
+                return '???'; // should never happen...
             }
-            if (this.puzzle[i][j]!=teka.viewer.masyu.Defaults.NONE 
-                && this.puzzle[i][j]!=teka.viewer.masyu.Defaults.BLACK 
-                && h==0) {
+            if ((this.puzzle[i][j]==teka.viewer.masyu.Defaults.EMPTY
+                || this.puzzle[i][j]==teka.viewer.masyu.Defaults.FULL)
+                && h===0) {
                 this.error[i][j] = true;
                 return 'masyu_circle_missing';
             }
         }
     }
+
+    // check for circle conditions
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.puzzle[i][j]==1 && !this.correctWeiss(i,j)) {
+            if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.EMPTY
+                && !this.checkEmptyCircle(i,j,checkr,checkd)) {
                 this.error[i][j] = true;
                 return 'masyu_white_circle';
             }
-            if (this.puzzle[i][j]==2 && !this.correctSchwarz(i,j)) {
+            if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.FULL
+                && !this.checkFullCircle(i,j,checkr,checkd)) {
                 this.error[i][j] = true;
                 return 'masyu_black_circle';
             }
         }
     }
 
-    var mark = teka.new_array([X,Y],false);
-    for (var i=X-1;i>=0;i--) {
-        for (var j=Y-1;j>=0;j--) {
-            if (this.puzzle[i][j]!=0) {
-                this.mark(mark,i,j);
-                if (this.unmarked(mark)) {
-                    this.colorMarked(mark);
-                    return 'masyu_not_connected';
-                }
-                return true;
+    // check if all the line segments are connected
+    var sx = -1;
+    var sy = -1;
+    outer: for (var i=0;i<X-1;i++) {
+        for (var j=0;j<Y;j++) {
+            if (checkr[i][j]==1) {
+                sx = i;
+                sy = j;
+                break outer;
             }
         }
     }
-    
+
+    if (sx==-1 || sy==-1) {
+        return 'masyu_no_line_found';
+    }
+
+    var mark = teka.new_array([X,Y],false);
+    this.fill(mark,sx,sy,checkr,checkd);
+
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (!mark[i][j] &&
+                this.countLines(i,j,checkr,checkd)>0) {
+
+                for (var ii=0;ii<this.X;ii++) {
+                    for (var jj=0;jj<this.Y;jj++) {
+                        if (mark[ii][jj]) {
+                            this.error[ii][jj] = true;
+                        }
+                    }
+                }
+
+                return 'masyu_not_connected';
+            }
+        }
+    }
+
     return true;
 };
 
-/** countLines */
-teka.viewer.masyu.MasyuViewer.prototype.countLines = function(x, y)
+/** Count the lines, that start at position x,y. */
+teka.viewer.masyu.MasyuViewer.prototype.countLines = function(x, y, checkr, checkd)
 {
     var az = 0;
-    if (x>0 && this.fr[x-1][y]==1) {
+    if (x>0 && checkr[x-1][y]==1) {
         az++;
     }
-    if (x<this.X-1 && this.fr[x][y]==1) {
+    if (x<this.X-1 && checkr[x][y]==1) {
         az++;
     }
-    if (y>0 && this.fd[x][y-1]==1) {
+    if (y>0 && checkd[x][y-1]==1) {
         az++;
     }
-    if (y<this.Y-1 && this.fd[x][y]==1) {
+    if (y<this.Y-1 && checkd[x][y]==1) {
         az++;
     }
     return az;
 };
 
-/** mark */
-teka.viewer.masyu.MasyuViewer.prototype.mark = function(mark, x, y)
+/** Check, if all conditions of an empty circle are met. */
+teka.viewer.masyu.MasyuViewer.prototype.checkEmptyCircle = function(x, y, checkr, checkd)
+{
+    if (this.isBending(x,y,checkr,checkd)) {
+        return false;
+    }
+
+    var nb = this.getNeighbours(x,y,checkr,checkd);
+
+    var ok = false;
+    if (nb[0]==1 && this.isBending(x-1,y,checkr,checkd)) {
+        ok = true;
+    }
+    if (nb[1]==1 && this.isBending(x+1,y,checkr,checkd)) {
+        ok = true;
+    }
+    if (nb[2]==1 && this.isBending(x,y-1,checkr,checkd)) {
+        ok = true;
+    }
+    if (nb[3]==1 && this.isBending(x,y+1,checkr,checkd)) {
+        ok = true;
+    }
+
+    return ok;
+};
+
+/** Check, if all conditions of an full circle are met. */
+teka.viewer.masyu.MasyuViewer.prototype.checkFullCircle = function(x, y, checkr, checkd)
+{
+    if (!this.isBending(x,y,checkr,checkd)) {
+        return false;
+    }
+
+    var nb = this.getNeighbours(x,y,checkr,checkd);
+
+    if (nb[0]==1 && this.isBending(x-1,y,checkr,checkd)) {
+        return false;
+    }
+    if (nb[1]==1 && this.isBending(x+1,y,checkr,checkd)) {
+        return false;
+    }
+    if (nb[2]==1 && this.isBending(x,y-1,checkr,checkd)) {
+        return false;
+    }
+    if (nb[3]==1 && this.isBending(x,y+1,checkr,checkd)) {
+        return false;
+    }
+
+    return true;
+};
+
+/** Check, if the path bends at x,y. Assumes, that the path passes though x,y. */
+teka.viewer.masyu.MasyuViewer.prototype.isBending = function(x, y, checkr, checkd)
+{
+    var nb = this.getNeighbours(x,y,checkr,checkd);
+
+    return (nb[0]==1 || nb[1]==1) && (nb[2]==1 || nb[3]==1);
+};
+
+/** Get neighbour segments of cell x,y */
+teka.viewer.masyu.MasyuViewer.prototype.getNeighbours = function(x, y, checkr, checkd)
+{
+    var result = teka.new_array([4],0);
+    if (x>0) {
+        result[0] = checkr[x-1][y];
+    }
+    if (x<this.X-1) {
+        result[1] = checkr[x][y];
+    }
+    if (y>0) {
+        result[2] = checkd[x][y-1];
+    }
+    if (y<this.Y-1) {
+        result[3] = checkd[x][y];
+    }
+    return result;
+};
+
+/** Floodfill all cells, that are connected by segments, starting from x,y */
+teka.viewer.masyu.MasyuViewer.prototype.fill = function(mark, x, y, checkr, checkd)
 {
     if (x<0 || x>=this.X || y<0 || y>=this.Y) {
         return;
     }
+
     if (mark[x][y]) {
         return;
     }
+
     mark[x][y]=true;
-    var h = this.getNachbar(x,y);
-    if (h[0]==1) {
-        this.mark(mark,x-1,y);
-    }
-    if (h[1]==1) {
-        this.mark(mark,x+1,y);
-    }
-    if (h[2]==1) {
-        this.mark(mark,x,y-1);
-    }
-    if (h[3]==1) {
-        this.mark(mark,x,y+1);
-    }
-};
 
-/** unmarked */
-teka.viewer.masyu.MasyuViewer.prototype.unmarked = function(mark)
-{
-    for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.Y;j++) {
-            if (!mark[i][j] && this.countLines(i,j)>0) {
-                return true;
-            }
-        }
+    var nb = this.getNeighbours(x,y,checkr,checkd);
+    if (nb[0]==1) {
+        this.fill(mark,x-1,y,checkr,checkd);
     }
-    return false;
-};
-
-/** colorMarked */
-teka.viewer.masyu.MasyuViewer.prototype.colorMarked = function(mark)
-{
-    for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.Y;j++) {
-            if (mark[i][j]) {
-                this.error[i][j] = true;
-            }
-        }
+    if (nb[1]==1) {
+        this.fill(mark,x+1,y,checkr,checkd);
     }
-};
-
-/** correctWeiss */
-teka.viewer.masyu.MasyuViewer.prototype.correctWeiss = function(x, y)
-{
-    if (this.knick(x,y)) {
-        return false;
+    if (nb[2]==1) {
+        this.fill(mark,x,y-1,checkr,checkd);
     }
-    var h = this.getNachbar(x,y);
-    var ok = false;
-    if (h[0]==1 && this.knick(x-1,y)) {
-        ok = true;
+    if (nb[3]==1) {
+        this.fill(mark,x,y+1,checkr,checkd);
     }
-    if (h[1]==1 && this.knick(x+1,y)) {
-        ok = true;
-    }
-    if (h[2]==1 && this.knick(x,y-1)) {
-        ok = true;
-    }
-    if (h[3]==1 && this.knick(x,y+1)) {
-        ok = true;
-    }
-    return ok;
-};
-
-/** knick */
-teka.viewer.masyu.MasyuViewer.prototype.knick = function(x, y)
-{
-    var h = this.getNachbar(x,y);
-    if ((h[0]==1 || h[1]==1) && (h[2]==1 || h[3]==1)) {
-        return true;
-    }
-    return false;
-};
-
-/** correctSchwarz */
-teka.viewer.masyu.MasyuViewer.prototype.correctSchwarz = function(x, y)
-{
-    if (!this.knick(x,y)) {
-        return false;
-    }
-    var h = this.getNachbar(x,y);
-    if (h[0]==1 && this.knick(x-1,y)) {
-        return false;
-    }
-    if (h[1]==1 && this.knick(x+1,y)) {
-        return false;
-    }
-    if (h[2]==1 && this.knick(x,y-1)) {
-        return false;
-    }
-    if (h[3]==1 && this.knick(x,y+1)) {
-        return false;
-    }
-    return true;
-};
-
-/** getNachbar */
-teka.viewer.masyu.MasyuViewer.prototype.getNachbar = function(x, y)
-{
-    var h = teka.new_array([4],0);
-    if (x>0) {
-        h[0] = this.fr[x-1][y];
-    }
-    if (x<this.X-1) {
-        h[1] = this.fr[x][y];
-    }
-    if (y>0) {
-        h[2] = this.fd[x][y-1];
-    }
-    if (y<this.Y-1) {
-        h[3] = this.fd[x][y];
-    }
-    return h;
 };
 
 //////////////////////////////////////////////////////////////////
@@ -520,7 +566,7 @@ teka.viewer.masyu.MasyuViewer.prototype.setMetrics = function(g)
 {
     this.scale = Math.floor(Math.min((this.width-3)/this.X,
                                      (this.height-3)/this.Y));
-    
+
     var realwidth = this.X*this.scale+3;
     var realheight = this.Y*this.scale+3;
 
@@ -528,7 +574,7 @@ teka.viewer.masyu.MasyuViewer.prototype.setMetrics = function(g)
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
     this.borderX = 1;
     this.borderY = 1;
-    
+
     if (realwidth>this.width || realheight>this.height) {
         this.scale=false;
     }
@@ -606,6 +652,10 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
                 g.lineWidth = 1;
                 continue;
             }
+            if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.BLACK ||
+                this.puzzle[i+1][j]==teka.viewer.masyu.Defaults.BLACK) {
+                continue;
+            }
             g.strokeStyle = this.getColorString(this.cr[i][j]);
             switch (this.fr[i][j]) {
               case 1:
@@ -633,6 +683,10 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
                 teka.drawLine(g,i*S+Math.floor(S/2),j*S+Math.floor(S/2),
                               i*S+Math.floor(S/2),(j+1)*S+Math.floor(S/2));
                 g.lineWidth = 1;
+                continue;
+            }
+            if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.BLACK ||
+                this.puzzle[i][j+1]==teka.viewer.masyu.Defaults.BLACK) {
                 continue;
             }
             g.strokeStyle = this.getColorString(this.cd[i][j]);
@@ -686,28 +740,28 @@ teka.viewer.masyu.MasyuViewer.prototype.processMousemoveEvent = function(xc, yc,
     var oldy = this.y;
     var old_cursor = this.cursor_mode;
 
-    if (this.start===undefined || 
-        this.start.x!=this.coord.x || 
+    if (this.start===undefined ||
+        this.start.x!=this.coord.x ||
         this.start.y!=this.coord.y) {
         this.moved = true;
     }
-    
+
     if (this.coord.x<0 || this.coord.x>=this.X ||
         this.coord.y<0 || this.coord.y>=this.Y) {
         return false;
     }
-    
+
     this.x = this.coord.x;
     this.y = this.coord.y;
-    
-    if (pressed 
+
+    if (pressed
         && this.cursor_mode==teka.viewer.masyu.Defaults.CELL) {
         this.processMousedraggedEvent(xc,yc);
         return true;
     }
-    
+
     this.checkCloseToEdge(this.coord);
-    
+
     return this.x!=oldx || this.y!=oldy || this.cursor_mode!=old_cursor;
 };
 
@@ -726,12 +780,12 @@ teka.viewer.masyu.MasyuViewer.prototype.processMousedownEvent = function(xc, yc)
 
 /** Handles mouseup event. */
 teka.viewer.masyu.MasyuViewer.prototype.processMouseupEvent = function(xc, yc)
-{    
+{
     this.processMousemoveEvent(xc,yc,false);
 
     if (!this.moved)
         {
-            if (this.start.top==this.coord.top && 
+            if (this.start.top==this.coord.top &&
                 this.start.bottom==this.coord.bottom &&
                 this.cursor_mode==teka.viewer.masyu.Defaults.H_EDGE) {
                 this.setEdge(this.x,this.y,this.get(this.x,this.y,false)==2?0:2,false);
@@ -745,15 +799,15 @@ teka.viewer.masyu.MasyuViewer.prototype.processMouseupEvent = function(xc, yc)
                 this.set(this.x,this.y,!this.f[this.x][this.y]);
             }
         }
-    
+
     this.startx = false;
     this.starty = false;
-    
+
     return true;
 };
 
-/** 
- * Handles pseudo event 'mousedragged' 
+/**
+ * Handles pseudo event 'mousedragged'
  * Horizontal and vertical lines are treated separately, as
  * much faster algorithms can be applied and they should make up the
  * majority of use cases.
@@ -767,7 +821,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processMousedraggedEvent = function(xc, 
         this.moved = false;
         return;
     }
-    
+
     var lastx = this.startx;
     var lasty = this.starty;
     this.startx = xc;
@@ -775,7 +829,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processMousedraggedEvent = function(xc, 
 
     var from = this.normalizeCoordinates(lastx,lasty);
     var to = this.normalizeCoordinates(this.startx,this.starty);
-    
+
     if (from.x==to.x && from.y==to.y) {
         return;
     }
@@ -794,7 +848,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processMousedraggedEvent = function(xc, 
         }
         return;
     }
-    
+
     // vertical line
     if (from.x==to.x) {
         if (to.y>from.y) {
@@ -809,7 +863,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processMousedraggedEvent = function(xc, 
         }
         return;
     }
-    
+
     // draw line from from to to
     while (from.x!=to.x || from.y!=to.y) {
         if (Math.abs(to.x-from.x)>=Math.abs(to.y-from.y)) {
@@ -883,12 +937,12 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
         this.set(this.x,this.y,0);
         return true;
     }
-    
+
     if (e.key==teka.KEY_HASH || e.key==teka.KEY_X) {
         this.set(this.x,this.y,1);
         return true;
     }
-    
+
     return false;
 };
 
@@ -906,7 +960,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeyupEvent = function(e)
 //////////////////////////////////////////////////////////////////
 
 /**
- * If mouse is close to an edge, replace the normal cursor by an 
+ * If mouse is close to an edge, replace the normal cursor by an
  * edge cursor.
  */
 teka.viewer.masyu.MasyuViewer.prototype.checkCloseToEdge = function(coord)
@@ -915,24 +969,24 @@ teka.viewer.masyu.MasyuViewer.prototype.checkCloseToEdge = function(coord)
         this.cursor_mode = teka.viewer.masyu.Defaults.CELL;
         return;
     }
-    
+
     if (coord.left && coord.x>0) {
         this.cursor_mode = teka.viewer.masyu.Defaults.V_EDGE;
         this.x--;
         return;
     }
-    
+
     if (coord.right && coord.x<this.X-1) {
         this.cursor_mode = teka.viewer.masyu.Defaults.V_EDGE;
         return;
     }
-    
+
     if (coord.top && coord.y>0) {
         this.cursor_mode = teka.viewer.masyu.Defaults.H_EDGE;
         this.y--;
         return;
     }
-    
+
     if (coord.bottom && coord.y<this.Y-1) {
         this.cursor_mode = teka.viewer.masyu.Defaults.H_EDGE;
         return;

@@ -336,6 +336,7 @@ teka.dictionary = {
     masyu_white_circle: 'Im markierten Feld darf der Weg nicht abbiegen, muss aber in einem der beiden Nachbarfelder abbiegen.',
     masyu_black_circle: 'Im markierten Feld muss der Weg abbiegen, und in beiden Richtungen danach geradeaus weiter gehen.',
     masyu_not_connected: 'Der markierte Rundweg hängt nicht mit dem Rest des Weges zusammen.',
+    masyu_no_line_found: 'Im Diagramm befindet sich kein Wegstück.',
 
     dummy_to_avoid_comma_bug: ''
 };
