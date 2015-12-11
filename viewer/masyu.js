@@ -22,6 +22,7 @@ teka.viewer.masyu.Defaults = {
     NONE: 0,
     EMPTY: 1,
     FULL: 2,
+    BLACK: 3,
     
     CELL: 0,
     H_EDGE: 1,
@@ -47,13 +48,14 @@ teka.viewer.masyu.MasyuViewer.prototype.initData = function(data)
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
     this.asciiToData(data.get('puzzle'));
+    this.asciiToSolution(data.get('solution'));
 
     this.f = teka.new_array([this.X,this.Y],false);
     this.c = teka.new_array([this.X,this.Y],0);
     this.fr = teka.new_array([this.X-1,this.Y],0);
-    this.fu = teka.new_array([this.X,this.Y-1],0);
+    this.fd = teka.new_array([this.X,this.Y-1],0);
     this.cr = teka.new_array([this.X-1,this.Y],0);
-    this.cu = teka.new_array([this.X,this.Y-1],0);
+    this.cd = teka.new_array([this.X,this.Y-1],0);
     this.error = teka.new_array([this.X,this.Y],false);
 };
 
@@ -76,24 +78,49 @@ teka.viewer.masyu.MasyuViewer.prototype.asciiToData = function(ascii)
               case teka.ord('*'):
                 this.puzzle[i][j] = teka.viewer.masyu.Defaults.FULL;
                 break;
+              case teka.ord('#'):
+                this.puzzle[i][j] = teka.viewer.masyu.Defaults.BLACK;
+                break;
               default:
                 this.puzzle[i][j] = teka.viewer.masyu.Defaults.NONE;
                 break;
             }
         }
     }
+    
+    this.pr = teka.new_array([this.X-1,this.Y],0);
+    for (var i=0;i<this.X-1;i++)
+        for (var j=0;j<this.Y;j++)
+            if (grid[2*i+2][2*j+1]==teka.ord('-'))
+                this.pr[i][j]=1;
+    
+    this.pd = teka.new_array([this.X,this.Y-1],0);
+    for (var i=0;i<this.X;i++)
+        for (var j=0;j<this.Y-1;j++)
+            if (grid[2*i+1][2*j+2]==teka.ord('|'))
+                this.pd[i][j]=1;
+};
 
-    sr = teka.new_array([this.X-1,this.Y],0);
+/** Read solution from ascii art. */
+teka.viewer.masyu.MasyuViewer.prototype.asciiToSolution = function(ascii)
+{
+    if (ascii===false) {
+        return;
+    }
+
+    var grid = this.asciiToArray(ascii);
+
+    this.sr = teka.new_array([this.X-1,this.Y],0);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            sr[i][j] = grid[2*i+2][2*j+1]==teka.ord('-')?1:0;
+            this.sr[i][j] = grid[2*i+2][2*j+1]==teka.ord('-')?1:0;
         }
     }
 
-    su = teka.new_array([this.X,this.Y-1],0);
+    this.sd = teka.new_array([this.X,this.Y-1],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            su[i][j] = grid[2*i+1][2*j+2]==teka.ord('|')?1:0;
+            this.sd[i][j] = grid[2*i+1][2*j+2]==teka.ord('|')?1:0;
         }
     }
 };
@@ -103,12 +130,12 @@ teka.viewer.masyu.MasyuViewer.prototype.addSolution = function()
 {
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.fr[i][j] = sr[i][j];
+            this.fr[i][j] = this.sr[i][j];
         }
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.fu[i][j] = su[i][j];
+            this.fd[i][j] = this.sd[i][j];
         }
     }
 };
@@ -118,10 +145,12 @@ teka.viewer.masyu.MasyuViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.masyu.MasyuViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (masyu)\n/sol false\n/X 5\n/Y 5'
-        +'\n/puzzle [ (+-+-+-+-+-+) (|   - -*  |) (+ +|+ +|+ +) (| -       |)'
-        +' (+|+ + +|+ +) (|O  - -*  |) (+|+|+ + + +) (|   - -O- |) (+|+ + + +|+)'
-        +' (| - - - - |) (+-+-+-+-+-+) ]';
+    return '/format 1\n/type (masyu)\n/sol false\n/X 5\n/Y 5\n'
+        +'/puzzle [ (+-+-+-+-+-+) (|  *   O  |) (+ + + + + +) (|       - |) '
+        +'(+ + + + + +) (|      #  |) (+ + + + + +) (|O        |) (+ + + +|+ +) '
+        +'(|         |) (+-+-+-+-+-+) ]\n/solution [ (+-+-+-+-+-+) (|  *- -O- |) '
+        +'(+ +|+ + +|+) (|     - - |) (+ +|+|+ + +) (| -    #  |) (+|+ +|+ + +) '
+        +'(|O    -   |) (+|+ + +|+ +) (| - - -   |) (+-+-+-+-+-+) ]';
 };
 
 /** Returns a list of automatically generated properties. */
@@ -149,8 +178,8 @@ teka.viewer.masyu.MasyuViewer.prototype.reset = function()
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.fu[i][j]=0;
-            this.cu[i][j]=0;
+            this.fd[i][j]=0;
+            this.cd[i][j]=0;
         }
     }
 };
@@ -184,8 +213,8 @@ teka.viewer.masyu.MasyuViewer.prototype.copyColor = function(color)
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            if (this.cu[i][j]==this.color) {
-                this.cu[i][j] = color;
+            if (this.cd[i][j]==this.color) {
+                this.cd[i][j] = color;
             }
         }
     }
@@ -210,8 +239,8 @@ teka.viewer.masyu.MasyuViewer.prototype.clearColor = function(color)
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            if (this.cu[i][j]==color) {
-                this.fu[i][j] = 0;
+            if (this.cd[i][j]==color) {
+                this.fd[i][j] = 0;
             }
         }
     }
@@ -240,8 +269,8 @@ teka.viewer.masyu.MasyuViewer.prototype.saveState = function()
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            fu[i][j] = this.fu[i][j];
-            cu[i][j] = this.cu[i][j];
+            fu[i][j] = this.fd[i][j];
+            cu[i][j] = this.cd[i][j];
         }
     }
 
@@ -265,8 +294,8 @@ teka.viewer.masyu.MasyuViewer.prototype.loadState = function(state)
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.fu[i][j] = state.fu[i][j];
-            this.cu[i][j] = state.cu[i][j];
+            this.fd[i][j] = state.fu[i][j];
+            this.cd[i][j] = state.cu[i][j];
         }
     }
 };
@@ -290,7 +319,9 @@ teka.viewer.masyu.MasyuViewer.prototype.check = function()
                   case 4: return 'masyu_crossing';
                 }
             }
-            if (this.puzzle[i][j]!=0 && h==0) {
+            if (this.puzzle[i][j]!=teka.viewer.masyu.Defaults.NONE 
+                && this.puzzle[i][j]!=teka.viewer.masyu.Defaults.BLACK 
+                && h==0) {
                 this.error[i][j] = true;
                 return 'masyu_circle_missing';
             }
@@ -336,10 +367,10 @@ teka.viewer.masyu.MasyuViewer.prototype.countLines = function(x, y)
     if (x<this.X-1 && this.fr[x][y]==1) {
         az++;
     }
-    if (y>0 && this.fu[x][y-1]==1) {
+    if (y>0 && this.fd[x][y-1]==1) {
         az++;
     }
-    if (y<this.Y-1 && this.fu[x][y]==1) {
+    if (y<this.Y-1 && this.fd[x][y]==1) {
         az++;
     }
     return az;
@@ -461,10 +492,10 @@ teka.viewer.masyu.MasyuViewer.prototype.getNachbar = function(x, y)
         h[1] = this.fr[x][y];
     }
     if (y>0) {
-        h[2] = this.fu[x][y-1];
+        h[2] = this.fd[x][y-1];
     }
     if (y<this.Y-1) {
-        h[3] = this.fu[x][y];
+        h[3] = this.fd[x][y];
     }
     return h;
 };
@@ -544,7 +575,10 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
     // paint content of cells
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.EMPTY) {
+            if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.BLACK) {
+                g.fillStyle = '#000';
+                g.fillRect(i*S,j*S,S,S);
+            } else if (this.puzzle[i][j]==teka.viewer.masyu.Defaults.EMPTY) {
                 g.fillStyle = '#fff';
                 teka.fillOval(g,i*S+S/2,j*S+S/2,S/2-S/8);
                 g.strokeStyle = '#000';
@@ -564,12 +598,20 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
     g.lineCap = 'square';
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
+            if (this.pr[i][j]==1) {
+                g.strokeStyle = '#000';
+                g.lineWidth = 5;
+                teka.drawLine(g,i*S+Math.floor(S/2),j*S+Math.floor(S/2),
+                              (i+1)*S+Math.floor(S/2),j*S+Math.floor(S/2));
+                g.lineWidth = 1;
+                continue;
+            }
             g.strokeStyle = this.getColorString(this.cr[i][j]);
             switch (this.fr[i][j]) {
               case 1:
                 g.lineWidth = 5;
-                teka.drawLine(g,i*S+S/2,j*S+Math.floor(S/2),
-                              (i+1)*S+S/2,j*S+Math.floor(S/2));
+                teka.drawLine(g,i*S+Math.floor(S/2),j*S+Math.floor(S/2),
+                              (i+1)*S+Math.floor(S/2),j*S+Math.floor(S/2));
                 g.lineWidth = 1;
                 break;
               case 2:
@@ -585,12 +627,20 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
     // paint symbols on horizontal edges
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
-            g.strokeStyle = this.getColorString(this.cu[i][j]);
-            switch (this.fu[i][j]) {
+            if (this.pd[i][j]==1) {
+                g.strokeStyle = '#000';
+                g.lineWidth = 5;
+                teka.drawLine(g,i*S+Math.floor(S/2),j*S+Math.floor(S/2),
+                              i*S+Math.floor(S/2),(j+1)*S+Math.floor(S/2));
+                g.lineWidth = 1;
+                continue;
+            }
+            g.strokeStyle = this.getColorString(this.cd[i][j]);
+            switch (this.fd[i][j]) {
               case 1:
                 g.lineWidth = 5;
-                teka.drawLine(g,i*S+Math.floor(S/2),j*S+S/2,
-                              i*S+Math.floor(S/2),(j+1)*S+S/2);
+                teka.drawLine(g,i*S+Math.floor(S/2),j*S+Math.floor(S/2),
+                              i*S+Math.floor(S/2),(j+1)*S+Math.floor(S/2));
                 g.lineWidth = 1;
                 break;
               case 2:
@@ -899,7 +949,7 @@ teka.viewer.masyu.MasyuViewer.prototype.setEdge = function(x, y, value, vertical
     if (vertical) {
         this.setVertical(x,y,value);
     } else {
-        this.setHorinzontal(x,y,value);
+        this.setHorizontal(x,y,value);
     }
 };
 
@@ -925,12 +975,12 @@ teka.viewer.masyu.MasyuViewer.prototype.setHorizontal = function(x, y, value)
         return;
     }
 
-    if (this.fu[x][y]!=0 && this.cu[x][y]!=this.color) {
+    if (this.fd[x][y]!=0 && this.cd[x][y]!=this.color) {
         return;
     }
 
-    this.fu[x][y] = value;
-    this.cu[x][y] = this.color;
+    this.fd[x][y] = value;
+    this.cd[x][y] = this.color;
 };
 
 /** Gets the value of an edge. */
@@ -948,7 +998,7 @@ teka.viewer.masyu.MasyuViewer.prototype.get = function(x, y, vertical)
         return 0;
     }
 
-    return this.fu[x][y];
+    return this.fd[x][y];
 };
 
 /** Sets the value of a cell, if the color fits. */
