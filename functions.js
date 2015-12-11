@@ -47,9 +47,6 @@ teka.buttonPressed = function(e)
     if (e.buttons!==undefined) {
         return e.buttons>0;
     }
-    if (e.button!==undefined) {
-        return e.button>0;
-    }
     if (e.which!==undefined) {
         return e.which>0;
     }
