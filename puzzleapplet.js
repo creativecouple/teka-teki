@@ -125,6 +125,12 @@ teka.Defaults.MAX_LEVEL = 12;
 teka.Defaults.TAKE_TIME = false;
 
 /**
+ * Maximum time (in seconds) allowed to use until the puzzle is solved.
+ * Set to false, if no time limit should be applied.
+ */
+teka.Defaults.MAX_TIME = false;
+
+/**
  * Set to true, if failed attempts should be counted.
  * Failed attempts are only counted, when time is taken.
  * Therefore teka.Defaults. TAKE_TIME must be true too, to
@@ -162,8 +168,13 @@ teka.PuzzleApplet = function(options)
         this.setOptions(options);
     }
 
+    if (this.values_.MAX_TIME!==false) {
+        this.values_.TAKE_TIME = true;
+    }
+
     this.showStart = this.values_.TAKE_TIME===true;
     this.showInstructions = false;
+    this.timeout = false;
     this.canvas = this.addCanvas();
     this.image = this.canvas.getContext('2d');
 
@@ -176,7 +187,7 @@ teka.PuzzleApplet = function(options)
     }));
 };
 
-/** Check's if the given language is defined. */
+/** Checks if the given language is defined. */
 teka.PuzzleApplet.prototype.correctLanguage = function()
 {
     var whitelist = ['de','en'];
@@ -641,6 +652,11 @@ teka.PuzzleApplet.prototype.paint = function()
     this.head.paint(this.image);
     this.image.restore();
 
+    if (this.timeout) {
+        this.paintTimeout();
+        return;
+    }
+
     if (this.showInstructions) {
         this.image.save();
         this.instructions.translate(this.image);
@@ -681,6 +697,18 @@ teka.PuzzleApplet.prototype.paintError = function()
                         this.canvas.height/2+this.values_.TEXT_HEIGHT);
 };
 
+/** Paints a timeout message. */
+teka.PuzzleApplet.prototype.paintTimeout = function()
+{
+    this.image.textBaseline = 'middle';
+    this.image.textAlign = 'center';
+    this.image.font = this.values_.TEXT_HEIGHT+'px sans-serif';
+    this.image.fillStyle = this.values_.TEXT_COLOR;
+    this.image.fillText(teka.translate('timeout'),
+                        this.canvas.width/2,
+                        this.canvas.height/2);
+};
+
 //////////////////////////////////////////////////////////////////
 
 /** Eventhandler for mousemove events. */
@@ -692,6 +720,8 @@ teka.PuzzleApplet.prototype.mousemoveListener = function(e)
     }
 
     this.canvas.focus();
+
+    this.checkTimeout();
 
     if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
         return;
@@ -744,6 +774,8 @@ teka.PuzzleApplet.prototype.mousedownListener = function(e)
         this.paint();
         return;
     }
+
+    this.checkTimeout();
 
     if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
             this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
@@ -799,6 +831,8 @@ teka.PuzzleApplet.prototype.mouseupListener = function(e)
         return;
     }
 
+    this.checkTimeout();
+
     if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
         return;
     }
@@ -836,6 +870,8 @@ teka.PuzzleApplet.prototype.keydownListener = function(e)
         this.paint();
         return true;
     }
+
+    this.checkTimeout();
 
     if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
             this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
@@ -888,6 +924,8 @@ teka.PuzzleApplet.prototype.keyupListener = function(e)
         return true;
     }
 
+    this.checkTimeout();
+
     if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
         return true;
     }
@@ -939,6 +977,23 @@ teka.PuzzleApplet.prototype.start = function()
     this.failed_attempts = 0;
     this.timer_stop = false;
     this.timer_start = new Date().getTime();
+};
+
+/** Checks, if MAX_TIME has been reached. */
+teka.PuzzleApplet.prototype.checkTimeout = function()
+{
+    if (this.values_.MAX_TIME===false) {
+        return;
+    }
+    if (this.showStart!==false) {
+        return;
+    }
+
+    if (new Date().getTime()<this.timer_start+1000*this.values_.MAX_TIME) {
+        return;
+    }
+
+    this.timeout = true;
 };
 
 /**
