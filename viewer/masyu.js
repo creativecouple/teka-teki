@@ -563,7 +563,7 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
             switch (this.fr[i][j]) {
               case 1:
                 g.lineWidth = 5;
-                teka.drawLine(g,i*S+S/2,j*S+S/2,(i+1)*S+S/2,j*S+S/2);
+                teka.drawLine(g,i*S+S/2,j*S+Math.floor(S/2),(i+1)*S+Math.floor(S/2),j*S+S/2);
                 g.lineWidth = 1;
                 break;
               case 2:
@@ -582,7 +582,7 @@ teka.viewer.masyu.MasyuViewer.prototype.paint = function(g)
             switch (this.fu[i][j]) {
               case 1:
                 g.lineWidth = 5;
-                teka.drawLine(g,i*S+S/2,j*S+S/2,i*S+S/2,(j+1)*S+S/2);
+                teka.drawLine(g,i*S+Math.floor(S/2),j*S+S/2,i*S+Math.floor(S/2),(j+1)*S+S/2);
                 g.lineWidth = 1;
                 break;
               case 2:
@@ -686,6 +686,9 @@ teka.viewer.masyu.MasyuViewer.prototype.processMouseupEvent = function(xc, yc)
             }
         }
     
+    this.startx = false;
+    this.starty = false;
+    
     return true;
 };
 
@@ -697,6 +700,14 @@ teka.viewer.masyu.MasyuViewer.prototype.processMouseupEvent = function(xc, yc)
  */
 teka.viewer.masyu.MasyuViewer.prototype.processMousedraggedEvent = function(xc, yc)
 {
+    if (this.startx===false || this.starty===false) {
+        this.startx = xc;
+        this.starty = yc;
+        this.start = this.coord;
+        this.moved = false;
+        return;
+    }
+    
     var lastx = this.startx;
     var lasty = this.starty;
     this.startx = xc;
@@ -808,6 +819,16 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
+    if (e.key==teka.KEY_SPACE) {
+        this.setCross(this.x,this.y,0);
+        return true;
+    }
+    
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_X) {
+        this.setCross(this.x,this.y,1);
+        return true;
+    }
+    
     return false;
 };
 
@@ -923,4 +944,4 @@ teka.viewer.masyu.MasyuViewer.prototype.setCross = function(x,y,value)
 
     this.f[x][y] = value;
     this.c[x][y] = this.color;
-}
+};
