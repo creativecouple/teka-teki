@@ -808,7 +808,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processKeydownEvent = fu
     this.exp = false;
 
     if (e.key==teka.KEY_DOWN) {
-        if (this.y<this.X-1) {
+        if (this.y<this.Y-1) {
             this.y++;
         }
         return true;
@@ -832,7 +832,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processKeydownEvent = fu
         return true;
     }
 
-    if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.X) {
+    if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.Y) {
         return false;
     }
 

@@ -133,6 +133,27 @@ teka.dictionary = {
 
     generic_size: 'Größe {1}.',
 
+    kakuro: 'Kakuro',
+    kakuro_instruction: 'Füllen Sie das Rätsel wie ein Kreuzworträtsel aus. Verwenden Sie'
+        +' dabei an Stelle der Buchstaben die Ziffern von 1 bis 9. Die Beschreibung'
+        +' eines \'Wortes\' gibt die Summe der Ziffern in diesem \'Wort\' an.'
+        +' Innerhalb eines \'Wortes\' darf keine Ziffer doppelt vorkommen.',
+    kakuro_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Klicken Sie nach der 9 erneut um '
+        +'den Feldinhalt zu löschen.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    
     kropki: 'Kropki',
     kropki_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
         +'dass jede Zahl in jeder Zeile und jeder Spalte genau einmal vorkommt.\n\n'
