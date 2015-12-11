@@ -972,6 +972,8 @@ teka.PuzzleApplet.prototype.setInstructions = function(val)
 /** Removes the startscreen and starts the timer. */
 teka.PuzzleApplet.prototype.start = function()
 {
+    this.startHook();
+
     this.showStart = false;
 
     this.failed_attempts = 0;
@@ -1009,6 +1011,7 @@ teka.PuzzleApplet.prototype.check = function()
     if (erg!==true) {
         if (this.values_.TAKE_TIME===true && this.timer_stop===false) {
             this.failed_attempts++;
+            this.failedAttemptHook();
         }
         this.setText(teka.translate(erg),false);
         this.puzzleViewer.setMode(teka.viewer.Defaults.WAIT);
@@ -1039,6 +1042,7 @@ teka.PuzzleApplet.prototype.check = function()
     this.paint();
 
     setTimeout(this.blink.bind(this),300);
+    this.correctHook();
 };
 
 /** Converts duration d, given in seconds, into a human readable format. */
@@ -1123,4 +1127,21 @@ teka.PuzzleApplet.prototype.loadState = function(state)
     this.puzzleViewer.save();
     this.puzzleViewer.loadState(state);
     this.paint();
+};
+
+//////////////////////////////////////////////////////////////////
+
+/** To be overridden by descendant. */
+teka.PuzzleApplet.prototype.startHook = function()
+{
+};
+
+/** To be overridden by descendant. */
+teka.PuzzleApplet.prototype.failedAttemptHook = function()
+{
+};
+
+/** To be overridden by descendant. */
+teka.PuzzleApplet.prototype.correctHook = function()
+{
 };
