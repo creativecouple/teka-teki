@@ -153,7 +153,10 @@ teka.dictionary = {
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
         +'und ausschalten.',
-    
+    kakuro_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    kakuro_duplicate: 'Die markierten Ziffern kommen in der Zahl mehrfach vor.',
+    kakuro_wrong_sum: 'Die Summe stimmt in der markierten Zahl nicht.',
+
     kropki: 'Kropki',
     kropki_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
         +'dass jede Zahl in jeder Zeile und jeder Spalte genau einmal vorkommt.\n\n'

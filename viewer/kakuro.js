@@ -41,23 +41,23 @@ teka.viewer.kakuro.KakuroViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
-    this.asciiToPuzzle(data.get('puzzle'));
+    this.asciiToData(data.get('puzzle'));
     this.asciiToSolution(data.get('solution'));
-    
+
     this.f = teka.new_array([this.X,this.Y],0);
     this.c = teka.new_array([this.X,this.Y],0);
     this.error = teka.new_array([this.X,this.Y],false);
 };
 
-/** asciiToPuzzle */
-teka.viewer.kakuro.KakuroViewer.prototype.asciiToPuzzle = function(ascii)
+/** Read puzzle form ascii art. */
+teka.viewer.kakuro.KakuroViewer.prototype.asciiToData = function(ascii)
 {
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.puzzle = teka.new_array([this.X,this.Y,2],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -77,7 +77,7 @@ teka.viewer.kakuro.KakuroViewer.prototype.asciiToPuzzle = function(ascii)
             } else {
                 this.puzzle[i][j][0] = 10*(grid[2*i][2*j]-teka.ord('0'))+(grid[2*i+1][2*j]-teka.ord('0'));
             }
-            
+
             if (grid[2*i+1][2*j+1]==teka.ord('#')) {
                 this.puzzle[i][j][1] = 0;
             } else if (grid[2*i][2*j+1]==teka.ord('#')) {
@@ -95,9 +95,9 @@ teka.viewer.kakuro.KakuroViewer.prototype.asciiToSolution = function(ascii)
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -125,10 +125,10 @@ teka.viewer.kakuro.KakuroViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.kakuro.KakuroViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (kakuro)\n/sol false\n/X 5\n/Y 5'
-        +'\n/puzzle [ (##########) (##1614####) (#8    ####) (##    10#7) (30        )'
-        +' (##        ) (###6      ) (####      ) (###3    ##) (####    ##) ]'
-        +'\n/solution [ (#####) (#71##) (#9876) (##321) (##21#) ]';
+    return '/format 1\n/type (kakuro)\n/sol false\n/X 4\n/Y 4\n'
+        +'/puzzle [ (########) (###421##) (##    ##) (##    ##) '
+        +'(11      ) (##      ) (###54   ) (####    ) ]\n/solution [ '
+        +'(####) (#39#) (#182) (##41) ]';
 };
 
 /** Returns a list of automatically generated properties. */
@@ -217,21 +217,24 @@ teka.viewer.kakuro.KakuroViewer.prototype.check = function()
 {
     var X = this.X;
     var Y = this.Y;
+
+    // convert user input to check
     var check = teka.new_array([X,Y],0);
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]===null) {
                 check[i][j] = this.getDigit(this.f[i][j]);
-                if (check[i][j]==0) {
+                if (check[i][j]===false) {
                     this.error[i][j] = true;
-                    return 'Das markierte Feld enthält kein eindeutiges Symbol.';
+                    return 'kakuro_not_unique';
                 }
             } else if (this.puzzle[i][j].length==1) {
                 check[i][j] = this.puzzle[i][j][0];
             }
         }
     }
-    
+
+    // check sums
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]!==null && this.puzzle[i][j].length==2) {
@@ -241,7 +244,7 @@ teka.viewer.kakuro.KakuroViewer.prototype.check = function()
                         return h;
                     }
                 }
-                
+
                 if (this.puzzle[i][j][1]>0) {
                     var h = this.checkSum(check,this.puzzle[i][j][1],0,1,i,j);
                     if (h!=null) {
@@ -254,50 +257,62 @@ teka.viewer.kakuro.KakuroViewer.prototype.check = function()
     return true;
 };
 
-/** checkSum */
+/**
+ * Checks, if the sum of a row or column is correct
+ * and if all digits are different.
+ */
 teka.viewer.kakuro.KakuroViewer.prototype.checkSum = function(check, sum, dx, dy, x, y)
 {
     x+=dx;
     y+=dy;
     var sx = x;
     var sy = y;
+
     var s = 0;
-    var da = teka.new_array([10],false);
+    var used = teka.new_array([10],false);
+
     while (x<this.X && y<this.Y) {
-        if (this.puzzle[x][y]!=null && this.puzzle[x][y].length==2) {
+        if (this.puzzle[x][y]!==null && this.puzzle[x][y].length==2) {
             break;
         }
+
         s+=check[x][y];
-        if (da[check[x][y]]) {
+        if (used[check[x][y]]) {
+
             while (sx<this.X && sy<this.Y) {
                 if (this.puzzle[sx][sy]!=null && this.puzzle[sx][sy].length==2) {
                     break;
                 }
+
                 if (check[sx][sy]==check[x][y]) {
                     this.error[sx][sy] = true;
                 }
                 sx+=dx;
                 sy+=dy;
             }
-            return 'Die markierten Ziffern kommen in der Zahl mehrfach vor.';
+            return 'kakuro_duplicate';
         }
-        da[check[x][y]] = true;
+
+        used[check[x][y]] = true;
         x+=dx;
         y+=dy;
     }
+
     if (sum==s) {
         return null;
     }
-    
+
     while (sx<this.X && sy<this.Y) {
         if (this.puzzle[sx][sy]!=null && this.puzzle[sx][sy].length==2) {
             break;
         }
+
         this.error[sx][sy] = true;
+
         sx+=dx;
         sy+=dy;
     }
-    return 'Die Summe stimmt in der markierten Zahl nicht.';
+    return 'kakuro_wrong_sum';
 };
 
 //////////////////////////////////////////////////////////////////
@@ -322,7 +337,7 @@ teka.viewer.kakuro.KakuroViewer.prototype.setMetrics = function(g)
                                      (this.height-3)/this.Y));
     var realwidth = this.X*this.scale+3;
     var realheight = this.Y*this.scale+3;
-    
+
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
     this.borderX = 1;
@@ -333,7 +348,7 @@ teka.viewer.kakuro.KakuroViewer.prototype.setMetrics = function(g)
     this.givensfont = teka.getFontData(Math.round(this.scale/3)+'px sans-serif',this.scale);
     this.mediumfont = teka.getFontData(Math.round(this.scale/3)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round((this.scale-6)/4)+'px sans-serif',this.scale);
-    
+
     if (realwidth>this.width || realheight>this.height) {
         this.scale=false;
     }
@@ -352,7 +367,8 @@ teka.viewer.kakuro.KakuroViewer.prototype.paint = function(g)
 
     g.fillStyle = '#fff';
     g.fillRect(0,0,X*S,Y*S);
-    
+
+    // paint background of cells
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]===null || this.puzzle[i][j].length==1) {
@@ -363,7 +379,8 @@ teka.viewer.kakuro.KakuroViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
+    // paint content of dark cells
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]!==null) {
@@ -375,14 +392,21 @@ teka.viewer.kakuro.KakuroViewer.prototype.paint = function(g)
                     g.fillText(this.puzzle[i][j][0],S*i+S/2,S*j+S/2+this.boldfont.delta);
                     continue;
                 }
-                
-                g.fillStyle = this.puzzle[i][j][0]===0 && this.puzzle[i][j][1]===0?
-                    '#888':'#CCC';
-                g.fillRect(S*i,S*j,S,S);
-                if (this.puzzle[i][j][0]!==0 || this.puzzle[i][j][1]!==0) {
-                    teka.drawLine(g,S*i,S*j,S*(i+1),S*(j+1));
+
+                if (this.puzzle[i][j][0]===0 && this.puzzle[i][j][1]===0 &&
+                    (i===0 || this.puzzle[i-1][j]!==null) &&
+                    (i===X-1 || this.puzzle[i+1][j]!==null) &&
+                    (j===0 || this.puzzle[i][j-1]!==null) &&
+                    (j===Y-1 || this.puzzle[i][j+1]!==null)) {
+                    g.fillStyle = '#888';
+                    g.fillRect(S*i,S*j,S,S);
+                    continue;
                 }
-                
+
+                g.fillStyle = '#CCC';
+                g.fillRect(S*i,S*j,S,S);
+                teka.drawLine(g,S*i,S*j,S*(i+1),S*(j+1));
+
                 g.textAlign = 'center';
                 g.textBaseline = 'middle';
                 g.fillStyle = '#000';
@@ -396,26 +420,27 @@ teka.viewer.kakuro.KakuroViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
+    // paint content of light cells
     g.fillStyle = '#000';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]===null && this.f[i][j]>0) {
                 g.fillStyle = this.getColorString(this.c[i][j]);
-                
+
                 if (this.f[i][j]<10) {
                     g.textAlign = 'center';
                     g.textBaseline = 'middle';
                     g.font = this.font.font;
                     g.fillText(this.f[i][j],S*i+S/2,S*j+S/2+this.font.delta);
                     continue;
-                } 
+                }
 
                 if (this.f[i][j]>=100 && this.f[i][j]<1000) {
                     var a = (this.f[i][j]-100)%10;
                     var b = Math.floor((this.f[i][j]-100)/10);
                     var tmp = (a===0?'?':a)+'-'+(b===0?'?':b);
-                    
+
                     g.fillStyle = this.getColorString(this.c[i][j]);
                     g.font = this.mediumfont.font;
                     g.fillText(tmp,S*i+S/2,S*j+S/2+this.mediumfont.delta);
@@ -438,14 +463,15 @@ teka.viewer.kakuro.KakuroViewer.prototype.paint = function(g)
                 teka.drawLine(g,S*(i+1)-3*S/8,S*j+S/8,S*(i+1)-3*S/8,S*(j+1)-S/8);
                 teka.drawLine(g,S*i+S/8,S*j+3*S/8,S*(i+1)-S/8,S*j+3*S/8);
                 teka.drawLine(g,S*i+S/8,S*(j+1)-3*S/8,S*(i+1)-S/8,S*(j+1)-3*S/8);
-                
+
                 // little x
                 teka.drawLine(g,(i+1)*S-S/8-2,(j+1)*S-S/8-2,(i+1)*S-2,(j+1)*S-2);
                 teka.drawLine(g,(i+1)*S-S/8-2,(j+1)*S-2,(i+1)*S-2,(j+1)*S-S/8-2);
             }
         }
     }
-    
+
+    // paint grid
     g.strokeStyle = '#000';
     for (var i=1;i<=X-1;i++) {
         teka.drawLine(g,i*S,0,i*S,Y*S);
@@ -453,42 +479,43 @@ teka.viewer.kakuro.KakuroViewer.prototype.paint = function(g)
     for (var j=1;j<=Y-1;j++) {
         teka.drawLine(g,0,j*S,X*S,j*S);
     }
-    
+
     g.lineWidth = 3;
     g.strokeRect(0,0,X*S,Y*S);
     g.lineWidth = 1;
 
+    // paint cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle = '#f00';
         if (this.exp) {
-            teka.drawLine(g,(this.x+1)*S+3-S/8,(this.y+1)*S+3-S/8,(this.x+1)*S-2,(this.y+1)*S-2);
-            teka.drawLine(g,(this.x+1)*S+3-S/8,(this.y+1)*S-2,(this.x+1)*S-2,(this.y+1)*S+3-S/8);
+            teka.drawLine(g,(this.x+1)*S-S/8-2,(this.y+1)*S-S/8-2,(this.x+1)*S-2,(this.y+1)*S-2);
+            teka.drawLine(g,(this.x+1)*S-S/8-2,(this.y+1)*S-2,(this.x+1)*S-2,(this.y+1)*S-S/8-2);
         } else {
             g.lineWidth = 2;
             g.strokeRect(S*this.x+3.5,S*this.y+3.5,S-7,S-7);
         }
     }
-    
+
     g.restore();
 };
 
 //////////////////////////////////////////////////////////////////
 
-/** processMousemoveEvent */
+/** Handles mousemove event. */
 teka.viewer.kakuro.KakuroViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     xc = xc-this.deltaX-this.borderX;
     yc = yc-this.deltaY-this.borderY;
-    
+
     var oldx = this.x;
     var oldy = this.y;
 
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
-    
+
     this.xm = xc-this.scale*this.x;
     this.ym = yc-this.scale*this.y;
-    
+
     if (this.x<1) {
         this.x=1;
     }
@@ -501,22 +528,22 @@ teka.viewer.kakuro.KakuroViewer.prototype.processMousemoveEvent = function(xc, y
     if (this.y>this.Y-1) {
         this.y=this.Y-1;
     }
-    
+
     var oldexp = this.exp;
     this.exp = this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8;
-    
+
     return this.x!=oldx || this.y!=oldy || this.exp!=oldexp;
 };
 
-/** processMousedownEvent */
+/** Handles mousedown event. */
 teka.viewer.kakuro.KakuroViewer.prototype.processMousedownEvent = function(xc, yc)
 {
     var erg = this.processMousemoveEvent(xc,yc,false);
-    
+
     if (this.puzzle[this.x][this.y]!==null) {
         return erg;
     }
-    
+
     if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
         if (this.f[this.x][this.y]<1000) {
             this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
@@ -525,33 +552,37 @@ teka.viewer.kakuro.KakuroViewer.prototype.processMousedownEvent = function(xc, y
         }
         return true;
     }
-    
+
     if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<1000) {
         if (this.xm<this.scale/2) {
-            this.set(this.x,this.y,(((this.f[this.x][this.y]-100)%10)+1)%10+((this.f[this.x][this.y]-100)/10*10)+100);
+            this.set(this.x,this.y,
+                     (((this.f[this.x][this.y]-100)%10)+1)%10+
+                     (Math.floor((this.f[this.x][this.y]-100)/10)*10)+100);
         } else {
-            this.set(this.x,this.y,((((this.f[this.x][this.y]-100)/10)+1)%10)*10+((this.f[this.x][this.y]-100)%10)+100);
+            this.set(this.x,this.y,
+                     ((Math.floor((this.f[this.x][this.y]-100)/10)+1)%10)*10+
+                     ((this.f[this.x][this.y]-100)%10)+100);
         }
         return true;
     }
-    
+
     if (this.f[this.x][this.y]>=1000) {
         var nr = ((this.xm<3*this.scale/8)?0:(this.xm>this.scale-3*this.scale/8)?2:1)+
             3*((this.ym<3*this.scale/8)?0:(this.ym>this.scale-3*this.scale/8)?2:1)+1;
         this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000);
         return true;
     }
-    
+
     this.set(this.x,this.y,(this.f[this.x][this.y]+1)%10);
-    
+
     return true;
 };
 
-/** processKeydownEvent */
+/** Handles keydown event. */
 teka.viewer.kakuro.KakuroViewer.prototype.processKeydownEvent = function(e)
 {
     this.exp = false;
-    
+
     if (e.key==teka.KEY_DOWN) {
         if (this.y<this.Y-1) {
             this.y++;
@@ -631,40 +662,50 @@ teka.viewer.kakuro.KakuroViewer.prototype.set = function(x, y, value)
     this.c[x][y]=this.color;
 };
 
-/** getDigit */
+/**
+ * Tries to convert the content of a cell to a digit.
+ * Returns false if not possible.
+ */
 teka.viewer.kakuro.KakuroViewer.prototype.getDigit = function(h)
 {
+    if (h===0) {
+        return false;
+    }
+
     if (h<10) {
         return h;
     }
+
     if (h<100) {
-        return 0;
+        return false;
     }
+
     if (h<1000) {
         var a = (h-100)%10;
-        var b = (h-100)/10;
-        if (a==0 && b==1) {
+        var b = Math.floor((h-100)/10);
+        if (a===0 && b===1) {
             return 1;
         }
-        if (a==9 && b==0) {
+        if (a===9 && b===0) {
             return 9;
         }
         if (a==b) {
             return a;
         }
-        return 0;
+        return false;
     }
+
     var k = -1;
     for (var i=1;i<=9;i++) {
         if (((h-1000)&(1<<i))!=0) {
             if (k!=-1) {
-                return 0;
+                return false;
             }
             k = i;
         }
     }
     if (k==-1) {
-        return 0;
+        return false;
     }
     return k;
 };
@@ -672,15 +713,15 @@ teka.viewer.kakuro.KakuroViewer.prototype.getDigit = function(h)
 /** Converts from normal mode to expert mode. */
 teka.viewer.kakuro.KakuroViewer.prototype.setExpert = function(h)
 {
-    if (h==0) {
+    if (h===0) {
         return 1000;
     }
     if (h<10) {
         return 1000+(1<<h);
     }
     var a = (h-100)%10;
-    var b = (h-100)/10;
-    if (b==0) {
+    var b = Math.floor((h-100)/10);
+    if (b===0) {
         b=9;
     }
     if (a>b) {
@@ -711,10 +752,10 @@ teka.viewer.kakuro.KakuroViewer.prototype.getExpert = function(h)
             }
         }
     }
-    if (min==10 && max==0) {
+    if (min===10 && max===0) {
         return 0;
     }
-    if (min==max) {
+    if (min===max) {
         return min;
     }
     return 100+10*max+min;

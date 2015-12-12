@@ -772,9 +772,13 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousedownEvent = 
 
     if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<1000) {
         if (this.xm<this.scale/2) {
-            this.set(this.x,this.y,(((this.f[this.x][this.y]-100)%10)+1)%(this.MAX+1)+((this.f[this.x][this.y]-100)/10*10)+100);
+            this.set(this.x,this.y,
+                     (((this.f[this.x][this.y]-100)%10)+1)%(this.MAX+1)+
+                     (Math.floor((this.f[this.x][this.y]-100)/10)*10)+100);
         } else {
-            this.set(this.x,this.y,((((this.f[this.x][this.y]-100)/10)+1)%(this.MAX+1))*10+((this.f[this.x][this.y]-100)%10)+100);
+            this.set(this.x,this.y,
+                     ((Math.floor((this.f[this.x][this.y]-100)/10)+1)%(this.MAX+1))*10+
+                     ((this.f[this.x][this.y]-100)%10)+100);
         }
         return true;
     }
