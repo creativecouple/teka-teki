@@ -133,6 +133,86 @@ teka.dictionary = {
 
     generic_size: 'Größe {1}.',
 
+    hashi: 'Hashi',
+    hashi_instructions: 'Verbinden Sie die Inseln so durch Brücken, dass jede Insel '
+        +'von jeder anderen aus erreichbar ist. Die Brücken dürfen dabei '
+        +'nur waagerecht oder senkrecht gebaut werden und nicht über andere '
+        +'Brücken oder Inseln hinweggehen. Zwischen zwei Inseln dürfen sich '
+        +'maximal zwei Brücken befinden. Die Zahlen in den Inseln geben an, '
+        +'wie viele Brücken von dieser Insel aus wegführen.\n\n'
+        +'Für eine korrekte Lösung müssen nur die Brücken eingezeichnet werden.',
+    hashi_usage: 'Bedienung mit der Maus:\n\n'
+        +'Brücken:\n'
+        +'1. Klick: Eine waagerechte Brücke; 2. Klick: Zwei waagerechte Brücken\n'
+        +'3. Klick: Eine senkrechte Brücke; 4. Klick: Zwei senkrechte Brücken\n'
+        +'5. Klick: Feldinhalt löschen\nBrücken, die nicht gebaut werden können '
+        +'werden dabei übersprungen\n'
+        +'Inseln:\n'
+        +'1. Klick: Markieren\n2. Klick: Markierung löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Brücken:\n'
+        +'w: Eine waagerechte Brücke; Shift-W oder e: zwei waagerechte Brücken\n'
+        +'s: Eine senkrechte Brücke; Shift-S oder d: zwei senkrechte Brücken\n'
+        +'Ist bereits die entsprechende Brücke eingezeichnet wird eine zweite '
+        +'Brücke dazu beziehungsweise eine weniger eingezeichnet.\n'
+        +'Inseln:\n'
+        +'#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
+    hashi_wrong_bridges: 'In der markierten Insel stimmt die Anzahl der Brücken nicht.',
+    hashi_not_connected: 'Die markierten Inseln hängen nicht mit dem Rest zusammen.',
+
+    hitori: 'Hitori',
+    hitori_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass in den '
+        +'verbleibenden Feldern jede Zahl in jeder Zeile und jeder Spalte nur '
+        +'maximal einmal vorkommt. Alle ungeschwärzten Felder müssen miteinander '
+        +'verbunden sein (das heißt, die Schwarzfelder dürfen das Rätsel nicht '
+        +'in zwei Teile teilen). Zudem dürfen keine zwei Schwarzfelder benachbart sein.\n\n'
+        +'Für eine korrekte Lösung werden nur die Schwarzfelder gewertet.',
+    hitori_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Schwarzes Feld\n2. Klick: Weißes Feld (markiert durch einen Kreis)\n3. Klick: Feldinhalt löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch einen Kreis)\nLeertaste: Feldinhalt löschen',
+    hitori_neighbours: 'Die markierten schwarzen Felder sind benachbart.',
+    hitori_same_numbers: 'In den markierten Feldern befindet sich die gleiche Zahl.',
+    hitori_not_connected: 'Die markierten Felder sind nicht mit dem Rest der weißen Felder verbunden.',
+
+    japanese_sums: 'Japanische Summen',
+    japanese_sums_instructions: 'Schwärzen Sie einige Felder im Diagramm und tragen Sie in die '
+        +'restlichen Felder die angegebenen Ziffern so ein, dass in keiner '
+        +'Zeile oder Spalte eine Ziffer mehrfach vorkommt. Die Zahlen am '
+        +'Rand geben in der richtigen Reihenfolge die Summen von Blöcken '
+        +'aufeinanderfolgender Ziffern (ohne Schwarzfeld dazwischen) an. '
+        +'Auch einzelne Ziffern werden hier angegeben. Ein Fragezeichen steht '
+        +'für eine unbekannte Zahl. Steht am Rand nichts, so ist über die '
+        +'entsprechenden Zeile oder Spalte nichts bekannt.\n\n'
+        +'Für eine korrekte Lösung müssen zusätzlich zu allen Zahlen auch '
+        +'alle Schwarzfelder eingezeichnet sein.',
+    japanese_sums_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick zeichnet einen Kreis in das Feld ein. Dieser bedeutet, '
+        +'dass es sich um ein Zahlenfeld handelt. Der nächste Klick trägt ein '
+        +'Schwarzfeld ein. Danach folgen die Zahlen von 1 bis zur Maximalzahl '
+        +'und mit dem nächsten Klick wird der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'. oder O: Als Zahlenfeld markieren (wird als Kreis dargestellt)\n'
+        +'X, B oder S: Schwarzfeld\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    japanese_sums_digits: 'Zahlen von 1 bis {1}.',
+    japanese_sums_empty: 'Das markierte Feld ist leer.',
+    japanese_sums_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    japanese_sums_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',
+    japanese_sums_column_duplicate: 'Die markierten Zahlen kommen in der Spalte doppelt vor.',
+    japanese_sums_row_count: 'In der markierten Zeile stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
+    japanese_sums_column_count: 'In der markierten Spalte stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
+    japanese_sums_sum_wrong: 'Die markierten Zahlen ergeben nicht die entsprechende Summe am Rand.',
+
     kakuro: 'Kakuro',
     kakuro_instructions: 'Füllen Sie das Rätsel wie ein Kreuzworträtsel aus. Verwenden Sie'
         +' dabei an Stelle der Buchstaben die Ziffern von 1 bis 9. Die Beschreibung'
@@ -216,128 +296,6 @@ teka.dictionary = {
     magnets_column_plus: 'In der markierten Spalte stimmt die Anzahl der Pluspole nicht.',
     magnets_column_minus: 'In der markierten Spalte stimmt die Anzahl der Minuspole nicht.',
 
-    starbattle: 'Doppelstern',
-    starbattle_instructions: 'Tragen Sie in das Diagramm Sterne so ein, dass sich '
-        +'in jeder Zeile, jeder Spalte und jedem fettumrandeten Gebiet genau so '
-        +'viele Sterne befinden wie unter dem Rätsel angegeben ist. '
-        +'Die Sterne haben jeweils die Größe eines Kästchens und dürfen einander '
-        +'nicht berühren, auch nicht diagonal.',
-    starbattle_usage: 'Bedienung mit der Maus:\n\n'
-        +'1. Klick: Stern\n2. Klick: Leerfeld (markiert durch einen Strich)\n'
-        +'3. Klick: Feldinhalt löschen\n\n\n'
-        +'Bedienung mit der Tastatur:\n\n'
-        +'#, * und Q: Stern\n-, / und W: Leerfeld (markiert durch einen Strich)\n'
-        +'Leertaste: Feldinhalt löschen',
-    starbattle_stars: 'Anzahl der Sterne: {1}',
-    starbattle_touch: 'Die beiden markierten Sterne berühren sich.',
-    starbattle_row: 'In der markierten Zeile stimmt die Anzahl der Sterne nicht.',
-    starbattle_column: 'In der markierten Spalte stimmt die Anzahl der Sterne nicht.',
-    starbattle_area: 'Im markierten Gebiet stimmt die Anzahl der Sterne nicht.',
-
-    tapa: 'Tapa',
-    tapa_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass alle schwarzen '
-        +'Felder waagerecht oder senkrecht zusammenhängen und kein 2x2-Feld '
-        +'komplett geschwärzt ist. Felder mit Zahlen dürfen dabei grundsätzlich '
-        +'nicht geschwärzt werden.\n\n'
-        +'Für die Felder, die Zahlen enthalten, gilt: '
-        +'Betrachtet man die Nachbarfelder dieses Feldes einmal im Kreis herum, so '
-        +'erhält man eine Folge von schwarzen und weißen Feldern. Die Zahlen geben '
-        +'die Längen der Schwarzblöcke in dieser Sequenz wieder, wobei jede Zahl zu '
-        +'genau einem Block gehört und die Reihenfolge nicht bekannt ist.\n\n'
-        +'Für eine korrekte Lösung sind nur die schwarzen Felder relevant. '
-        +'Die weißen Felder können mit einem Kreuz markiert oder leer sein.',
-    tapa_usage: 'Bedienung mit der Maus:\n\n'
-        +'1. Klick: Schwarzes Feld\n2. Klick: Weißes Feld (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n'
-        +'In einem Feld mit Vorgaben führt der erste Klick zu einem '
-        +'Kreuz und der zweite löscht dieses wieder.\n\n\n'
-        +'Bedienung mit der Tastatur:\n\n'
-        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n\n'
-        +'In einem Feld mit Vorgaben führen #, * und Q zu einem Kreuz und die Leertaste '
-        +'löscht dieses wieder.',
-    tapa_2x2: 'Die vier markierten Felder bilden ein volles 2x2-Gebiet.',
-    tapa_wrong_numbers: 'Im markierten Feld stimmen die Zahlen nicht.',
-    tapa_not_connected: 'Die markierten Felder hängen nicht mit dem Rest der Schwarzfelder zusammen.',
-
-    hashi: 'Hashi',
-    hashi_instructions: 'Verbinden Sie die Inseln so durch Brücken, dass jede Insel '
-        +'von jeder anderen aus erreichbar ist. Die Brücken dürfen dabei '
-        +'nur waagerecht oder senkrecht gebaut werden und nicht über andere '
-        +'Brücken oder Inseln hinweggehen. Zwischen zwei Inseln dürfen sich '
-        +'maximal zwei Brücken befinden. Die Zahlen in den Inseln geben an, '
-        +'wie viele Brücken von dieser Insel aus wegführen.\n\n'
-        +'Für eine korrekte Lösung müssen nur die Brücken eingezeichnet werden.',
-    hashi_usage: 'Bedienung mit der Maus:\n\n'
-        +'Brücken:\n'
-        +'1. Klick: Eine waagerechte Brücke; 2. Klick: Zwei waagerechte Brücken\n'
-        +'3. Klick: Eine senkrechte Brücke; 4. Klick: Zwei senkrechte Brücken\n'
-        +'5. Klick: Feldinhalt löschen\nBrücken, die nicht gebaut werden können '
-        +'werden dabei übersprungen\n'
-        +'Inseln:\n'
-        +'1. Klick: Markieren\n2. Klick: Markierung löschen\n\n\n'
-        +'Bedienung mit der Tastatur:\n\n'
-        +'Brücken:\n'
-        +'w: Eine waagerechte Brücke; Shift-W oder e: zwei waagerechte Brücken\n'
-        +'s: Eine senkrechte Brücke; Shift-S oder d: zwei senkrechte Brücken\n'
-        +'Ist bereits die entsprechende Brücke eingezeichnet wird eine zweite '
-        +'Brücke dazu beziehungsweise eine weniger eingezeichnet.\n'
-        +'Inseln:\n'
-        +'#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
-    hashi_wrong_bridges: 'In der markierten Insel stimmt die Anzahl der Brücken nicht.',
-    hashi_not_connected: 'Die markierten Inseln hängen nicht mit dem Rest zusammen.',
-
-    japanese_sums: 'Japanische Summen',
-    japanese_sums_instructions: 'Schwärzen Sie einige Felder im Diagramm und tragen Sie in die '
-        +'restlichen Felder die angegebenen Ziffern so ein, dass in keiner '
-        +'Zeile oder Spalte eine Ziffer mehrfach vorkommt. Die Zahlen am '
-        +'Rand geben in der richtigen Reihenfolge die Summen von Blöcken '
-        +'aufeinanderfolgender Ziffern (ohne Schwarzfeld dazwischen) an. '
-        +'Auch einzelne Ziffern werden hier angegeben. Ein Fragezeichen steht '
-        +'für eine unbekannte Zahl. Steht am Rand nichts, so ist über die '
-        +'entsprechenden Zeile oder Spalte nichts bekannt.\n\n'
-        +'Für eine korrekte Lösung müssen zusätzlich zu allen Zahlen auch '
-        +'alle Schwarzfelder eingezeichnet sein.',
-    japanese_sums_usage: 'Bedienung mit der Maus:\n\n'
-        +'Der erste Klick zeichnet einen Kreis in das Feld ein. Dieser bedeutet, '
-        +'dass es sich um ein Zahlenfeld handelt. Der nächste Klick trägt ein '
-        +'Schwarzfeld ein. Danach folgen die Zahlen von 1 bis zur Maximalzahl '
-        +'und mit dem nächsten Klick wird der Feldinhalt gelöscht.\n\n'
-        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
-        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
-        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
-        +'den Expertenmodus.\n\n\n'
-        +'Bedienung mit der Tastatur:\n\n'
-        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
-        +'. oder O: Als Zahlenfeld markieren (wird als Kreis dargestellt)\n'
-        +'X, B oder S: Schwarzfeld\n'
-        +'Leertaste: Feldinhalt löschen\n'
-        +'Minustaste: Markierung von Zahlbereichen\n'
-        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
-        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
-        +'und ausschalten.',
-    japanese_sums_digits: 'Zahlen von 1 bis {1}.',
-    japanese_sums_empty: 'Das markierte Feld ist leer.',
-    japanese_sums_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
-    japanese_sums_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',
-    japanese_sums_column_duplicate: 'Die markierten Zahlen kommen in der Spalte doppelt vor.',
-    japanese_sums_row_count: 'In der markierten Zeile stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
-    japanese_sums_column_count: 'In der markierten Spalte stimmt die Anzahl der Summen nicht mit denen am Rand überein.',
-    japanese_sums_sum_wrong: 'Die markierten Zahlen ergeben nicht die entsprechende Summe am Rand.',
-
-    hitori: 'Hitori',
-    hitori_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass in den '
-        +'verbleibenden Feldern jede Zahl in jeder Zeile und jeder Spalte nur '
-        +'maximal einmal vorkommt. Alle ungeschwärzten Felder müssen miteinander '
-        +'verbunden sein (das heißt, die Schwarzfelder dürfen das Rätsel nicht '
-        +'in zwei Teile teilen). Zudem dürfen keine zwei Schwarzfelder benachbart sein.\n\n'
-        +'Für eine korrekte Lösung werden nur die Schwarzfelder gewertet.',
-    hitori_usage: 'Bedienung mit der Maus:\n\n'
-        +'1. Klick: Schwarzes Feld\n2. Klick: Weißes Feld (markiert durch einen Kreis)\n3. Klick: Feldinhalt löschen\n\n\n'
-        +'Bedienung mit der Tastatur:\n\n'
-        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch einen Kreis)\nLeertaste: Feldinhalt löschen',
-    hitori_neighbours: 'Die markierten schwarzen Felder sind benachbart.',
-    hitori_same_numbers: 'In den markierten Feldern befindet sich die gleiche Zahl.',
-    hitori_not_connected: 'Die markierten Felder sind nicht mit dem Rest der weißen Felder verbunden.',
-
     masyu: 'Masyu',
     masyu_instructions: 'Zeichnen Sie in das Rätsel einen Rundweg ein, der durch jedes Feld mit einem'
         +' Kreis hindurchgeht und in den Feldern im 90°-Winkel abbiegen kann.'
@@ -362,6 +320,73 @@ teka.dictionary = {
     masyu_black_circle: 'Im markierten Feld muss der Weg abbiegen, und in beiden Richtungen danach geradeaus weiter gehen.',
     masyu_not_connected: 'Der markierte Rundweg hängt nicht mit dem Rest des Weges zusammen.',
     masyu_no_line_found: 'Im Diagramm befindet sich kein Wegstück.',
+
+    starbattle: 'Doppelstern',
+    starbattle_instructions: 'Tragen Sie in das Diagramm Sterne so ein, dass sich '
+        +'in jeder Zeile, jeder Spalte und jedem fettumrandeten Gebiet genau so '
+        +'viele Sterne befinden wie unter dem Rätsel angegeben ist. '
+        +'Die Sterne haben jeweils die Größe eines Kästchens und dürfen einander '
+        +'nicht berühren, auch nicht diagonal.',
+    starbattle_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Stern\n2. Klick: Leerfeld (markiert durch einen Strich)\n'
+        +'3. Klick: Feldinhalt löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Stern\n-, / und W: Leerfeld (markiert durch einen Strich)\n'
+        +'Leertaste: Feldinhalt löschen',
+    starbattle_stars: 'Anzahl der Sterne: {1}',
+    starbattle_touch: 'Die beiden markierten Sterne berühren sich.',
+    starbattle_row: 'In der markierten Zeile stimmt die Anzahl der Sterne nicht.',
+    starbattle_column: 'In der markierten Spalte stimmt die Anzahl der Sterne nicht.',
+    starbattle_area: 'Im markierten Gebiet stimmt die Anzahl der Sterne nicht.',
+
+    sudoku: 'Sudoku',
+    sudoku_instructions: 'Tragen Sie die angegebenen Ziffern so in das Diagramm ein, '
+        +'dass in jeder Zeile, jeder Spalte und jedem fett umrandeten '
+        +'Gebiet jede Ziffer genau einmal vorkommt.',
+    sudoku_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
+        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    sudoku_digits: 'Ziffern von 1 bis {1}.',
+    sudoku_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    sudoku_empty: 'Das markierte Feld ist leer.',
+    sudoku_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
+    sudoku_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
+    sudoku_area_duplicate: 'Die markierten Ziffern kommen in dem Gebiet doppelt vor.',
+    
+    tapa: 'Tapa',
+    tapa_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass alle schwarzen '
+        +'Felder waagerecht oder senkrecht zusammenhängen und kein 2x2-Feld '
+        +'komplett geschwärzt ist. Felder mit Zahlen dürfen dabei grundsätzlich '
+        +'nicht geschwärzt werden.\n\n'
+        +'Für die Felder, die Zahlen enthalten, gilt: '
+        +'Betrachtet man die Nachbarfelder dieses Feldes einmal im Kreis herum, so '
+        +'erhält man eine Folge von schwarzen und weißen Feldern. Die Zahlen geben '
+        +'die Längen der Schwarzblöcke in dieser Sequenz wieder, wobei jede Zahl zu '
+        +'genau einem Block gehört und die Reihenfolge nicht bekannt ist.\n\n'
+        +'Für eine korrekte Lösung sind nur die schwarzen Felder relevant. '
+        +'Die weißen Felder können mit einem Kreuz markiert oder leer sein.',
+    tapa_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Schwarzes Feld\n2. Klick: Weißes Feld (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n'
+        +'In einem Feld mit Vorgaben führt der erste Klick zu einem '
+        +'Kreuz und der zweite löscht dieses wieder.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n\n'
+        +'In einem Feld mit Vorgaben führen #, * und Q zu einem Kreuz und die Leertaste '
+        +'löscht dieses wieder.',
+    tapa_2x2: 'Die vier markierten Felder bilden ein volles 2x2-Gebiet.',
+    tapa_wrong_numbers: 'Im markierten Feld stimmen die Zahlen nicht.',
+    tapa_not_connected: 'Die markierten Felder hängen nicht mit dem Rest der Schwarzfelder zusammen.',
 
     dummy_to_avoid_comma_bug: ''
 };
