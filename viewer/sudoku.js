@@ -41,8 +41,10 @@ teka.extend(teka.viewer.sudoku.SudokuViewer,teka.viewer.PuzzleViewer);
 teka.viewer.sudoku.SudokuViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('size'),10);
-    this.asciiToData(data.get('puzzle'));
-    this.asciiToSolution(data.get('solution'));
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
+    this.asciiToSolution(data.get('solution'),digits);
     
     this.f = teka.new_array([this.X,this.X],0);
     this.c = teka.new_array([this.X,this.X],0);
@@ -50,7 +52,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.sudoku.SudokuViewer.prototype.asciiToData = function(ascii)
+teka.viewer.sudoku.SudokuViewer.prototype.asciiToData = function(ascii, d)
 {
     if (ascii===false) {
         return;
@@ -61,9 +63,10 @@ teka.viewer.sudoku.SudokuViewer.prototype.asciiToData = function(ascii)
     this.puzzle = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            this.puzzle[i][j] = grid[2*i+1][2*j+1]==teka.ord(' ')
-                ?teka.viewer.sudoku.Defaults.NONE
-                :(grid[2*i+1][2*j+1]-teka.ord('0'));
+            var nr = this.getNr(grid,(d+1)*i+1,2*j+1,d);
+            if (nr!==false) {
+                this.puzzle[i][j] = nr;
+            }
         }
     }
     
@@ -72,14 +75,14 @@ teka.viewer.sudoku.SudokuViewer.prototype.asciiToData = function(ascii)
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             if (this.area[i][j]==0) {
-                this.fillArea(grid,i,j,++nr);
+                this.fillArea(grid,i,j,++nr,d);
             }
         }
     }
 };
 
 /** Floodfill the areas starting with x,y. */
-teka.viewer.sudoku.SudokuViewer.prototype.fillArea = function(grid, x, y, nr)
+teka.viewer.sudoku.SudokuViewer.prototype.fillArea = function(grid, x, y, nr, d)
 {
     if (x<0 || y<0 || x>=this.X || y>=this.X) {
         return;
@@ -88,22 +91,22 @@ teka.viewer.sudoku.SudokuViewer.prototype.fillArea = function(grid, x, y, nr)
         return;
     }
     this.area[x][y] = nr;
-    if (grid[2*x+2][2*y+1]==teka.ord(' ')) {
-        this.fillArea(grid,x+1,y,nr);
+    if (grid[(d+1)*x+d+1][2*y+1]==teka.ord(' ')) {
+        this.fillArea(grid,x+1,y,nr,d);
     }
-    if (grid[2*x][2*y+1]==teka.ord(' ')) {
-        this.fillArea(grid,x-1,y,nr);
+    if (grid[(d+1)*x][2*y+1]==teka.ord(' ')) {
+        this.fillArea(grid,x-1,y,nr,d);
     }
-    if (grid[2*x+1][2*y+2]==teka.ord(' ')) {
-        this.fillArea(grid,x,y+1,nr);
+    if (grid[(d+1)*x+d][2*y+2]==teka.ord(' ')) {
+        this.fillArea(grid,x,y+1,nr,d);
     }
-    if (grid[2*x+1][2*y]==teka.ord(' ')) {
-        this.fillArea(grid,x,y-1,nr);
+    if (grid[(d+1)*x+d][2*y]==teka.ord(' ')) {
+        this.fillArea(grid,x,y-1,nr,d);
     }
 };
 
 /** Read solution from ascii art. */
-teka.viewer.sudoku.SudokuViewer.prototype.asciiToSolution = function(ascii)
+teka.viewer.sudoku.SudokuViewer.prototype.asciiToSolution = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -114,7 +117,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.asciiToSolution = function(ascii)
     this.solution = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            this.solution[i][j] = grid[i][j]-teka.ord('0');
+            this.solution[i][j] = this.getNr(grid,d*i,j,d);
         }
     }
 };
@@ -679,33 +682,6 @@ teka.viewer.sudoku.SudokuViewer.prototype.set = function(x, y, value)
     }
     this.f[x][y] = value;
     this.c[x][y] = this.color;
-};
-
-/** get */
-teka.viewer.sudoku.SudokuViewer.prototype.get = function(x, y)
-{
-    return this.f[x][y];
-};
-
-/** replaceDigit */
-teka.viewer.sudoku.SudokuViewer.prototype.replaceDigit = function(h)
-{
-    if (h<1000) {
-        return h;
-    }
-    var k = -1;
-    for (var i=1;i<=9;i++) {
-        if (((h-1000)&(1<<i))!=0) {
-            if (k!=-1) {
-                return h;
-            }
-            k = i;
-        }
-    }
-    if (k==-1) {
-        return h;
-    }
-    return k;
 };
 
 /** Converts from normal mode to expert mode. */
