@@ -1,0 +1,151 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 0 0 93 93
+%%CropBox: 0 0 93 93
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.8 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1.6 pt setlinewidth } def
+
+<<
+/format 1
+/type (kakuro)
+/sol false
+/X 4
+/Y 4
+/puzzle [
+(########)
+(###421##)
+(##    ##)
+(##    ##)
+(11      )
+(##      )
+(###54   )
+(####    ) ]
+/solution [
+(####)
+(#39#)
+(#182)
+(##41) ]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto 
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+/tr { dup 4 2 roll moveto 
+      stringwidth pop neg 0.94 add 0.65 rmoveto show } def
+/bl { 3 1 roll moveto 
+      0.06 0.06 rmoveto show } def
+
+1 setgray
+0 0 X Y rectfill
+0 setgray
+
+0 setlinecap
+duenn
+
+0 1 X 1 sub { /i e
+  0 1 Y 1 sub { /j e
+    puzzle Y j sub 1 sub 2 mul get i 2 mul get /h1 e
+    puzzle Y j sub 1 sub 2 mul get i 2 mul 1 add get /h2 e
+    puzzle Y j sub 1 sub 2 mul 1 add get i 2 mul get /h3 e
+    puzzle Y j sub 1 sub 2 mul 1 add get i 2 mul 1 add get /h4 e
+
+    h2 ( ) 0 get ne {
+      /clue false def
+
+      h2 (#) 0 get ne h4 (#) 0 get ne or {
+        /clue true def
+      } if
+
+      i 0 ne {
+        puzzle Y j sub 1 sub 2 mul get i 1 sub 2 mul 1 add get ( ) 0 get eq {
+          /clue true def
+        } if
+      } if
+
+      i X 1 sub ne {
+        puzzle Y j sub 1 sub 2 mul get i 1 add 2 mul 1 add get ( ) 0 get eq {
+          /clue true def
+        } if
+      } if
+
+      j 0 ne {
+        puzzle Y j 1 sub sub 1 sub 2 mul get i 2 mul 1 add get ( ) 0 get eq {
+          /clue true def
+        } if
+      } if
+
+      j X 1 sub ne {
+        puzzle Y j 1 add sub 1 sub 2 mul get i 2 mul 1 add get ( ) 0 get eq {
+          /clue true def
+        } if
+      } if
+
+      clue {
+        0.75 setgray
+        i j 1 1 rectfill
+        0 setgray
+        i j 1 add i 1 add j l
+      } {
+        0.5 setgray
+        i j 1 1 rectfill
+      } ifelse
+    } if
+  } for
+} for
+
+0 setgray
+duenn 
+0 1 X { /i e i 0 i Y l } for
+0 1 Y { /j e 0 j X j l } for
+
+duenn
+0 1 X 1 sub { /i e
+  0 1 Y 1 sub { /j e
+    puzzle Y j sub 1 sub 2 mul get i 2 mul 1 add get 32 eq {
+      /Helvetica findfont 0.65 scalefont setfont
+      sol {
+        i j solution Y j sub 1 sub get i get 48 sub 5 string cvs c
+      } {
+        puzzle Y j sub 1 sub 2 mul get i 2 mul get /h e
+        h 32 ne {
+          i j h 48 sub 5 string cvs c
+        } if
+      } ifelse
+    } {
+      puzzle Y j sub 1 sub 2 mul get i 2 mul get /h1 e
+      puzzle Y j sub 1 sub 2 mul get i 2 mul 1 add get /h2 e
+      puzzle Y j sub 1 sub 2 mul 1 add get i 2 mul get /h3 e
+      puzzle Y j sub 1 sub 2 mul 1 add get i 2 mul 1 add get /h4 e
+      
+      /Helvetica-Bold findfont 0.4 scalefont setfont
+      h2 (#) 0 get ne {
+        h1 (#) 0 get eq { /h1 48 def } if
+        i j h1 48 sub 10 mul h2 48 sub add 5 string cvs tr
+      } if
+      h4 (#) 0 get ne {
+        h3 (#) 0 get eq { /h3 48 def } if
+        i j h3 48 sub 10 mul h4 48 sub add 5 string cvs bl
+      } if
+      0 setgray
+    } ifelse
+  } for
+} for
+
+0 setgray
+dick
+0 0 X Y rectstroke
+
+
+end pgsave restore showpage
+%%EOF

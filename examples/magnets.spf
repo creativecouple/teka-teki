@@ -1,0 +1,188 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 0 0 162 162
+%%CropBox: 0 0 162 162
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.8 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1.6 pt setlinewidth } def
+
+<<
+/type (magnets)
+/sol false
+/X 5
+/Y 5
+/digits 2
+/puzzle [
+(    |          )
+( +  |      2   )
+(    |          )
+(   -|        1 )
+(----+-+-+-+-+-+)
+( 3  | |   |   |)
+(    + +-+-+-+-+)
+(    | |   | |#|)
+(    +-+-+-+ + +)
+( 1 1| | |#| |#|)
+(    + + +-+-+-+)
+(    | | |   | |)
+(    +-+-+-+-+ +)
+(    |- +|   | |)
+(    +-+-+-+-+-+) ]
+/solution [
+(+-+-+)
+(-##+#)
+(#+#-#)
+(#-##+)
+(-+-+-) ]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto 
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+currentdict /digits known not { /digits 1 def } if
+
+/minus {
+  gsave 
+    translate
+    0.09 setlinewidth
+    0.3 0.5 0.7 0.5 l
+  grestore
+} def
+
+/plus {
+  gsave 
+    translate
+    0.09 setlinewidth
+    0.3 0.5 0.7 0.5 l
+    0.5 0.3 0.5 0.7 l
+  grestore
+} def
+
+/neutral {
+  gsave
+    translate
+    0 0 1 1 rectfill
+  grestore
+} def
+
+/symbol {
+  /s e
+  s (+) 0 get eq { plus 1 1 } if
+  s (-) 0 get eq { minus 1 1 } if
+  s (#) 0 get eq { neutral 1 1 } if
+  pop pop
+} def
+
+2 setlinecap
+
+2 0 translate
+
+1 setgray
+0 0 X Y rectfill
+-2 0 2 Y rectfill
+0 Y X 2 rectfill
+0 setgray
+
+dick
+-2 0 X 2 add Y 2 add rectstroke
+0 0 0 Y 2 add l
+-2 Y X Y l
+
+duenn 
+0 1 X { /i e i Y i Y 2 add l } for
+0 1 Y { /j e -2 j 0 j l } for
+-1 0 -1 Y 1 add l
+-1 Y 1 add X Y 1 add l
+
+dick
+0 1 X { /i e
+  0 1 Y 1 sub { /j e
+    puzzle Y j sub 1 sub 2 mul digits 2 mul add 1 add get 
+      i 2 mul digits 2 mul add get (|) 0 get eq {
+      i j i j 1 add l
+    } if
+  } for
+} for
+
+0 1 X 1 sub { /i e
+  0 1 Y { /j e
+    puzzle Y j sub 1 sub 2 mul digits 2 mul add get 
+      i 2 mul digits 2 mul add 1 add get (-) 0 get eq {
+      i j 1 add i 1 add j 1 add l
+    } if
+  } for
+} for
+
+-2 Y 1 add plus
+-1 Y minus
+
+/getNr {
+  /x e /line e
+  line x digits add 1 sub get ( ) 0 get ne {
+    /val 0 def
+    0 1 digits 1 sub { /ii e
+      line x ii add get /hh e
+      hh ( ) 0 get eq { /hh (0) 0 get def } if
+      /val val 10 mul hh (0) 0 get sub add def
+    } for
+    val
+  } {
+    -1
+  } ifelse
+} def
+
+/getSNr {
+  /y e /x e /grid e
+  grid y digits add 1 sub get x get ( ) 0 get ne {
+    /val 0 def
+    0 1 digits 1 sub { /ii e
+      grid y ii add get x get /hh e
+      hh ( ) 0 get eq { /hh (0) 0 get def } if
+      /val val 10 mul hh (0) 0 get sub add def
+    } for
+    val
+  } {
+    -1
+  } ifelse
+} def
+
+/Helvetica findfont 0.65 scalefont setfont
+0 1 Y 1 sub { /j e
+  puzzle Y j sub 1 sub 2 mul digits 2 mul add 1 add get 
+    dup 0 getNr /h1 e digits getNr /h2 e
+  h1 -1 ne { -2 j h1 digits string cvs c } if
+  h2 -1 ne { -1 j h2 digits string cvs c } if
+} for
+0 1 X 1 sub { /i e
+  puzzle i 2 mul digits 2 mul add 1 add 0 getSNr /h1 e
+  puzzle i 2 mul digits 2 mul add 1 add digits getSNr /h2 e
+  h1 -1 ne { i Y 1 add h1 digits string cvs c } if
+  h2 -1 ne { i Y h2 digits string cvs c } if
+} for
+
+0 1 X 1 sub { /i e
+  0 1 Y 1 sub { /j e
+    i j
+    sol {
+      solution Y j sub 1 sub get i get
+    } {
+      puzzle Y j sub 1 sub 2 mul digits 2 mul add 1 add get 
+        i 2 mul digits 2 mul add 1 add get
+    } ifelse
+    symbol
+  } for
+} for
+
+end pgsave restore showpage
+%%EOF
