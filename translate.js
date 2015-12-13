@@ -160,6 +160,24 @@ teka.dictionary = {
     hashi_wrong_bridges: 'In der markierten Insel stimmt die Anzahl der Brücken nicht.',
     hashi_not_connected: 'Die markierten Inseln hängen nicht mit dem Rest zusammen.',
 
+    heyawake: 'Heyawake',
+    heyawake_instructions: 'Schwärzen Sie einige Felder im Diagramm, sodass keine zwei schwarzen '
+        +'Felder waagerecht oder senkrecht nebeneinander stehen und alle weißen '
+        +'Felder zusammenhängen (das heißt: die schwarzen Felder dürfen das Rätsel '
+        +'nicht in zwei Teile teilen). Zudem darf keine waagerechte oder senkrechte '
+        +'Folge von weißen Feldern durch mehr als zwei Gebiete gehen. Die Zahlen '
+        +'in den Feldern geben an, wie viele Schwarzfelder in diesem Gebiet zu '
+        +'finden sind. Felder mit Zahlen dürfen geschwärzt werden.\n\n'
+        +'Für eine korrekte Lösung werden nur die Schwarzfelder gewertet.',
+    heyawake_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Schwarzes Feld\n2. Klick: Weißes Feld (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch ein Kreuz)\nEMPTYtaste: Feldinhalt löschen',
+    heyawake_neighbours: 'Die markierten schwarzen Felder sind benachbart.',
+    heyawake_number_wrong: 'Im markierten Gebiet stimmt die Anzahl der Schwarzfelder nicht.',
+    heyawake_sequence_too_long: 'Die markierten Leerfelder gehen über mehr als 2 Gebiete.',
+    heyawake_not_connected: 'Die markierten Felder sind nicht mit dem Rest der weißen Felder verbunden.',
+    
     hitori: 'Hitori',
     hitori_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass in den '
         +'verbleibenden Feldern jede Zahl in jeder Zeile und jeder Spalte nur '

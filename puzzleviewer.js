@@ -115,8 +115,14 @@ teka.viewer.PuzzleViewer.prototype.setColorTool = function(colortool)
 };
 
 /** Returns the string defining the color from the colortool. */
-teka.viewer.PuzzleViewer.prototype.getColorString = function(color)
+teka.viewer.PuzzleViewer.prototype.getColorString = function(color, lightblack)
 {
+    if (lightblack===undefined) {
+        lightblack = false;
+    }
+    if (lightblack===true && color===0) {
+        return '#888';
+    }
     if (this.colortool===false) {
         return '#000';
     }
