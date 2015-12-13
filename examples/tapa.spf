@@ -1,0 +1,130 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 0 0 139 139
+%%CropBox: 0 0 139 139
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.8 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1.6 pt setlinewidth } def
+
+<<
+/format 1
+/type (tapa)
+/sol false
+/X 6
+/Y 6
+/puzzle [
+(            )
+(            )
+(    11  51  )
+(    11      )
+(##          )
+(##          )
+(    22      )
+(    1       )
+(        7   )
+(            )
+(2 --        )
+(  --        ) ]
+/solution [
+(## ###)
+(#    #)
+(## # #)
+(#  ###)
+(###  #)
+(  ####) ]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto 
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+/numbers {
+  /a4 e /a3 e /a2 e /a1 e /y e /x e
+  a4 32 eq {
+    a3 32 eq {
+      a2 32 eq {
+        /Helvetica findfont 0.65 scalefont setfont
+        x y a1 48 sub 5 string cvs c
+      } {
+        x y 1 add x 1 add y l        
+        /Helvetica findfont 0.5 scalefont setfont
+        x 0.25 sub y 0.15 sub a1 48 sub 5 string cvs c
+        x 0.25 add y 0.3 add a2 48 sub 5 string cvs c
+      } ifelse
+    } {
+      x y 0.9 add x 0.5 add y 0.4 add l
+      x 1 add y 0.9 add x 0.5 add y 0.4 add l
+      x 0.5 add y x 0.5 add y 0.4 add l
+      /Helvetica findfont 0.45 scalefont setfont
+      x y 0.35 add a1 48 sub 5 string cvs c
+      x 0.28 sub y 0.12 sub a2 48 sub 5 string cvs c
+      x 0.28 add y 0.12 sub a3 48 sub 5 string cvs c
+    } ifelse
+  } {
+    x y x 1 add y 1 add l
+    x 1 add y x y 1 add l
+    /Helvetica findfont 0.45 scalefont setfont
+    x 0.3 sub y 0.1 add (1) c
+    x 0.3 add y 0.1 add (1) c
+    x y 0.35 add (1) c
+    x y 0.2 sub (1) c
+    
+  } ifelse
+} def
+
+2 setlinecap
+
+1 setgray
+0 0 X Y rectfill
+0 setgray
+
+duenn 
+0 1 X { /i e i 0 i Y l } for
+0 1 Y { /j e 0 j X j l } for
+
+dick 0 0 X Y rectstroke
+
+0 setlinecap
+duenn
+/Helvetica findfont 0.65 scalefont setfont
+0 1 X 1 sub { /i e
+  0 1 Y 1 sub { /j e
+    puzzle Y j sub 1 sub 2 mul get i 2 mul get /x1 e
+    puzzle Y j sub 1 sub 2 mul get i 2 mul 1 add get /x2 e
+    puzzle Y j sub 1 sub 2 mul 1 add get i 2 mul get /x3 e
+    puzzle Y j sub 1 sub 2 mul 1 add get i 2 mul 1 add get /x4 e
+    x1 48 ge x1 57 le and {
+      i j x1 x2 x3 x4 numbers
+    } if
+    x1 (#) 0 get eq {
+      i j 1 1 rectfill
+    } if
+    x1 (-) 0 get eq {
+      i 0.2 add j 0.5 add i 0.8 add j 0.5 add l
+    } if
+  } for
+} for
+
+sol {
+  0 1 X 1 sub { /i e
+    0 1 Y 1 sub { /j e
+      solution Y j sub 1 sub get i get /h e
+      h (#) 0 get eq {
+        i j 1 1 rectfill
+      } if
+    } for
+  } for
+} if
+
+end pgsave restore showpage
+%%EOF

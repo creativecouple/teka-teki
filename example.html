@@ -35,14 +35,71 @@
 <script charset="utf-8" src="puzzleviewer.js"></script>
 <script charset="utf-8" src="psdata.js"></script>
 
+<H1>Example for Teka-Teki</H1>
+    
 <div id="applet"></div>
 
 <script>
-  new teka.PuzzleApplet({
-    WIDTH: 600,
-    HEIGHT: 400,
-    FILE: 'kropki.spf'
-  });
+  var get = window.location.search;
+
+  var viewer = ['hashi','hitori','japanese_sums','kakuro','kropki',
+                'magnets','masyu','starbattle','sudoku','tapa'];
+
+  if (get.length===0) {
+      var doc = document.getElementById('applet');
+      var add = '<P>Please choose:\n'
+          +'<FORM action="example.html" method="GET"\n'
+          +'<P>Puzzle type: <SELECT name="f">\n';
+      for (var i=0;i<viewer.length;i++) {
+          add += '<option value="'+viewer[i]+'">'+
+              viewer[i].substring(0,1).toUpperCase()+viewer[i].substring(1)+
+              '</option>\n';
+      }
+      add += '</SELECT>\n'
+          +'<P>Language: <SELECT name="l">\n'
+          +'<option value="de">German</option>\n'
+          +'<option value="en">English</option>\n'
+          +'</SELECT>\n'
+          +'<P><INPUT type="submit" name="submit" value="Start applet">\n'
+          +'</FORM>\n';
+      doc.innerHTML = add;
+  } else {
+      get = get.substring(1).split('&');
+
+      var param = {};
+      
+      for (var i=0;i<get.length;i++) {
+          var tmp = get[i].split('=');
+          param[tmp[0]] = tmp[1];
+      }
+      
+      var file = 'kropki';
+      var language = 'de';
+
+      if (param['f']!==undefined) {
+          for (var i=0;i<viewer.length;i++) {
+              if (viewer[i]==param['f']) {
+                  file = viewer[i];
+              }
+          }
+      }
+
+      if (param['l']!==undefined) {
+          if (param['l']=='de') {
+              language = 'de';
+          }
+          if (param['l']=='en') {
+              language = 'en';
+          }
+      }
+
+      new teka.PuzzleApplet({
+          WIDTH: 600,
+          HEIGHT: 400,
+          LANGUAGE: language,
+          FILE: 'examples/'+file+'.spf'
+      });
+  }
 </script>
 
 </html>
