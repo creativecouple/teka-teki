@@ -41,7 +41,9 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
-    this.asciiToData(data.get('puzzle'));
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
     this.asciiToSolution(data.get('solution'));
     
     this.f = teka.new_array([this.X,this.Y],0);
@@ -50,7 +52,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.heyawake.HeyawakeViewer.prototype.asciiToData = function(ascii)
+teka.viewer.heyawake.HeyawakeViewer.prototype.asciiToData = function(ascii, d)
 {
     if (ascii===false) {
         return;
@@ -63,21 +65,24 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.asciiToData = function(ascii)
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
             if (this.puzzle[i][j]==0) {
-                this.fillArea(grid,i,j,++co);
+                this.fillArea(grid,i,j,++co,d);
             }
         }
     }
 
-    this.numbers = teka.new_array([this.X,this.Y],0);
+    this.numbers = teka.new_array([this.X,this.Y],-1);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.numbers[i][j] = (grid[2*i+1][2*j+1]==' ')?-1:(grid[2*i+1][2*j+1]-teka.ord('0'));
+            var nr = this.getNr(grid,(d+1)*i+1,2*j+1,d);
+            if (nr!==false) {
+                this.numbers[i][j] = nr;
+            }
         }
     }
 };
 
-/** fillArea */
-teka.viewer.heyawake.HeyawakeViewer.prototype.fillArea = function(c, x, y, w)
+/** Floodfill the areas starting with x,y. */
+teka.viewer.heyawake.HeyawakeViewer.prototype.fillArea = function(c, x, y, w, d)
 {
     if (x<0 || y<0 || x>=this.X || y>=this.Y) {
         return;
@@ -85,20 +90,20 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.fillArea = function(c, x, y, w)
     if (this.puzzle[x][y]!=0) {
         return;
     }
-    
+
     this.puzzle[x][y] = w;
     
-    if (c[2*x+2][2*y+1]!=teka.ord('|')) {
-        this.fillArea(c,x+1,y,w);
+    if (c[(d+1)*x+d+1][2*y+1]!=teka.ord('|')) {
+        this.fillArea(c,x+1,y,w,d);
     }
-    if (c[2*x][2*y+1]!=teka.ord('|')) {
-        this.fillArea(c,x-1,y,w);
+    if (c[(d+1)*x][2*y+1]!=teka.ord('|')) {
+        this.fillArea(c,x-1,y,w,d);
     }
-    if (c[2*x+1][2*y+2]!=teka.ord('-')) {
-        this.fillArea(c,x,y+1,w);
+    if (c[(d+1)*x+d][2*y+2]!=teka.ord('-')) {
+        this.fillArea(c,x,y+1,w,d);
     }
-    if (c[2*x+1][2*y]!=teka.ord('-')) {
-        this.fillArea(c,x,y-1,w);
+    if (c[(d+1)*x+d][2*y]!=teka.ord('-')) {
+        this.fillArea(c,x,y-1,w,d);
     }
 };
 
@@ -136,11 +141,10 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.heyawake.HeyawakeViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (heyawake)\n/sol false\n/X 5\n/Y 5\n'
-        +'/puzzle (+-+-+-+-+-+) (|   | |   |) (+-+-+ +-+-+) (|3  | |   |) '
-        +'(+ + +-+-+-+) (|   |   |1|) (+ + + + + +) (|   |   | |) (+-+-+ + + +) '
-        +'(|   |   | |) (+-+-+-+-+-+) ]\n'
-        +'/solution [ (   # ) ( #   ) (#   #) ( #   ) (   # ) ]';
+    return '/format 1\n/type (heyawake)\n/sol true\n/X 4\n/Y 4\n/puzzle ['
+        +' (+-+-+-+-+) (|2    | |) (+-+-+-+-+) (|     | |) (+-+-+-+ +)'
+        +' (|1| |0| |) (+ + + + +) (| | | | |) (+-+-+-+-+) ]\n'
+        +'/solution [ (# # ) (    ) ( #  ) (#  #) ]';
 };
 
 /** Returns a list of automatically generated properties. */
@@ -229,7 +233,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.check = function()
 {
     var X = this.X;
     var Y = this.Y;
-    
+
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
             if (this.f[i][j]==teka.viewer.heyawake.Defaults.FULL && this.f[i+1][j]==teka.viewer.heyawake.Defaults.FULL) {
@@ -273,12 +277,8 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.check = function()
     }
     
     var mark = teka.new_array([X,Y],false);
-    if (this.f[0][0]!=teka.viewer.heyawake.Defaults.FULL) {
-        this.fill(0,0,mark);
-    } else {
-        this.fill(1,0,mark);
-    }
-    
+    this.fill(this.f[0][0]==teka.viewer.heyawake.Defaults.FULL?1:0,0,mark);
+
     var wrong = false;
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
@@ -288,15 +288,14 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.check = function()
             }
         }
     }
-    
     if (wrong) {
         return 'heyawake_not_connected';
     }
-    
+
     return true;
 };
 
-/** fill */
+/** Floodfill white area starting bei x,y */
 teka.viewer.heyawake.HeyawakeViewer.prototype.fill = function(x, y, mark)
 {
     if (x<0 || y<0 || x>=this.X || y>=this.Y) {
@@ -315,7 +314,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.fill = function(x, y, mark)
     this.fill(x,y-1,mark);
 };
 
-/** checkNumber */
+/** If an area has a number, check, if the number of black cells is correct. */
 teka.viewer.heyawake.HeyawakeViewer.prototype.checkNumber = function(az, nr)
 {
     var c = 0;
@@ -341,7 +340,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.checkNumber = function(az, nr)
     return false;
 };
 
-/** checkSeq */
+/** Check for white celled sequences over more than two areas. */
 teka.viewer.heyawake.HeyawakeViewer.prototype.checkSeq = function(x, y, dx, dy)
 {
     var a = -1;
@@ -419,13 +418,6 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.paint = function(g)
     g.save();
     g.translate(this.deltaX+this.borderX,this.deltaY+this.borderY);
 
-    g.fillStyle = '#0f0';
-    g.fillRect(-10,-10,this.width+20,this.height+20);
-    g.fillStyle = '#f00';
-    var realwidth = this.X*this.scale+3;
-    var realheight = this.Y*this.scale+3;
-    g.fillRect(-this.borderX,-this.borderY,realwidth,realheight);
-
     g.fillStyle = '#fff';
     g.fillRect(0,0,S*X,S*Y);
 
@@ -449,8 +441,10 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.paint = function(g)
                     teka.drawLine(g,i*S+S/4,j*S+S/4,(i+1)*S-S/4,(j+1)*S-S/4);
                     teka.drawLine(g,(i+1)*S-S/4,j*S+S/4,i*S+S/4,(j+1)*S-S/4);
                 } else {
-                    g.fillStyle = this.getColorString(this.c[i][j],true);
-                    g.fillRect(i*S,j*S,S,S);
+                    if (this.error[i][j]===false) {
+                        g.fillStyle = this.getColorString(this.c[i][j],true);
+                        g.fillRect(i*S,j*S,S,S);
+                    }
                 }
             }
         }

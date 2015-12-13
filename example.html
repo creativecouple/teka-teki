@@ -35,15 +35,16 @@
 <script charset="utf-8" src="puzzleviewer.js"></script>
 <script charset="utf-8" src="psdata.js"></script>
 
-<H1>Example for Teka-Teki</H1>
+<H1 style="font-size:120%">Example for Teka-Teki</H1>
     
 <div id="applet"></div>
 
 <script>
   var get = window.location.search;
 
-  var viewer = ['hashi','hitori','japanese_sums','kakuro','kropki',
-                'magnets','masyu','starbattle','sudoku','tapa'];
+  var viewer = ['hashi','heyawake','hitori','japanese_sums',
+                'kakuro','kropki','magnets','masyu','starbattle',
+                'sudoku','tapa'];
 
   if (get.length===0) {
       var doc = document.getElementById('applet');

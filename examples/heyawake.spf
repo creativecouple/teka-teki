@@ -1,0 +1,117 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 0 0 94 94
+%%CropBox: 0 0 94 94
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.8 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 2 pt setlinewidth } def
+
+% convert heyawake.spf
+
+<<
+/format 1
+/type (heyawake)
+/sol false
+/X 4
+/Y 4
+/digits 2
+/puzzle [
+(+--+--+--+--+)
+(| 2      |  |)
+(+--+--+--+--+)
+(|        |  |)
+(+--+--+--+  +)
+(| 1|  | 0|  |)
+(+  +  +  +  +)
+(|  |  |  |  |)
+(+--+--+--+--+) ]
+/solution [
+(# # )
+(    )
+( #  )
+(#  #) ]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto 
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+currentdict /digits known not { /digits 1 def } if
+
+1 setgray
+0 0 X Y rectfill
+0 setgray
+
+2 setlinecap
+dick 
+0 0 X Y rectstroke
+
+duenn 
+0 1 X { /i e i 0 i Y l } for
+0 1 Y { /j e 0 j X j l } for
+
+dick
+0 1 X { /i e
+  0 1 Y 1 sub { /j e
+    puzzle Y j sub 1 sub 2 mul 1 add get i digits 1 add mul get (|) 0 get eq {
+      i j i j 1 add l
+    } if
+  } for
+} for
+
+0 1 X 1 sub { /i e
+  0 1 Y { /j e
+    puzzle Y j sub 2 mul get i digits 1 add mul digits add get (-) 0 get eq {
+      i j i 1 add j l
+    } if
+  } for
+} for
+
+/getNr {
+  /x e /line e
+  /val 0 def
+  0 1 digits 1 sub { /ii e
+    line x ii add get /hh e
+    hh ( ) 0 get eq { /hh (0) 0 get def } if
+    /val val 10 mul hh (0) 0 get sub add def
+  } for
+  val
+} def
+
+/Helvetica-Bold findfont 0.65 scalefont setfont
+0 1 X 1 sub { /i e
+  0 1 Y 1 sub { /j e
+    puzzle Y j sub 1 sub 2 mul 1 add get i digits 1 add mul digits add get /h e
+    h (#) 0 get eq {
+      i j 1 1 rectfill
+    } if
+    h (0) 0 get ge h (9) 0 get le and {
+      puzzle Y j sub 1 sub 2 mul 1 add get i digits 1 add mul 1 add getNr /h e
+      i j h digits string cvs c
+    } if
+  } for
+} for
+
+sol {
+  0 1 X 1 sub { /i e
+    0 1 Y 1 sub { /j e
+      solution Y j sub 1 sub get i get /h e
+      h (#) 0 get eq {
+        i j 1 1 rectfill
+      } if
+    } for
+  } for
+} if
+
+end pgsave restore showpage
+%%EOF
