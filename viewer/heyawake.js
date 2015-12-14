@@ -564,7 +564,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.processMousedownEvent = function(x
 {
     var erg = this.processMousemoveEvent(xc,yc,false);
 
-    if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.Y*this.scale) {
+    if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
     }
 

@@ -529,7 +529,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processMousedownEvent = functi
 {
     var erg = this.processMousemoveEvent(xc,yc,false);
 
-    if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.X*this.scale) {
+    if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.X) {
         return erg;
     }
 
