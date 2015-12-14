@@ -45,7 +45,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.initData = function(data)
     digits = digits===false?1:parseInt(data.get('digits'),10);
     this.asciiToData(data.get('puzzle'),digits);
     this.asciiToSolution(data.get('solution'),digits);
-    
+
     this.f = teka.new_array([this.X,this.X],0);
     this.c = teka.new_array([this.X,this.X],0);
     this.error = teka.new_array([this.X,this.X],false);
@@ -57,9 +57,9 @@ teka.viewer.sudoku.SudokuViewer.prototype.asciiToData = function(ascii, d)
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.puzzle = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -69,12 +69,12 @@ teka.viewer.sudoku.SudokuViewer.prototype.asciiToData = function(ascii, d)
             }
         }
     }
-    
+
     this.area = teka.new_array([this.X,this.X],0);
     var nr=0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (this.area[i][j]==0) {
+            if (this.area[i][j]===0) {
                 this.fillArea(grid,i,j,++nr,d);
             }
         }
@@ -111,9 +111,9 @@ teka.viewer.sudoku.SudokuViewer.prototype.asciiToSolution = function(ascii,d)
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.solution = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -228,8 +228,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.loadState = function(state)
 teka.viewer.sudoku.SudokuViewer.prototype.check = function()
 {
     var X = this.X;
-    var Y = this.Y;
-    
+
     // copy givens into f
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
@@ -238,7 +237,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.check = function()
             }
         }
     }
-    
+
     // convert user input to check
     var check = teka.new_array([X,X],0);
     for (var i=0;i<X;i++) {
@@ -252,35 +251,35 @@ teka.viewer.sudoku.SudokuViewer.prototype.check = function()
             } else {
                 check[i][j] = this.f[i][j];
             }
-            
+
             if (check[i][j]==teka.viewer.sudoku.Defaults.NONE) {
                 this.error[i][j] = true;
                 return 'sudoku_empty';
             }
         }
     }
-    
+
     // check rows
     for (var i=0;i<X;i++) {
         if (!this.checkRow(check,i)) {
             return 'sudoku_row_duplicate';
         }
     }
-    
+
     // check columns
     for (var i=0;i<X;i++) {
         if (!this.checkColumn(check,i)) {
             return 'sudoku_column_duplicate';
         }
     }
-    
+
     // check areas
     for (var i=0;i<X;i++) {
         if (!this.checkArea(check,i)) {
             return 'sudoku_area_duplicate';
         }
     }
-    
+
     return true;
 };
 
@@ -288,7 +287,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.check = function()
 teka.viewer.sudoku.SudokuViewer.prototype.checkRow = function(check, j)
 {
     var used = teka.new_array([this.X],false);
-    
+
     for (var i=0;i<this.X;i++) {
         if (used[check[i][j]-1]) {
             for (var ii=0;ii<this.X;ii++) {
@@ -298,10 +297,10 @@ teka.viewer.sudoku.SudokuViewer.prototype.checkRow = function(check, j)
             }
             return false;
         }
-        
+
         used[check[i][j]-1] = true;
     }
-    
+
     return true;
 };
 
@@ -317,12 +316,12 @@ teka.viewer.sudoku.SudokuViewer.prototype.checkColumn = function(check, i)
                     this.error[i][jj] = true;
                 }
             }
-            
+
             return false;
         }
         used[check[i][j]-1] = true;
     }
-    
+
     return true;
 };
 
@@ -330,7 +329,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.checkColumn = function(check, i)
 teka.viewer.sudoku.SudokuViewer.prototype.checkArea = function(check, n)
 {
     var used = teka.new_array([this.X],false);
-    
+
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             if (this.area[i][j]==n) {
@@ -343,14 +342,14 @@ teka.viewer.sudoku.SudokuViewer.prototype.checkArea = function(check, n)
                                 }                            }
                         }
                     }
-                    
+
                     return false;
                 }
                 used[check[i][j]-1] = true;
             }
         }
     }
-    
+
     return true;
 };
 
@@ -376,7 +375,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.setMetrics = function(g)
                                      (this.height-3-(this.textHeight+2))/this.X));
     var realwidth = this.X*this.scale+3;
     var realheight = this.X*this.scale+3+this.textHeight+2;
-    
+
     this.bottomText = teka.translate('sudoku_digits',[this.X]);
     g.font = 'bold '+this.textHeight+'px sans-serif';
     var textwidth = g.measureText(this.bottomText).width+1;
@@ -401,7 +400,6 @@ teka.viewer.sudoku.SudokuViewer.prototype.setMetrics = function(g)
 teka.viewer.sudoku.SudokuViewer.prototype.paint = function(g)
 {
     var X = this.X;
-    var Y = this.Y;
     var S = this.scale;
 
     g.save();
@@ -440,7 +438,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
             if (this.area[i][j]!=this.area[i][j+1]) {
@@ -450,7 +448,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.paint = function(g)
     }
     g.lineCap = 'butt';
     g.lineWidth = 1;
-    
+
     // paint the content of the cells
     g.textAlign = 'center';
     g.textBaseline = 'middle';
@@ -533,16 +531,16 @@ teka.viewer.sudoku.SudokuViewer.prototype.processMousemoveEvent = function(xc, y
 {
     xc -= this.deltaX+this.borderX;
     yc -= this.deltaY+this.borderY;
-    
+
     var oldx = this.x;
     var oldy = this.y;
-    
+
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
-    
+
     this.xm = xc-this.scale*this.x;
     this.ym = yc-this.scale*this.y;
-    
+
     if (this.x<0) {
         this.x=0;
     }
@@ -555,10 +553,10 @@ teka.viewer.sudoku.SudokuViewer.prototype.processMousemoveEvent = function(xc, y
     if (this.y>this.X-1) {
         this.y=this.X-1;
     }
-    
+
     var oldexp = this.exp;
     this.exp = this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8;
-    
+
     return this.x!=oldx || this.y!=oldy || this.exp!=oldexp;
 };
 
@@ -566,11 +564,11 @@ teka.viewer.sudoku.SudokuViewer.prototype.processMousemoveEvent = function(xc, y
 teka.viewer.sudoku.SudokuViewer.prototype.processMousedownEvent = function(xc, yc)
 {
     var erg = this.processMousemoveEvent(xc,yc,false);
-    
+
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.X) {
         return erg;
     }
-    
+
     if (this.X<=9) {
         if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
             if (this.f[this.x][this.y]<1000) {
@@ -677,7 +675,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.processKeydownEvent = function(e)
 /** Sets the value of a cell, if the color fits. */
 teka.viewer.sudoku.SudokuViewer.prototype.set = function(x, y, value)
 {
-    if (this.f[x][y]!=0 && this.f[x][y]!=1000 && this.c[x][y]!=this.color) {
+    if (this.f[x][y]!==0 && this.f[x][y]!=1000 && this.c[x][y]!=this.color) {
         return;
     }
     this.f[x][y] = value;
@@ -687,7 +685,7 @@ teka.viewer.sudoku.SudokuViewer.prototype.set = function(x, y, value)
 /** Converts from normal mode to expert mode. */
 teka.viewer.sudoku.SudokuViewer.prototype.setExpert = function(h)
 {
-    if (h==0) {
+    if (h===0) {
         return 1000;
     }
     return 1000+(1<<h);
@@ -714,4 +712,3 @@ teka.viewer.sudoku.SudokuViewer.prototype.getExpert = function(h)
     }
     return 0;
 };
-

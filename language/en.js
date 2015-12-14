@@ -38,7 +38,7 @@ teka.dictionary.start_text= 'For this puzzle the time you require to solve it wi
 teka.dictionary.check = 'Submit solution';
 teka.dictionary.check_descr = 'Submits (and checks) the current solution.';
 teka.dictionary.undo = 'Undo';
-teka.dictionary.undo_descr = 'Reverts the last major change (e.g. change of colours) - this action can be reverted by clicking again.'
+teka.dictionary.undo_descr = 'Reverts the last major change (e.g. change of colours) - this action can be reverted by clicking again.';
 teka.dictionary.instructions = 'Instructions';
 teka.dictionary.instructions_descr = 'Displays the puzzle description together with instructions for the usage of the applet.';
 
@@ -72,12 +72,12 @@ teka.dictionary.load_state = 'Returns to the previously stored state of the solu
 
 teka.dictionary.error = 'Unfortunately, an unexpected error has occurred.';
 teka.dictionary.congratulations = 'Congratulations !!!';
-teka.dictionary.failed_attempt= 'You had one failed attempt.',
-teka.dictionary.failed_attempts= 'You had {1} failed attempts.',
-teka.dictionary.duration_seconds= 'Your time was {1} seconds.',
-teka.dictionary.duration_minutes= 'Your time was {1} minutes and {2} seconds.',
-teka.dictionary.duration_hours= 'Your time was {1} hour, {2} minutes, and {3} seconds.',
-teka.dictionary.duration_days= 'Your time was {1} day(s), {2} hours, {3} minutes, and {4} seconds.',
+teka.dictionary.failed_attempt= 'You had one failed attempt.';
+teka.dictionary.failed_attempts= 'You had {1} failed attempts.';
+teka.dictionary.duration_seconds= 'Your time was {1} seconds.';
+teka.dictionary.duration_minutes= 'Your time was {1} minutes and {2} seconds.';
+teka.dictionary.duration_hours= 'Your time was {1} hour, {2} minutes, and {3} seconds.';
+teka.dictionary.duration_days= 'Your time was {1} day(s), {2} hours, {3} minutes, and {4} seconds.';
 
 
 //Instructions

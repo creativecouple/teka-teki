@@ -45,7 +45,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.initData = function(data)
     digits = digits===false?1:parseInt(data.get('digits'),10);
     this.asciiToData(data.get('puzzle'),digits);
     this.asciiToSolution(data.get('solution'));
-    
+
     this.f = teka.new_array([this.X,this.Y],0);
     this.c = teka.new_array([this.X,this.Y],0);
     this.error = teka.new_array([this.X,this.Y],false);
@@ -57,25 +57,32 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.asciiToData = function(ascii, d)
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.puzzle = teka.new_array([this.X,this.Y],0);
     var co = 0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (this.puzzle[i][j]==0) {
+            if (this.puzzle[i][j]===0) {
                 this.fillArea(grid,i,j,++co,d);
             }
         }
     }
 
+    this.givens = teka.new_array([this.X,this.Y],0);
     this.numbers = teka.new_array([this.X,this.Y],-1);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            var nr = this.getNr(grid,(d+1)*i+1,2*j+1,d);
-            if (nr!==false) {
-                this.numbers[i][j] = nr;
+            if (grid[(d+1)*i+d][2*j+1]==teka.ord('#')) {
+                this.givens[i][j] = teka.viewer.heyawake.Defaults.FULL;
+            } else if (grid[(d+1)*i+d][2*j+1]==teka.ord('-')) {
+                this.givens[i][j] = teka.viewer.heyawake.Defaults.EMPTY;
+            } else {
+                var nr = this.getNr(grid,(d+1)*i+1,2*j+1,d);
+                if (nr!==false) {
+                    this.numbers[i][j] = nr;
+                }
             }
         }
     }
@@ -92,7 +99,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.fillArea = function(c, x, y, w, d)
     }
 
     this.puzzle[x][y] = w;
-    
+
     if (c[(d+1)*x+d+1][2*y+1]!=teka.ord('|')) {
         this.fillArea(c,x+1,y,w,d);
     }
@@ -113,9 +120,9 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.asciiToSolution = function(ascii)
     if (ascii===false) {
         return;
     }
-    
+
     var grid = this.asciiToArray(ascii);
-    
+
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -234,6 +241,16 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.check = function()
     var X = this.X;
     var Y = this.Y;
 
+    // fill givens into the solution
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<Y;j++) {
+            if (this.givens[i][j]>0) {
+                this.f[i][j] = this.givens[i][j];
+            }
+        }
+    }
+
+    // check for neighbouring blackened cells
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
             if (this.f[i][j]==teka.viewer.heyawake.Defaults.FULL && this.f[i+1][j]==teka.viewer.heyawake.Defaults.FULL) {
@@ -243,7 +260,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.check = function()
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
             if (this.f[i][j]==teka.viewer.heyawake.Defaults.FULL && this.f[i][j+1]==teka.viewer.heyawake.Defaults.FULL) {
@@ -253,29 +270,32 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.check = function()
             }
         }
     }
-    
+
+    // check numbers in areas
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.numbers[i][j]>=0) {
                 if (!this.checkNumber(this.numbers[i][j],this.puzzle[i][j])) {
                     return 'heyawake_number_wrong';
-                }            
+                }
             }
         }
     }
-    
+
+    // check for sequences of white cells
     for (var i=0;i<Y;i++) {
         if (!this.checkSeq(0,i,1,0)) {
             return 'heyawake_sequence_too_long';
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         if (!this.checkSeq(i,0,0,1)) {
             return 'heyawake_sequence_too_long';
         }
     }
-    
+
+    // check if white cells are connected
     var mark = teka.new_array([X,Y],false);
     this.fill(this.f[0][0]==teka.viewer.heyawake.Defaults.FULL?1:0,0,mark);
 
@@ -323,7 +343,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.checkNumber = function(az, nr)
             if (this.puzzle[i][j]==nr) {
                 if (this.f[i][j]==teka.viewer.heyawake.Defaults.FULL) {
                     c++;
-                }       
+                }
             }
         }
     }
@@ -394,7 +414,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.setMetrics = function(g)
                                      (this.height-3)/this.Y));
     var realwidth = this.X*this.scale+3;
     var realheight = this.Y*this.scale+3;
-    
+
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
     this.borderX = 1;
@@ -430,27 +450,29 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.paint = function(g)
             g.fillRect(i*S,j*S,S,S);
         }
     }
-    
+
     g.lineWidth=3;
     // paint cell content
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.f[i][j]!=teka.viewer.heyawake.Defaults.NONE) {
-                if (this.f[i][j]==teka.viewer.heyawake.Defaults.EMPTY) {
-                    g.strokeStyle = this.getColorString(this.c[i][j]);
-                    teka.drawLine(g,i*S+S/4,j*S+S/4,(i+1)*S-S/4,(j+1)*S-S/4);
-                    teka.drawLine(g,(i+1)*S-S/4,j*S+S/4,i*S+S/4,(j+1)*S-S/4);
-                } else {
-                    if (this.error[i][j]===false) {
-                        g.fillStyle = this.getColorString(this.c[i][j],true);
-                        g.fillRect(i*S,j*S,S,S);
-                    }
+            if (this.givens[i][j]>0) {
+                this.f[i][j] = this.givens[i][j];
+                this.c[i][j] = 0;
+            }
+            if (this.f[i][j]==teka.viewer.heyawake.Defaults.EMPTY) {
+                g.strokeStyle = this.getColorString(this.c[i][j]);
+                teka.drawLine(g,i*S+S/4,j*S+S/4,(i+1)*S-S/4,(j+1)*S-S/4);
+                teka.drawLine(g,(i+1)*S-S/4,j*S+S/4,i*S+S/4,(j+1)*S-S/4);
+            } else if (this.f[i][j]==teka.viewer.heyawake.Defaults.FULL) {
+                if (this.error[i][j]===false) {
+                    g.fillStyle = this.getColorString(this.c[i][j],true);
+                    g.fillRect(i*S,j*S,S,S);
                 }
             }
         }
     }
     g.lineWidth=1;
-    
+
     // paint grid
     g.strokeStyle = '#000';
     for (var i=0;i<=X;i++) {
@@ -459,7 +481,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.paint = function(g)
     for (var i=0;i<=Y;i++) {
         teka.drawLine(g,0,i*S,X*S,i*S);
     }
-    
+
     g.lineWidth = 3;
     g.lineCap = 'square';
     g.strokeRect(0,0,X*S,Y*S);
@@ -472,7 +494,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.paint = function(g)
             }
         }
     }
-    
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
             if (this.puzzle[i][j]!=this.puzzle[i][j+1]) {
@@ -483,7 +505,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.paint = function(g)
 
     g.lineCap = 'butt';
     g.lineWidth = 1;
-    
+
     // paint given numbers
     g.textAlign = 'center';
     g.textBaseline = 'middle';
@@ -503,7 +525,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.paint = function(g)
         g.lineWidth = 2;
         g.strokeRect(this.x*S+3.5,this.y*S+3.5,S-7,S-7);
     }
-    
+
     g.restore();
 };
 
@@ -517,10 +539,10 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.processMousemoveEvent = function(x
 
     var oldx = this.x;
     var oldy = this.y;
-    
+
     this.x = Math.floor(xc/this.scale);
     this.y = Math.floor(yc/this.scale);
-    
+
     if (this.x<0) {
         this.x=0;
     }
@@ -533,7 +555,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.processMousemoveEvent = function(x
     if (this.y>=this.Y) {
         this.y=this.Y-1;
     }
-    
+
     return this.x!=oldx || this.y!=oldy;
 };
 
@@ -541,13 +563,13 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.processMousemoveEvent = function(x
 teka.viewer.heyawake.HeyawakeViewer.prototype.processMousedownEvent = function(xc, yc)
 {
     var erg = this.processMousemoveEvent(xc,yc,false);
-    
+
     if (xc<0 || yc<0 || xc>=this.X*this.scale || yc>=this.Y*this.scale) {
         return erg;
     }
-    
+
     this.set(this.x,this.y,(this.f[this.x][this.y]+1)%3);
-    
+
     return true;
 };
 
@@ -610,4 +632,3 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.set = function(x, y, value)
     this.f[x][y] = value;
     this.c[x][y] = this.color;
 };
-

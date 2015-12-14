@@ -15,8 +15,6 @@ sc dup scale 0.8 pt dup translate
 /duenn { 0.4 pt setlinewidth } def
 /dick { 2 pt setlinewidth } def
 
-% convert heyawake.spf
-
 <<
 /format 1
 /type (heyawake)
@@ -28,11 +26,11 @@ sc dup scale 0.8 pt dup translate
 (+--+--+--+--+)
 (| 2      |  |)
 (+--+--+--+--+)
-(|        |  |)
+(|        |--|)
 (+--+--+--+  +)
-(| 1|  | 0|  |)
+(|  |  | 0|  |)
 (+  +  +  +  +)
-(|  |  |  |  |)
+(|##|  |  |  |)
 (+--+--+--+--+) ]
 /solution [
 (# # )
@@ -53,6 +51,50 @@ currentdict /digits known not { /digits 1 def } if
 0 setgray
 
 2 setlinecap
+
+/getNr {
+  /x e /line e
+  /val 0 def
+  0 1 digits 1 sub { /ii e
+    line x ii add get /hh e
+    hh ( ) 0 get eq { /hh (0) 0 get def } if
+    /val val 10 mul hh (0) 0 get sub add def
+  } for
+  val
+} def
+
+/Helvetica-Bold findfont 0.65 scalefont setfont
+0 1 X 1 sub { /i e
+  0 1 Y 1 sub { /j e
+    puzzle Y j sub 1 sub 2 mul 1 add get i digits 1 add mul digits add get /h e
+    h (#) 0 get eq {
+      0.5 setgray
+      i j 1 1 rectfill
+      0 setgray
+    } if
+    h (-) 0 get eq {
+      duenn
+      i 0.2 add j 0.2 add i 0.8 add j 0.8 add l
+      i 0.2 add j 0.8 add i 0.8 add j 0.2 add l
+    } if
+    h (0) 0 get ge h (9) 0 get le and {
+      puzzle Y j sub 1 sub 2 mul 1 add get i digits 1 add mul 1 add getNr /h e
+      i j h digits string cvs c
+    } if
+  } for
+} for
+
+sol {
+  0 1 X 1 sub { /i e
+    0 1 Y 1 sub { /j e
+      solution Y j sub 1 sub get i get /h e
+      h (#) 0 get eq {
+        i j 1 1 rectfill
+      } if
+    } for
+  } for
+} if
+
 dick 
 0 0 X Y rectstroke
 
@@ -76,42 +118,6 @@ dick
     } if
   } for
 } for
-
-/getNr {
-  /x e /line e
-  /val 0 def
-  0 1 digits 1 sub { /ii e
-    line x ii add get /hh e
-    hh ( ) 0 get eq { /hh (0) 0 get def } if
-    /val val 10 mul hh (0) 0 get sub add def
-  } for
-  val
-} def
-
-/Helvetica-Bold findfont 0.65 scalefont setfont
-0 1 X 1 sub { /i e
-  0 1 Y 1 sub { /j e
-    puzzle Y j sub 1 sub 2 mul 1 add get i digits 1 add mul digits add get /h e
-    h (#) 0 get eq {
-      i j 1 1 rectfill
-    } if
-    h (0) 0 get ge h (9) 0 get le and {
-      puzzle Y j sub 1 sub 2 mul 1 add get i digits 1 add mul 1 add getNr /h e
-      i j h digits string cvs c
-    } if
-  } for
-} for
-
-sol {
-  0 1 X 1 sub { /i e
-    0 1 Y 1 sub { /j e
-      solution Y j sub 1 sub get i get /h e
-      h (#) 0 get eq {
-        i j 1 1 rectfill
-      } if
-    } for
-  } for
-} if
 
 end pgsave restore showpage
 %%EOF

@@ -177,7 +177,7 @@ teka.dictionary = {
     heyawake_number_wrong: 'Im markierten Gebiet stimmt die Anzahl der Schwarzfelder nicht.',
     heyawake_sequence_too_long: 'Die markierten Leerfelder gehen über mehr als 2 Gebiete.',
     heyawake_not_connected: 'Die markierten Felder sind nicht mit dem Rest der weißen Felder verbunden.',
-    
+
     hitori: 'Hitori',
     hitori_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass in den '
         +'verbleibenden Feldern jede Zahl in jeder Zeile und jeder Spalte nur '
@@ -381,7 +381,7 @@ teka.dictionary = {
     sudoku_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
     sudoku_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
     sudoku_area_duplicate: 'Die markierten Ziffern kommen in dem Gebiet doppelt vor.',
-    
+
     tapa: 'Tapa',
     tapa_instructions: 'Schwärzen Sie einige Felder im Diagramm so, dass alle schwarzen '
         +'Felder waagerecht oder senkrecht zusammenhängen und kein 2x2-Feld '
