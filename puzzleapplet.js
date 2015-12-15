@@ -279,11 +279,8 @@ teka.PuzzleApplet.prototype.paintLogo = function()
 //////////////////////////////////////////////////////////////////
 
 /**
- * Initializes the applet: First, the puzzle is loaded and the
- * corresponding viewer is loaded too. Then all the needed tools
- * are created, initialized and attached to an layout container.
- * Eventlisteners are registered and finally the instructions
- * pages are initialized.
+ * Initializes the applet: First, the puzzle is loaded. Then, the
+ * initTools method is called, to initialize all the tools needed.
  */
 teka.PuzzleApplet.prototype.init = function()
 {
@@ -293,60 +290,68 @@ teka.PuzzleApplet.prototype.init = function()
         return;
     }
 
-    this.loadPuzzleData(this.values_.FILE, teka.myBind(this,function() {
-        this.puzzleViewer =
-            new teka.viewer[this.type][this.typeToViewer(this.type)](this.psdata);
-        if (this.puzzleViewer===undefined || this.puzzleViewer===false) {
-            teka.setError('Puzzleviewer cannot be loaded - '+this.type);
-            this.paint();
-            return;
-        }
-        this.head = new teka.HeadDisplay();
-        this.buttonTool = new teka.ButtonTool();
-        this.colorTool = new teka.ColorTool();
-        this.casesTool = new teka.CasesTool();
-        this.textTool = new teka.TextTool();
-        this.instructions = new teka.Instructions();
-        if (this.values_.TAKE_TIME===true) {
-            this.start_screen = new teka.StartScreen();
-        }
+    this.loadPuzzleData(this.values_.FILE, this.initTools.bind(this));
+};
 
-        this.initPuzzleViewer();
-        this.initHead(teka.translate(this.type));
-        this.initButtonTool();
-        this.initColorTool();
-        this.initCasesTool();
-        this.initTextTool();
-        this.initInstructions();
-        if (this.values_.TAKE_TIME===true) {
-            this.initStartScreen();
-        }
-
-        this.addLayout([this.puzzleViewer,
-                        this.buttonTool,
-                        this.colorTool,
-                        this.casesTool,
-                        this.textTool]);
-
+/**
+ * Initializes the tools of the applet: First, the viewer is loaded.
+ * Then all the needed tools are created, initialized and attached to
+ * an layout container. And the event listeners are registered.
+ */
+teka.PuzzleApplet.prototype.initTools = function()
+{
+    this.puzzleViewer =
+        new teka.viewer[this.type][this.typeToViewer(this.type)](this.psdata);
+    if (this.puzzleViewer===undefined || this.puzzleViewer===false) {
+        teka.setError('Puzzleviewer cannot be loaded - '+this.type);
         this.paint();
-
-        this.canvas.addEventListener('mousemove',
-                                     this.mousemoveListener.bind(this),
-                                     false);
-        this.canvas.addEventListener('mousedown',
-                                     this.mousedownListener.bind(this),
-                                     false);
-        this.canvas.addEventListener('mouseup',
-                                     this.mouseupListener.bind(this),
-                                     false);
-        this.canvas.addEventListener('keydown',
-                                     this.keydownListener.bind(this),
-                                     false);
-        this.canvas.addEventListener('keyup',
-                                     this.keyupListener.bind(this),
-                                     false);
-        this.canvas.focus();
-    }));
+        return;
+    }
+    this.head = new teka.HeadDisplay();
+    this.buttonTool = new teka.ButtonTool();
+    this.colorTool = new teka.ColorTool();
+    this.casesTool = new teka.CasesTool();
+    this.textTool = new teka.TextTool();
+    this.instructions = new teka.Instructions();
+    if (this.values_.TAKE_TIME===true) {
+        this.start_screen = new teka.StartScreen();
+    }
+    
+    this.initPuzzleViewer();
+    this.initHead(teka.translate(this.type));
+    this.initButtonTool();
+    this.initColorTool();
+    this.initCasesTool();
+    this.initTextTool();
+    this.initInstructions();
+    if (this.values_.TAKE_TIME===true) {
+        this.initStartScreen();
+    }
+    
+    this.addLayout([this.puzzleViewer,
+                    this.buttonTool,
+                    this.colorTool,
+                    this.casesTool,
+                    this.textTool]);
+    
+    this.paint();
+    
+    this.canvas.addEventListener('mousemove',
+                                 this.mousemoveListener.bind(this),
+                                 false);
+    this.canvas.addEventListener('mousedown',
+                                 this.mousedownListener.bind(this),
+                                 false);
+    this.canvas.addEventListener('mouseup',
+                                 this.mouseupListener.bind(this),
+                                 false);
+    this.canvas.addEventListener('keydown',
+                                 this.keydownListener.bind(this),
+                                 false);
+    this.canvas.addEventListener('keyup',
+                                 this.keyupListener.bind(this),
+                                 false);
+    this.canvas.focus();
 };
 
 //////////////////////////////////////////////////////////////////
