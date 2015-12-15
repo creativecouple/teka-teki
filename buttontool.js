@@ -41,6 +41,13 @@ teka.ButtonTool = function()
 };
 teka.extend(teka.ButtonTool,teka.Tool);
 
+/** Sets the buttons. */
+teka.ButtonTool.prototype.setButtons = function(buttons,descriptions)
+{
+    this.buttons_ = buttons;
+    this.description_ = description;
+};
+
 /** Sets the functions to call in case of events. */
 teka.ButtonTool.prototype.setEvents = function(check,undo,instr,setText)
 {
