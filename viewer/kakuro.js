@@ -394,9 +394,7 @@ teka.viewer.kakuro.KakuroViewer.prototype.paint = function(g)
                 }
 
                 if (this.puzzle[i][j][0]===0 && this.puzzle[i][j][1]===0 &&
-                    (i===0 || this.puzzle[i-1][j]!==null) &&
                     (i===X-1 || this.puzzle[i+1][j]!==null) &&
-                    (j===0 || this.puzzle[i][j-1]!==null) &&
                     (j===Y-1 || this.puzzle[i][j+1]!==null)) {
                     g.fillStyle = '#888';
                     g.fillRect(S*i,S*j,S,S);
