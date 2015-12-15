@@ -74,10 +74,11 @@ teka.ButtonTool.prototype.getMinDim = function(g)
 {
     g.font = this.getButtonFont();
     var width = 0;
-    for (var i=0;i<3;i++) {
+    for (var i=0;i<this.buttons_.length;i++) {
         width = Math.max(width,g.measureText(this.buttons_[i]).width);
     }
-    var height = 3*this.buttonHeight+2*this.gap;
+    var height = this.buttons_.length*this.buttonHeight
+        +(this.buttons_.length-1)*this.gap;
     return { width:width+32, height:height };
 };
 
@@ -90,7 +91,7 @@ teka.ButtonTool.prototype.paint = function(g)
 
     g.save();
     g.translate(this.delta,0);
-    for (var i=0;i<=2;i++) {
+    for (var i=0;i<this.buttons_.length;i++) {
         this.paintButton(g,0,0,mindim.width,this.buttonHeight,
                          this.activeButton===i?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,this.buttons_[i]);
         g.translate(0,this.buttonHeight+this.gap);
@@ -142,14 +143,14 @@ teka.ButtonTool.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_F3) {
+    if (this.buttons_.length>=1 && e.key==teka.KEY_F3) {
         if (this.events[1]!==false) {
             this.events[1]();
         }
         return true;
     }
 
-    if (e.key==teka.KEY_F4) {
+    if (this.buttons_.length>=2 && e.key==teka.KEY_F4) {
         if (this.events[2]!==false) {
             this.events[2](true);
         }
@@ -167,7 +168,7 @@ teka.ButtonTool.prototype.getButton = function(xc,yc)
 {
     xc -= this.delta;
 
-    for (var i=0;i<=2;i++) {
+    for (var i=0;i<this.buttons_.length;i++) {
         if (xc>=0 && xc<=this.minwidth &&
             yc>=0 && yc<=this.buttonHeight) {
             return i;
