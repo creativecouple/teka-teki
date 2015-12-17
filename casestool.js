@@ -30,6 +30,8 @@ teka.CasesTool = function()
     this.events = [false,false,false];
     this.maxLevel = 9;
     this.gap = 7;
+
+    this.translate_level();
 };
 teka.extend(teka.CasesTool,teka.Tool);
 
@@ -37,6 +39,7 @@ teka.extend(teka.CasesTool,teka.Tool);
 teka.CasesTool.prototype.setMaxLevel = function(level)
 {
     this.maxLevel = level;
+    this.translate_level();
 };
 
 /** Sets the functions to call in case of events. */
@@ -65,7 +68,7 @@ teka.CasesTool.prototype.getMinDim = function(g)
     g.font = this.getButtonFont();
     var width = 0;
     for (var i=0;i<=this.maxLevel;i++) {
-        width = Math.max(width,g.measureText(teka.translate('level',[i])).width);
+        width = Math.max(width,g.measureText(this.level_text[i]).width);
     }
     return {
         width: width+2*this.gap+2*this.buttonHeight,
@@ -110,7 +113,7 @@ teka.CasesTool.prototype.paint = function(g)
     g.textAlign = 'left';
     g.textBaseline = 'middle';
     g.font = 'bold '+this.getTextFont();
-    g.fillText(teka.translate('level',[this.stack.length]),
+    g.fillText(this.level_text[this.stack.length],
                0,this.buttonHeight/2+1);
 
     g.restore();
@@ -211,4 +214,15 @@ teka.CasesTool.prototype.getButton = function(xc,yc)
     }
 
     return false;
+};
+
+//////////////////////////////////////////////////////////////////
+
+teka.CasesTool.prototype.translate_level = function()
+{
+    this.level_text = [];
+
+    for (var i=0;i<=this.maxLevel;i++) {
+        this.level_text[i] = teka.translate('level',[i]);
+    }
 };
