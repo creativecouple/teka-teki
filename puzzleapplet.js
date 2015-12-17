@@ -316,7 +316,7 @@ teka.PuzzleApplet.prototype.initTools = function()
     if (this.values_.TAKE_TIME===true) {
         this.start_screen = new teka.StartScreen();
     }
-    
+
     this.initPuzzleViewer();
     this.initHead(teka.translate(this.type));
     this.initButtonTool();
@@ -327,15 +327,15 @@ teka.PuzzleApplet.prototype.initTools = function()
     if (this.values_.TAKE_TIME===true) {
         this.initStartScreen();
     }
-    
+
     this.addLayout([this.puzzleViewer,
                     this.buttonTool,
                     this.colorTool,
                     this.casesTool,
                     this.textTool]);
-    
+
     this.paint();
-    
+
     this.canvas.addEventListener('mousemove',
                                  this.mousemoveListener.bind(this),
                                  false);
