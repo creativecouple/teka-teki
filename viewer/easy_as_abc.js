@@ -203,7 +203,8 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.loadState = function(state)
 teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.check = function()
 {
     var X = this.X;
-    var Y = this.Y;
+
+    // Add givens.
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.puzzle[i+1][j+1]!=teka.viewer.easy_as_abc.Defaults.EMPTY) {
@@ -212,6 +213,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.check = function()
         }
     }
 
+    // copy to check, removing expert mode
     var check = teka.new_array([X,X],0);
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
@@ -230,6 +232,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.check = function()
         }
     }
 
+    // check columns
     for (var i=0;i<X;i++) {
         var da = teka.new_array([this.MAX],0);
         for (var j=0;j<X;j++) {
@@ -247,7 +250,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.check = function()
                 }
                 return 'easy_as_abc_column_duplicate';
             }
-            if (da[j]==0) {
+            if (da[j]===0) {
                 for (var k=0;k<X;k++) {
                     this.error[i][k] = true;
                 }
@@ -256,6 +259,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.check = function()
         }
     }
 
+    // check rows
     for (var j=0;j<X;j++) {
         var da = teka.new_array([this.MAX],0);
         for (var i=0;i<X;i++) {
@@ -273,7 +277,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.check = function()
                 }
                 return 'easy_as_abc_row_duplicate';
             }
-            if (da[i]==0) {
+            if (da[i]===0) {
                 for (var k=0;k<X;k++) {
                     this.error[k][j] = true;
                 }
@@ -282,6 +286,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.check = function()
         }
     }
 
+    // check letters at the border
     for (var i=-1;i<=X;i++) {
         for (var j=-1;j<=X;j++) {
             if ((i==-1 || j==-1 || i==X || j==X) && this.puzzle[i+1][j+1]>0) {
@@ -306,11 +311,12 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.check = function()
     return true;
 };
 
-/** checkFirst */
-teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.checkFirst = function(x, y, f, was)
+/** Checks, if the first letter in the row or column is the one at the edge. */
+teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.checkFirst = function(x, y, f, value)
 {
     var dx = 0;
     var dy = 0;
+
     if (x==-1) {
         dx = 1;
     }
@@ -328,10 +334,10 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.checkFirst = function(x, y, 
     y+=dy;
     while (x!=-1 && y!=-1 && x!=this.X && y!=this.X) {
         if (f[x][y]>0 && f[x][y]<=this.MAX) {
-            if (f[x][y]!=was) {
+            if (f[x][y]!=value) {
                 this.error[x][y] = true;
             }
-            return f[x][y]==was;
+            return f[x][y]==value;
         }
         x+=dx;
         y+=dy;
@@ -384,7 +390,6 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.setMetrics = function(g)
 teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
 {
     var X = this.X;
-    var Y = this.Y;
     var S = this.scale;
 
     g.save();
@@ -393,6 +398,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
     g.fillStyle = '#fff';
     g.fillRect(S,S,X*S,X*S);
 
+    // paint background
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             g.fillStyle = this.isBlinking()?
@@ -402,6 +408,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
         }
     }
 
+    // paint grid
     g.strokeStyle = '#000';
     for (var i=1;i<=X+1;i++) {
         teka.drawLine(g,i*S,S,i*S,(X+1)*S);
@@ -410,6 +417,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
         teka.drawLine(g,S,j*S,(X+1)*S,j*S);
     }
 
+    // paint content of the cells
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     for (var i=-1;i<=X;i++) {
@@ -427,7 +435,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
                               (i+1)*S+S/2,(j+1)*S+S/2+this.font.delta);
                 }
             } else if (i>=0 && j>=0 && i<X && j<X) {
-                if (this.f[i][j]==0) {
+                if (this.f[i][j]===0) {
                     g.strokeStyle = this.getColorString(this.c[i][j]);
                     teka.drawLine(g,S*(i+1)+S/3,S*(j+1)+S/2,
                                   S*(i+1)+2*S/3,S*(j+1)+S/2);
