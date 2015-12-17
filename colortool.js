@@ -33,6 +33,11 @@ teka.ColorTool = function()
     this.buttonWidth = 20;
     this.gap = 7;
     this.buttonPadding = 5;
+
+    this.coloring = teka.translate('coloring');
+    this.deleting = teka.translate('deleting');
+
+    this.translate_color_of_pen();
 };
 teka.extend(teka.ColorTool,teka.Tool);
 
@@ -49,6 +54,8 @@ teka.ColorTool.prototype.setColors = function(c)
     if (c.colors!==undefined) {
         this.colors = c.colors;
     }
+
+    this.translate_color_of_pen();
 };
 
 /** Returns the CSS style of the active color. */
@@ -93,15 +100,13 @@ teka.ColorTool.prototype.getMinDim = function(g)
 {
     g.font = this.getButtonFont();
     this.buttonWidth =
-        Math.max(g.measureText(teka.translate('coloring')).width,
-                 g.measureText(teka.translate('deleting')).width)+
+        Math.max(g.measureText(this.coloring).width,
+                 g.measureText(this.deleting).width)+
         2*this.buttonPadding;
     var width = Math.max(3*this.buttonWidth+2*this.gap);
     for (var i=0;i<this.colorname.length;i++) {
         width = Math.max(width,
-            g.measureText(
-                teka.translate('color_of_pen',
-                    [teka.translate(this.colorname[this.activeColor])])).width);
+            g.measureText(this.color_of_pen[this.colorname[i]]).width);
     }
 
     var height = this.textHeight+
@@ -123,8 +128,7 @@ teka.ColorTool.prototype.paint = function(g)
     g.textAlign = 'center';
     g.textBaseline = 'top';
     g.font = 'bold '+this.getTextFont();
-    g.fillText(teka.translate('color_of_pen',
-                              [teka.translate(this.colorname[this.activeColor])]),
+    g.fillText(this.color_of_pen[this.colorname[this.activeColor]],
                mindim.width/2,2);
 
     g.translate(0,this.textHeight+this.gap);
@@ -143,13 +147,13 @@ teka.ColorTool.prototype.paint = function(g)
             this.paintButton(g,this.gap+this.buttonWidth,0,
                              this.buttonWidth,this.buttonHeight,
                              (x===1 && i==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
-                             teka.translate('coloring'));
+                             this.coloring);
         }
 
         this.paintButton(g,2*(this.gap+this.buttonWidth),0,
                          this.buttonWidth,this.buttonHeight,
                          (x===2 && i==y)?this.BUTTON_ACTIVE:this.BUTTON_PASSIVE,
-                         teka.translate('deleting'));
+                         this.deleting);
 
         g.translate(0,this.buttonHeight+this.gap);
     }
@@ -281,4 +285,17 @@ teka.ColorTool.prototype.getButton = function(xc,yc)
         }
     }
     return false;
+};
+
+//////////////////////////////////////////////////////////////////
+
+teka.ColorTool.prototype.translate_color_of_pen = function()
+{
+    this.color_of_pen = {};
+
+    for (var i=0;i<this.colorname.length;i++) {
+        this.color_of_pen[this.colorname[i]] =
+            teka.translate('color_of_pen',
+                           [teka.translate(this.colorname[i])]);
+    }
 };

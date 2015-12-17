@@ -14,6 +14,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+teka.used = {};
+
 /**
  * Takes a string (index) and optionally an array with parameters
  * and returns a translated version of that string with the parameters
