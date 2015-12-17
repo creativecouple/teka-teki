@@ -410,7 +410,7 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
  */
 teka.PuzzleApplet.prototype.correctType = function(type)
 {
-    var whitelist = ['hashi','heyawake','hitori','japanese_sums',
+    var whitelist = ['easy_as_abc','hashi','heyawake','hitori','japanese_sums',
                      'kakuro','kropki','magnets','masyu','starbattle',
                      'sudoku','tapa'];
 
@@ -1014,7 +1014,11 @@ teka.PuzzleApplet.prototype.check = function()
             this.failed_attempts++;
             this.failedAttemptHook();
         }
-        this.setText(teka.translate(erg),false);
+        if (typeof erg=='string') {
+            this.setText(teka.translate(erg),false);
+        } else {
+            this.setText(teka.translate(erg['text'],erg['param']),false);
+        }
         this.puzzleViewer.setMode(teka.viewer.Defaults.WAIT);
         this.paint();
         return;

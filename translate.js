@@ -133,6 +133,41 @@ teka.dictionary = {
 
     generic_size: 'Größe {1}.',
 
+    easy_as_abc: 'Buchstabensalat',
+    easy_as_abc_instructions: 'Tragen Sie die unter dem Rätsel angegebenen Buchstaben so in das Diagramm ein,'
+        +' dass in jeder Zeile und jeder Spalte jeder Buchstabe genau einmal vorkommt.'
+        +' Die Buchstaben am Rand geben an, welcher Buchstabe in der entsprechenden'
+        +' Zeile oder Spalte aus der entsprechenden Richtung gesehen als erstes steht.',
+    easy_as_abc_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt ein A in das Feld ein. Jeder weitere Klick '
+        +'führt zum nächsten Buchstaben. Ist bereits der letzte Buchstabe erreicht, '
+        +'so wird durch einen erneuten Klick ein Strich eingetragen um anzuzeigen, '
+        +'dass das Feld leer bleiben soll. Der nächste Klick zeichnet einen Kreis '
+        +'in das Feld ein. Dieser bedeutet, dass es sich um ein Zahlenfeld handelt.'
+        +'Durch einen weiteren Klick wird der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jeden Buchstaben einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Buchstabentasten: Den entsprechenden Buchstaben in das Feld eintragen\n'
+        +'. oder O: Als Buchstabenfeld markieren (wird als Kreis dargestellt)\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Minustaste: Als Leerfeld markieren\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Buchstabentasten jeden Buchstaben einzeln ein- '
+        +'und ausschalten.',
+    easy_as_abc_letters: 'Buchstaben von A bis {1}.',
+    easy_as_abc_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    easy_as_abc_column_duplicate: 'Die markierten Buchstaben kommen in der Spalte doppelt vor.',
+    easy_as_abc_column_missing: 'In der markierten Spalte fehlt der Buchstabe {1}.',
+    easy_as_abc_row_duplicate: 'Die markierten Buchstaben kommen in der Zeile doppelt vor.',
+    easy_as_abc_row_missing: 'In der markierten Zeile fehlt der Buchstabe {1}.',
+    easy_as_abc_left_wrong: 'Der markierte Buchstabe stimmt nicht mit dem Buchstaben am linken Rand überein.',
+    easy_as_abc_right_wrong: 'Der markierte Buchstabe stimmt nicht mit dem Buchstaben am rechten Rand überein.',
+    easy_as_abc_top_wrong: 'Der markierte Buchstabe stimmt nicht mit dem Buchstaben am oberen Rand überein.',
+    easy_as_abc_bottom_wrong: 'Der markierte Buchstabe stimmt nicht mit dem Buchstaben am unteren Rand überein.',
+
     hashi: 'Hashi',
     hashi_instructions: 'Verbinden Sie die Inseln so durch Brücken, dass jede Insel '
         +'von jeder anderen aus erreichbar ist. Die Brücken dürfen dabei '
@@ -172,7 +207,7 @@ teka.dictionary = {
     heyawake_usage: 'Bedienung mit der Maus:\n\n'
         +'1. Klick: Schwarzes Feld\n2. Klick: Weißes Feld (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
-        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch ein Kreuz)\nEMPTYtaste: Feldinhalt löschen',
+        +'#, * und Q: Schwarzes Feld\n-, / und W: Weißes Feld (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen',
     heyawake_neighbours: 'Die markierten schwarzen Felder sind benachbart.',
     heyawake_number_wrong: 'Im markierten Gebiet stimmt die Anzahl der Schwarzfelder nicht.',
     heyawake_sequence_too_long: 'Die markierten Leerfelder gehen über mehr als 2 Gebiete.',

@@ -168,6 +168,12 @@ teka.ord = function(c)
     return c.charCodeAt(0);
 };
 
+/** Return character of an ascii-index */
+teka.chr = function(c)
+{
+    return String.fromCharCode(c);
+};
+
 /**
  * Creates a new array with dimensions given in dims, filled with the
  * value val.
@@ -323,4 +329,5 @@ teka.KEY_Q = 81;
 teka.KEY_S = 83;
 teka.KEY_W = 87;
 teka.KEY_X = 88;
+teka.KEY_Z = 90;
 teka.KEY_SHIFT = 16;
