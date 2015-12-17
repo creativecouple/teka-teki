@@ -757,7 +757,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.processMousedownEvent = 
 {
     var erg = this.processMousemoveEvent(xc,yc,false);
 
-    if (xc<this.L*this.scale || yc<this.T*this.scale || xc>=(this.X+this.L)*this.scale || yc>=(this.Y+this.T)*this.scale) {
+    if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
         return erg;
     }
 

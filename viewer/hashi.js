@@ -405,7 +405,7 @@ teka.viewer.hashi.HashiViewer.prototype.paint = function(g)
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]===0) {
-                g.strokeStyle = this.getColorString(this.c[i][j]);
+                g.strokeStyle = this.bridges[i][j]!==0?'#000':this.getColorString(this.c[i][j]);
                 switch (this.bridges[i][j]!==0?this.bridges[i][j]:this.f[i][j]) {
                   case teka.viewer.hashi.Defaults.HORIZONTAL_1:
                     teka.drawLine(g,
@@ -786,6 +786,7 @@ teka.viewer.hashi.HashiViewer.prototype.addBridges = function()
         for (var j=0;j<this.Y;j++) {
             if (this.bridges[i][j]!==0) {
                 this.f[i][j] = this.bridges[i][j];
+                this.c[i][j] = 0;
             }
         }
     }
