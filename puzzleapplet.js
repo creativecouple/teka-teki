@@ -119,7 +119,7 @@ teka.Defaults.COLORTOOL_COLORS = {
 };
 
 /** The maximum level to use in the cases tool. */
-teka.Defaults.MAX_LEVEL = 12;
+teka.Defaults.MAX_LEVEL = 9;
 
 /** Set to true, if the time measurment should be done. */
 teka.Defaults.TAKE_TIME = false;
