@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Pages: 1
-%%BoundingBox: 0 0 207 207
-%%CropBox: 0 0 207 207
+%%BoundingBox: 0 0 162 162
+%%CropBox: 0 0 162 162
 %%DocumentData: Clean7Bit
 %%Page: 1 1
 %%EndComments
@@ -11,36 +11,30 @@
 /pgsave save def 200 dict begin
 /sc 22.8 def
 /pt {sc div} def
-sc dup scale 0.5 pt dup translate
+sc dup scale 0.8 pt dup translate
 /duenn { 0.4 pt setlinewidth } def
-/dick { 1 pt setlinewidth } def
+/dick { 1.6 pt setlinewidth } def
 
-% create abcd:CEP -s 5
 <<
 /format 1
 /type (abcd)
 /sol false
-/X 5
-/Y 5
-/letter 4
-/diag true
+/X 3
+/Y 3
+/max 4
 /puzzle [
-(     11121)
-(     02211)
-(     12102)
-(     30121)
-(    +-----)
-(0122|     )
-(1220|     )
-(2102|     )
-(2120|     )
-(1103|     ) ]
+(        )
+(     2 0)
+(      0 )
+(      12)
+(    +---)
+(    |   )
+(0   |B  )
+(    |   ) ]
 /solution [
-(ABCAB)
-(BCBDC)
-(ADCAD)
-(DBDCB)
-(ACADA) ]
+(CDA)
+(BAB)
+(CDA) ]
 >> currentdict copy pop
 
 /e { exch def } bind def
@@ -49,45 +43,45 @@ sc dup scale 0.5 pt dup translate
      stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
 
 gsave
-letter 0 translate
+max 0 translate
 
 1 setgray
 0 0 X Y rectfill
-letter neg 0 letter Y rectfill
-0 Y X letter rectfill
+max neg 0 max Y rectfill
+0 Y X max rectfill
 0 setgray
 
 2 setlinecap
 
 dick
-letter neg 0 X letter add Y rectstroke
-0 0 X Y letter add rectstroke
+max neg 0 X max add Y rectstroke
+0 0 X Y max add rectstroke
 
 duenn
-0 1 X { /i e i 0 i Y letter add l } for
-0 1 Y { /j e letter neg j X j l } for
+0 1 X { /i e i 0 i Y max add l } for
+0 1 Y { /j e max neg j X j l } for
 
-letter neg 1 0 { /i e i 0 i Y l } for
-Y 1 Y letter add { /j e 0 j X j l } for
+max neg 1 0 { /i e i 0 i Y l } for
+Y 1 Y max add { /j e 0 j X j l } for
 
 /Helvetica findfont 0.65 scalefont setfont
-0 1 letter 1 sub { /i e
+0 1 max 1 sub { /i e
   i neg 1 sub Y i 65 add ( ) dup 0 3 index put exch pop c
   i 0 ne {
     -1 Y i add i 65 add ( ) dup 0 3 index put exch pop c
   } if
 } for
 
-0 1 letter 1 sub { /i e
+0 1 max 1 sub { /i e
   0 1 Y 1 sub { /j e
-    puzzle Y j sub letter add get i get /h e
-    i letter sub j h ( ) dup 0 3 index put exch pop c
+    puzzle Y j sub max add get i get /h e
+    i max sub j h ( ) dup 0 3 index put exch pop c
   } for
 } for
 
 0 1 X 1 sub { /i e
-  0 1 letter 1 sub { /j e
-    puzzle letter j sub 1 sub get i letter add 1 add get /h e
+  0 1 max 1 sub { /j e
+    puzzle max j sub 1 sub get i max add 1 add get /h e
     i j Y add h ( ) dup 0 3 index put exch pop c
   } for
 } for
@@ -97,7 +91,7 @@ Y 1 Y letter add { /j e 0 j X j l } for
     sol {
       solution Y j sub 1 sub get i get /h e
     } {
-      puzzle Y j sub letter add get i letter add 1 add get /h e
+      puzzle Y j sub max add get i max add 1 add get /h e
     } ifelse
     i j h ( ) dup 0 3 index put exch pop c
   } for

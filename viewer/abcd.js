@@ -42,23 +42,25 @@ teka.viewer.abcd.AbcdViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
-    this.L = parseInt(data.get('letter'),10);
-    this.asciiToData(data.get('puzzle'));
+    this.MAX = parseInt(data.get('max'),10);
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
     this.asciiToSolution(data.get('solution'));
 
     this.f = teka.new_array([this.X,this.Y],0);
-    this.top_f = teka.new_array([this.X,this.L],false);
-    this.left_f = teka.new_array([this.L,this.Y],false);
+    this.top_f = teka.new_array([this.X,this.MAX],false);
+    this.left_f = teka.new_array([this.MAX,this.Y],false);
     this.c = teka.new_array([this.X,this.Y],0);
-    this.top_c = teka.new_array([this.X,this.L],0);
-    this.left_c = teka.new_array([this.L,this.Y],0);
+    this.top_c = teka.new_array([this.X,this.MAX],0);
+    this.left_c = teka.new_array([this.MAX,this.Y],0);
     this.error = teka.new_array([this.X,this.Y],false);
-    this.top_error = teka.new_array([this.X,this.L],false);
-    this.left_error = teka.new_array([this.L,this.Y],false);
+    this.top_error = teka.new_array([this.X,this.MAX],false);
+    this.left_error = teka.new_array([this.MAX,this.Y],false);
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.abcd.AbcdViewer.prototype.asciiToData = function(ascii)
+teka.viewer.abcd.AbcdViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -66,27 +68,31 @@ teka.viewer.abcd.AbcdViewer.prototype.asciiToData = function(ascii)
 
     var grid = this.asciiToArray(ascii);
 
-    this.puzzle = teka.new_array([this.X,this.Y],0);
+    this.puzzle = teka.new_array([this.X,this.Y],teka.viewer.abcd.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.puzzle[i][j] = grid[this.L+1+i][this.L+1+j]==teka.ord(' ')
-                ?0:(grid[L+1+i][L+1+j]-teka.ord('A')+1);
+            this.puzzle[i][j] = grid[d*this.MAX+1+i][d*this.MAX+1+j]==teka.ord(' ')
+                ?0:(grid[d*this.MAX+1+i][d*this.MAX+1+j]-teka.ord('A')+1);
         }
     }
 
-    this.topdata = teka.new_array([this.X,this.L],0);
+    this.topdata = teka.new_array([this.X,this.MAX],teka.viewer.abcd.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.L;j++) {
-            this.topdata[i][j] = grid[this.L+1+i][j]==teka.ord(' ')
-                ?teka.viewer.abcd.Defaults.NONE:(grid[this.L+1+i][j]-teka.ord('0'));
+        for (var j=0;j<this.MAX;j++) {
+            var h = this.getVNr(grid,d*this.MAX+1+i,d*j,d);
+            if (h!==false) {
+                this.topdata[i][j] = h;
+            }
         }
     }
 
-    this.leftdata = teka.new_array([this.L,this.Y],0);
-    for (var i=0;i<this.L;i++) {
+    this.leftdata = teka.new_array([this.MAX,this.Y],teka.viewer.abcd.Defaults.NONE);
+    for (var i=0;i<this.MAX;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.leftdata[i][j] = grid[i][this.L+1+j]==teka.ord(' ')
-                ?teka.viewer.abcd.Defaults.NONE:(grid[i][this.L+1+j]-teka.ord('0'));
+            var h = this.getNr(grid,d*i,d*this.MAX+1+j,d);
+            if (h!==false) {
+                this.leftdata[i][j] = h;
+            }
         }
     }
 };
@@ -123,18 +129,17 @@ teka.viewer.abcd.AbcdViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.abcd.AbcdViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (abcd)\n/sol false\n/X 4\n/Y 4\n/letter 5\n/diag false'
-        +'\n/puzzle [ (      0111) (      0201) (      1020) (      1110)'
-        +' (      2002) (     +----) (11110|    ) (10012|    ) (02200|    )'
-        +' (10012|    ) ]'
-        +'\n/solution [ (BDCE) (AEBA) (CDCD) (ABEA) ]';
+    return '/format 1\n/type (abcd)\n/sol false\n/X 3\n/Y 3\n/max 4\n'
+        +'/puzzle [ (        ) (        ) (     1 1) (      0 )'
+        +'(    +---) (00  |   ) (2   | C ) (    |   ) ]\n'
+        +'/solution [ (ABA) (DCD) (BDB) ]';
 };
 
 /** Returns a list of automatically generated properties. */
 teka.viewer.abcd.AbcdViewer.prototype.getProperties = function()
 {
-    return [teka.translate('generic_size',[this.X+'x'+this.Y])];
-    // + Buchstaben von ... bis.
+    return [teka.translate('generic_size',[this.X+'x'+this.Y]),
+            teka.translate('abcd_letters',[teka.chr(teka.ord('A')+this.MAX-1)])];
 };
 
 //////////////////////////////////////////////////////////////////
@@ -148,14 +153,14 @@ teka.viewer.abcd.AbcdViewer.prototype.reset = function()
             this.c[i][j] = 0;
         }
     }
-    for (var i=0;i<this.L;i++) {
+    for (var i=0;i<this.MAX;i++) {
         for (var j=0;j<this.Y;j++) {
             this.left_f[i][j] = false;
             this.left_c[i][j] = 0;
         }
     }
     for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.L;j++) {
+        for (var j=0;j<this.MAX;j++) {
             this.top_f[i][j] = false;
             this.top_c[i][j] = 0;
         }
@@ -171,11 +176,11 @@ teka.viewer.abcd.AbcdViewer.prototype.clearError = function()
         }
     }
     for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.L;j++) {
+        for (var j=0;j<this.MAX;j++) {
             this.top_error[i][j] = false;
         }
     }
-    for (var i=0;i<this.L;i++) {
+    for (var i=0;i<this.MAX;i++) {
         for (var j=0;j<this.Y;j++) {
             this.left_error[i][j] = false;
         }
@@ -192,7 +197,7 @@ teka.viewer.abcd.AbcdViewer.prototype.copyColor = function(color)
             }
         }
     }
-    for (var i=0;i<this.L;i++) {
+    for (var i=0;i<this.MAX;i++) {
         for (var j=0;j<this.Y;j++) {
             if (this.left_c[i][j]==this.color) {
                 this.left_c[i][j] = color;
@@ -200,7 +205,7 @@ teka.viewer.abcd.AbcdViewer.prototype.copyColor = function(color)
         }
     }
     for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.L;j++) {
+        for (var j=0;j<this.MAX;j++) {
             if (this.top_c[i][j]==this.color) {
                 this.top_c[i][j] = color;
             }
@@ -218,7 +223,7 @@ teka.viewer.abcd.AbcdViewer.prototype.clearColor = function(color)
             }
         }
     }
-    for (var i=0;i<this.L;i++) {
+    for (var i=0;i<this.MAX;i++) {
         for (var j=0;j<this.Y;j++) {
             if (this.left_c[i][j]==color) {
                 this.left_f[i][j] = false;
@@ -226,7 +231,7 @@ teka.viewer.abcd.AbcdViewer.prototype.clearColor = function(color)
         }
     }
     for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.L;j++) {
+        for (var j=0;j<this.MAX;j++) {
             if (this.top_c[i][j]==color) {
                 this.top_f[i][j] = false;
             }
@@ -246,19 +251,19 @@ teka.viewer.abcd.AbcdViewer.prototype.saveState = function()
         }
     }
 
-    var left_f = teka.new_array([this.L,this.Y],0);
-    var left_c = teka.new_array([this.L,this.Y],0);
-    for (var i=0;i<this.L;i++) {
+    var left_f = teka.new_array([this.MAX,this.Y],0);
+    var left_c = teka.new_array([this.MAX,this.Y],0);
+    for (var i=0;i<this.MAX;i++) {
         for (var j=0;j<this.Y;j++) {
             left_f[i][j] = this.left_f[i][j];
             left_c[i][j] = this.left_c[i][j];
         }
     }
 
-    var top_f = teka.new_array([this.X,this.L],0);
-    var top_c = teka.new_array([this.X,this.L],0);
+    var top_f = teka.new_array([this.X,this.MAX],0);
+    var top_c = teka.new_array([this.X,this.MAX],0);
     for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.L;j++) {
+        for (var j=0;j<this.MAX;j++) {
             top_c[i][j] = this.top_c[i][j];
             top_f[i][j] = this.top_f[i][j];
         }
@@ -277,7 +282,7 @@ teka.viewer.abcd.AbcdViewer.prototype.loadState = function(state)
         }
     }
 
-    for (var i=0;i<this.L;i++) {
+    for (var i=0;i<this.MAX;i++) {
         for (var j=0;j<this.Y;j++) {
             this.left_f[i][j] = state.left_f[i][j];
             this.left_c[i][j] = state.left_c[i][j];
@@ -285,7 +290,7 @@ teka.viewer.abcd.AbcdViewer.prototype.loadState = function(state)
     }
 
     for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.L;j++) {
+        for (var j=0;j<this.MAX;j++) {
             this.top_c[i][j] = state.top_c[i][j];
             this.top_f[i][j] = state.top_f[i][j];
         }
@@ -306,7 +311,7 @@ teka.viewer.abcd.AbcdViewer.prototype.check = function()
             check[i][j] = this.f[i][j];
 
             if (this.puzzle[i][j]!==0) {
-                this.f[i][j] = this.puzzle[i][j];
+                check[i][j] = this.puzzle[i][j];
                 continue;
             }
 
@@ -349,13 +354,13 @@ teka.viewer.abcd.AbcdViewer.prototype.check = function()
     }
 
     for (var j=0;j<Y;j++) {
-        var az = teka.new_array([this.L],0);
+        var az = teka.new_array([this.MAX],0);
         for (var i=0;i<X;i++) {
             az[check[i][j]-1]++;
         }
-        for (var i=0;i<this.L;i++) {
-            if (this.leftdata[this.L-i-1][j]!=-1 && this.leftdata[this.L-i-1][j]!=az[i]) {
-                this.left_error[this.L-i-1][j] = true;
+        for (var i=0;i<this.MAX;i++) {
+            if (this.leftdata[this.MAX-i-1][j]!=-1 && this.leftdata[this.MAX-i-1][j]!=az[i]) {
+                this.left_error[this.MAX-i-1][j] = true;
                 for (var ii=0;ii<X;ii++) {
                     if (check[ii][j]==i+1) {
                         this.error[ii][j] = true;
@@ -367,13 +372,13 @@ teka.viewer.abcd.AbcdViewer.prototype.check = function()
     }
 
     for (var i=0;i<X;i++) {
-        var az = teka.new_array([this.L],0);
+        var az = teka.new_array([this.MAX],0);
         for (var j=0;j<Y;j++) {
             az[check[i][j]-1]++;
         }
-        for (var j=0;j<this.L;j++) {
-            if (this.topdata[i][this.L-j-1]!=-1 && this.topdata[i][this.L-j-1]!=az[j]) {
-                this.top_error[i][this.L-j-1] = true;
+        for (var j=0;j<this.MAX;j++) {
+            if (this.topdata[i][this.MAX-j-1]!=-1 && this.topdata[i][this.MAX-j-1]!=az[j]) {
+                this.top_error[i][this.MAX-j-1] = true;
                 for (var jj=0;jj<Y;jj++) {
                     if (check[i][jj]==j+1) {
                         this.error[i][jj] = true;
@@ -405,10 +410,10 @@ teka.viewer.abcd.AbcdViewer.prototype.check = function()
  */
 teka.viewer.abcd.AbcdViewer.prototype.setMetrics = function(g)
 {
-    this.scale = Math.floor(Math.min((this.width-3)/(this.X+this.L),
-                                     (this.height-3-(this.textHeight+2))/(this.Y+this.L)));
-    var realwidth = (this.X+this.L)*this.scale+3;
-    var realheight = (this.Y+this.L)*this.scale+3+this.textHeight+2;
+    this.scale = Math.floor(Math.min((this.width-3)/(this.X+this.MAX),
+                                     (this.height-3-(this.textHeight+2))/(this.Y+this.MAX)));
+    var realwidth = (this.X+this.MAX)*this.scale+3;
+    var realheight = (this.Y+this.MAX)*this.scale+3+this.textHeight+2;
 
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
@@ -431,7 +436,7 @@ teka.viewer.abcd.AbcdViewer.prototype.paint = function(g)
     var X = this.X;
     var Y = this.Y;
     var S = this.scale;
-    var L = this.L;
+    var L = this.MAX;
 
     g.save();
     g.translate(this.deltaX+this.borderX,this.deltaY+this.borderY);
@@ -612,17 +617,17 @@ teka.viewer.abcd.AbcdViewer.prototype.processMousemoveEvent = function(xc, yc, p
     var oldx = this.x;
     var oldy = this.y;
 
-    this.x = Math.floor(xc/this.scale)-this.L;
-    this.y = Math.floor(yc/this.scale)-this.L;
+    this.x = Math.floor(xc/this.scale)-this.MAX;
+    this.y = Math.floor(yc/this.scale)-this.MAX;
 
-    this.xm = xc-this.scale*(this.x+this.L);
-    this.ym = yc-this.scale*(this.y+this.L);
+    this.xm = xc-this.scale*(this.x+this.MAX);
+    this.ym = yc-this.scale*(this.y+this.MAX);
 
-    if (this.x<-this.L) {
-        this.x=-this.L;
+    if (this.x<-this.MAX) {
+        this.x=-this.MAX;
     }
-    if (this.y<-this.L) {
-        this.y=-this.L;
+    if (this.y<-this.MAX) {
+        this.y=-this.MAX;
     }
     if (this.x>=this.X) {
         this.x=this.X-1;
@@ -646,11 +651,11 @@ teka.viewer.abcd.AbcdViewer.prototype.processMousedownEvent = function(xc, yc)
     var erg = this.processMousemoveEvent(xc,yc);
 
     if (this.x<0 && this.y>=0 && this.y<this.Y) {
-        this.set_left(this.x+this.L,this.y,!this.left_f[this.x+this.L][this.y]);
+        this.set_left(this.x+this.MAX,this.y,!this.left_f[this.x+this.MAX][this.y]);
         return true;
     }
     if (this.y<0 && this.x>=0 && this.x<this.X) {
-        this.set_top(this.x,this.y+this.L,!this.top_f[this.x][this.y+this.L]);
+        this.set_top(this.x,this.y+this.MAX,!this.top_f[this.x][this.y+this.MAX]);
         return true;
     }
     if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y) {
@@ -670,9 +675,9 @@ teka.viewer.abcd.AbcdViewer.prototype.processMousedownEvent = function(xc, yc)
     }
 
     if (this.f[this.x][this.y]>=1000) {
-        if (this.L<=4) {
+        if (this.MAX<=4) {
             var nr = ((this.xm<this.scale/2)?0:1)+2*((this.ym<this.scale/2)?0:1)+1;
-            if (nr<1 || nr>this.L) {
+            if (nr<1 || nr>this.MAX) {
                 return erg;
             }
             this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000);
@@ -680,7 +685,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processMousedownEvent = function(xc, yc)
         } else {
             var nr = ((this.xm<3*this.scale/8)?0:(this.xm>this.scale-3*this.scale/8)?2:1)+
             3*((this.ym<3*this.scale/8)?0:(this.ym>this.scale-3*this.scale/8)?2:1)+1;
-            if (nr<1 || nr>this.L) {
+            if (nr<1 || nr>this.MAX) {
                 return erg;
             }
             this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000);
@@ -688,7 +693,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processMousedownEvent = function(xc, yc)
         }
     }
 
-    this.set(this.x,this.y,(this.f[this.x][this.y]+1)%(this.L+1));
+    this.set(this.x,this.y,(this.f[this.x][this.y]+1)%(this.MAX+1));
     return true;
 };
 
@@ -704,7 +709,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
     if (e.key==teka.KEY_UP) {
-        if (this.y>0 || (this.x>=0 && this.y>-this.L)) {
+        if (this.y>0 || (this.x>=0 && this.y>-this.MAX)) {
             this.y--;
         }
         return true;
@@ -716,7 +721,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
     if (e.key==teka.KEY_LEFT) {
-        if (this.x>0 || (this.y>=0 && this.x>-this.L)) {
+        if (this.x>0 || (this.y>=0 && this.x>-this.MAX)) {
             this.x--;
         }
         return true;
@@ -724,18 +729,18 @@ teka.viewer.abcd.AbcdViewer.prototype.processKeydownEvent = function(e)
 
     if (this.x<0) {
         if (e.key==teka.KEY_SPACE) {
-            this.set_left(this.x+this.L,this.y,false);
+            this.set_left(this.x+this.MAX,this.y,false);
         } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
-            this.set_left(this.x+this.L,this.y,true);
+            this.set_left(this.x+this.MAX,this.y,true);
         }
         return true;
     }
 
     if (this.y<0) {
         if (e.key==teka.KEY_SPACE) {
-            this.set_top(this.x,this.y+this.L,false);
+            this.set_top(this.x,this.y+this.MAX,false);
         } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
-            this.set_top(this.x,this.y+this.L,true);
+            this.set_top(this.x,this.y+this.MAX,true);
         }
         return true;
     }
@@ -749,7 +754,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key>=teka.KEY_A && e.key<=teka.KEY_A+this.L-1) {
+    if (e.key>=teka.KEY_A && e.key<=teka.KEY_A+this.MAX-1) {
         if (this.f[this.x][this.y]>=1000) {
             this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<(e.key-teka.KEY_A+1)))+1000);
         } else {
@@ -817,7 +822,7 @@ teka.viewer.abcd.AbcdViewer.prototype.getExpert = function(h)
     var min = 10;
     var max = 0;
     h = h-1000;
-    for (var i=1;i<=this.L;i++) {
+    for (var i=1;i<=this.MAX;i++) {
         if ((h&(1<<i))!=0) {
             if (i<min) {
                 min=i;

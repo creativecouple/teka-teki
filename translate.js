@@ -158,6 +158,7 @@ teka.dictionary = {
         +'Im Expertenmodus können Sie mit den Buchstabentasten jeden Buchstaben einzeln ein- '
         +'und ausschalten.\n\n'
         +'Links und oben:\n#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
+    abcd_letters: 'Buchstaben von A bis {1}.',
     abcd_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     abcd_empty: 'Das markierte Feld ist leer.',
     abcd_same_letters: 'In den markierten Feldern sind gleiche Buchstaben benachbart.',
