@@ -142,7 +142,8 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.getExample = function()
 /** Returns a list of automatically generated properties. */
 teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.getProperties = function()
 {
-    return [teka.translate('generic_size',[this.X+'x'+this.X])];
+    return [teka.translate('generic_size',[this.X+'x'+this.X]),
+            teka.translate('easy_as_abc_letters',[teka.chr(teka.ord('A')+this.MAX-1)])];
 };
 
 //////////////////////////////////////////////////////////////////
