@@ -460,10 +460,10 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
             if (this.puzzle[i][j]!=teka.viewer.easy_as_abc.Defaults.NONE) {
                 g.fillStyle = '#000';
                 if (this.puzzle[i][j]==teka.viewer.easy_as_abc.Defaults.EMPTY) {
-                    teka.drawLine(g,S*(i+1)+S/3,S*(j+1)+S/2,
-                                  S*(i+1)+2*S/3,S*(j+1)+S/2);
-                    teka.drawLine(g,S*(i+1)+S/3,S*(j+1)+S/2+1,
-                                  S*(i+1)+2*S/3,S*(j+1)+S/2+1);
+                    g.lineWidth = 2;
+                    teka.drawLine(g,S*(i+1)+S/3,S*(j+1)+Math.floor(S/2)+0.5,
+                                  S*(i+1)+2*S/3,S*(j+1)+Math.floor(S/2)+0.5);
+                    g.lineWidth = 1;
                 } else {
                     g.font = this.font.font;
                     g.fillText(teka.chr(teka.ord('A')+this.puzzle[i][j]-1),
@@ -474,8 +474,10 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
 
             if (this.f[i][j]==teka.viewer.easy_as_abc.Defaults.EMPTY) {
                 g.strokeStyle = this.getColorString(this.c[i][j]);
-                teka.drawLine(g,S*(i+1)+S/3,S*(j+1)+S/2,
-                              S*(i+1)+2*S/3,S*(j+1)+S/2);
+                g.lineWidth = 2;
+                teka.drawLine(g,S*(i+1)+S/3,S*(j+1)+Math.floor(S/2)+0.5,
+                              S*(i+1)+2*S/3,S*(j+1)+Math.floor(S/2)+0.5);
+                g.lineWidth = 1;
                 continue;
             }
 
