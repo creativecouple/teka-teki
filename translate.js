@@ -135,6 +135,30 @@ teka.dictionary = {
 
     generic_size: 'Größe {1}.',
 
+    abcd: 'ABCD-Rätsel',
+    abcd_instructions: 'Tragen Sie in jedes Feld einen der angegebenen Buchstaben so ein, '
+        +'dass in waagerecht und senkrecht benachbarten Feldern keine '
+        +'gleichen Buchstaben stehen. Die Zahlen am Rand geben an, wie oft jeder der '
+        +'Buchstaben in der entsprechenden Zeile oder Spalte vorkommt. '
+        +'Möglicherweise dürfen sich die Buchstaben auch nicht diagonal berühren. '
+        +'Wenn dies der Fall ist, steht das unterhalb des Rätsels.',
+    abcd_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt ein A in das Feld ein. Jeder weitere Klick '
+        +'führt zum nächsten Buchstaben. Ist bereits der letzte Buchstabe erreicht, '
+        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jeden Buchstaben einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n'
+        +'Ein Klick in den Vorgaben links und oben setzt ein Kreuz. Ein weiterer Klick löscht dieses wieder.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Buchstabentasten: Den entsprechenden Buchstaben in das Feld eintragen\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Buchstabentasten jeden Buchstaben einzeln ein- '
+        +'und ausschalten.\n\n'
+        +'Links und oben:\n#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
+
     easy_as_abc: 'Buchstabensalat',
     easy_as_abc_instructions: 'Tragen Sie die unter dem Rätsel angegebenen Buchstaben so in das Diagramm ein,'
         +' dass in jeder Zeile und jeder Spalte jeder Buchstabe genau einmal vorkommt.'

@@ -415,9 +415,9 @@ teka.PuzzleApplet.prototype.loadPuzzleData = function(filename, callback)
  */
 teka.PuzzleApplet.prototype.correctType = function(type)
 {
-    var whitelist = ['easy_as_abc','hashi','heyawake','hitori','japanese_sums',
-                     'kakuro','kropki','magnets','masyu','starbattle',
-                     'sudoku','tapa'];
+    var whitelist = ['abcd','easy_as_abc','hashi','heyawake','hitori',
+                     'japanese_sums','kakuro','kropki','magnets','masyu',
+                     'starbattle','sudoku','tapa'];
 
     for (var i=0;i<whitelist.length;i++) {
         if (whitelist[i]===type) {
