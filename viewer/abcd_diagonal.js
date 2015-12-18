@@ -15,15 +15,15 @@
  */
 
 /** Add own namespace to avoid conflicts. */
-teka.viewer.abcd = {};
+teka.viewer.abcd_diagonal = {};
 
 /** Some constants. */
-teka.viewer.abcd.Defaults = {
+teka.viewer.abcd_diagonal.Defaults = {
     NONE: -1
 };
 
 /** Constructor */
-teka.viewer.abcd.AbcdViewer = function(data)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer = function(data)
 {
     teka.viewer.PuzzleViewer.call(this,data);
 
@@ -33,12 +33,12 @@ teka.viewer.abcd.AbcdViewer = function(data)
     this.ym = 0;
     this.exp = false;
 };
-teka.extend(teka.viewer.abcd.AbcdViewer,teka.viewer.PuzzleViewer);
+teka.extend(teka.viewer.abcd_diagonal.Abcd_diagonalViewer,teka.viewer.PuzzleViewer);
 
 //////////////////////////////////////////////////////////////////
 
 /** Initialize this viewer width the PSData object provided. */
-teka.viewer.abcd.AbcdViewer.prototype.initData = function(data)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
@@ -60,7 +60,7 @@ teka.viewer.abcd.AbcdViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.abcd.AbcdViewer.prototype.asciiToData = function(ascii,d)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -68,7 +68,7 @@ teka.viewer.abcd.AbcdViewer.prototype.asciiToData = function(ascii,d)
 
     var grid = this.asciiToArray(ascii);
 
-    this.puzzle = teka.new_array([this.X,this.Y],teka.viewer.abcd.Defaults.NONE);
+    this.puzzle = teka.new_array([this.X,this.Y],teka.viewer.abcd_diagonal.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
             this.puzzle[i][j] = grid[d*this.MAX+1+i][d*this.MAX+1+j]==teka.ord(' ')
@@ -76,7 +76,7 @@ teka.viewer.abcd.AbcdViewer.prototype.asciiToData = function(ascii,d)
         }
     }
 
-    this.topdata = teka.new_array([this.X,this.MAX],teka.viewer.abcd.Defaults.NONE);
+    this.topdata = teka.new_array([this.X,this.MAX],teka.viewer.abcd_diagonal.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.MAX;j++) {
             var h = this.getVNr(grid,d*this.MAX+1+i,d*j,d);
@@ -86,7 +86,7 @@ teka.viewer.abcd.AbcdViewer.prototype.asciiToData = function(ascii,d)
         }
     }
 
-    this.leftdata = teka.new_array([this.MAX,this.Y],teka.viewer.abcd.Defaults.NONE);
+    this.leftdata = teka.new_array([this.MAX,this.Y],teka.viewer.abcd_diagonal.Defaults.NONE);
     for (var i=0;i<this.MAX;i++) {
         for (var j=0;j<this.Y;j++) {
             var h = this.getNr(grid,d*i,d*this.MAX+1+j,d);
@@ -98,7 +98,7 @@ teka.viewer.abcd.AbcdViewer.prototype.asciiToData = function(ascii,d)
 };
 
 /** Read solution from ascii art. */
-teka.viewer.abcd.AbcdViewer.prototype.asciiToSolution = function(ascii)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.asciiToSolution = function(ascii)
 {
     if (ascii===false) {
         return;
@@ -115,7 +115,7 @@ teka.viewer.abcd.AbcdViewer.prototype.asciiToSolution = function(ascii)
 };
 
 /** Add solution. */
-teka.viewer.abcd.AbcdViewer.prototype.addSolution = function()
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.addSolution = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -127,16 +127,16 @@ teka.viewer.abcd.AbcdViewer.prototype.addSolution = function()
 //////////////////////////////////////////////////////////////////
 
 /** Returns a small example. */
-teka.viewer.abcd.AbcdViewer.prototype.getExample = function()
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (abcd)\n/sol false\n/X 3\n/Y 3\n/max 4\n'
-        +'/puzzle [ (        ) (        ) (     1 1) (      0 )'
-        +'(    +---) (00  |   ) (2   | C ) (    |   ) ]\n'
-        +'/solution [ (ABA) (DCD) (BDB) ]';
+    return '/format 1\n/type (abcd_diagonal)\n/sol true\n/X 3\n/Y 3\n'
+        +'/max 5\n/puzzle [ (       1 ) (         ) (      1  ) (         ) '
+        +'(        1) (     +---) (1    |E  ) ( 2   |   ) (    1|   ) ]\n'
+        +'/solution [ (EAC) (DBD) (CEA) ]';
 };
 
 /** Returns a list of automatically generated properties. */
-teka.viewer.abcd.AbcdViewer.prototype.getProperties = function()
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.getProperties = function()
 {
     return [teka.translate('generic_size',[this.X+'x'+this.Y]),
             teka.translate('abcd_letters',[teka.chr(teka.ord('A')+this.MAX-1)])];
@@ -145,7 +145,7 @@ teka.viewer.abcd.AbcdViewer.prototype.getProperties = function()
 //////////////////////////////////////////////////////////////////
 
 /** Reset the whole diagram. */
-teka.viewer.abcd.AbcdViewer.prototype.reset = function()
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.reset = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -168,7 +168,7 @@ teka.viewer.abcd.AbcdViewer.prototype.reset = function()
 };
 
 /** Reset the error marks. */
-teka.viewer.abcd.AbcdViewer.prototype.clearError = function()
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.clearError = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -188,7 +188,7 @@ teka.viewer.abcd.AbcdViewer.prototype.clearError = function()
 };
 
 /** Copy digits colored with this.color to color. */
-teka.viewer.abcd.AbcdViewer.prototype.copyColor = function(color)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.copyColor = function(color)
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -214,7 +214,7 @@ teka.viewer.abcd.AbcdViewer.prototype.copyColor = function(color)
 };
 
 /** Delete all digits with color. */
-teka.viewer.abcd.AbcdViewer.prototype.clearColor = function(color)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.clearColor = function(color)
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -240,7 +240,7 @@ teka.viewer.abcd.AbcdViewer.prototype.clearColor = function(color)
 };
 
 /** Save current state. */
-teka.viewer.abcd.AbcdViewer.prototype.saveState = function()
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.saveState = function()
 {
     var f = teka.new_array([this.X,this.Y],0);
     var c = teka.new_array([this.X,this.Y],0);
@@ -273,7 +273,7 @@ teka.viewer.abcd.AbcdViewer.prototype.saveState = function()
 };
 
 /** Load state. */
-teka.viewer.abcd.AbcdViewer.prototype.loadState = function(state)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.loadState = function(state)
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -300,7 +300,7 @@ teka.viewer.abcd.AbcdViewer.prototype.loadState = function(state)
 //////////////////////////////////////////////////////////////////
 
 /** Check, if the solution is correct. */
-teka.viewer.abcd.AbcdViewer.prototype.check = function()
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.check = function()
 {
     var X = this.X;
     var Y = this.Y;
@@ -348,6 +348,19 @@ teka.viewer.abcd.AbcdViewer.prototype.check = function()
         for (var j=0;j<Y-1;j++) {
             if (check[i][j]==check[i][j+1]) {
                 this.error[i][j] = this.error[i][j+1] = true;
+                return 'abcd_same_letters';
+            }
+        }
+    }
+
+    for (var i=0;i<X-1;i++) {
+        for (var j=0;j<Y-1;j++) {
+            if (check[i][j]==check[i+1][j+1]) {
+                this.error[i][j] = this.error[i+1][j+1] = true;
+                return 'abcd_same_letters';
+            }
+            if (check[i][j+1]==check[i+1][j]) {
+                this.error[i][j+1] = this.error[i+1][j] = true;
                 return 'abcd_same_letters';
             }
         }
@@ -408,7 +421,7 @@ teka.viewer.abcd.AbcdViewer.prototype.check = function()
  * Return value is an object with width and height of the used space,
  * and, most important, the scale.
  */
-teka.viewer.abcd.AbcdViewer.prototype.setMetrics = function(g)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.setMetrics = function(g)
 {
     this.scale = Math.floor(Math.min((this.width-3)/(this.X+this.MAX),
                                      (this.height-3-(this.textHeight+2))/(this.Y+this.MAX)));
@@ -431,7 +444,7 @@ teka.viewer.abcd.AbcdViewer.prototype.setMetrics = function(g)
 };
 
 /** Paints the diagram. */
-teka.viewer.abcd.AbcdViewer.prototype.paint = function(g)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.paint = function(g)
 {
     var X = this.X;
     var Y = this.Y;
@@ -609,7 +622,7 @@ teka.viewer.abcd.AbcdViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.abcd.AbcdViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     xc -= this.deltaX+this.borderX;
     yc -= this.deltaY+this.borderY;
@@ -646,7 +659,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processMousemoveEvent = function(xc, yc, p
 };
 
 /** Handles mousedown event. */
-teka.viewer.abcd.AbcdViewer.prototype.processMousedownEvent = function(xc, yc)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.processMousedownEvent = function(xc, yc)
 {
     var erg = this.processMousemoveEvent(xc,yc);
 
@@ -698,7 +711,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processMousedownEvent = function(xc, yc)
 };
 
 /** Handles keydown event. */
-teka.viewer.abcd.AbcdViewer.prototype.processKeydownEvent = function(e)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.processKeydownEvent = function(e)
 {
     this.exp = false;
 
@@ -778,7 +791,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processKeydownEvent = function(e)
 //////////////////////////////////////////////////////////////////
 
 /** Sets the value of a cell, if the color fits. */
-teka.viewer.abcd.AbcdViewer.prototype.set = function(x, y, value)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.set = function(x, y, value)
 {
     if (this.f[x][y]!=0 && this.f[x][y]!=1000 && this.c[x][y]!=this.color) {
         return;
@@ -788,7 +801,7 @@ teka.viewer.abcd.AbcdViewer.prototype.set = function(x, y, value)
 };
 
 /** set_left */
-teka.viewer.abcd.AbcdViewer.prototype.set_left = function(x, y, value)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.set_left = function(x, y, value)
 {
     if (this.left_f[x][y] && this.left_c[x][y]!=this.color) {
         return;
@@ -798,7 +811,7 @@ teka.viewer.abcd.AbcdViewer.prototype.set_left = function(x, y, value)
 };
 
 /** set_top */
-teka.viewer.abcd.AbcdViewer.prototype.set_top = function(x, y, value)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.set_top = function(x, y, value)
 {
     if (this.top_f[x][y] && this.top_c[x][y]!=this.color) {
         return;
@@ -808,7 +821,7 @@ teka.viewer.abcd.AbcdViewer.prototype.set_top = function(x, y, value)
 };
 
 /** Converts from normal mode to expert mode. */
-teka.viewer.abcd.AbcdViewer.prototype.setExpert = function(h)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.setExpert = function(h)
 {
     if (h==0) {
         return 1000;
@@ -817,7 +830,7 @@ teka.viewer.abcd.AbcdViewer.prototype.setExpert = function(h)
 };
 
 /** Converts back from expert mode to normal mode. */
-teka.viewer.abcd.AbcdViewer.prototype.getExpert = function(h)
+teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.getExpert = function(h)
 {
     var min = 10;
     var max = 0;
