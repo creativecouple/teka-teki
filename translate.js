@@ -79,7 +79,7 @@ teka.dictionary = {
     instructions_descr: 'Zeigt die Aufgabenstellung und eine Anleitung zur Bedienung dieses Applets an.',
     instructions_global: 'Testen (Strg-Enter): Wenn Sie auf diesen Button klicken, überprüft '
         +'das Applet, ob Ihre Lösung stimmt. Ist die Lösung richtig, so blinkt '
-        +'das Rätsel in unterschiedlichen Blautönen. Ist die Lösung hingegen falsch, '
+        +'das Rätsel. Ist die Lösung hingegen falsch, '
         +'so wird ein Fehler im Rätsel markiert und ein Fehlertext angezeigt.\n\n'
         +'Rückgängig (F3): Die letzte größere Änderung wird rückgängig gemacht. Sie '
         +'können auch das Rückgängigmachen selbst rückgängig machen, indem sie diesen '
