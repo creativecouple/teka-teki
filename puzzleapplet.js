@@ -485,7 +485,9 @@ teka.PuzzleApplet.prototype.initPuzzleViewer = function()
 /** Initializes the head. */
 teka.PuzzleApplet.prototype.initHead = function(title)
 {
-    this.head.setTitle(title);
+    if (title!==undefined) {
+        this.head.setTitle(title);
+    }
     this.head.setPrefix(this.values_.HEAD_PREFIX);
     this.head.setTextParameter(this.values_.TEXT_COLOR,
                                     this.values_.TEXT_HEIGHT);
@@ -894,6 +896,20 @@ teka.PuzzleApplet.prototype.keydownListener = function(e)
 
     var myEvent = teka.normalizeKeyEvent(e);
 
+    if (this.checkResize(myEvent)) {
+        this.initHead();
+        this.addLayout([this.puzzleViewer,
+                        this.buttonTool,
+                        this.colorTool,
+                        this.casesTool,
+                        this.textTool]);
+
+        this.setText('',false);
+        this.paint();
+        teka.stopPropagation(e);
+        return false;
+    }
+
     if (this.showInstructions) {
         if (this.instructions.processKeydownEvent(myEvent)) {
             this.paint();
@@ -920,6 +936,35 @@ teka.PuzzleApplet.prototype.keydownListener = function(e)
 
     this.canvas.focus();
     return true;
+};
+
+teka.PuzzleApplet.prototype.checkResize = function(e)
+{
+    if (e.key==teka.KEY_RIGHT && e.ctrl==true) {
+        this.canvas.width += 50;
+        this.canvas.style.width = this.canvas.width+'px';
+        return true;
+    }
+
+    if (e.key==teka.KEY_LEFT && e.ctrl==true) {
+        this.canvas.width -= 50;
+        this.canvas.style.width = this.canvas.width+'px';
+        return true;
+    }
+
+    if (e.key==teka.KEY_DOWN && e.ctrl==true) {
+        this.canvas.height += 50;
+        this.canvas.style.height = this.canvas.height+'px';
+        return true;
+    }
+
+    if (e.key==teka.KEY_UP && e.ctrl==true) {
+        this.canvas.height -= 50;
+        this.canvas.style.height = this.canvas.height+'px';
+        return true;
+    }
+
+    return false;
 };
 
 /** Eventhandler for keyup events. */

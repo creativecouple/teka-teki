@@ -56,6 +56,9 @@ teka.LRLayout.prototype.arrangeTools = function(g) {
 
     this.tools[0].setExtent(0,0,this.width-width-this.gap,this.height);
     var metrics = this.tools[0].setMetrics(g);
+    if (metrics.scale===false) {
+        return false;
+    }
     this.tools[0].setExtent(0,0,metrics.width,this.height);
     var metrics = this.tools[0].setMetrics(g);
 
