@@ -126,6 +126,7 @@ teka.dictionary = {
         +'\"Anleitung\" klicken. Dort erfahren Sie die Regeln des Rätsels, sowie '
         +'die Bedienung des Applets bei diesem speziellen Rätsel.',
     timeout: 'Die Zeit für dieses Rätsel ist abgelaufen.',
+    too_small: 'Das Fenster ist zu klein.',
     turkey: 'türkis',
     turkey_a: 'türkisfarbigen',
     undo: 'Rückgängig',

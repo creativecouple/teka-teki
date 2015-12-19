@@ -460,7 +460,7 @@ teka.PuzzleApplet.prototype.addLayout = function(tools)
     var td_scale = td.arrangeTools(this.image);
 
     if (lr_scale===false && td_scale===false) {
-        teka.setError('image too small for puzzle');
+        this.layout = false;
         return;
     } else if (lr_scale===false) {
         this.layout = td;
@@ -470,7 +470,9 @@ teka.PuzzleApplet.prototype.addLayout = function(tools)
         this.layout = lr_scale>=td_scale?lr:td;
     }
 
-    this.layout.arrangeTools(this.image);
+    if (this.layout!==false) {
+        this.layout.arrangeTools(this.image);
+    }
 };
 
 /** Initializes the puzzleviewer. */
@@ -683,6 +685,10 @@ teka.PuzzleApplet.prototype.paint = function()
         return;
     }
 
+    if (this.layout===false) {
+        this.paintTooSmall();
+        return;
+    }
     this.image.save();
     this.layout.translate(this.image);
     this.layout.clip(this.image);
@@ -703,6 +709,18 @@ teka.PuzzleApplet.prototype.paintError = function()
     this.image.fillText(teka.error,
                         this.canvas.width/2,
                         this.canvas.height/2+this.values_.TEXT_HEIGHT);
+};
+
+/** Paints an message on the screen, that the applet is too small. */
+teka.PuzzleApplet.prototype.paintTooSmall = function()
+{
+    this.image.textBaseline = 'middle';
+    this.image.textAlign = 'center';
+    this.image.font = this.values_.TEXT_HEIGHT+'px sans-serif';
+    this.image.fillStyle = this.values_.TEXT_COLOR;
+    this.image.fillText(teka.translate('too_small'),
+                        this.canvas.width/2,
+                        this.canvas.height/2);
 };
 
 /** Paints a timeout message. */
@@ -898,6 +916,10 @@ teka.PuzzleApplet.prototype.keydownListener = function(e)
 
     if (this.checkResize(myEvent)) {
         this.initHead();
+        if (this.showStart) {
+            this.initStartScreen();
+        }
+        this.initInstructions();
         this.addLayout([this.puzzleViewer,
                         this.buttonTool,
                         this.colorTool,
@@ -938,28 +960,41 @@ teka.PuzzleApplet.prototype.keydownListener = function(e)
     return true;
 };
 
+/** Checks for ctrl-cursor and resizes the canvas. */
 teka.PuzzleApplet.prototype.checkResize = function(e)
 {
     if (e.key==teka.KEY_RIGHT && e.ctrl==true) {
         this.canvas.width += 50;
+        if (this.canvas.width>2000) {
+            this.canvas.width = 2000;
+        }
         this.canvas.style.width = this.canvas.width+'px';
         return true;
     }
 
     if (e.key==teka.KEY_LEFT && e.ctrl==true) {
         this.canvas.width -= 50;
+        if (this.canvas.width<200) {
+            this.canvas.width = 200;
+        }
         this.canvas.style.width = this.canvas.width+'px';
         return true;
     }
 
     if (e.key==teka.KEY_DOWN && e.ctrl==true) {
         this.canvas.height += 50;
+        if (this.canvas.height>2000) {
+            this.canvas.height = 2000;
+        }
         this.canvas.style.height = this.canvas.height+'px';
         return true;
     }
 
     if (e.key==teka.KEY_UP && e.ctrl==true) {
         this.canvas.height -= 50;
+        if (this.canvas.height<200) {
+            this.canvas.height = 200;
+        }
         this.canvas.style.height = this.canvas.height+'px';
         return true;
     }
