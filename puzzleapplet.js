@@ -177,6 +177,7 @@ teka.PuzzleApplet = function(options)
     this.timeout = false;
     this.canvas = this.addCanvas();
     this.image = this.canvas.getContext('2d');
+    this.dragx = this.dragy = false;
 
     this.paintLogo();
 
@@ -656,6 +657,13 @@ teka.PuzzleApplet.prototype.paint = function()
         return;
     }
 
+    this.image.strokeStyle = '#000';
+    for (var i=4;i<15;i+=4) {
+        teka.drawLine(this.image,
+                      this.canvas.width-i,this.canvas.height,
+                      this.canvas.width,this.canvas.height-i);
+    }
+
     this.image.save();
     this.head.translate(this.image);
     this.head.clip(this.image);
@@ -778,7 +786,7 @@ teka.PuzzleApplet.prototype.mousemoveListener = function(e)
     }
 
     var paint = false;
-    if (this.layout.inExtent(x,y)) {
+    if (this.layout!==false && this.layout.inExtent(x,y)) {
         if (this.layout.processMousemoveEvent(x-this.layout.left,
                                               y-this.layout.top,
                                               buttonPressed)) {
@@ -803,6 +811,10 @@ teka.PuzzleApplet.prototype.mousedownListener = function(e)
 
     this.checkTimeout();
 
+    if (this.dragx!==false) {
+        return;
+    }
+
     if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
             this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
         this.puzzleViewer.clearError();
@@ -819,6 +831,18 @@ teka.PuzzleApplet.prototype.mousedownListener = function(e)
 
     var x = position.x-this.canvas.offsetLeft;
     var y = position.y-this.canvas.offsetTop;
+
+    if (x>=this.canvas.width-15 && y>=this.canvas.height-15) {
+        this.dragx = x;
+        this.dragy = y;
+        this.dragwidth = this.canvas.width;
+        this.dragheight = this.canvas.height;
+        this.draglistener = this.mousedragListener.bind(this);
+        document.addEventListener('mousemove',
+                                  this.draglistener,
+                                  false);
+        return;
+    }
 
     if (this.showInstructions) {
         if (this.instructions.processMousedownEvent(x-this.instructions.left,
@@ -837,7 +861,7 @@ teka.PuzzleApplet.prototype.mousedownListener = function(e)
     }
 
     var paint = false;
-    if (this.layout.inExtent(x,y)) {
+    if (this.layout!==false && this.layout.inExtent(x,y)) {
         if (this.layout.processMousedownEvent(x-this.layout.left,
                                               y-this.layout.top)) {
             paint = true;
@@ -877,7 +901,7 @@ teka.PuzzleApplet.prototype.mouseupListener = function(e)
     }
 
     var paint = false;
-    if (this.layout.inExtent(x,y)) {
+    if (this.layout!==false && this.layout.inExtent(x,y)) {
         if (this.layout.processMouseupEvent(x-this.layout.left,
                                             y-this.layout.top)) {
             paint = true;
@@ -887,6 +911,64 @@ teka.PuzzleApplet.prototype.mouseupListener = function(e)
     if (paint) {
         this.paint();
     }
+};
+
+/** Eventhandler for mousedown events. */
+teka.PuzzleApplet.prototype.mousedragListener = function(e)
+{
+    if (teka.error) {
+        document.removeEventListener('mousemove',
+                                     this.draglistener,
+                                     false);
+        this.paint();
+        return;
+    }
+
+    var position = teka.normalizeMouseEvent(e);
+    var buttonPressed = teka.buttonPressed(e);
+
+    if (buttonPressed===false) {
+        document.removeEventListener('mousemove',
+                                     this.draglistener,
+                                     false);
+        this.dragx = this.dragy = false;
+        this.paint();
+        return;
+    }
+
+    var x = position.x-this.canvas.offsetLeft;
+    var y = position.y-this.canvas.offsetTop;
+
+    this.canvas.width = this.dragwidth+(x-this.dragx);
+    this.canvas.height = this.dragheight+(y-this.dragy);
+    if (this.canvas.width<200) {
+        this.canvas.width=200;
+    }
+    if (this.canvas.width>2000) {
+        this.canvas.width=2000;
+    }
+    if (this.canvas.height<200) {
+        this.canvas.height=200;
+    }
+    if (this.canvas.height>2000) {
+        this.canvas.height=2000;
+    }
+    this.canvas.style.width = this.canvas.width+'px';
+    this.canvas.style.height = this.canvas.height+'px';
+
+    this.initHead();
+    if (this.showStart) {
+        this.initStartScreen();
+    }
+    this.initInstructions();
+    this.addLayout([this.puzzleViewer,
+                    this.buttonTool,
+                    this.colorTool,
+                    this.casesTool,
+                    this.textTool]);
+
+    this.setText('',false);
+    this.paint();
 };
 
 /** Eventhandler for keydown events. */
@@ -950,7 +1032,7 @@ teka.PuzzleApplet.prototype.keydownListener = function(e)
         return true;
     }
 
-    if (this.layout.processKeydownEvent(myEvent)) {
+    if (this.layout!==false && this.layout.processKeydownEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
         return false;
@@ -963,7 +1045,7 @@ teka.PuzzleApplet.prototype.keydownListener = function(e)
 /** Checks for ctrl-cursor and resizes the canvas. */
 teka.PuzzleApplet.prototype.checkResize = function(e)
 {
-    if (e.key==teka.KEY_RIGHT && e.ctrl==true) {
+    if (e.key==teka.KEY_RIGHT && e.ctrl===true) {
         this.canvas.width += 50;
         if (this.canvas.width>2000) {
             this.canvas.width = 2000;
@@ -972,7 +1054,7 @@ teka.PuzzleApplet.prototype.checkResize = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_LEFT && e.ctrl==true) {
+    if (e.key==teka.KEY_LEFT && e.ctrl===true) {
         this.canvas.width -= 50;
         if (this.canvas.width<200) {
             this.canvas.width = 200;
@@ -981,7 +1063,7 @@ teka.PuzzleApplet.prototype.checkResize = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_DOWN && e.ctrl==true) {
+    if (e.key==teka.KEY_DOWN && e.ctrl===true) {
         this.canvas.height += 50;
         if (this.canvas.height>2000) {
             this.canvas.height = 2000;
@@ -990,7 +1072,7 @@ teka.PuzzleApplet.prototype.checkResize = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_UP && e.ctrl==true) {
+    if (e.key==teka.KEY_UP && e.ctrl===true) {
         this.canvas.height -= 50;
         if (this.canvas.height<200) {
             this.canvas.height = 200;
@@ -1026,7 +1108,7 @@ teka.PuzzleApplet.prototype.keyupListener = function(e)
         return true;
     }
 
-    if (this.layout.processKeyupEvent(myEvent)) {
+    if (this.layout!==false && this.layout.processKeyupEvent(myEvent)) {
         this.paint();
         teka.stopPropagation(e);
         return false;

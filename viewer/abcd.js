@@ -810,7 +810,7 @@ teka.viewer.abcd.AbcdViewer.prototype.set_top = function(x, y, value)
 /** Converts from normal mode to expert mode. */
 teka.viewer.abcd.AbcdViewer.prototype.setExpert = function(h)
 {
-    if (h==0) {
+    if (h===0) {
         return 1000;
     }
     return 1000+(1<<h);

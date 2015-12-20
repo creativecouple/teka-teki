@@ -244,6 +244,10 @@ teka.strokeOval = function(g,x,y,scale,start,end)
  */
 teka.getFontData = function(font,size)
 {
+    if (size<=5) {
+        return { font:font, delta:0 };
+    }
+
     var canvas = document.createElement("canvas");
     canvas.width = size;
     canvas.height = size;
