@@ -1,0 +1,152 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 0 0 139 139
+%%CropBox: 0 0 139 139
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.5 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1 pt setlinewidth } def
+
+<<
+/type (greater_than_sudoku)
+/sol false
+/size 6
+/puzzle [
+(+-+-+-+-+-+-+)
+(| > |  1|   |)
+(+^+ + + + + +)
+(|   |   |6  |)
+(+ + + + + +^+)
+(|   D > D   |)
+(+-+-+V+-+V+A+)
+(|   |3  |   |)
+(+ + + + + + +)
+(|   |   |5 3|)
+(+ + + + + + +)
+(|   |4> |   |)
+(+-+-+-+-+-+-+) ]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+/vergleichr {
+  /w e /y e /x e
+  gsave
+  w 1 eq { 1 setgray dick
+           x -0.15 add y -0.25 add moveto
+           x 0.15 add y lineto
+           x -0.15 add y 0.25 add lineto stroke
+           0 setgray duenn
+           x -0.15 add y -0.25 add moveto
+           x 0.15 add y lineto
+           x -0.15 add y 0.25 add lineto stroke } if
+  w -1 eq { 1 setgray dick
+           x 0.15 add y -0.25 add moveto
+           x -0.15 add y lineto
+           x 0.15 add y 0.25 add lineto stroke
+           0 setgray duenn
+           x 0.15 add y -0.25 add moveto
+           x -0.15 add y lineto
+           x 0.15 add y 0.25 add lineto stroke } if
+  grestore
+} def
+
+/vergleichu {
+  /w e /y e /x e
+  gsave
+  w 1 eq { 1 setgray dick
+           x -0.25 add y -0.15 add moveto
+           x y 0.15 add lineto
+           x 0.25 add y -0.15 add lineto stroke
+           0 setgray duenn
+           x -0.25 add y -0.15 add moveto
+           x y 0.15 add lineto
+           x 0.25 add y -0.15 add lineto stroke } if
+  w -1 eq { 1 setgray dick
+           x -0.25 add y 0.15 add moveto
+           x y -0.15 add lineto
+           x 0.25 add y 0.15 add lineto stroke
+           0 setgray duenn
+           x -0.25 add y 0.15 add moveto
+           x y -0.15 add lineto
+           x 0.25 add y 0.15 add lineto stroke } if
+  grestore
+} def
+
+1 setgray
+0 0 size size rectfill
+0 setgray
+
+2 setlinecap
+dick
+0 0 size size rectstroke
+
+duenn
+0 1 size { /i e i 0 i size l } for
+0 1 size { /j e 0 j size j l } for
+
+dick
+0 1 size 2 sub { /i e
+  0 1 size 1 sub { /j e
+    puzzle size j sub 1 sub 2 mul 1 add get i 2 mul 2 add get /h e
+    h (|) 0 get eq h (C) 0 get eq h (D) 0 get eq or or {
+      i 1 add j i 1 add j 1 add l
+    } if
+    h (C) 0 get eq h (<) 0 get eq or {
+      i 1 add j 0.5 add -1 vergleichr
+    } if
+    h (D) 0 get eq h (>) 0 get eq or {
+      i 1 add j 0.5 add 1 vergleichr
+    } if
+  } for
+} for
+
+0 1 size 1 sub { /i e
+  0 1 size 2 sub { /j e
+    puzzle size j sub 1 sub 2 mul get i 2 mul 1 add get /h e
+    h (-) 0 get eq h (V) 0 get eq h (A) 0 get eq or or {
+      i j 1 add i 1 add j 1 add l
+    } if
+    h (V) 0 get eq h (v) 0 get eq or {
+      i 0.5 add j 1 add -1 vergleichu
+    } if
+    h (A) 0 get eq h (^) 0 get eq or {
+      i 0.5 add j 1 add 1 vergleichu
+    } if
+  } for
+} for
+
+/Helvetica findfont 0.65 scalefont setfont
+0 1 size 1 sub { /x e
+  0 1 size 1 sub { /y e
+    puzzle size y sub 1 sub 2 mul 1 add get x 2 mul 1 add get /h e
+    h ( ) 0 get ne {
+      x y h 48 sub 5 string cvs c
+    } if
+  } for
+} for
+
+sol {
+  0 1 size 1 sub { /x e
+    0 1 size 1 sub { /y e
+      solution size y sub 1 sub get x get /h e
+      h ( ) 0 get ne {
+        x y h 48 sub 5 string cvs c
+      } if
+    } for
+  } for
+} if
+
+end pgsave restore showpage
+%%EOF

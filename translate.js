@@ -221,6 +221,35 @@ teka.dictionary = {
     easy_as_abc_top_wrong: 'Der markierte Buchstabe stimmt nicht mit dem Buchstaben am oberen Rand überein.',
     easy_as_abc_bottom_wrong: 'Der markierte Buchstabe stimmt nicht mit dem Buchstaben am unteren Rand überein.',
 
+    greater_than_sudoku: 'Vergleichssudoku',
+    greater_than_sudoku_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
+        +'dass in jeder Zeile, jeder Spalte und jedem fett umrandeten '
+        +'Gebiet jede Zahl genau einmal vorkommt.\n\n'
+        +'Die Kleinerzeichen zwischen zwei Feldern geben an, in '
+        +'welchem der beiden Felder die kleinere Zahl steht.',
+    greater_than_sudoku_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
+        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    greater_than_sudoku_digits: 'Ziffern von 1 bis {1}.',
+    greater_than_sudoku_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    greater_than_sudoku_empty: 'Das markierte Feld ist leer.',
+    greater_than_sudoku_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
+    greater_than_sudoku_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
+    greater_than_sudoku_area_duplicate: 'Die markierten Ziffern kommen in dem Gebiet doppelt vor.',
+    greater_than_sudoku_symbol_wrong: 'Der Vergleich zwischen den beiden markierten Feldern stimmt nicht.',
+
     hashi: 'Hashi',
     hashi_instructions: 'Verbinden Sie die Inseln so durch Brücken, dass jede Insel '
         +'von jeder anderen aus erreichbar ist. Die Brücken dürfen dabei '
