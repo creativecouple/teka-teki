@@ -1,0 +1,300 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: -1 -1 163 151
+%%CropBox: -1 -1 163 151
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.09 0.09 translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1 pt setlinewidth } def
+
+<<
+/format 2
+/type (fences)
+/sol false
+/style [
+[ 1 0 0 1 0 0 ] ]
+/edge [
+[ 1.386 0.4 ]
+[ 2.078 0 ]
+[ 2.771 0.4 ]
+[ 3.464 0 ]
+[ 4.157 0.4 ]
+[ 4.85 0 ]
+[ 5.543 0.4 ]
+[ 0.693 1.6 ]
+[ 1.386 1.2 ]
+[ 2.078 1.6 ]
+[ 2.771 1.2 ]
+[ 3.464 1.6 ]
+[ 4.157 1.2 ]
+[ 4.85 1.6 ]
+[ 5.543 1.2 ]
+[ 6.235 1.6 ]
+[ 0 2.8 ]
+[ 0.693 2.4 ]
+[ 1.386 2.8 ]
+[ 2.078 2.4 ]
+[ 2.771 2.8 ]
+[ 3.464 2.4 ]
+[ 4.157 2.8 ]
+[ 4.85 2.4 ]
+[ 5.543 2.8 ]
+[ 6.235 2.4 ]
+[ 6.928 2.8 ]
+[ 0 3.6 ]
+[ 0.693 4 ]
+[ 1.386 3.6 ]
+[ 2.078 4 ]
+[ 2.771 3.6 ]
+[ 3.464 4 ]
+[ 4.157 3.6 ]
+[ 4.85 4 ]
+[ 5.543 3.6 ]
+[ 6.235 4 ]
+[ 6.928 3.6 ]
+[ 0.693 4.8 ]
+[ 1.386 5.2 ]
+[ 2.078 4.8 ]
+[ 2.771 5.2 ]
+[ 3.464 4.8 ]
+[ 4.157 5.2 ]
+[ 4.85 4.8 ]
+[ 5.543 5.2 ]
+[ 6.235 4.8 ]
+[ 1.386 6 ]
+[ 2.078 6.4 ]
+[ 2.771 6 ]
+[ 3.464 6.4 ]
+[ 4.157 6 ]
+[ 4.85 6.4 ]
+[ 5.543 6 ] ]
+/border [
+[ 0 1 true ]
+[ 1 2 true ]
+[ 2 3 false ]
+[ 3 4 false ]
+[ 4 5 true ]
+[ 5 6 true ]
+[ 7 8 true ]
+[ 8 9 false ]
+[ 9 10 true ]
+[ 10 11 false ]
+[ 11 12 true ]
+[ 12 13 false ]
+[ 13 14 true ]
+[ 14 15 false ]
+[ 16 17 true ]
+[ 17 18 false ]
+[ 18 19 true ]
+[ 19 20 false ]
+[ 20 21 true ]
+[ 21 22 false ]
+[ 22 23 true ]
+[ 23 24 false ]
+[ 24 25 false ]
+[ 25 26 false ]
+[ 27 28 true ]
+[ 28 29 false ]
+[ 29 30 true ]
+[ 30 31 false ]
+[ 31 32 true ]
+[ 32 33 false ]
+[ 33 34 true ]
+[ 34 35 false ]
+[ 35 36 false ]
+[ 36 37 false ]
+[ 38 39 true ]
+[ 39 40 false ]
+[ 40 41 true ]
+[ 41 42 true ]
+[ 42 43 false ]
+[ 43 44 false ]
+[ 44 45 true ]
+[ 45 46 false ]
+[ 47 48 true ]
+[ 48 49 true ]
+[ 49 50 true ]
+[ 50 51 true ]
+[ 51 52 true ]
+[ 52 53 true ]
+[ 0 8 true ]
+[ 2 10 true ]
+[ 4 12 true ]
+[ 6 14 true ]
+[ 7 17 true ]
+[ 9 19 true ]
+[ 11 21 true ]
+[ 13 23 true ]
+[ 15 25 false ]
+[ 16 27 true ]
+[ 18 29 true ]
+[ 20 31 true ]
+[ 22 33 true ]
+[ 24 35 false ]
+[ 26 37 false ]
+[ 28 38 true ]
+[ 30 40 true ]
+[ 32 42 true ]
+[ 34 44 true ]
+[ 36 46 false ]
+[ 39 47 true ]
+[ 41 49 false ]
+[ 43 51 false ]
+[ 45 53 true ] ]
+/area [
+[ 2.078 0.8 -1 0 ]
+[ 3.464 0.8 -1 0 ]
+[ 4.85 0.8 -1 0 ]
+[ 1.386 2 4 0 ]
+[ 2.771 2 -1 0 ]
+[ 4.157 2 4 0 ]
+[ 5.543 2 -1 0 ]
+[ 0.693 3.2 -1 0 ]
+[ 2.078 3.2 4 0 ]
+[ 3.464 3.2 4 0 ]
+[ 4.85 3.2 3 0 ]
+[ 6.235 3.2 0 0 ]
+[ 1.386 4.4 4 0 ]
+[ 2.771 4.4 5 0 ]
+[ 4.157 4.4 -1 0 ]
+[ 5.543 4.4 -1 0 ]
+[ 2.078 5.6 -1 0 ]
+[ 3.464 5.6 3 0 ]
+[ 4.85 5.6 -1 0 ] ]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+datatype (graph) eq {
+  0 1 edge length 1 sub { /k e
+    edge k get 0 get /x e
+    edge k get 1 get /y e
+    x y 0.09 0 360 arc fill
+  } for
+
+  0 1 border length 1 sub { /k e
+    border k get 0 get /e1 e
+    border k get 1 get /e2 e
+    sol border k get 2 get and {
+      dick
+      edge e1 get 0 get edge e1 get 1 get moveto
+      edge e2 get 0 get edge e2 get 1 get lineto
+      stroke
+    } {
+      gsave
+        0.02 setlinewidth [0.05 0.2] 0.01 setdash
+        edge e1 get 0 get edge e1 get 1 get moveto
+        edge e2 get 0 get edge e2 get 1 get lineto
+        stroke
+      grestore
+    } ifelse
+  } for
+
+  /Helvetica findfont 18 pt scalefont setfont
+  0 1 area length 1 sub { /k e
+    area k get 0 get /x e
+    area k get 1 get /y e
+    area k get 2 get /nr e
+    area k get 3 get /s e
+    nr -1 ne {
+      gsave
+        x y translate
+        style s get concat
+        nr 5 string cvs /c e
+        c stringwidth pop 2 div neg -6.5 pt moveto c show
+      grestore
+    } if
+  } for
+} if
+
+datatype (rectangle) eq {
+  1 setgray
+  0 0 X Y rectfill
+  0 setgray
+
+  0 1 X { /x e
+    0 1 Y { /y e
+      puzzle Y y sub 2 mul get x 2 mul get (+) 0 get eq {
+        x y 0.09 0 360 arc fill
+      } if
+    } for
+  } for
+
+  ( ) 0 get /h1 e
+  0 1 X { /x e
+    0 1 Y 1 sub { /y e
+      puzzle Y y sub 1 sub 2 mul 1 add get x 2 mul get /h e
+      sol { solution Y y sub 1 sub 2 mul 1 add get x 2 mul get /h1 e } if
+      sol h1 (|) 0 get eq and { (H) 0 get /h e } if
+      h (|) 0 get eq {
+        gsave
+          0.02 setlinewidth [0.05 0.2] 0.01 setdash
+          x y x y 1 add l
+        grestore
+      } if
+      h (H) 0 get eq {
+        dick
+        x y x y 1 add l
+      } if
+    } for
+  } for
+
+  0 1 X 1 sub { /x e
+    0 1 Y { /y e
+      puzzle Y y sub 2 mul get x 2 mul 1 add get /h e
+      sol { solution Y y sub 2 mul get x 2 mul 1 add get /h1 e } if
+      sol h1 (-) 0 get eq and { (=) 0 get /h e } if
+      h (-) 0 get eq {
+        gsave
+          0.02 setlinewidth [0.05 0.2] 0.01 setdash
+          x y x 1 add y l
+        grestore
+      } if
+      h (=) 0 get eq {
+        dick
+        x y x 1 add y l
+      } if
+    } for
+  } for
+
+  /Helvetica findfont 18 pt scalefont setfont
+  0 1 X 1 sub { /x e
+    0 1 Y 1 sub { /y e
+      puzzle Y y sub 1 sub 2 mul 1 add get x 2 mul 1 add get /h e
+      h 48 ge h 57 le and {
+        x y h 48 sub 5 string cvs c
+      } if
+    } for
+  } for
+
+  1 1 X 1 sub { /x e
+    1 1 Y 1 sub { /y e
+      puzzle Y y sub 2 mul get x 2 mul get /h e
+      h 48 ge h 57 le and {
+        gsave
+        x 1 sub y 1 sub translate
+        2 2 scale
+        0 0 h 48 sub 5 string cvs c
+        grestore
+      } if
+    } for
+  } for
+} if
+
+datatype (hexagonal) eq {
+  % fehlt noch...
+} if
+
+end pgsave restore showpage
+%%EOF

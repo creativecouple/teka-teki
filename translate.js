@@ -221,6 +221,18 @@ teka.dictionary = {
     easy_as_abc_top_wrong: 'Der markierte Buchstabe stimmt nicht mit dem Buchstaben am oberen Rand überein.',
     easy_as_abc_bottom_wrong: 'Der markierte Buchstabe stimmt nicht mit dem Buchstaben am unteren Rand überein.',
 
+    fences: 'Rundwegrätsel',
+    fences_instructions: 'Zeichnen Sie entlang der gepunkteten Linien einen geschlossenen Weg ein, '
+        +'wobei nicht alle Gitterpunkte durchlaufen werden müssen. Die Zahlen '
+        +'in den Feldern geben an, wie viele der benachbarten Kanten für den Weg '
+        +'verwendet werden. Der Weg darf sich nicht selbst kreuzen oder berühren.',
+    fences_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Kante gesetzt\n2. Klick: Kante leer (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Kante gesetzt\n-, / und W: Kante leer (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n'
+        +'Escape: Wählt bei der Navigation mit den Cursortasten eine alternative Kante aus. '
+        +'Alle Alternativen werden durch dünne rote Striche markiert.',
+
     greater_than_sudoku: 'Vergleichssudoku',
     greater_than_sudoku_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
         +'dass in jeder Zeile, jeder Spalte und jedem fett umrandeten '

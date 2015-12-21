@@ -248,6 +248,20 @@ teka.viewer.PuzzleViewer.prototype.asciiToArray = function(ascii)
     return c;
 };
 
+teka.viewer.PuzzleViewer.prototype.asciiToList = function(ascii)
+{
+    var tmp = ascii.replace(/[\[\]\n]/g,' ').split(' ');
+    var list = [];
+
+    for (var i=0;i<tmp.length;i++) {
+        if (tmp[i].trim()!=='') {
+            list.push(tmp[i]);
+        }
+    }
+
+    return list;
+};
+
 /**
  * Reads a number of d digits from ascii art array c at
  * positon x,y. Returns false, if no number is found.
