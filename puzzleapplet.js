@@ -1141,13 +1141,13 @@ teka.PuzzleApplet.prototype.setInstructions = function(val)
 /** Removes the startscreen and starts the timer. */
 teka.PuzzleApplet.prototype.start = function()
 {
-    this.startHook();
-
     this.showStart = false;
 
     this.failed_attempts = 0;
     this.timer_stop = false;
     this.timer_start = new Date().getTime();
+
+    this.startHook();
 };
 
 /** Checks, if MAX_TIME has been reached. */
