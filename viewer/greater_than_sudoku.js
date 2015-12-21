@@ -174,10 +174,10 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.addSolution 
 /** Returns a small example. */
 teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.getExample = function()
 {
-    return '/type (greater_than_sudoku)\n/sol false\n/size 4'
-        +'\n/puzzle [ (+-+-+-+-+) (|     |1|)(+ +-+-+ +) (| |2|   |) (+-+ + +-+)'
-        +' (|4  | | |) (+ +-+-+ +) (| |     |) (+-+-+-+-+) ]'
-        +'\n/solution [ (2341) (1234) (4123) (3412) ]';
+    return '/format 1\n/type (greater_than_sudoku)\n/sol false\n/size 4\n/digits 2\n'
+        +'/puzzle [ (+--+--+--+--+) (|  >  C     |) (+  +--+  + ^+) (| 3|  |     |) '
+        +'(+  +  +-V+--+) (|  |  D    4|) (+-A+  + v+  +) (|  <  |     |) '
+        +'(+--+--+--+--+) ]\n/solution [ ( 4 2 3 1) ( 3 1 4 2) ( 1 3 2 4) ( 2 4 1 3) ]';
 };
 
 /** Returns a list of automatically generated properties. */
