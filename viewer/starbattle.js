@@ -165,7 +165,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.getExample = function()
 /** Returns a list of automatically generated properties. */
 teka.viewer.starbattle.StarbattleViewer.prototype.getProperties = function()
 {
-    return [teka.translate('generic_size',[this.X+'x'+this.Y]),
+    return [teka.translate('generic_size',[this.X+'x'+this.X]),
             teka.translate('starbattle_stars',[this.STARS])];
 };
 
