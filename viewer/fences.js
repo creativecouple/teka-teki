@@ -28,6 +28,8 @@ teka.viewer.fences.Defaults = {
 teka.viewer.fences.FencesViewer = function(data)
 {
     teka.viewer.PuzzleViewer.call(this,data);
+
+    this.cursor = false;
 };
 teka.extend(teka.viewer.fences.FencesViewer,teka.viewer.PuzzleViewer);
 
@@ -298,9 +300,9 @@ teka.viewer.fences.FencesViewer.prototype.calculatePolygons = function()
     }
 
     for (var i=0;i<this.B;i++) {
-        Polygon p = calculatePolygon(this.border[i].von, this.border[i].nach);
+        Polygon p = calculatePolygon(this.border[i].from, this.border[i].to);
         findArea(p);
-        p = calculatePolygon(this.border[i].nach, this.border[i].von);
+        p = calculatePolygon(this.border[i].to, this.border[i].from);
         findArea(p);
     }
 
@@ -338,13 +340,13 @@ teka.viewer.fences.FencesViewer.prototype.findArea = function(p)
 */
 /** findBorder */
 /*
-teka.viewer.fences.FencesViewer.prototype.findBorder = function(von, nach)
+teka.viewer.fences.FencesViewer.prototype.findBorder = function(from, to)
 {
     for (var i=0;i<this.B;i++) {
-        if (this.border[i].von==von && this.border[i].nach==nach) {
+        if (this.border[i].from==from && this.border[i].to==to) {
             return i;
         }
-        if (this.border[i].von==nach && this.border[i].nach==von) {
+        if (this.border[i].from==to && this.border[i].to==from) {
             return i;
         }
     }
@@ -353,30 +355,30 @@ teka.viewer.fences.FencesViewer.prototype.findBorder = function(von, nach)
 */
 /** calculatePolygon */
 /*
-teka.viewer.fences.FencesViewer.prototype.calculatePolygon = function(von, nach)
+teka.viewer.fences.FencesViewer.prototype.calculatePolygon = function(from, to)
 {
     var e = teka.new_array([this.E],0);
     var ec = 0;
 
     double sum = 0;
-    var s = nach;
-    e[ec++] = von;
-    while (s!=von) {
+    var s = to;
+    e[ec++] = from;
+    while (s!=from) {
         e[ec++] = s;
         var best = s;
         double bestangle=400.0;
         for (var i=0;i<this.B;i++) {
-            if (this.border[i].von==s && this.border[i].nach!=e[ec-2]) {
-                double h=angle(e[ec-2],e[ec-1],this.border[i].nach);
+            if (this.border[i].from==s && this.border[i].to!=e[ec-2]) {
+                double h=angle(e[ec-2],e[ec-1],this.border[i].to);
                 if (h<bestangle) {
-                    best = this.border[i].nach;
+                    best = this.border[i].to;
                     bestangle = h;
                 }
             }
-            if (this.border[i].nach==s && this.border[i].von!=e[ec-2]) {
-                double h=angle(e[ec-2],e[ec-1],this.border[i].von);
+            if (this.border[i].to==s && this.border[i].from!=e[ec-2]) {
+                double h=angle(e[ec-2],e[ec-1],this.border[i].from);
                 if (h<bestangle) {
-                    best = this.border[i].von;
+                    best = this.border[i].from;
                     bestangle = h;
                 }
             }
@@ -384,7 +386,7 @@ teka.viewer.fences.FencesViewer.prototype.calculatePolygon = function(von, nach)
         s = best;
         sum+=bestangle;
     }
-    sum+=angle(e[ec-1],von,nach);
+    sum+=angle(e[ec-1],from,to);
     if (Math.abs(sum-(ec-2)*Math.PI)>0.1) {
         return null;
     }
@@ -455,10 +457,10 @@ teka.viewer.fences.FencesViewer.prototype.calculateNeighbours = function()
     double[] ba = new double[this.B];
 
     for (var i=0;i<this.B;i++) {
-        var e1 = this.border[i].von;
-        var e2 = this.border[i].nach;
+        var e1 = this.border[i].from;
+        var e2 = this.border[i].to;
         for (var j=0;j<this.B;j++) {
-            nb[j] = this.border[j].von==e1 || this.border[j].von==e2 || this.border[j].nach==e1 || this.border[j].nach==e2;
+            nb[j] = this.border[j].from==e1 || this.border[j].from==e2 || this.border[j].to==e1 || this.border[j].to==e2;
         }
 
         for (var j=0;j<this.border[i].areas.length;j++) {
@@ -481,8 +483,8 @@ teka.viewer.fences.FencesViewer.prototype.calculateNeighbours = function()
 
         for (var j=0;j<this.B;j++) {
             if (nb[j]) {
-                double xm2 = (this.edge[this.border[j].von].x+this.edge[this.border[j].nach].x)/2;
-                double ym2 = (this.edge[this.border[j].von].y+this.edge[this.border[j].nach].y)/2;
+                double xm2 = (this.edge[this.border[j].from].x+this.edge[this.border[j].to].x)/2;
+                double ym2 = (this.edge[this.border[j].from].y+this.edge[this.border[j].to].y)/2;
                 double dx = this.xm-xm2;
                 double dy = this.ym-ym2;
 
@@ -618,11 +620,23 @@ teka.viewer.fences.FencesViewer.prototype.clearColor = function(color)
 /** Save current state. */
 teka.viewer.fences.FencesViewer.prototype.saveState = function()
 {
+    var f = teka.new_array([this.B],0);
+    var c = teka.new_array([this.B],0);
+    for (var i=0;i<this.B;i++) {
+        f[i] = this.f[i];
+        c[i] = this.c[i];
+    }
+
+    return { f:f, c:c };
 };
 
 /** Load state. */
 teka.viewer.fences.FencesViewer.prototype.loadState = function(state)
 {
+    for (var i=0;i<this.B;i++) {
+        this.f[i] = state.f[i];
+        this.c[i] = state.c[i];
+    }
 };
 
 //////////////////////////////////////////////////////////////////
@@ -644,13 +658,13 @@ teka.viewer.fences.FencesViewer.prototype.check = function()
     for (var i=0;i<this.E;i++) {
         var az = 0;
         for (var j=0;j<this.B;j++) {
-            if (this.f[j]==teka.viewer.fences.Defaults.SET && (this.border[j].von==i || this.border[j].nach==i)) {
+            if (this.f[j]==teka.viewer.fences.Defaults.SET && (this.border[j].from==i || this.border[j].to==i)) {
                 az++;
             }
         }
         if (az!=0 && az!=2) {
             for (var j=0;j<this.B;j++) {
-                if (this.f[j]==teka.viewer.fences.Defaults.SET && (this.border[j].von==i || this.border[j].nach==i)) {
+                if (this.f[j]==teka.viewer.fences.Defaults.SET && (this.border[j].from==i || this.border[j].to==i)) {
                     this.border_error[j] = true;
                 }
             }
@@ -687,9 +701,9 @@ teka.viewer.fences.FencesViewer.prototype.check = function()
         }
     }
 
-    var start = this.border[k].von;
+    var start = this.border[k].from;
     var last = start;
-    var jetzt = this.border[k].nach;
+    var jetzt = this.border[k].to;
 
     var e = teka.new_array([this.E],0);
     var ec = 1;
@@ -700,12 +714,12 @@ teka.viewer.fences.FencesViewer.prototype.check = function()
         var neu = -1;
         for (var i=0;i<this.B;i++) {
             if (this.f[i]==teka.viewer.fences.Defaults.SET) {
-                if (this.border[i].von==jetzt && this.border[i].nach!=last) {
-                    neu = this.border[i].nach;
+                if (this.border[i].from==jetzt && this.border[i].to!=last) {
+                    neu = this.border[i].to;
                     this.border_error[i] = true;
                 }
-                if (this.border[i].nach==jetzt && this.border[i].von!=last) {
-                    neu = this.border[i].von;
+                if (this.border[i].to==jetzt && this.border[i].from!=last) {
+                    neu = this.border[i].from;
                     this.border_error[i] = true;
                 }
             }
@@ -811,6 +825,32 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
         }
     }
 
+    for (var i=0;i<this.B;i++) {
+        g.strokeStyle = this.getColorString(this.c[i]);
+
+        if (this.f[i]==teka.viewer.fences.Defaults.SET) {
+            g.lineWidth = 4;
+            g.lineCap = 'round';
+            teka.drawLine(g,
+                          this.edge[this.border[i].from].x*S,
+                          this.edge[this.border[i].from].y*S,
+                          this.edge[this.border[i].to].x*S,
+                          this.edge[this.border[i].to].y*S);
+            g.lineCap = 'butt';
+            g.lineWidth = 1;
+        }
+
+        if (this.f[i]==teka.viewer.fences.Defaults.EMPTY) {
+            var x = (this.edge[this.border[i].from].x+this.edge[this.border[i].to].x)/2*S;
+            var y = (this.edge[this.border[i].from].y+this.edge[this.border[i].to].y)/2*S;
+
+            g.lineWidth = 2;
+            teka.drawLine(g,x-3,y-3,x+3,y+3);
+            teka.drawLine(g,x-3,y+3,x+3,y-3);
+            g.lineWidth = 1;
+        }
+    }
+
     /*
     var this.error = false;
     for (var i=0;i<this.A;i++) {
@@ -866,49 +906,43 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
     g.drawImage(image,0,0,master);
 
     Stroke s = g.getStroke();
-    for (var i=0;i<this.B;i++) {
-        g.fillStyle = (ColorTool.colors[this.c[i]]);
-        if (this.f[i]==teka.viewer.fences.Defaults.SET) {
-            g.setStroke(new BasicStroke(5));
-            teka.drawLine(g,(var)(this.edge[this.border[i].von].x*S)+3,(var)(this.edge[this.border[i].von].y*S)+3,
-            (var)(this.edge[this.border[i].nach].x*S)+3,(var)(this.edge[this.border[i].nach].y*S)+3);
-        }
-        if (this.f[i]==teka.viewer.fences.Defaults.EMPTY) {
-            var x = (var)((this.edge[this.border[i].von].x+this.edge[this.border[i].nach].x)/2*S)+3;
-            var y = (var)((this.edge[this.border[i].von].y+this.edge[this.border[i].nach].y)/2*S)+3;
-            g.setStroke(new BasicStroke(2));
-            teka.drawLine(g,x-3,y-3,x+3,y+3);
-            teka.drawLine(g,x-3,y+3,x+3,y-3);
-        }
-    }
     g.setStroke(s);
 
     g.fillStyle = ('#f00');
     g.setStroke(new BasicStroke(5));
     for (var i=0;i<this.B;i++) {
         if (this.border_error[i]) {
-            teka.drawLine(g,(var)(this.edge[this.border[i].von].x*S)+3,(var)(this.edge[this.border[i].von].y*S)+3,
+            teka.drawLine(g,(var)(this.edge[this.border[i].from].x*S)+3,(var)(this.edge[this.border[i].from].y*S)+3,
         }
     }
-    (var)(this.edge[this.border[i].nach].x*S)+3,(var)(this.edge[this.border[i].nach].y*S)+3);
+    (var)(this.edge[this.border[i].to].x*S)+3,(var)(this.edge[this.border[i].to].y*S)+3);
     g.setStroke(s);
 
-    g.fillStyle = ('#f00');
-    if (this.mode==NORMAL) {
-        g.setStroke(new BasicStroke(3));
-        teka.drawLine(g,(var)(this.edge[this.border[x].von].x*S)+3,(var)(this.edge[this.border[x].von].y*S)+3,
-        (var)(this.edge[this.border[x].nach].x*S)+3,(var)(this.edge[this.border[x].nach].y*S)+3);
-        g.setStroke(s);
+     */
+
+    // paint the cursor
+    if (this.mode==teka.viewer.Defaults.NORMAL) {
+        if (this.cursor!==false) {
+            g.strokeStyle = '#f00';
+            g.lineWidth = 3;
+            teka.drawLine(g,
+                          this.edge[this.border[this.cursor].from].x*S,
+                          this.edge[this.border[this.cursor].from].y*S,
+                          this.edge[this.border[this.cursor].to].x*S,
+                          this.edge[this.border[this.cursor].to].y*S);
+        }
     }
+
+    /*
     if (this.list!=null) {
         g.fillStyle = ('#f00');
         g.setStroke(new BasicStroke(1));
         for (var i=0;i<this.list.length;i++) {
             if (this.list[i]!=x) {
-                teka.drawLine(g,(var)(this.edge[this.border[this.list[i]].von].x*S)+3,(var)(this.edge[this.border[this.list[i]].von].y*S)+3,
+                teka.drawLine(g,(var)(this.edge[this.border[this.list[i]].from].x*S)+3,(var)(this.edge[this.border[this.list[i]].from].y*S)+3,
             }
         }
-        (var)(this.edge[this.border[this.list[i]].nach].x*S)+3,(var)(this.edge[this.border[this.list[i]].nach].y*S)+3);
+        (var)(this.edge[this.border[this.list[i]].to].x*S)+3,(var)(this.edge[this.border[this.list[i]].to].y*S)+3);
         g.setStroke(s);
     }
      */
@@ -921,19 +955,18 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
 /** Handles mousemove event. */
 teka.viewer.fences.FencesViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
-    xc -= this.deltaX;
-    yc -= this.deltaY;
+    xc = xc-this.deltaX-this.borderX;
+    yc = yc-this.deltaY-this.borderY;
 
-    /*
-    this.list = null;
-    var oldx = x;
-    x = getBorder((xc-3)/(double)this.scale,(yc-3)/(double)this.scale);
-    if (x==-1) {
-        x=oldx;
+    var oldcursor = this.cursor;
+
+    this.cursor = this.getBorder(xc/this.scale,yc/this.scale);
+
+    if (this.cursor===false) {
+        this.cursor = oldcursor;
     }
-    return x!=oldx;
-     */
-    return false;
+
+    return this.cursor!=oldcursor;
 };
 
 /** Handles mousedown event. */
@@ -941,7 +974,11 @@ teka.viewer.fences.FencesViewer.prototype.processMousedownEvent = function(xc, y
 {
     var erg = this.processMousemoveEvent(xc,yc);
 
-    this.set(x,(this.f[x]+1)%3);
+    if (this.cursor===false) {
+        return erg;
+    }
+
+    this.set(this.cursor,(this.f[this.cursor]+1)%3);
 
     return true;
 };
@@ -1011,36 +1048,46 @@ teka.viewer.fences.FencesViewer.prototype.set = function(k, value)
     this.c[k] = this.color;
 };
 
-/** getBorder */
-/*
+/**
+ * Searches the border, that is next to point x,y. Returns false,
+ * if all borders are too far.
+ */
 teka.viewer.fences.FencesViewer.prototype.getBorder = function(x, y)
 {
-    var mini = -1;
-    double min = 1000;
+    var minpos = false;
+    var mindist = 1000;
+
     for (var i=0;i<this.B;i++) {
-        double ax = this.edge[this.border[i].von].x;
-        double ay = this.edge[this.border[i].von].y;
-        double bx = this.edge[this.border[i].nach].x;
-        double by = this.edge[this.border[i].nach].y;
-        double k = ((x-ax)*(bx-ax)+(y-ay)*(by-ay))/(sqr(ax-bx)+sqr(ay-by));
+        var ax = this.edge[this.border[i].from].x;
+        var ay = this.edge[this.border[i].from].y;
+        var bx = this.edge[this.border[i].to].x;
+        var by = this.edge[this.border[i].to].y;
+
+        var k = ((x-ax)*(bx-ax)+(y-ay)*(by-ay))/(teka.sqr(ax-bx)+teka.sqr(ay-by));
+
         if (k<0 || k>1) {
             continue;
         }
-        double nx = ax+(bx-ax)*k;
-        double ny = ay+(by-ay)*k;
-        double d = sqr(x-nx)+sqr(y-ny);
+
+        var nx = ax+(bx-ax)*k;
+        var ny = ay+(by-ay)*k;
+        var d = teka.sqr(x-nx)+teka.sqr(y-ny);
+
         if (k>0.5) {
             k = 1-k;
         }
+
         if (d*2>k*k) {
             continue;
         }
-        if (d*2>min) {
+
+        if (d*2>mindist) {
             continue;
         }
-        min = d*2;
-        mini = i;
+
+        minpos = i;
+        mindist = d*2;
     }
-    return mini;
+
+    return minpos;
 };
-*/

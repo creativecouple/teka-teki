@@ -174,6 +174,12 @@ teka.chr = function(c)
     return String.fromCharCode(c);
 };
 
+/** Returns the square of x */
+teka.sqr = function(x)
+{
+    return x*x;
+};
+
 /**
  * Creates a new array with dimensions given in dims, filled with the
  * value val.
