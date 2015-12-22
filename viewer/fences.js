@@ -51,6 +51,7 @@ teka.viewer.fences.FencesViewer.prototype.initData = function(data)
     }
 
     this.moveToFirstQuadrant();
+    this.addGraphData();
 
     this.f = teka.new_array([this.B],0);
     this.c = teka.new_array([this.B],0);
@@ -196,7 +197,7 @@ teka.viewer.fences.FencesViewer.prototype.listToBorder = function(ascii)
     this.border = [];
 
     for (var i=0;i<list.length;i+=3) {
-        this.border[this.B] = {from:parseInt(list[i]),to:parseInt(list[i+1])};
+        this.border[this.B] = {from:parseInt(list[i],10),to:parseInt(list[i+1],10)};
         this.B++;
     }
 };
@@ -216,8 +217,8 @@ teka.viewer.fences.FencesViewer.prototype.listToArea = function(ascii, format2)
         this.area[this.A] = {
             x:parseFloat(list[i]),
             y:parseFloat(list[i+1]),
-            value:parseInt(list[i+2]),
-            style:parseInt(list[i+3])
+            value:parseInt(list[i+2],10),
+            style:parseInt(list[i+3],10)
         };
         if (this.area[this.A].value===-1) {
             this.area[this.A].value = false;
@@ -286,6 +287,217 @@ teka.viewer.fences.FencesViewer.prototype.moveToFirstQuadrant = function()
 
     this.MAXX = Math.ceil(maxx-minx);
     this.MAXY = Math.ceil(maxy-miny);
+};
+
+//////////////////////////////////////////////////////////////////
+
+/**
+ * Adds some usefull data to the graph datas:
+ * a) areas get a sorted list of touching borders and touching edges.
+ * b) borders get the two areas at the left and at the right.
+ */
+teka.viewer.fences.FencesViewer.prototype.addGraphData = function()
+{
+    for (var i=0;i<this.A;i++) {
+        this.area[i].borderlist = false;
+        this.area[i].edgelist = false;
+    }
+
+    for (var i=0;i<this.B;i++) {
+        this.border[i].r_area = false;
+        this.border[i].l_area = false;
+    }
+
+    for (var i=0;i<this.B;i++) {
+        if (this.border[i].r_area===false) {
+            this.findRightArea(i,true);
+        }
+        if (this.border[i].l_area===false) {
+            this.findRightArea(i,false);
+        }
+    }
+};
+
+/**
+ * Finds the area to the right of the given border b. Which side is
+ * 'right' depends on the value of forward. Attaches the borders and
+ * edges to this area as well as the area to the borders.
+ */
+teka.viewer.fences.FencesViewer.prototype.findRightArea = function(b, forward)
+{
+    var borderlist = this.getBorderlistToTheRight(b, forward);
+    if (borderlist===false) {
+        return;
+    }
+
+    var angle = this.getAngleFromBorderlist(borderlist);
+    if (Math.abs(angle-(borderlist.length-2)*Math.PI)>0.1) {
+        // we found the outside polygon
+        this.setAreaForBordersInBorderlist(borderlist,false);
+        return;
+    }
+
+    var edgelist = this.getEdgelistFromBorderlist(borderlist);
+    var area = this.getAreaFromEdgelist(edgelist);
+
+    this.setAreaForBordersInBorderlist(borderlist,area);
+    this.addBorderlistAndEdgelistToArea(area,borderlist,edgelist);
+};
+
+/**
+ * Follows the graph, starting by border b, always selecting the rightmost
+ * continuation.
+ */
+teka.viewer.fences.FencesViewer.prototype.getBorderlistToTheRight = function(b, forward)
+{
+    var result = [{nr:b,forward:forward}];
+
+    var start = forward?this.border[b].from:this.border[b].to;
+    var last = start;
+    var edge = forward?this.border[b].to:this.border[b].from;
+
+    while (edge!=start) {
+        var best = false;
+        var bestforward = false;
+        var bestangle = 400;
+
+        for (var i=0;i<this.B;i++) {
+            if (this.border[i].from==edge && this.border[i].to!=last) {
+                var h = this.getAngle(last,edge,this.border[i].to);
+                if (h<bestangle) {
+                    bestangle = h;
+                    best = i;
+                    bestforward = true;
+                }
+            }
+            if (this.border[i].to==edge && this.border[i].from!=last) {
+                var h = this.getAngle(last,edge,this.border[i].from);
+                if (h<bestangle) {
+                    bestangle = h;
+                    best = i;
+                    bestforward = false;
+                }
+            }
+        }
+
+        if (best===false) {
+            return false;
+        }
+
+        result.push({nr:best,forward:bestforward});
+
+        last = edge;
+        edge = bestforward?this.border[best].to:this.border[best].from;
+    }
+
+    return result;
+};
+
+/** Calculate the sum of all inner angles in the polygon bl. */
+teka.viewer.fences.FencesViewer.prototype.getAngleFromBorderlist = function(bl)
+{
+    var result = 0;
+    var last = bl.length-1;
+    var edge = 0;
+
+    while (edge<bl.length) {
+        result += this.getAngle(bl[last].forward===true?this.border[bl[last].nr].from:this.border[bl[last].nr].to,
+                                bl[edge].forward===true?this.border[bl[edge].nr].from:this.border[bl[edge].nr].to,
+                                bl[edge].forward===true?this.border[bl[edge].nr].to:this.border[bl[edge].nr].from);
+        last = edge;
+        edge++;
+    }
+
+    return result;
+};
+
+/** Calculate the angle between the edges e1, e2, e3 */
+teka.viewer.fences.FencesViewer.prototype.getAngle = function(a,b,c)
+{
+    var la = teka.sqr(this.edge[a].x-this.edge[b].x)+teka.sqr(this.edge[a].y-this.edge[b].y);
+    var lb = teka.sqr(this.edge[c].x-this.edge[b].x)+teka.sqr(this.edge[c].y-this.edge[b].y);
+    var lc = teka.sqr(this.edge[a].x-this.edge[c].x)+teka.sqr(this.edge[a].y-this.edge[c].y);
+    var h = (la+lb-lc)/(2*Math.sqrt(la*lb));
+    if (h<-0.999999) {
+        return Math.PI;
+    }
+    var w = Math.acos(h);
+
+    var k = (this.edge[c].x-this.edge[a].x)*(this.edge[b].y-this.edge[a].y)-(this.edge[c].y-this.edge[a].y)*(this.edge[b].x-this.edge[a].x);
+
+    if (k<0) {
+        w=2*Math.PI-w;
+    }
+    return w;
+};
+
+/** Calculate the area, that is framed by the given el. */
+teka.viewer.fences.FencesViewer.prototype.getAreaFromEdgelist = function(el)
+{
+    var area = false;
+
+    for (var i=0;i<this.A;i++) {
+        if (this.inPoly(el,this.area[i])) {
+            area = i;
+            break;
+        }
+    }
+
+    return area;
+};
+
+/** PNPoly algorithm found by W. Randolph Franklin. */
+teka.viewer.fences.FencesViewer.prototype.inPoly = function(el,a)
+{
+    var result = false;
+    var last = el.length-1;
+    var edge = 0;
+
+    while (edge<el.length) {
+        if (((this.edge[el[edge]].y>a.y) != (this.edge[el[last]].y>a.y))
+            && (a.x<(this.edge[el[last]].x-this.edge[el[edge]].x)*
+                (a.y-this.edge[el[edge]].y)/(this.edge[el[last]].y-this.edge[el[edge]].y)+
+                this.edge[el[edge]].x)) {
+            result = !result;
+        }
+        last = edge;
+        edge++;
+    }
+
+    return result;
+};
+
+/** Create an edgelist from the borders in the bl. */
+teka.viewer.fences.FencesViewer.prototype.getEdgelistFromBorderlist = function(bl)
+{
+    var el = [];
+    for (var i=0;i<bl.length;i++) {
+        if (bl[i].forward===true) {
+            el.push(this.border[bl[i].nr].to);
+        } else {
+            el.push(this.border[bl[i].nr].from);
+        }
+    }
+    return el;
+};
+
+/** Add area a to all borders in bl. */
+teka.viewer.fences.FencesViewer.prototype.setAreaForBordersInBorderlist = function(bl, a)
+{
+    for (var i=0;i<bl.length;i++) {
+        if (bl[i].forward===true) {
+            this.border[bl[i].nr].r_area = a;
+        } else {
+            this.border[bl[i].nr].l_area = a;
+        }
+    }
+};
+
+/** Add borderlist bl and edgelist el to area. */
+teka.viewer.fences.FencesViewer.prototype.addBorderlistAndEdgelistToArea = function(a, bl, el)
+{
+    this.area[a].borderlist = bl;
+    this.area[a].edgelist = el;
 };
 
 ///////// from here on it might be rubbish...
@@ -796,6 +1008,20 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
 
 //    g.fillStyle = '#0f0';
 //    g.fillRect(-10,-10,this.width+20,this.height+20);
+
+    g.fillStyle = '#fff';
+    for (var i=0;i<this.A;i++) {
+        if (this.area[i].edgelist!==false) {
+            g.beginPath();
+            g.moveTo(this.edge[this.area[i].edgelist[0]].x*S,
+                     this.edge[this.area[i].edgelist[0]].y*S);
+            for (var k=1;k<this.area[i].edgelist.length;k++) {
+                g.lineTo(this.edge[this.area[i].edgelist[k]].x*S,
+                         this.edge[this.area[i].edgelist[k]].y*S);
+            }
+            g.fill();
+        }
+    }
 
     g.strokeStyle = '#888';
     for (var i=0;i<this.B;i++) {
