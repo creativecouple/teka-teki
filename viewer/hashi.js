@@ -132,8 +132,8 @@ teka.viewer.hashi.HashiViewer.prototype.addSolution = function()
 teka.viewer.hashi.HashiViewer.prototype.getExample = function()
 {
     return '/type (hashi)\n/sol false\n/X 6\n/Y 6\n/puzzle [ (1 1   ) '
-        +'(   2 2) (4 4   ) (   2 4) (      ) (4 5  3) ]\n/solution [ '
-        +'(1 1   ) (| |2-2) (4-4| |) (H H2-4) (H H  H) (4=5--3) ]';
+        +'(   2 2) (4 ?   ) (   2 4) (      ) (4 5  3) ]\n/solution [ '
+        +'(1 1   ) (| |2-2) (4-?| |) (H H2-4) (H H  H) (4=5--3) ]';
 };
 
 /** Returns a list of automatically generated properties. */

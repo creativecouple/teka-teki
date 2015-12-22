@@ -268,7 +268,9 @@ teka.dictionary = {
         +'nur waagerecht oder senkrecht gebaut werden und nicht über andere '
         +'Brücken oder Inseln hinweggehen. Zwischen zwei Inseln dürfen sich '
         +'maximal zwei Brücken befinden. Die Zahlen in den Inseln geben an, '
-        +'wie viele Brücken von dieser Insel aus wegführen.\n\n'
+        +'wie viele Brücken von dieser Insel aus wegführen. Ist in '
+        +'einer Insel keine Zahl vorgegeben, so ist nicht bekannt, wie viele '
+        +'Brücken von dieser Insel aus wegführen.\n\n'
         +'Für eine korrekte Lösung müssen nur die Brücken eingezeichnet werden.',
     hashi_usage: 'Bedienung mit der Maus:\n\n'
         +'Brücken:\n'
