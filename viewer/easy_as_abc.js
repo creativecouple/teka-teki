@@ -519,6 +519,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
             }
 
             if (this.f[i][j]>=1000) {
+                g.fillStyle = this.getColorString(this.c[i][j]);
                 for (var k=0;k<=8;k++) {
                     if (((this.f[i][j]-1000)&(1<<k))!=0) {
                         g.font = this.smallfont.font;
