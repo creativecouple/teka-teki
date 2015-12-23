@@ -820,7 +820,7 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
     for (var i=0;i<this.A;i++) {
         if (this.area[i].nodelist!==false) {
             g.fillStyle = this.isBlinking()?
-                this.getBlinkColor(i,i,this.A,this.f[i]):
+                this.getBlinkColor(Math.floor(this.area[i].x),Math.floor(this.area[i].y),this.A,this.f[i]):
                 (this.area_error[i]?'#f00':'#fff');
             g.beginPath();
             g.moveTo(this.node[this.area[i].nodelist[0]].x*S,
