@@ -164,7 +164,7 @@ teka.dictionary = {
     abcd_wrong_letters_row: 'Die Anzahl des markierten Buchstabens stimmt in der entsprechenden Zeile nicht.',
     abcd_wrong_letters_column: 'Die Anzahl des markierten Buchstabens stimmt in der entsprechenden Spalte nicht.',
 
-    abcd_diagonal: 'ABCD-Rätsel',
+    abcd_diagonal: 'ABCD-Rätsel ohne Diagonalberührung',
     abcd_diagonal_instructions: 'Tragen Sie in jedes Feld einen der angegebenen Buchstaben so ein, '
         +'dass in benachbarten Feldern keine gleichen Buchstaben stehen, '
         +'auch nicht diagonal. Die Zahlen am Rand geben an, wie oft jeder der '
