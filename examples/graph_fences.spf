@@ -19,9 +19,7 @@ sc dup scale 0.09 0.09 translate
 /format 2
 /type (fences)
 /sol false
-/style [
-[ 1 0 0 1 0 0 ] ]
-/edge [
+/node [
 [ 1.386 0.4 ]
 [ 2.078 0 ]
 [ 2.771 0.4 ]
@@ -76,7 +74,7 @@ sc dup scale 0.09 0.09 translate
 [ 4.157 6 ]
 [ 4.85 6.4 ]
 [ 5.543 6 ] ]
-/border [
+/edge [
 [ 0 1 true ]
 [ 1 2 true ]
 [ 2 3 false ]
@@ -169,6 +167,8 @@ sc dup scale 0.09 0.09 translate
 [ 2.078 5.6 -1 0 ]
 [ 3.464 5.6 3 0 ]
 [ 4.85 5.6 -1 0 ] ]
+/style [
+[ 1 0 0 1 0 0 ] ]
 >> currentdict copy pop
 
 /e { exch def } bind def

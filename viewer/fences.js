@@ -60,7 +60,7 @@ teka.viewer.fences.FencesViewer.prototype.initData = function(data)
     this.f = teka.new_array([this.B],0);
     this.c = teka.new_array([this.B],0);
     this.area_error = teka.new_array([this.A],false);
-    this.border_error = teka.new_array([this.B],false);
+    this.edge_error = teka.new_array([this.B],false);
 };
 
 /** Initialize with puzzle in rectangular ascii art. */
@@ -80,13 +80,13 @@ teka.viewer.fences.FencesViewer.prototype.asciiToData = function(ascii, X, Y)
     var grid = this.asciiToArray(ascii);
 
     this.E = 0;
-    this.edge = [];
+    this.node = [];
 
     var e = [];
     for (var i=0;i<=X;i++) {
         for (var j=0;j<=Y;j++) {
             if (grid[2*i][2*j]==teka.ord('+')) {
-                this.edge[this.E] = {x:i,y:Y-j};
+                this.node[this.E] = {x:i,y:Y-j};
                 e[i+(X+1)*(Y-j)] = this.E;
                 this.E++;
             }
@@ -94,12 +94,12 @@ teka.viewer.fences.FencesViewer.prototype.asciiToData = function(ascii, X, Y)
     }
 
     this.B = 0;
-    this.border = [];
+    this.edge = [];
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<=Y;j++) {
             if (grid[2*i+1][2*j]==teka.ord('-')) {
-                this.border[this.B] = {from:e[i+(X+1)*(Y-j)],to:e[i+1+(X+1)*(Y-j)]};
+                this.edge[this.B] = {from:e[i+(X+1)*(Y-j)],to:e[i+1+(X+1)*(Y-j)]};
                 this.B++;
             }
         }
@@ -107,7 +107,7 @@ teka.viewer.fences.FencesViewer.prototype.asciiToData = function(ascii, X, Y)
     for (var i=0;i<=X;i++) {
         for (var j=0;j<Y;j++) {
             if (grid[2*i][2*j+1]==teka.ord('|')) {
-                this.border[this.B] = {from:e[i+(X+1)*(Y-j)],to:e[i+(X+1)*(Y-(j+1))]};
+                this.edge[this.B] = {from:e[i+(X+1)*(Y-j)],to:e[i+(X+1)*(Y-(j+1))]};
                 this.B++;
             }
         }
@@ -173,11 +173,28 @@ teka.viewer.fences.FencesViewer.prototype.asciiToData = function(ascii, X, Y)
 /** Initialize with puzzle in graph format. */
 teka.viewer.fences.FencesViewer.prototype.initDataGraph = function(data)
 {
+    this.listToNode(data.get('node'));
     this.listToEdge(data.get('edge'));
-    this.listToBorder(data.get('border'));
     this.listToArea(data.get('area'));
     this.listToStyle(data.get('style'));
     this.properties.push(teka.translate('fences_graph_size',[this.A]));
+};
+
+/** Read nodes from list. */
+teka.viewer.fences.FencesViewer.prototype.listToNode = function(ascii)
+{
+    if (ascii===false) {
+        return;
+    }
+    var list = this.asciiToList(ascii);
+
+    this.E = 0;
+    this.node = [];
+
+    for (var i=0;i<list.length;i+=2) {
+        this.node[this.E] = {x:parseFloat(list[i]),y:parseFloat(list[i+1])};
+        this.E++;
+    }
 };
 
 /** Read edges from list. */
@@ -188,29 +205,12 @@ teka.viewer.fences.FencesViewer.prototype.listToEdge = function(ascii)
     }
     var list = this.asciiToList(ascii);
 
-    this.E = 0;
-    this.edge = [];
-
-    for (var i=0;i<list.length;i+=2) {
-        this.edge[this.E] = {x:parseFloat(list[i]),y:parseFloat(list[i+1])};
-        this.E++;
-    }
-};
-
-/** Read borders from list. */
-teka.viewer.fences.FencesViewer.prototype.listToBorder = function(ascii)
-{
-    if (ascii===false) {
-        return;
-    }
-    var list = this.asciiToList(ascii);
-
     this.B = 0;
-    this.border = [];
+    this.edge = [];
     this.solution = [];
 
     for (var i=0;i<list.length;i+=3) {
-        this.border[this.B] = {from:parseInt(list[i],10),to:parseInt(list[i+1],10)};
+        this.edge[this.B] = {from:parseInt(list[i],10),to:parseInt(list[i+1],10)};
         this.solution[this.B] = list[i+2]=='true'
             ?teka.viewer.fences.Defaults.SET
             :teka.viewer.fences.Defaults.NONE;
@@ -276,21 +276,21 @@ teka.viewer.fences.FencesViewer.prototype.listToStyle = function(ascii)
  */
 teka.viewer.fences.FencesViewer.prototype.moveToFirstQuadrant = function()
 {
-    var minx=this.edge[0].x;
-    var miny=this.edge[0].y;
-    var maxx=this.edge[0].x;
-    var maxy=this.edge[0].y;
+    var minx=this.node[0].x;
+    var miny=this.node[0].y;
+    var maxx=this.node[0].x;
+    var maxy=this.node[0].y;
 
     for (var i=1;i<this.E;i++) {
-        minx = Math.min(minx,this.edge[i].x);
-        maxx = Math.max(maxx,this.edge[i].x);
-        miny = Math.min(miny,this.edge[i].y);
-        maxy = Math.max(maxy,this.edge[i].y);
+        minx = Math.min(minx,this.node[i].x);
+        maxx = Math.max(maxx,this.node[i].x);
+        miny = Math.min(miny,this.node[i].y);
+        maxy = Math.max(maxy,this.node[i].y);
     }
 
     for (var i=0;i<this.E;i++) {
-        this.edge[i].x-=minx;
-        this.edge[i].y=maxy-this.edge[i].y;
+        this.node[i].x-=minx;
+        this.node[i].y=maxy-this.node[i].y;
     }
 
     for (var i=0;i<this.A;i++) {
@@ -311,85 +311,85 @@ teka.viewer.fences.FencesViewer.prototype.moveToFirstQuadrant = function()
 
 /**
  * Adds some usefull data to the graph datas:
- * a) areas get a sorted list of touching borders and touching edges.
- * b) borders get the two areas at the left and at the right.
+ * a) areas get a sorted list of touching edges and touching nodes.
+ * b) edges get the two areas at the left and at the right.
  */
 teka.viewer.fences.FencesViewer.prototype.addGraphData = function()
 {
     for (var i=0;i<this.A;i++) {
-        this.area[i].borderlist = false;
         this.area[i].edgelist = false;
+        this.area[i].nodelist = false;
     }
 
     for (var i=0;i<this.B;i++) {
-        this.border[i].r_area = false;
-        this.border[i].l_area = false;
+        this.edge[i].r_area = false;
+        this.edge[i].l_area = false;
     }
 
     for (var i=0;i<this.B;i++) {
-        if (this.border[i].r_area===false) {
+        if (this.edge[i].r_area===false) {
             this.findRightArea(i,true);
         }
-        if (this.border[i].l_area===false) {
+        if (this.edge[i].l_area===false) {
             this.findRightArea(i,false);
         }
     }
 };
 
 /**
- * Finds the area to the right of the given border b. Which side is
- * 'right' depends on the value of forward. Attaches the borders and
- * edges to this area as well as the area to the borders.
+ * Finds the area to the right of the given edge b. Which side is
+ * 'right' depends on the value of forward. Attaches the edges and
+ * nodes to this area as well as the area to the edges.
  */
 teka.viewer.fences.FencesViewer.prototype.findRightArea = function(b, forward)
 {
-    var borderlist = this.getBorderlistToTheRight(b, forward);
-    if (borderlist===false) {
+    var edgelist = this.getEdgelistToTheRight(b, forward);
+    if (edgelist===false) {
         return;
     }
 
-    var angle = this.getAngleFromBorderlist(borderlist);
-    if (Math.abs(angle-(borderlist.length-2)*Math.PI)>0.1) {
+    var angle = this.getAngleFromEdgelist(edgelist);
+    if (Math.abs(angle-(edgelist.length-2)*Math.PI)>0.1) {
         // we found the outside polygon
-        this.setAreaForBordersInBorderlist(borderlist,false);
+        this.setAreaForEdgesInEdgelist(edgelist,false);
         return;
     }
 
-    var edgelist = this.getEdgelistFromBorderlist(borderlist);
-    var area = this.getAreaFromEdgelist(edgelist);
+    var nodelist = this.getNodelistFromEdgelist(edgelist);
+    var area = this.getAreaFromNodelist(nodelist);
 
-    this.setAreaForBordersInBorderlist(borderlist,area);
-    this.addBorderlistAndEdgelistToArea(area,borderlist,edgelist);
+    this.setAreaForEdgesInEdgelist(edgelist,area);
+    this.addEdgelistAndNodelistToArea(area,edgelist,nodelist);
 };
 
 /**
- * Follows the graph, starting by border b, always selecting the rightmost
+ * Follows the graph, starting by edge b, always selecting the rightmost
  * continuation.
  */
-teka.viewer.fences.FencesViewer.prototype.getBorderlistToTheRight = function(b, forward)
+teka.viewer.fences.FencesViewer.prototype.getEdgelistToTheRight = function(b, forward)
 {
     var result = [{nr:b,forward:forward}];
 
-    var start = forward?this.border[b].from:this.border[b].to;
+    var start = forward?this.edge[b].from:this.edge[b].to;
     var last = start;
-    var edge = forward?this.border[b].to:this.border[b].from;
+    var node = forward?this.edge[b].to:this.edge[b].from;
 
-    while (edge!=start) {
+    while (node!=start) {
         var best = false;
         var bestforward = false;
         var bestangle = 400;
 
         for (var i=0;i<this.B;i++) {
-            if (this.border[i].from==edge && this.border[i].to!=last) {
-                var h = this.getAngle(last,edge,this.border[i].to);
+            if (this.edge[i].from==node && this.edge[i].to!=last) {
+                var h = this.getAngle(last,node,this.edge[i].to);
                 if (h<bestangle) {
                     bestangle = h;
                     best = i;
                     bestforward = true;
                 }
             }
-            if (this.border[i].to==edge && this.border[i].from!=last) {
-                var h = this.getAngle(last,edge,this.border[i].from);
+            if (this.edge[i].to==node && this.edge[i].from!=last) {
+                var h = this.getAngle(last,node,this.edge[i].from);
                 if (h<bestangle) {
                     bestangle = h;
                     best = i;
@@ -404,44 +404,44 @@ teka.viewer.fences.FencesViewer.prototype.getBorderlistToTheRight = function(b, 
 
         result.push({nr:best,forward:bestforward});
 
-        last = edge;
-        edge = bestforward?this.border[best].to:this.border[best].from;
+        last = node;
+        node = bestforward?this.edge[best].to:this.edge[best].from;
     }
 
     return result;
 };
 
 /** Calculate the sum of all inner angles in the polygon bl. */
-teka.viewer.fences.FencesViewer.prototype.getAngleFromBorderlist = function(bl)
+teka.viewer.fences.FencesViewer.prototype.getAngleFromEdgelist = function(bl)
 {
     var result = 0;
     var last = bl.length-1;
-    var edge = 0;
+    var node = 0;
 
-    while (edge<bl.length) {
-        result += this.getAngle(bl[last].forward===true?this.border[bl[last].nr].from:this.border[bl[last].nr].to,
-                                bl[edge].forward===true?this.border[bl[edge].nr].from:this.border[bl[edge].nr].to,
-                                bl[edge].forward===true?this.border[bl[edge].nr].to:this.border[bl[edge].nr].from);
-        last = edge;
-        edge++;
+    while (node<bl.length) {
+        result += this.getAngle(bl[last].forward===true?this.edge[bl[last].nr].from:this.edge[bl[last].nr].to,
+                                bl[node].forward===true?this.edge[bl[node].nr].from:this.edge[bl[node].nr].to,
+                                bl[node].forward===true?this.edge[bl[node].nr].to:this.edge[bl[node].nr].from);
+        last = node;
+        node++;
     }
 
     return result;
 };
 
-/** Calculate the angle between the edges e1, e2, e3 */
+/** Calculate the angle between the nodes e1, e2, e3 */
 teka.viewer.fences.FencesViewer.prototype.getAngle = function(a,b,c)
 {
-    var la = teka.sqr(this.edge[a].x-this.edge[b].x)+teka.sqr(this.edge[a].y-this.edge[b].y);
-    var lb = teka.sqr(this.edge[c].x-this.edge[b].x)+teka.sqr(this.edge[c].y-this.edge[b].y);
-    var lc = teka.sqr(this.edge[a].x-this.edge[c].x)+teka.sqr(this.edge[a].y-this.edge[c].y);
+    var la = teka.sqr(this.node[a].x-this.node[b].x)+teka.sqr(this.node[a].y-this.node[b].y);
+    var lb = teka.sqr(this.node[c].x-this.node[b].x)+teka.sqr(this.node[c].y-this.node[b].y);
+    var lc = teka.sqr(this.node[a].x-this.node[c].x)+teka.sqr(this.node[a].y-this.node[c].y);
     var h = (la+lb-lc)/(2*Math.sqrt(la*lb));
     if (h<-0.999999) {
         return Math.PI;
     }
     var w = Math.acos(h);
 
-    var k = (this.edge[c].x-this.edge[a].x)*(this.edge[b].y-this.edge[a].y)-(this.edge[c].y-this.edge[a].y)*(this.edge[b].x-this.edge[a].x);
+    var k = (this.node[c].x-this.node[a].x)*(this.node[b].y-this.node[a].y)-(this.node[c].y-this.node[a].y)*(this.node[b].x-this.node[a].x);
 
     if (k<0) {
         w=2*Math.PI-w;
@@ -450,7 +450,7 @@ teka.viewer.fences.FencesViewer.prototype.getAngle = function(a,b,c)
 };
 
 /** Calculate the area, that is framed by the given el. */
-teka.viewer.fences.FencesViewer.prototype.getAreaFromEdgelist = function(el)
+teka.viewer.fences.FencesViewer.prototype.getAreaFromNodelist = function(el)
 {
     var area = false;
 
@@ -469,53 +469,53 @@ teka.viewer.fences.FencesViewer.prototype.inPoly = function(el,a)
 {
     var result = false;
     var last = el.length-1;
-    var edge = 0;
+    var node = 0;
 
-    while (edge<el.length) {
-        if (((this.edge[el[edge]].y>a.y) != (this.edge[el[last]].y>a.y))
-            && (a.x<(this.edge[el[last]].x-this.edge[el[edge]].x)*
-                (a.y-this.edge[el[edge]].y)/(this.edge[el[last]].y-this.edge[el[edge]].y)+
-                this.edge[el[edge]].x)) {
+    while (node<el.length) {
+        if (((this.node[el[node]].y>a.y) != (this.node[el[last]].y>a.y))
+            && (a.x<(this.node[el[last]].x-this.node[el[node]].x)*
+                (a.y-this.node[el[node]].y)/(this.node[el[last]].y-this.node[el[node]].y)+
+                this.node[el[node]].x)) {
             result = !result;
         }
-        last = edge;
-        edge++;
+        last = node;
+        node++;
     }
 
     return result;
 };
 
-/** Create an edgelist from the borders in the bl. */
-teka.viewer.fences.FencesViewer.prototype.getEdgelistFromBorderlist = function(bl)
+/** Create an nodelist from the edges in the bl. */
+teka.viewer.fences.FencesViewer.prototype.getNodelistFromEdgelist = function(bl)
 {
     var el = [];
     for (var i=0;i<bl.length;i++) {
         if (bl[i].forward===true) {
-            el.push(this.border[bl[i].nr].to);
+            el.push(this.edge[bl[i].nr].to);
         } else {
-            el.push(this.border[bl[i].nr].from);
+            el.push(this.edge[bl[i].nr].from);
         }
     }
     return el;
 };
 
-/** Add area a to all borders in bl. */
-teka.viewer.fences.FencesViewer.prototype.setAreaForBordersInBorderlist = function(bl, a)
+/** Add area a to all edges in bl. */
+teka.viewer.fences.FencesViewer.prototype.setAreaForEdgesInEdgelist = function(bl, a)
 {
     for (var i=0;i<bl.length;i++) {
         if (bl[i].forward===true) {
-            this.border[bl[i].nr].r_area = a;
+            this.edge[bl[i].nr].r_area = a;
         } else {
-            this.border[bl[i].nr].l_area = a;
+            this.edge[bl[i].nr].l_area = a;
         }
     }
 };
 
-/** Add borderlist bl and edgelist el to area. */
-teka.viewer.fences.FencesViewer.prototype.addBorderlistAndEdgelistToArea = function(a, bl, el)
+/** Add edgelist bl and nodelist el to area. */
+teka.viewer.fences.FencesViewer.prototype.addEdgelistAndNodelistToArea = function(a, bl, el)
 {
-    this.area[a].borderlist = bl;
-    this.area[a].edgelist = el;
+    this.area[a].edgelist = bl;
+    this.area[a].nodelist = el;
 };
 
 /** Add solution. */
@@ -529,49 +529,49 @@ teka.viewer.fences.FencesViewer.prototype.addSolution = function()
 //////////////////////////////////////////////////////////////////
 
 /**
- * For use with keys: For every border the borders, that can be considered to
+ * For use with keys: For every edge the edges, that can be considered to
  * be left, right, top and bottom, are calculated and saved in lists.
  */
 teka.viewer.fences.FencesViewer.prototype.calculateListsOfNextNeighbours = function()
 {
     for (var i=0;i<this.B;i++) {
-        this.border[i].left = [];
-        this.border[i].right = [];
-        this.border[i].top = [];
-        this.border[i].bottom = [];
+        this.edge[i].left = [];
+        this.edge[i].right = [];
+        this.edge[i].top = [];
+        this.edge[i].bottom = [];
     }
 
     for (var i=0;i<this.B;i++) {
         for (var j=0;j<this.B;j++) {
             if (i!=j) {
-                if (this.border[j].from==this.border[i].from ||
-                    this.border[j].from==this.border[i].to) {
-                    if (this.edge[this.border[j].to].x>this.edge[this.border[j].from].x) {
-                        this.border[i].right.push(j);
+                if (this.edge[j].from==this.edge[i].from ||
+                    this.edge[j].from==this.edge[i].to) {
+                    if (this.node[this.edge[j].to].x>this.node[this.edge[j].from].x) {
+                        this.edge[i].right.push(j);
                     }
-                    if (this.edge[this.border[j].to].x<this.edge[this.border[j].from].x) {
-                        this.border[i].left.push(j);
+                    if (this.node[this.edge[j].to].x<this.node[this.edge[j].from].x) {
+                        this.edge[i].left.push(j);
                     }
-                    if (this.edge[this.border[j].to].y>this.edge[this.border[j].from].y) {
-                        this.border[i].bottom.push(j);
+                    if (this.node[this.edge[j].to].y>this.node[this.edge[j].from].y) {
+                        this.edge[i].bottom.push(j);
                     }
-                    if (this.edge[this.border[j].to].y<this.edge[this.border[j].from].y) {
-                        this.border[i].top.push(j);
+                    if (this.node[this.edge[j].to].y<this.node[this.edge[j].from].y) {
+                        this.edge[i].top.push(j);
                     }
                 }
-                if (this.border[j].to==this.border[i].from ||
-                    this.border[j].to==this.border[i].to) {
-                    if (this.edge[this.border[j].from].x>this.edge[this.border[j].to].x) {
-                        this.border[i].right.push(j);
+                if (this.edge[j].to==this.edge[i].from ||
+                    this.edge[j].to==this.edge[i].to) {
+                    if (this.node[this.edge[j].from].x>this.node[this.edge[j].to].x) {
+                        this.edge[i].right.push(j);
                     }
-                    if (this.edge[this.border[j].from].x<this.edge[this.border[j].to].x) {
-                        this.border[i].left.push(j);
+                    if (this.node[this.edge[j].from].x<this.node[this.edge[j].to].x) {
+                        this.edge[i].left.push(j);
                     }
-                    if (this.edge[this.border[j].from].y>this.edge[this.border[j].to].y) {
-                        this.border[i].bottom.push(j);
+                    if (this.node[this.edge[j].from].y>this.node[this.edge[j].to].y) {
+                        this.edge[i].bottom.push(j);
                     }
-                    if (this.edge[this.border[j].from].y<this.edge[this.border[j].to].y) {
-                        this.border[i].top.push(j);
+                    if (this.node[this.edge[j].from].y<this.node[this.edge[j].to].y) {
+                        this.edge[i].top.push(j);
                     }
                 }
             }
@@ -585,10 +585,10 @@ teka.viewer.fences.FencesViewer.prototype.calculateListsOfNextNeighbours = funct
 teka.viewer.fences.FencesViewer.prototype.getExample = function()
 {
     return '/format 2\n/type (fences)\n/sol false\n/style [ [ 1 0 0 1 0 0 ] ]\n'
-        +'/edge [ [ 0 0 ] [ 1 0 ] [ 2 0 ] [ 3 0 ] [ 4 0 ] [ 0 1 ] [ 1 1 ] [ 2 1 ] '
+        +'/node [ [ 0 0 ] [ 1 0 ] [ 2 0 ] [ 3 0 ] [ 4 0 ] [ 0 1 ] [ 1 1 ] [ 2 1 ] '
         +'[ 3 1 ] [ 4 1 ] [ 0 2 ] [ 1 2 ] [ 2 2 ] [ 3 2 ] [ 4 2 ] [ 0 3 ] [ 1 3 ] '
         +'[ 2 3 ] [ 3 3 ] [ 4 3 ] [ 0 4 ] [ 1 4 ] [ 2 4 ] [ 3 4 ] [ 4 4 ] ]\n'
-        +'/border [ [ 0 1 false ] [ 1 2 false ] [ 2 3 false ] [ 3 4 true ] '
+        +'/edge [ [ 0 1 false ] [ 1 2 false ] [ 2 3 false ] [ 3 4 true ] '
         +'[ 5 6 false ] [ 6 7 true ] [ 7 8 false ] [ 8 9 false ] [ 10 11 true ] '
         +'[ 11 12 false ] [ 12 13 false ] [ 13 14 false ] [ 15 16 false ] '
         +'[ 16 17 false ] [ 17 18 true ] [ 18 19 false ] [ 20 21 true ] '
@@ -626,7 +626,7 @@ teka.viewer.fences.FencesViewer.prototype.clearError = function()
         this.area_error[i] = false;
     }
     for (var i=0;i<this.B;i++) {
-        this.border_error[i] = false;
+        this.edge_error[i] = false;
     }
 };
 
@@ -685,15 +685,15 @@ teka.viewer.fences.FencesViewer.prototype.check = function()
         var az = 0;
         for (var j=0;j<this.B;j++) {
             if (this.f[j]==teka.viewer.fences.Defaults.SET
-                && (this.border[j].from==i || this.border[j].to==i)) {
+                && (this.edge[j].from==i || this.edge[j].to==i)) {
                 az++;
             }
         }
         if (az!=0 && az!=2) {
             for (var j=0;j<this.B;j++) {
                 if (this.f[j]==teka.viewer.fences.Defaults.SET
-                    && (this.border[j].from==i || this.border[j].to==i)) {
-                    this.border_error[j] = true;
+                    && (this.edge[j].from==i || this.edge[j].to==i)) {
+                    this.edge_error[j] = true;
                 }
             }
         }
@@ -709,8 +709,8 @@ teka.viewer.fences.FencesViewer.prototype.check = function()
     for (var i=0;i<this.A;i++) {
         if (this.area[i].value!==false) {
             var az = 0;
-            for (var j=0;j<this.area[i].borderlist.length;j++) {
-                if (this.f[this.area[i].borderlist[j].nr]==teka.viewer.fences.Defaults.SET) {
+            for (var j=0;j<this.area[i].edgelist.length;j++) {
+                if (this.f[this.area[i].edgelist[j].nr]==teka.viewer.fences.Defaults.SET) {
                     az++;
                 }
             }
@@ -721,7 +721,7 @@ teka.viewer.fences.FencesViewer.prototype.check = function()
         }
     }
 
-    // find one set border
+    // find one set edge
     var k = false;
     for (var i=0;i<this.B;i++) {
         if (this.f[i]==teka.viewer.fences.Defaults.SET) {
@@ -735,42 +735,42 @@ teka.viewer.fences.FencesViewer.prototype.check = function()
         return true;
     }
 
-    // mark all borders, that are set and connected with border k
-    var start = this.border[k].from;
-    var last = this.border[k].from;
-    var edge = this.border[k].to;
-    this.border_error[k] = true;
+    // mark all edges, that are set and connected with edge k
+    var start = this.edge[k].from;
+    var last = this.edge[k].from;
+    var node = this.edge[k].to;
+    this.edge_error[k] = true;
 
-    while (edge!=start) {
+    while (node!=start) {
         var neu = false;
 
         for (var i=0;i<this.B;i++) {
             if (this.f[i]==teka.viewer.fences.Defaults.SET) {
-                if (this.border[i].from==edge && this.border[i].to!=last) {
-                    neu = this.border[i].to;
-                    this.border_error[i] = true;
+                if (this.edge[i].from==node && this.edge[i].to!=last) {
+                    neu = this.edge[i].to;
+                    this.edge_error[i] = true;
                 }
-                if (this.border[i].to==edge && this.border[i].from!=last) {
-                    neu = this.border[i].from;
-                    this.border_error[i] = true;
+                if (this.edge[i].to==node && this.edge[i].from!=last) {
+                    neu = this.edge[i].from;
+                    this.edge_error[i] = true;
                 }
             }
         }
 
-        last = edge;
-        edge = neu;
+        last = node;
+        node = neu;
     }
 
-    // still set borders left? => not connected
+    // still set edges left? => not connected
     for (var i=0;i<this.B;i++) {
-        if (this.f[i]==teka.viewer.fences.Defaults.SET && !this.border_error[i]) {
+        if (this.f[i]==teka.viewer.fences.Defaults.SET && !this.edge_error[i]) {
             return 'fences_not_connected';
         }
     }
 
     // cleaning up
     for (var i=0;i<this.B;i++) {
-        this.border_error[i] = false;
+        this.edge_error[i] = false;
     }
 
     return true;
@@ -800,8 +800,8 @@ teka.viewer.fences.FencesViewer.prototype.setMetrics = function(g)
 
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
-    this.borderX = 3;
-    this.borderY = 3;
+    this.edgeX = 3;
+    this.edgeY = 3;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
 
@@ -817,20 +817,20 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
     var S = this.scale;
 
     g.save();
-    g.translate(this.deltaX+this.borderX,this.deltaY+this.borderY);
+    g.translate(this.deltaX+this.edgeX,this.deltaY+this.edgeY);
 
     // paint background
     for (var i=0;i<this.A;i++) {
-        if (this.area[i].edgelist!==false) {
+        if (this.area[i].nodelist!==false) {
             g.fillStyle = this.isBlinking()?
                 this.getBlinkColor(i,i,this.A,this.f[i]):
                 (this.area_error[i]?'#f00':'#fff');
             g.beginPath();
-            g.moveTo(this.edge[this.area[i].edgelist[0]].x*S,
-                     this.edge[this.area[i].edgelist[0]].y*S);
-            for (var k=1;k<this.area[i].edgelist.length;k++) {
-                g.lineTo(this.edge[this.area[i].edgelist[k]].x*S,
-                         this.edge[this.area[i].edgelist[k]].y*S);
+            g.moveTo(this.node[this.area[i].nodelist[0]].x*S,
+                     this.node[this.area[i].nodelist[0]].y*S);
+            for (var k=1;k<this.area[i].nodelist.length;k++) {
+                g.lineTo(this.node[this.area[i].nodelist[k]].x*S,
+                         this.node[this.area[i].nodelist[k]].y*S);
             }
             g.fill();
         }
@@ -840,16 +840,16 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
     g.strokeStyle = this.isBlinking()?'#000':'#888';
     for (var i=0;i<this.B;i++) {
         teka.drawLine(g,
-                      this.edge[this.border[i].from].x*S,
-                      this.edge[this.border[i].from].y*S,
-                      this.edge[this.border[i].to].x*S,
-                      this.edge[this.border[i].to].y*S);
+                      this.node[this.edge[i].from].x*S,
+                      this.node[this.edge[i].from].y*S,
+                      this.node[this.edge[i].to].x*S,
+                      this.node[this.edge[i].to].y*S);
     }
 
-    // paint edges
+    // paint nodes
     g.fillStyle = '#000';
     for (var i=0;i<this.E;i++) {
-        teka.fillOval(g,this.edge[i].x*S,this.edge[i].y*S,3);
+        teka.fillOval(g,this.node[i].x*S,this.node[i].y*S,3);
     }
 
     // paint numbers
@@ -875,17 +875,17 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
             g.lineWidth = 4;
             g.lineCap = 'round';
             teka.drawLine(g,
-                          this.edge[this.border[i].from].x*S,
-                          this.edge[this.border[i].from].y*S,
-                          this.edge[this.border[i].to].x*S,
-                          this.edge[this.border[i].to].y*S);
+                          this.node[this.edge[i].from].x*S,
+                          this.node[this.edge[i].from].y*S,
+                          this.node[this.edge[i].to].x*S,
+                          this.node[this.edge[i].to].y*S);
             g.lineCap = 'butt';
             g.lineWidth = 1;
         }
 
         if (this.f[i]==teka.viewer.fences.Defaults.EMPTY) {
-            var x = (this.edge[this.border[i].from].x+this.edge[this.border[i].to].x)/2*S;
-            var y = (this.edge[this.border[i].from].y+this.edge[this.border[i].to].y)/2*S;
+            var x = (this.node[this.edge[i].from].x+this.node[this.edge[i].to].x)/2*S;
+            var y = (this.node[this.edge[i].from].y+this.node[this.edge[i].to].y)/2*S;
 
             g.lineWidth = 2;
             teka.drawLine(g,x-3,y-3,x+3,y+3);
@@ -894,17 +894,17 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
         }
     }
 
-    // paint erroneous borders
+    // paint erroneous edges
     g.strokeStyle = '#f00';
     g.lineWidth = 5;
     g.lineCap = 'round';
     for (var i=0;i<this.B;i++) {
-        if (this.border_error[i]) {
+        if (this.edge_error[i]) {
             teka.drawLine(g,
-                          this.edge[this.border[i].from].x*S,
-                          this.edge[this.border[i].from].y*S,
-                          this.edge[this.border[i].to].x*S,
-                          this.edge[this.border[i].to].y*S);
+                          this.node[this.edge[i].from].x*S,
+                          this.node[this.edge[i].from].y*S,
+                          this.node[this.edge[i].to].x*S,
+                          this.node[this.edge[i].to].y*S);
         }
     }
     g.lineCap = 'butt';
@@ -916,10 +916,10 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
             g.strokeStyle = '#f00';
             g.lineWidth = 3;
             teka.drawLine(g,
-                          this.edge[this.border[this.cursor].from].x*S,
-                          this.edge[this.border[this.cursor].from].y*S,
-                          this.edge[this.border[this.cursor].to].x*S,
-                          this.edge[this.border[this.cursor].to].y*S);
+                          this.node[this.edge[this.cursor].from].x*S,
+                          this.node[this.edge[this.cursor].from].y*S,
+                          this.node[this.edge[this.cursor].to].x*S,
+                          this.node[this.edge[this.cursor].to].y*S);
             g.lineWidth = 1;
         }
     }
@@ -929,10 +929,10 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
         for (var i=0;i<this.list.length;i++) {
             if (this.list[i]!=this.cursor) {
             teka.drawLine(g,
-                          this.edge[this.border[this.list[i]].from].x*S,
-                          this.edge[this.border[this.list[i]].from].y*S,
-                          this.edge[this.border[this.list[i]].to].x*S,
-                          this.edge[this.border[this.list[i]].to].y*S);
+                          this.node[this.edge[this.list[i]].from].x*S,
+                          this.node[this.edge[this.list[i]].from].y*S,
+                          this.node[this.edge[this.list[i]].to].x*S,
+                          this.node[this.edge[this.list[i]].to].y*S);
             }
         }
     }
@@ -947,12 +947,12 @@ teka.viewer.fences.FencesViewer.prototype.processMousemoveEvent = function(xc, y
 {
     this.list = false;
 
-    xc = xc-this.deltaX-this.borderX;
-    yc = yc-this.deltaY-this.borderY;
+    xc = xc-this.deltaX-this.edgeX;
+    yc = yc-this.deltaY-this.edgeY;
 
     var oldcursor = this.cursor;
 
-    this.cursor = this.getBorder(xc/this.scale,yc/this.scale);
+    this.cursor = this.getEdge(xc/this.scale,yc/this.scale);
 
     if (this.cursor===false) {
         this.cursor = oldcursor;
@@ -987,24 +987,24 @@ teka.viewer.fences.FencesViewer.prototype.processKeydownEvent = function(e)
     this.list = false;
     this.selected = false;
 
-    if (e.key==teka.KEY_DOWN && this.border[this.cursor].bottom.length>0) {
-        this.list = this.border[this.cursor].bottom;
-        this.cursor = this.border[this.cursor].bottom[0];
+    if (e.key==teka.KEY_DOWN && this.edge[this.cursor].bottom.length>0) {
+        this.list = this.edge[this.cursor].bottom;
+        this.cursor = this.edge[this.cursor].bottom[0];
         return true;
     }
-    if (e.key==teka.KEY_UP && this.border[this.cursor].top.length>0) {
-        this.list = this.border[this.cursor].top;
-        this.cursor = this.border[this.cursor].top[0];
+    if (e.key==teka.KEY_UP && this.edge[this.cursor].top.length>0) {
+        this.list = this.edge[this.cursor].top;
+        this.cursor = this.edge[this.cursor].top[0];
         return true;
     }
-    if (e.key==teka.KEY_LEFT && this.border[this.cursor].left.length>0) {
-        this.list = this.border[this.cursor].left;
-        this.cursor = this.border[this.cursor].left[0];
+    if (e.key==teka.KEY_LEFT && this.edge[this.cursor].left.length>0) {
+        this.list = this.edge[this.cursor].left;
+        this.cursor = this.edge[this.cursor].left[0];
         return true;
     }
-    if (e.key==teka.KEY_RIGHT && this.border[this.cursor].right.length>0) {
-        this.list = this.border[this.cursor].right;
-        this.cursor = this.border[this.cursor].right[0];
+    if (e.key==teka.KEY_RIGHT && this.edge[this.cursor].right.length>0) {
+        this.list = this.edge[this.cursor].right;
+        this.cursor = this.edge[this.cursor].right[0];
         return true;
     }
 
@@ -1040,19 +1040,19 @@ teka.viewer.fences.FencesViewer.prototype.set = function(k, value)
 };
 
 /**
- * Searches the border, that is next to point x,y. Returns false,
- * if all borders are too far.
+ * Searches the edge, that is next to point x,y. Returns false,
+ * if all edges are too far.
  */
-teka.viewer.fences.FencesViewer.prototype.getBorder = function(x, y)
+teka.viewer.fences.FencesViewer.prototype.getEdge = function(x, y)
 {
     var minpos = false;
     var mindist = 1000;
 
     for (var i=0;i<this.B;i++) {
-        var ax = this.edge[this.border[i].from].x;
-        var ay = this.edge[this.border[i].from].y;
-        var bx = this.edge[this.border[i].to].x;
-        var by = this.edge[this.border[i].to].y;
+        var ax = this.node[this.edge[i].from].x;
+        var ay = this.node[this.edge[i].from].y;
+        var bx = this.node[this.edge[i].to].x;
+        var by = this.node[this.edge[i].to].y;
 
         var k = ((x-ax)*(bx-ax)+(y-ay)*(by-ay))/(teka.sqr(ax-bx)+teka.sqr(ay-by));
 
