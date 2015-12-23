@@ -232,6 +232,9 @@ teka.dictionary = {
         +'#, * und Q: Kante gesetzt\n-, / und W: Kante leer (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n'
         +'Escape: Wählt bei der Navigation mit den Cursortasten eine alternative Kante aus. '
         +'Alle Alternativen werden durch dünne rote Striche markiert.',
+    fences_rectangular_size: 'Rechteckgitter der Größe {1}.',
+    fences_with_holes: 'Mit Löchern.',
+    fences_graph_size: 'Mit {1} Feldern.',
     fences_dead_end: 'Die markierte Kante endet in einer Sackgasse.',
     fences_branching: 'Die markierten Kanten treffen sich in einem Verzweigungspunkt.',
     fences_number_wrong: 'Bei der markierten Fläche stimmt die Anzahl der Kanten nicht.',

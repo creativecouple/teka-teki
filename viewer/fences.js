@@ -43,6 +43,7 @@ teka.viewer.fences.FencesViewer.prototype.initData = function(data)
     var format = data.get('format');
     format = format===false?1:parseInt(data.get('format'),10);
 
+    this.properties = [];
     switch (format) {
       case 1:
         this.initDataRectangle(data);
@@ -114,6 +115,7 @@ teka.viewer.fences.FencesViewer.prototype.asciiToData = function(ascii, X, Y)
 
     this.A = 0;
     this.area = [];
+    var holes = false;
 
     for (var i=1;i<X;i++) {
         for (var j=1;j<Y;j++) {
@@ -126,6 +128,7 @@ teka.viewer.fences.FencesViewer.prototype.asciiToData = function(ascii, X, Y)
                 grid[2*i+2][2*j]==teka.ord('+') &&
                 grid[2*i+2][2*j+2]==teka.ord('+') &&
                 grid[2*i][2*j]!=teka.ord('+')) {
+                holes = true;
                 this.area[this.A] = {
                     x:i,
                     y:Y-j,
@@ -160,6 +163,11 @@ teka.viewer.fences.FencesViewer.prototype.asciiToData = function(ascii, X, Y)
 
     this.S = 1;
     this.style = [ [1,0,0,1,0,0], [1.7,0,0,1.7,0,0] ];
+
+    this.properties.push(teka.translate('fences_rectangular_size',[X+'x'+Y]));
+    if (holes) {
+        this.properties.push(teka.translate('fences_with_holes'));
+    }
 };
 
 /** Initialize with puzzle in graph format. */
@@ -169,6 +177,7 @@ teka.viewer.fences.FencesViewer.prototype.initDataGraph = function(data)
     this.listToBorder(data.get('border'));
     this.listToArea(data.get('area'));
     this.listToStyle(data.get('style'));
+    this.properties.push(teka.translate('fences_graph_size',[this.A]));
 };
 
 /** Read edges from list. */
@@ -198,9 +207,13 @@ teka.viewer.fences.FencesViewer.prototype.listToBorder = function(ascii)
 
     this.B = 0;
     this.border = [];
+    this.solution = [];
 
     for (var i=0;i<list.length;i+=3) {
         this.border[this.B] = {from:parseInt(list[i],10),to:parseInt(list[i+1],10)};
+        this.solution[this.B] = list[i+2]=='true'
+            ?teka.viewer.fences.Defaults.SET
+            :teka.viewer.fences.Defaults.NONE;
         this.B++;
     }
 };
@@ -515,6 +528,10 @@ teka.viewer.fences.FencesViewer.prototype.addSolution = function()
 
 //////////////////////////////////////////////////////////////////
 
+/**
+ * For use with keys: For every border the borders, that can be considered to
+ * be left, right, top and bottom, are calculated and saved in lists.
+ */
 teka.viewer.fences.FencesViewer.prototype.calculateListsOfNextNeighbours = function()
 {
     for (var i=0;i<this.B;i++) {
@@ -567,13 +584,29 @@ teka.viewer.fences.FencesViewer.prototype.calculateListsOfNextNeighbours = funct
 /** Returns a small example. */
 teka.viewer.fences.FencesViewer.prototype.getExample = function()
 {
-    return '/type (fences)\n/X 1\n/Y 1\n/puzzle [ (+-+) (|4|) (+-+) ]\n/solution [ (+-+) (| |) (+-+) ]';
+    return '/format 2\n/type (fences)\n/sol false\n/style [ [ 1 0 0 1 0 0 ] ]\n'
+        +'/edge [ [ 0 0 ] [ 1 0 ] [ 2 0 ] [ 3 0 ] [ 4 0 ] [ 0 1 ] [ 1 1 ] [ 2 1 ] '
+        +'[ 3 1 ] [ 4 1 ] [ 0 2 ] [ 1 2 ] [ 2 2 ] [ 3 2 ] [ 4 2 ] [ 0 3 ] [ 1 3 ] '
+        +'[ 2 3 ] [ 3 3 ] [ 4 3 ] [ 0 4 ] [ 1 4 ] [ 2 4 ] [ 3 4 ] [ 4 4 ] ]\n'
+        +'/border [ [ 0 1 false ] [ 1 2 false ] [ 2 3 false ] [ 3 4 true ] '
+        +'[ 5 6 false ] [ 6 7 true ] [ 7 8 false ] [ 8 9 false ] [ 10 11 true ] '
+        +'[ 11 12 false ] [ 12 13 false ] [ 13 14 false ] [ 15 16 false ] '
+        +'[ 16 17 false ] [ 17 18 true ] [ 18 19 false ] [ 20 21 true ] '
+        +'[ 21 22 true ] [ 22 23 true ] [ 23 24 true ] [ 0 5 false ] [ 5 10 false ] '
+        +'[ 10 15 true ] [ 15 20 true ] [ 1 6 false ] [ 6 11 true ] [ 11 16 false ] '
+        +'[ 16 21 false ] [ 2 7 false ] [ 7 12 true ] [ 12 17 true ] [ 17 22 false ] '
+        +'[ 3 8 true ] [ 8 13 true ] [ 13 18 true ] [ 18 23 false ] [ 4 9 true ] '
+        +'[ 9 14 true ] [ 14 19 true ] [ 19 24 true ] ]\n'
+        +'/area [ [ 0.5 0.5 0 0 ] [ 1.5 0.5 -1 0 ] [ 2.5 0.5 1 0 ] [ 3.5 0.5 -1 0 ] '
+        +'[ 0.5 1.5 2 0 ] [ 1.5 1.5 3 0 ] [ 2.5 1.5 2 0 ] [ 3.5 1.5 -1 0 ] '
+        +'[ 0.5 2.5 -1 0 ] [ 1.5 2.5 -1 0 ] [ 2.5 2.5 -1 0 ] [ 3.5 2.5 -1 0 ] '
+        +'[ 0.5 3.5 -1 0 ] [ 1.5 3.5 1 0 ] [ 2.5 3.5 -1 0 ] [ 3.5 3.5 -1 0 ] ]';
 };
 
 /** Returns a list of automatically generated properties. */
 teka.viewer.fences.FencesViewer.prototype.getProperties = function()
 {
-    return [];
+    return this.properties;
 };
 
 //////////////////////////////////////////////////////////////////
