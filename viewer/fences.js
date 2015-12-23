@@ -861,7 +861,7 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
         if (this.area[i].value!==false) {
             g.save();
             var h = this.style[this.area[i].style];
-            g.translate(this.area[i].x*S,this.area[i].y*S)
+            g.translate(this.area[i].x*S,this.area[i].y*S);
             g.transform(h[0],h[1],h[2],h[3],h[4],h[5]);
             g.fillText(this.area[i].value,0,this.font.delta);
             g.restore();
@@ -925,7 +925,7 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
         }
     }
 
-    if (this.list!=false) {
+    if (this.list!==false) {
         g.strokeStyle = '#f00';
         for (var i=0;i<this.list.length;i++) {
             if (this.list[i]!=this.cursor) {
