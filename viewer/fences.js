@@ -677,9 +677,6 @@ teka.viewer.fences.FencesViewer.prototype.loadState = function(state)
 /** Check, if the solution is correct. */
 teka.viewer.fences.FencesViewer.prototype.check = function()
 {
-    var X = this.X;
-    var Y = this.Y;
-
     // check for dead ends and branching
     for (var i=0;i<this.E;i++) {
         var az = 0;
