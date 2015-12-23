@@ -341,3 +341,4 @@ teka.KEY_W = 87;
 teka.KEY_X = 88;
 teka.KEY_Z = 90;
 teka.KEY_SHIFT = 16;
+teka.KEY_ESCAPE = 27;

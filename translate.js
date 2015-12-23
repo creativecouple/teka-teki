@@ -232,6 +232,10 @@ teka.dictionary = {
         +'#, * und Q: Kante gesetzt\n-, / und W: Kante leer (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n'
         +'Escape: Wählt bei der Navigation mit den Cursortasten eine alternative Kante aus. '
         +'Alle Alternativen werden durch dünne rote Striche markiert.',
+    fences_dead_end: 'Die markierte Kante endet in einer Sackgasse.',
+    fences_branching: 'Die markierten Kanten treffen sich in einem Verzweigungspunkt.',
+    fences_number_wrong: 'Bei der markierten Fläche stimmt die Anzahl der Kanten nicht.',
+    fences_not_connected: 'Die markierten Kanten hängen nicht mit dem Rest zusammen.',
 
     greater_than_sudoku: 'Vergleichssudoku',
     greater_than_sudoku_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
