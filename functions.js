@@ -96,6 +96,12 @@ teka.normalizeKeyEvent = function(e)
         ret.key = 46;
     }
 
+    // simulate hash key on some key boards, where it is shift-3:
+    if (ret.key==51 && ret.shift) {
+        ret.shift = false;
+        ret.key = 163;
+    }
+
     return ret;
 };
 
