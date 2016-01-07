@@ -53,9 +53,11 @@ teka.viewer.fences.FencesViewer.prototype.initData = function(data)
         break;
     }
 
-    this.moveToFirstQuadrant();
-    this.addGraphData();
-    this.calculateListsOfNextNeighbours();
+    if (this.node!==undefined) {
+        this.moveToFirstQuadrant();
+        this.addGraphData();
+        this.calculateListsOfNextNeighbours();
+    }
 
     this.f = teka.new_array([this.B],0);
     this.c = teka.new_array([this.B],0);
