@@ -1198,24 +1198,32 @@ teka.PuzzleApplet.prototype.check = function()
 
     var duration = Math.floor((this.timer_stop-this.timer_start)/1000);
 
-    var result = teka.translate('congratulations');
-    if (this.values_.TAKE_TIME===true) {
-        result += '\n'+this.niceTime(duration);
-
-        if (this.values_.COUNT_FAILED_ATTEMPTS===true && this.failed_attempts>0) {
-            result += ' '+
-                (this.failed_attempts==1
-                    ?teka.translate('failed_attempt')
-                    :teka.translate('failed_attempts',[this.failed_attempts]));
-        }
-    }
+    var result = this.createResultMessage(duration,this.failed_attempts);
 
     this.setText(result,false);
     this.puzzleViewer.setMode(teka.viewer.Defaults.BLINK_START);
     this.paint();
 
     setTimeout(this.blink.bind(this),300);
-    this.correctHook();
+    this.correctHook(result);
+};
+
+/** Creates a result message. */
+teka.PuzzleApplet.prototype.createResultMessage = function(duration, failed_attempts)
+{
+    var result = teka.translate('congratulations');
+    if (this.values_.TAKE_TIME===true) {
+        result += '\n'+this.niceTime(duration);
+
+        if (this.values_.COUNT_FAILED_ATTEMPTS===true && failed_attempts>0) {
+            result += ' '+
+                (failed_attempts==1
+                    ?teka.translate('failed_attempt')
+                    :teka.translate('failed_attempts',[failed_attempts]));
+        }
+    }
+
+    return result;
 };
 
 /** Converts duration d, given in seconds, into a human readable format. */
@@ -1315,6 +1323,6 @@ teka.PuzzleApplet.prototype.failedAttemptHook = function()
 };
 
 /** To be overridden by descendant. */
-teka.PuzzleApplet.prototype.correctHook = function()
+teka.PuzzleApplet.prototype.correctHook = function(result)
 {
 };
