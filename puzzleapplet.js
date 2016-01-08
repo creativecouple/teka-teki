@@ -816,6 +816,10 @@ teka.PuzzleApplet.prototype.mousedownListener = function(e)
         return;
     }
 
+    if (this.values_.TAKE_TIME && new Date().getTime()<this.timer_start+500) {
+        return;
+    }
+
     if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
             this.puzzleViewer.getMode()==teka.viewer.Defaults.BLINK_END) {
         this.puzzleViewer.clearError();
