@@ -102,6 +102,11 @@ teka.normalizeKeyEvent = function(e)
         ret.key = 163;
     }
 
+    // Komma on key pad
+    if (ret.key==108) {
+        ret.key = 188;
+    }
+
     return ret;
 };
 
