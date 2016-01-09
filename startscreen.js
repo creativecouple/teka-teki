@@ -110,7 +110,16 @@ teka.StartScreen.prototype.setExtent = function(left,top,width,height)
     this.rightWidth = Math.floor(0.382*(width-this.gap));
     this.bottomHeight = Math.floor(0.5*(height-this.gap));
 
+    var tmp = this.buttonText.length*this.buttonHeight+
+        (this.buttonText.length-1)*this.gap;
+    if (tmp>height-this.bottomHeight) {
+        this.bottomHeight = height-tmp;
+    }
+
     this.initButtons();
+    this.rightWidth = Math.min(Math.max(this.buttonWidth,this.rightWidth),this.width);
+    this.initButtons();
+
     this.initText();
 };
 
@@ -122,13 +131,12 @@ teka.StartScreen.prototype.initButtons = function()
     for (var i=0;i<this.buttonText.length;i++) {
         width = Math.max(width,this.graphics.measureText(this.buttonText[i]).width);
     }
-
     this.buttonWidth = width+100;
 
     this.deltaButtonX = Math.floor((this.rightWidth-this.buttonWidth)/2);
     var tmp = this.buttonText.length*this.buttonHeight+
         (this.buttonText.length-1)*this.gap;
-    this.deltaButtonY = Math.floor((this.bottomHeight-tmp)/2);
+    this.deltaButtonY = Math.floor(((this.height-this.bottomHeight)-tmp)/2);
 };
 
 /** Wraps the text displayed at the left. */
@@ -188,6 +196,15 @@ teka.StartScreen.prototype.paint = function(g)
 
     // some notes on solving on time at left
     g.save();
+
+    g.beginPath();
+    g.moveTo(0,0);
+    g.lineTo(this.width-this.rightWidth-this.gap,0);
+    g.lineTo(this.width-this.rightWidth-this.gap,this.height);
+    g.lineTo(0,this.height);
+    g.closePath();
+    g.clip();
+
     g.fillStyle = this.textcolor;
     g.textAlign = 'left';
     g.textBaseline = 'top';
