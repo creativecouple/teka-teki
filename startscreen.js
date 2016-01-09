@@ -117,6 +117,7 @@ teka.StartScreen.prototype.setExtent = function(left,top,width,height)
 /** Calculate the width of the buttons. */
 teka.StartScreen.prototype.initButtons = function()
 {
+    this.graphics.font = this.getButtonFont();
     var width = 0;
     for (var i=0;i<this.buttonText.length;i++) {
         width = Math.max(width,this.graphics.measureText(this.buttonText[i]).width);
@@ -193,7 +194,7 @@ teka.StartScreen.prototype.paint = function(g)
     g.font = this.getTitleFont();
     g.fillText(teka.translate('solving_on_time'),0,2);
 
-    g.translate(0,3*this.textHeight);
+    g.translate(0,2*this.textHeight);
     g.font = this.getTextFont(this.printTextHeight);
 
     var y = 2;

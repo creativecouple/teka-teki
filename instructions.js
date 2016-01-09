@@ -213,6 +213,7 @@ teka.Instructions.prototype.paint = function(g)
 
     // textarea
     g.fillStyle = this.textcolor;
+    g.textBaseline = 'top';
     g.font = this.getTextFont();
     var y = 2;
     for (var i=0;i<this.text[this.mode][this.page].length;i++) {
