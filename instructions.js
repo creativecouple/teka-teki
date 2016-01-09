@@ -126,7 +126,10 @@ teka.Instructions.prototype.initExample = function()
     var metrics = this.exampleViewer.setMetrics(this.graphics);
     this.imageWidth = metrics.width;
     this.exampleViewer.setExtent(0,0,this.imageWidth,this.imageHeight);
-    this.exampleViewer.setMetrics(this.graphics);
+    var metrics = this.exampleViewer.setMetrics(this.graphics);
+    if (metrics.scale<this.textHeight || this.imageWidth>0.5*this.width) {
+        this.imageWidth = 0;
+    }
 };
 
 /** Wraps the three texts */
@@ -172,7 +175,7 @@ teka.Instructions.prototype.paint = function(g)
     g.translate(0,this.buttonHeight+this.gap);
 
     // Should we show the examples?
-    if (this.mode===0) {
+    if (this.mode===0 && this.imageWidth>0) {
         g.save();
         g.translate(this.width-this.imageWidth,0);
         this.exampleViewer.paint(g);
