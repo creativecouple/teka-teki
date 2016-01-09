@@ -570,7 +570,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processKeydownEvent = function
         return false;
     }
 
-    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
         this.set(this.x,this.y,1);
         return true;
     }

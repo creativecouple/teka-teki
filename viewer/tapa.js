@@ -638,7 +638,7 @@ teka.viewer.tapa.TapaViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
         this.set(this.x,this.y,teka.viewer.tapa.Defaults.BLACK);
         return true;
     }

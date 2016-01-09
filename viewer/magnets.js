@@ -682,7 +682,7 @@ teka.viewer.magnets.MagnetsViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_DOT || e.key==teka.KEY_HASH || e.key==teka.KEY_S) {
+    if (e.key==teka.KEY_DOT || e.key==teka.KEY_HASH || e.key==teka.KEY_S || (e.key==teka.KEY_PLUS && e.shift===true)) {
         this.set(this.x,this.y,teka.viewer.magnets.Defaults.MAGNET);
         return true;
     }

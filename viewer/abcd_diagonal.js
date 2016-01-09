@@ -743,7 +743,7 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.processKeydownEvent = fu
     if (this.x<0) {
         if (e.key==teka.KEY_SPACE) {
             this.set_left(this.x+this.MAX,this.y,false);
-        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
+        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
             this.set_left(this.x+this.MAX,this.y,true);
         }
         return true;
@@ -752,7 +752,7 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.processKeydownEvent = fu
     if (this.y<0) {
         if (e.key==teka.KEY_SPACE) {
             this.set_top(this.x,this.y+this.MAX,false);
-        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
+        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
             this.set_top(this.x,this.y+this.MAX,true);
         }
         return true;

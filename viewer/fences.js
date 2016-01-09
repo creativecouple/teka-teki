@@ -1008,7 +1008,7 @@ teka.viewer.fences.FencesViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
         this.set(this.cursor,teka.viewer.fences.Defaults.SET);
         return true;
     }

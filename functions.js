@@ -96,15 +96,35 @@ teka.normalizeKeyEvent = function(e)
         ret.key = 46;
     }
 
+    // keypad separator = comma
+    if (ret.key==108) {
+        ret.key = 188;
+    }
+
+    // keypad - = minus
+    if (ret.key==109) {
+        ret.key = 189;
+    }
+
+    // keypad + = plus
+    if (ret.key==107) {
+        ret.key = 187;
+    }
+
+    // keypad * = star
+    if (ret.key==106) {
+        ret.key = 187;
+        ret.shift = true;
+    }
+
     // simulate hash key on some key boards, where it is shift-3:
     if (ret.key==51 && ret.shift) {
         ret.shift = false;
         ret.key = 163;
     }
-
-    // Komma on key pad
-    if (ret.key==108) {
-        ret.key = 188;
+    // simulate star key on some key boards, where it is shift-8:
+    if (ret.key==56 && ret.shift) {
+        ret.key = 187;
     }
 
     return ret;
