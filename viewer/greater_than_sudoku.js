@@ -83,12 +83,12 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.asciiToData 
     this.lr_symbols = teka.new_array([this.X-1,this.X],0);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.X;j++) {
-            if (grid[2*i+d+1][2*j+1]==teka.ord('<')
-                || grid[2*i+d+1][2*j+1]==teka.ord('C')) {
+            if (grid[(d+1)*i+d+1][2*j+1]==teka.ord('<')
+                || grid[(d+1)*i+d+1][2*j+1]==teka.ord('C')) {
                 this.lr_symbols[i][j]=-1;
             }
-            if (grid[2*i+d+1][2*j+1]==teka.ord('>')
-                || grid[2*i+d+1][2*j+1]==teka.ord('D')) {
+            if (grid[(d+1)*i+d+1][2*j+1]==teka.ord('>')
+                || grid[(d+1)*i+d+1][2*j+1]==teka.ord('D')) {
                 this.lr_symbols[i][j]=1;
             }
         }
