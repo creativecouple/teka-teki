@@ -766,6 +766,10 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.setExpert = function(h)
         return 1000;
     }
 
+    if (h==teka.viewer.easy_as_abc.Defaults.EMPTY) {
+        return 1001;
+    }
+
     if (h==teka.viewer.easy_as_abc.Defaults.LETTER) {
         return 1000+(1<<(this.MAX+1))-2;
     }
@@ -778,6 +782,9 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.getExpert = function(h)
 {
     if (h<1000) {
         return h;
+    }
+    if (h==1001) {
+        return teka.viewer.easy_as_abc.Defaults.EMPTY;
     }
 
     var min = 10;
