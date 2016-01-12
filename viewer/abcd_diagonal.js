@@ -19,7 +19,8 @@ teka.viewer.abcd_diagonal = {};
 
 /** Some constants. */
 teka.viewer.abcd_diagonal.Defaults = {
-    NONE: -1
+    NONE: -1,
+    BLACK: -2
 };
 
 /** Constructor */
@@ -71,8 +72,11 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.asciiToData = function(a
     this.puzzle = teka.new_array([this.X,this.Y],teka.viewer.abcd_diagonal.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.puzzle[i][j] = grid[d*this.MAX+1+i][d*this.MAX+1+j]==teka.ord(' ')
-                ?0:(grid[d*this.MAX+1+i][d*this.MAX+1+j]-teka.ord('A')+1);
+            if (grid[d*this.MAX+1+i][d*this.MAX+1+j]==teka.ord('#'))
+                this.puzzle[i][j] = teka.viewer.abcd_diagonal.Defaults.BLACK;
+            else
+                this.puzzle[i][j] = grid[d*this.MAX+1+i][d*this.MAX+1+j]==teka.ord(' ')
+                    ?0:(grid[d*this.MAX+1+i][d*this.MAX+1+j]-teka.ord('A')+1);
         }
     }
 
@@ -328,7 +332,8 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.check = function()
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (check[i][j]===0) {
+            if (this.puzzle[i][j]!=teka.viewer.abcd_diagonal.Defaults.BLACK &&
+                check[i][j]===0) {
                 this.error[i][j] = true;
                 return 'abcd_empty';
             }
@@ -337,7 +342,8 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.check = function()
 
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
-            if (check[i][j]==check[i+1][j]) {
+            if (this.puzzle[i][j]!=teka.viewer.abcd_diagonal.Defaults.BLACK &&
+                check[i][j]==check[i+1][j]) {
                 this.error[i][j] = this.error[i+1][j] = true;
                 return 'abcd_same_letters';
             }
@@ -346,7 +352,8 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.check = function()
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
-            if (check[i][j]==check[i][j+1]) {
+            if (this.puzzle[i][j]!=teka.viewer.abcd_diagonal.Defaults.BLACK &&
+                check[i][j]==check[i][j+1]) {
                 this.error[i][j] = this.error[i][j+1] = true;
                 return 'abcd_same_letters';
             }
@@ -355,11 +362,13 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.check = function()
 
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y-1;j++) {
-            if (check[i][j]==check[i+1][j+1]) {
+            if (this.puzzle[i][j]!=teka.viewer.abcd_diagonal.Defaults.BLACK &&
+                check[i][j]==check[i+1][j+1]) {
                 this.error[i][j] = this.error[i+1][j+1] = true;
                 return 'abcd_same_letters';
             }
-            if (check[i][j+1]==check[i+1][j]) {
+            if (this.puzzle[i][j+1]!=teka.viewer.abcd_diagonal.Defaults.BLACK &&
+                check[i][j+1]==check[i+1][j]) {
                 this.error[i][j+1] = this.error[i+1][j] = true;
                 return 'abcd_same_letters';
             }
@@ -369,7 +378,9 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.check = function()
     for (var j=0;j<Y;j++) {
         var az = teka.new_array([this.MAX],0);
         for (var i=0;i<X;i++) {
-            az[check[i][j]-1]++;
+            if (this.puzzle[i][j]!=teka.viewer.abcd_diagonal.Defaults.BLACK) {
+                az[check[i][j]-1]++;
+            }
         }
         for (var i=0;i<this.MAX;i++) {
             if (this.leftdata[this.MAX-i-1][j]!=-1 && this.leftdata[this.MAX-i-1][j]!=az[i]) {
@@ -387,7 +398,9 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.check = function()
     for (var i=0;i<X;i++) {
         var az = teka.new_array([this.MAX],0);
         for (var j=0;j<Y;j++) {
-            az[check[i][j]-1]++;
+            if (this.puzzle[i][j]!=teka.viewer.abcd_diagonal.Defaults.BLACK) {
+                az[check[i][j]-1]++;
+            }
         }
         for (var j=0;j<this.MAX;j++) {
             if (this.topdata[i][this.MAX-j-1]!=-1 && this.topdata[i][this.MAX-j-1]!=az[j]) {
@@ -556,6 +569,12 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.paint = function(g)
                 g.font = this.font.font;
                 g.fillText(teka.chr(teka.ord('A')+this.puzzle[i][j]-1),
                            (L+i)*S+S/2,(j+L)*S+S/2+this.font.delta);
+                continue;
+            }
+
+            if (this.puzzle[i][j]==teka.viewer.abcd_diagonal.Defaults.BLACK) {
+                g.fillStyle = '#000';
+                g.fillRect((L+i)*S,(j+L)*S,S,S);
                 continue;
             }
 
