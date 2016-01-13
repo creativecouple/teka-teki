@@ -19,7 +19,8 @@ teka.viewer.killer_sudoku = {};
 
 /** Some constants. */
 teka.viewer.killer_sudoku.Defaults = {
-    NONE: 0
+    NONE: 0,
+    NO_MINI: -1
 };
 
 /** Constructor */
@@ -68,38 +69,38 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.asciiToData = function(a
         }
     }
 
-    this.pattern = teka.new_array([this.X,this.X],0);
+    this.area = teka.new_array([this.X,this.X],0);
     var nr=0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (this.pattern[i][j]===0) {
-                this.fillPattern(grid,i,j,++nr);
+            if (this.area[i][j]===0) {
+                this.fillArea(grid,i,j,++nr);
             }
         }
     }
 };
 
 /** Recursive filling of areas */
-teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.fillPattern = function(c, x, y, nr)
+teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.fillArea = function(c, x, y, nr)
 {
     if (x<0 || y<0 || x>=this.X || y>=this.X) {
         return;
     }
-    if (this.pattern[x][y]!=0) {
+    if (this.area[x][y]!=0) {
         return;
     }
-    this.pattern[x][y] = nr;
+    this.area[x][y] = nr;
     if (c[2*x+2][2*y+1]==teka.ord(' ')) {
-        this.fillPattern(c,x+1,y,nr);
+        this.fillArea(c,x+1,y,nr);
     }
     if (c[2*x][2*y+1]==teka.ord(' ')) {
-        this.fillPattern(c,x-1,y,nr);
+        this.fillArea(c,x-1,y,nr);
     }
     if (c[2*x+1][2*y+2]==teka.ord(' ')) {
-        this.fillPattern(c,x,y+1,nr);
+        this.fillArea(c,x,y+1,nr);
     }
     if (c[2*x+1][2*y]==teka.ord(' ')) {
-        this.fillPattern(c,x,y-1,nr);
+        this.fillArea(c,x,y-1,nr);
     }
 };
 
@@ -109,43 +110,51 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.asciiToSmallAreas = func
     var grid = this.asciiToArray(ascii);
 
     this.mini = teka.new_array([this.X,this.X],0);
-    this.area = teka.new_array([this.X,this.X],0);
+    this.smallarea = teka.new_array([this.X,this.X],0);
     var co = 0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (grid[3*i+2][2*j+1]!=teka.ord(' ')) {
-                var nr = grid[3*i+2][2*j+1]-teka.ord('0');
-                if (grid[3*i+1][2*j+1]!=teka.ord(' ')) {
-                    nr+=10*(grid[3*i+1][2*j+1]-teka.ord('0'));
-                }
-                this.mini[i][j] = nr;
-                this.fillArea(grid,i,j,++co);
+            if (this.mini[i][j]===0 && grid[3*i+2][2*j+1]!=teka.ord('#')) {
+                this.fillSmallArea(grid,i,j,++co);
+            }
+            if (grid[3*i+2][2*j+1]==teka.ord('#')) {
+                this.mini[i][j] = teka.viewer.killer_sudoku.Defaults.NO_MINI;
             }
         }
     }
 };
 
 /** Recursive filling of small areas */
-teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.fillArea = function(c, x, y, value)
+teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.fillSmallArea = function(c, x, y, value)
 {
     if (x<0 || x>=this.X || y<0 || y>=this.X) {
         return;
     }
-    if (this.area[x][y]!=0) {
+    if (this.smallarea[x][y]!=0) {
         return;
     }
-    this.area[x][y] = value;
+    this.smallarea[x][y] = value;
+
+    if (c[3*x+2][2*y+1]>=teka.ord('0') && c[3*x+2][2*y+1]<=teka.ord('9'))
+        {
+            var nr = c[3*x+2][2*y+1]-teka.ord('0');
+            if (c[3*x+1][2*y+1]!=teka.ord(' ')) {
+                nr+=10*(c[3*x+1][2*y+1]-teka.ord('0'));
+            }
+            this.mini[x][y] = nr;
+        }
+
     if (c[3*x][2*y+1]==teka.ord(' ')) {
-        this.fillArea(c,x-1,y,value);
+        this.fillSmallArea(c,x-1,y,value);
     }
     if (c[3*x+3][2*y+1]==teka.ord(' ')) {
-        this.fillArea(c,x+1,y,value);
+        this.fillSmallArea(c,x+1,y,value);
     }
     if (c[3*x+2][2*y]==teka.ord(' ')) {
-        this.fillArea(c,x,y-1,value);
+        this.fillSmallArea(c,x,y-1,value);
     }
     if (c[3*x+2][2*y+2]==teka.ord(' ')) {
-        this.fillArea(c,x,y+1,value);
+        this.fillSmallArea(c,x,y+1,value);
     }
 };
 
@@ -327,10 +336,12 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.check = function()
         }
     }
 
+    var mark = teka.new_array([this.X,this.X],false);
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.mini[i][j]>0) {
-                var erg = this.checkKillerSums(check,i,j);
+            if (mark[i][j]===false
+                && this.mini[i][j]!=teka.viewer.killer_sudoku.Defaults.NO_MINI) {
+                var erg = this.checkKillerSums(check,i,j,mark);
                 if (erg!=null) {
                     return erg;
                 }
@@ -390,11 +401,11 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.checkArea = function(che
 
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (this.pattern[i][j]==n) {
+            if (this.area[i][j]==n) {
                 if (used[check[i][j]-1]) {
                     for (var ii=0;ii<this.X;ii++) {
                         for (var jj=0;jj<this.X;jj++) {
-                            if (this.pattern[ii][jj]==n) {
+                            if (this.area[ii][jj]==n) {
                                 if (check[i][j]==check[ii][jj]) {
                                     this.error[ii][jj] = true;
                                 }                            }
@@ -412,17 +423,17 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.checkArea = function(che
 };
 
 /** Check, if all conditions on a small area are fulfilled */
-teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.checkKillerSums = function(check, x, y)
+teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.checkKillerSums = function(check, x, y, mark)
 {
     var da = teka.new_array([this.X],false);
     var sum = 0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (this.area[i][j]==this.area[x][y]) {
+            if (this.smallarea[i][j]==this.smallarea[x][y]) {
                 if (da[check[i][j]-1]) {
                     for (var ii=0;ii<this.X;ii++) {
                         for (var jj=0;jj<this.X;jj++) {
-                            if (this.area[ii][jj]==this.area[x][y]
+                            if (this.smallarea[ii][jj]==this.smallarea[x][y]
                                 && check[i][j]==check[ii][jj]) {
                                 this.error[ii][jj] = true;
                             }
@@ -432,13 +443,14 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.checkKillerSums = functi
                 }
                 da[check[i][j]-1] = true;
                 sum+=check[i][j];
+                mark[i][j] = true;
             }
         }
     }
-    if (sum!=this.mini[x][y]) {
+    if (this.mini[x][y]!==0 && sum!=this.mini[x][y]) {
         for (var i=0;i<this.X;i++) {
             for (var j=0;j<this.X;j++) {
-                if (this.area[i][j]==this.area[x][y]) {
+                if (this.smallarea[i][j]==this.smallarea[x][y]) {
                     this.error[i][j] = true;
                 }
             }
@@ -528,7 +540,7 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.paint = function(g)
     g.lineCap = 'square';
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {
-            if (this.pattern[i][j]!=this.pattern[i+1][j]) {
+            if (this.area[i][j]!=this.area[i+1][j]) {
                 teka.drawLine(g,(i+1)*S,j*S,(i+1)*S,(j+1)*S);
             }
         }
@@ -536,7 +548,7 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.paint = function(g)
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
-            if (this.pattern[i][j]!=this.pattern[i][j+1]) {
+            if (this.area[i][j]!=this.area[i][j+1]) {
                 teka.drawLine(g,i*S,(j+1)*S,(i+1)*S,(j+1)*S);
             }
         }
@@ -546,26 +558,27 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.paint = function(g)
     // paint the borders of the small areas
     g.lineWidth = 2;
     g.strokeStyle = '#888';
-    for (var j=0;j<X;j++) {
-        teka.drawLine(g,3.5,j*S+3.5,3.5,j*S+S-3.5);
-        teka.drawLine(g,X*S-3.5,j*S+3.5,X*S-3.5,j*S+S-3.5);
-    }
-
-    for (var i=0;i<X;i++) {
-        teka.drawLine(g,i*S+3.5,3.5,i*S+S-3.5,3.5);
-        teka.drawLine(g,i*S+3.5,X*S-3.5,i*S+S-3.5,X*S-3.5);
-    }
+    for (var i=0;i<X;i++)
+        for (var j=0;j<X;j++)
+            if (this.mini[i][j]!=teka.viewer.killer_sudoku.Defaults.NO_MINI) {
+                if (i===0 || this.smallarea[i][j]!=this.smallarea[i-1][j])
+                    teka.drawLine(g,i*S+3.5,j*S+3.5,i*S+3.5,(j+1)*S-3.5);
+                if (i==X-1 || this.smallarea[i][j]!=this.smallarea[i+1][j])
+                    teka.drawLine(g,(i+1)*S-3.5,j*S+3.5,(i+1)*S-3.5,(j+1)*S-3.5);
+                if (j===0 || this.smallarea[i][j]!=this.smallarea[i][j-1])
+                    teka.drawLine(g,i*S+3.5,j*S+3.5,(i+1)*S-3.5,j*S+3.5);
+                if (j==X-1 || this.smallarea[i][j]!=this.smallarea[i][j+1])
+                    teka.drawLine(g,i*S+3.5,(j+1)*S-3.5,(i+1)*S-3.5,(j+1)*S-3.5);
+            }
 
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {
-            if (this.area[i][j]!=this.area[i+1][j]) {
-                teka.drawLine(g,i*S+S-3.5,j*S+3.5,i*S+S-3.5,j*S+S-3.5);
-                teka.drawLine(g,i*S+S+3.5,j*S+3.5,i*S+S+3.5,j*S+S-3.5);
-            } else {
-                if (j===0 || this.area[i][j]!=this.area[i][j-1] || this.area[i][j]!=this.area[i+1][j-1]) {
+            if (this.smallarea[i][j]==this.smallarea[i+1][j]
+               && this.mini[i][j]!=teka.viewer.killer_sudoku.Defaults.NO_MINI) {
+                if (j===0 || this.smallarea[i][j]!=this.smallarea[i][j-1] || this.smallarea[i][j]!=this.smallarea[i+1][j-1]) {
                     teka.drawLine(g,i*S+S-3.5,j*S+3.5,i*S+S+3.5,j*S+3.5);
                 }
-                if (j==X-1 || this.area[i][j]!=this.area[i][j+1] || this.area[i][j]!=this.area[i+1][j+1]) {
+                if (j==X-1 || this.smallarea[i][j]!=this.smallarea[i][j+1] || this.smallarea[i][j]!=this.smallarea[i+1][j+1]) {
                     teka.drawLine(g,i*S+S-3.5,j*S+S-3.5,i*S+S+3.5,j*S+S-3.5);
                 }
             }
@@ -574,14 +587,12 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.paint = function(g)
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<X-1;j++) {
-            if (this.area[i][j]!=this.area[i][j+1]) {
-                teka.drawLine(g,i*S+3.5,j*S+S-3.5,i*S+S-3.5,j*S+S-3.5);
-                teka.drawLine(g,i*S+3.5,j*S+S+3.5,i*S+S-3.5,j*S+S+3.5);
-            } else {
-                if (i===0 || this.area[i][j]!=this.area[i-1][j] || this.area[i][j]!=this.area[i-1][j+1]) {
+            if (this.smallarea[i][j]==this.smallarea[i][j+1]
+               && this.mini[i][j]!=teka.viewer.killer_sudoku.Defaults.NO_MINI) {
+                if (i===0 || this.smallarea[i][j]!=this.smallarea[i-1][j] || this.smallarea[i][j]!=this.smallarea[i-1][j+1]) {
                     teka.drawLine(g,i*S+3.5,j*S+S-3.5,i*S+3.5,j*S+S+3.5);
                 }
-                if (i==X-1 || this.area[i][j]!=this.area[i+1][j] || this.area[i][j]!=this.area[i+1][j+1]) {
+                if (i==X-1 || this.smallarea[i][j]!=this.smallarea[i+1][j] || this.smallarea[i][j]!=this.smallarea[i+1][j+1]) {
                     teka.drawLine(g,i*S+S-3.5,j*S+S-3.5,i*S+S-3.5,j*S+S+3.5);
                 }
             }
@@ -595,7 +606,7 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.paint = function(g)
     g.textBaseline = 'top';
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.mini[i][j]!=0) {
+            if (this.mini[i][j]>0) {
                 g.fillStyle = this.isBlinking()?
                     this.getBlinkColor(i,j,X,this.f[i][j]):
                     (this.error[i][j]?'#f00':'#fff');

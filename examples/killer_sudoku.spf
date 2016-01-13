@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Pages: 1
-%%BoundingBox: 0 0 93 93
-%%CropBox: 0 0 93 93
+%%BoundingBox: 0 0 94 94
+%%CropBox: 0 0 94 94
 %%DocumentData: Clean7Bit
 %%Page: 1 1
 %%EndComments
@@ -11,44 +11,41 @@
 /pgsave save def 200 dict begin
 /sc 22.8 def
 /pt {sc div} def
-sc dup scale 0.5 pt dup translate
+sc dup scale 0.8 pt dup translate
 /duenn { 0.4 pt setlinewidth } def
-/dick { 1 pt setlinewidth } def
+/dick { 1.6 pt setlinewidth } def
 
-% create killer:CEP -s 4
 <<
 /format 1
 /type (killer_sudoku)
 /sol false
+/author ()
 /size 4
 /puzzle [
 (+-+-+-+-+)
-(|   |   |)
+(|   |4  |)
 (+ + + + +)
 (|   |   |)
 (+-+-+-+-+)
-(|   |   |)
+(|1  |   |)
 (+ + + + +)
 (|   |   |)
 (+-+-+-+-+) ]
 /smallareas [
 (+--+--+--+--+)
-(|10   | 6   |)
-(+  +  +--+--+)
-(|     |10   |)
-(+--+--+  +--+)
-(| 7|     | 3|)
-(+  +--+--+  +)
-(|  | 4   |  |)
+(| 3   |## ##|)
+(+--+--+--+  +)
+(| 5|##|  |##|)
+(+  +--+  +--+)
+(|  |     | 4|)
+(+--+--+--+--+)
+(| 7   |## ##|)
 (+--+--+--+--+) ]
 /solution [
-(1324)
-(2413)
-(3241)
-(4132) ]
-/description [
- (Gr&ouml;&szlig;e 4x4)
-]
+(2143)
+(4312)
+(1234)
+(3421) ]
 >> currentdict copy pop
 
 /e { exch def } bind def
