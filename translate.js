@@ -186,6 +186,34 @@ teka.dictionary = {
         +'und ausschalten.\n\n'
         +'Links und oben:\n#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
 
+    basic: 'Basic',
+    basic_instructions: 'Tragen Sie Ziffern so in das Diagramm ein, dass in jeder Zeile und '
+        +'jeder Spalte jede der angegebenen '
+        +'Zahlen genau einmal vorkommt. Die kleinen Zahlen in den Gebieten '
+        +'geben die Summe der Zahlen in diesem Gebiet an.\n\n'
+        +'Achtung: Innerhalb eines Gebiets können Zahlen doppelt vorkommen!',
+    basic_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
+        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die linke untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die linke untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'NONEtaste: Feldinhalt löschen\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    basic_digits: 'Zahlen von 1 bis {1}.',
+    basic_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    basic_empty: 'Das markierte Feld ist leer.',
+    basic_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
+    basic_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
+    basic_wrong_sum: 'Im markierten Bereich stimmt die Summe nicht.',
+
     easy_as_abc: 'Buchstabensalat',
     easy_as_abc_instructions: 'Tragen Sie die unter dem Rätsel angegebenen Buchstaben so in das Diagramm ein,'
         +' dass in jeder Zeile und jeder Spalte jeder Buchstabe genau einmal vorkommt.'
