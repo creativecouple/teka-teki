@@ -915,7 +915,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.setExpert = function(h)
         return 1000+(1<<h);
     }
     var a = (h-100)%10;
-    var b = (h-100)/10;
+    var b = Math.floor((h-100)/10);
     if (b===0) {
         b=this.MAX;
     }

@@ -495,6 +495,7 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.setMetrics = function(g)
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.boldfont = teka.getFontData('bold '+Math.round(this.scale/2)+'px sans-serif',this.scale);
+    this.mediumfont = teka.getFontData(Math.round(this.scale/3)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round((this.scale-6)/4)+'px sans-serif',this.scale);
 
     if (realwidth>this.width || realheight>this.height) {
@@ -638,9 +639,20 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.paint = function(g)
 
             // normal numbers
             g.fillStyle = this.getColorString(this.c[i][j]);
-            if (this.f[i][j]<1000) {
+            if (this.f[i][j]<100) {
                 g.font = this.font.font;
                 g.fillText(this.f[i][j],i*S+S/2,j*S+S/2+this.font.delta);
+                continue;
+            }
+
+            if (this.f[i][j]>=100 && this.f[i][j]<1000) {
+                var a = (this.f[i][j]-100)%10;
+                var b = Math.floor((this.f[i][j]-100)/10);
+                var tmp = (a===0?'?':a)+'-'+(b===0?'?':b);
+
+                g.fillStyle = this.getColorString(this.c[i][j]);
+                g.font = this.mediumfont.font;
+                g.fillText(tmp,S*i+S/2,S*j+S/2+this.mediumfont.delta);
                 continue;
             }
 
@@ -738,15 +750,26 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.processMousedownEvent = 
         return erg;
     }
 
-    if (this.X<=9) {
-        if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
-            if (this.f[this.x][this.y]<1000) {
-                this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
-            } else {
-                this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
-            }
-            return true;
+    if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
+        if (this.f[this.x][this.y]<1000) {
+            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
+        } else {
+            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
         }
+        return true;
+    }
+
+    if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<1000) {
+        if (this.xm<this.scale/2) {
+            this.set(this.x,this.y,
+                     (((this.f[this.x][this.y]-100)%10)+1)%(this.X+1)+
+                     (Math.floor((this.f[this.x][this.y]-100)/10)*10)+100);
+        } else {
+            this.set(this.x,this.y,
+                     ((Math.floor((this.f[this.x][this.y]-100)/10)+1)%(this.X+1))*10+
+                     ((this.f[this.x][this.y]-100)%10)+100);
+        }
+        return true;
     }
 
     if (this.f[this.x][this.y]>=1000) {
@@ -804,34 +827,34 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.processKeydownEvent = fu
         return true;
     }
 
-    if (e.key>=teka.KEY_0 && e.key<=teka.KEY_9) {
-
+    if (e.key>=teka.KEY_1 && e.key<=teka.KEY_9) {
         var val = e.key-teka.KEY_0;
-
-        if (val>this.X) {
-            return false;
-        }
-
-        if (this.f[this.x][this.y]<1000) {
-            if (this.f[this.x][this.y]>0 &&
-                this.f[this.x][this.y]*10+(e.key-teka.KEY_0)<=this.X) {
-                this.set(this.x,this.y,this.f[this.x][this.y]*10+val);
-            } else if (e.key>=teka.KEY_1) {
+        if (val<=this.X) {
+            if (this.f[this.x][this.y]>=1000) {
+                this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<val))+1000);
+            } else if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<110) {
+                this.set(this.x,this.y,this.f[this.x][this.y]+10*val);
+            } else {
                 this.set(this.x,this.y,val);
             }
+        }
+        return true;
+    }
+
+    if (e.key==teka.KEY_MINUS) {
+        if (this.f[this.x][this.y]<100 && this.f[this.x][this.y]>=0) {
+            this.set(this.x,this.y,100+this.f[this.x][this.y]);
         } else {
-            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<val))+1000);
+            this.set(this.x,this.y,100);
         }
         return true;
     }
 
     if (e.key==teka.KEY_HASH || e.key==teka.KEY_COMMA) {
-        if (this.X<=9) {
-            if (this.f[this.x][this.y]<1000) {
-                this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
-            } else {
-                this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
-            }
+        if (this.f[this.x][this.y]<1000) {
+            this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
+        } else {
+            this.set(this.x,this.y,this.getExpert(this.f[this.x][this.y]));
         }
         return true;
     }
@@ -844,7 +867,7 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.processKeydownEvent = fu
 /** Sets the value of a cell, if the color fits. */
 teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.set = function(x, y, value)
 {
-    if (this.f[x][y]!=0 && this.f[x][y]!=1000 && this.c[x][y]!=this.color) {
+    if (this.f[x][y]!==0 && this.f[x][y]!=1000 && this.c[x][y]!=this.color) {
         return;
     }
     this.f[x][y] = value;
@@ -854,14 +877,14 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.set = function(x, y, val
 /** Converts from normal mode to expert mode. */
 teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.setExpert = function(h)
 {
-    if (h===0) {
+    if (h<=0) {
         return 1000;
     }
     if (h<10) {
         return 1000+(1<<h);
     }
     var a = (h-100)%10;
-    var b = (h-100)/10;
+    var b = Math.floor((h-100)/10);
     if (b===0) {
         b=this.X;
     }
@@ -874,6 +897,7 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.setExpert = function(h)
     for (var i=a;i<=b;i++) {
         k+=1<<i;
     }
+    k&=~1;
     return k;
 };
 

@@ -858,7 +858,7 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.setExpert = 
         return 1000+(1<<h);
     }
     var a = (h-100)%10;
-    var b = (h-100)/10;
+    var b = Math.floor((h-100)/10);
     if (b===0) {
         b=this.X;
     }
