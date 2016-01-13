@@ -1,0 +1,120 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 0 0 138 138
+%%CropBox: 0 0 138 138
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.5 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1 pt setlinewidth } def
+
+% create skyofstars: -s 5
+<<
+/type (starry_sky)
+/sol false
+/X 5
+/Y 5
+/puzzle [
+(   2 0 0 3 1)
+( 0   y c x y)
+( 2 *     *  )
+( 2       * *)
+( 1       * q)
+( 1 * e     q) ]
+/description [
+ (Gr&ouml;&szlig;e 5x5)
+]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+
+/arrow2 {
+  gsave
+    3 1 roll
+    translate 0.5 0.5 translate
+    45 mul rotate
+    0.32 0 moveto
+    0 -0.135 lineto
+    0 0.135 lineto
+    0.32 0 lineto fill
+    0.12 0 moveto -0.32 0 lineto stroke
+  grestore
+} def
+
+/arrow {
+  /a e /y e /x e
+  a (d) 0 get eq { x y 0 arrow2 } if
+  a (e) 0 get eq { x y 1 arrow2 } if
+  a (w) 0 get eq { x y 2 arrow2 } if
+  a (q) 0 get eq { x y 3 arrow2 } if
+  a (a) 0 get eq { x y 4 arrow2 } if
+  a (y) 0 get eq { x y 5 arrow2 } if
+  a (x) 0 get eq { x y 6 arrow2 } if
+  a (c) 0 get eq { x y 7 arrow2 } if
+  a (*) 0 get eq sol and { x y star } if
+} def
+
+/zack {
+  gsave
+    x y translate
+    rotate
+    1.6 1.6 scale
+    0.25 0 moveto 0.08 0.058 lineto 0.08 0.24 lineto stroke
+    0.5 0.5 scale
+   0 0 moveto 0.25 0 moveto 0.08 0.058 lineto 0.08 0.24 lineto stroke
+  grestore
+} def
+
+/star {
+  gsave
+    0.5 0.5 translate
+    /y e /x e
+    0 1 5 { /n e
+      n 72 mul 18 add zack
+    } for
+  grestore
+} def
+
+2 setlinecap
+
+1 setgray
+1 0 X Y rectfill
+0 setgray
+
+dick 1 0 X Y rectstroke
+
+duenn
+1 1 X 1 add { /i e i 0 i Y l } for
+0 1 Y { /j e 1 j X 1 add j l } for
+
+/Helvetica findfont 0.65 scalefont setfont
+0 1 X { /i e
+  0 1 Y { /j e
+    puzzle Y j sub get i 2 mul 1 add get /h e
+    h 48 ge h 57 le and {
+      puzzle Y j sub get i 2 mul get /h2 e
+      h2 32 eq { /h2 48 def } if
+      i j h2 48 sub 10 mul h 48 sub add 5 string cvs c
+    } {
+      h 32 ne {
+        i j h arrow
+      } if
+    } ifelse
+  } for
+} for
+
+
+
+end pgsave restore showpage
+%%EOF

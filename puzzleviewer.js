@@ -343,7 +343,29 @@ teka.viewer.PuzzleViewer.prototype.drawStar = function(g, x, y)
 };
 
 /**
- *
+ * Draw a arrow at position x,y, rotated by dir.
+ */
+teka.viewer.PuzzleViewer.prototype.drawArrow = function(g, x, y, dir, scale)
+{
+    if (scale===undefined) {
+        scale = this.scale;
+    }
+
+    g.save();
+    g.translate(x,y);
+    g.rotate(45*Math.PI*dir/180);
+    g.beginPath();
+    g.moveTo(0.35*scale,0);
+    g.lineTo(0,0.12*scale);
+    g.lineTo(0,-0.12*scale);
+    g.fill();
+    teka.drawLine(g,0,0,-scale/4,0);
+    g.restore();
+};
+
+/**
+ * Calculate from a given coordinate, if it is close to a corner, an edge
+ * or in the center.
  */
 teka.viewer.PuzzleViewer.prototype.normalizeCoordinates = function(xc,yc)
 {

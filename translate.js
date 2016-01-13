@@ -555,6 +555,29 @@ teka.dictionary = {
     starbattle_column: 'In der markierten Spalte stimmt die Anzahl der Sterne nicht.',
     starbattle_area: 'Im markierten Gebiet stimmt die Anzahl der Sterne nicht.',
 
+    starry_sky: 'Sternenhimmel',
+    starry_sky_instructions: 'Zeichnen Sie in einige der leeren Felder einen Stern, '
+        +'so dass sowohl auf jeden Stern mindestens ein Pfeil als auch '
+        +'jeder Pfeil auf mindestens einen Stern zeigt. Die Pfeile können '
+        +'hierbei durch andere Pfeile und Sterne hindurchzeigen. Die Zahlen '
+        +'am Rand geben an, wie viele Sterne in der entsprechenden Zeile oder '
+        +'Spalte zu finden sind.\n\n'
+        +'Für eine korrekte Lösung sind nur die Felder mit einem Stern relevant.',
+    starry_sky_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Stern\n2. Klick: Weißes Feld (markiert durch ein Minus)\n3. Klick: Feldinhalt löschen\n\n'
+        +'In einem Feld mit einem vorgegebenen Pfeil führt der erste Klick zu einem '
+        +'Kreuz und der zweite löscht dieses wieder.\n\n'
+        +'Alternativ können Sie auch mit der Maus über mehrere Felder ziehen, '
+        +'in all diesen Feldern wird dann ein Stern gesetzt (dragging).\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Stern\n-, / und W: Weißes Feld (markiert durch ein Minus)\nLeertaste: Feldinhalt löschen\n\n'
+        +'In einem Feld mit einem vorgegebenen Pfeil führen #, * und Q zu einem Kreuz und die Leertaste '
+        +'löscht dieses wieder.',
+    starry_sky_row: 'In der markierten Zeile stimmt die Anzahl der Sterne nicht.',
+    starry_sky_column: 'In der markierten Spalte stimmt die Anzahl der Sterne nicht.',
+    starry_sky_zero_pointer: 'Der markierte Pfeil zeigt auf keinen Stern.',
+    starry_sky_no_pointer: 'Auf den markierten Stern zeigt kein Pfeil.',
+
     sudoku: 'Sudoku',
     sudoku_instructions: 'Tragen Sie die angegebenen Ziffern so in das Diagramm ein, '
         +'dass in jeder Zeile, jeder Spalte und jedem fett umrandeten '
