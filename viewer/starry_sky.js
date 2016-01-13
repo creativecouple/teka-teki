@@ -19,7 +19,6 @@ teka.viewer.starry_sky = {};
 
 /** Some constants. */
 teka.viewer.starry_sky.Defaults = {
-    NO_NUMBER: -1,
     EMPTY: 0,
     STAR: 1,
     NONE: 2,
@@ -50,7 +49,10 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
-    this.asciiToData(data.get('puzzle'));
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
+    this.asciiToSolution(data.get('solution'));
 
     this.f = teka.new_array([this.X,this.Y],0);
     this.c = teka.new_array([this.X,this.Y],0);
@@ -60,7 +62,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.starry_sky.Starry_skyViewer.prototype.asciiToData = function(ascii)
+teka.viewer.starry_sky.Starry_skyViewer.prototype.asciiToData = function(ascii, d)
 {
     if (ascii===false) {
         return;
@@ -71,7 +73,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.asciiToData = function(ascii)
     this.puzzle = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            switch (grid[2*i+3][j+1]) {
+            switch (grid[d*i+d+d-1][j+1]) {
               case teka.ord('q'): this.puzzle[i][j] = teka.viewer.starry_sky.Defaults.OL; break;
               case teka.ord('w'): this.puzzle[i][j] = teka.viewer.starry_sky.Defaults.O; break;
               case teka.ord('e'): this.puzzle[i][j] = teka.viewer.starry_sky.Defaults.OR; break;
@@ -80,29 +82,39 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.asciiToData = function(ascii)
               case teka.ord('x'): this.puzzle[i][j] = teka.viewer.starry_sky.Defaults.U; break;
               case teka.ord('y'): this.puzzle[i][j] = teka.viewer.starry_sky.Defaults.UL; break;
               case teka.ord('a'): this.puzzle[i][j] = teka.viewer.starry_sky.Defaults.L; break;
+              case teka.ord('*'): this.puzzle[i][j] = -teka.viewer.starry_sky.Defaults.STAR; break;
+              case teka.ord('-'): this.puzzle[i][j] = -teka.viewer.starry_sky.Defaults.NONE; break;
               default: this.puzzle[i][j] = 0; break;
             }
         }
     }
 
-    this.topdata = teka.new_array([this.X],0);
+    this.topdata = teka.new_array([this.X],false);
     for (var i=0;i<this.X;i++) {
-        this.topdata[i] = grid[2*i+3][0]==teka.ord(' ')?teka.viewer.starry_sky.Defaults.NO_NUMBER
-            :(grid[2*i+2][0]==teka.ord(' ')?(grid[2*i+3][0]-teka.ord('0'))
-              :(10*(grid[2*i+2][0]-teka.ord('0'))+(grid[2*i+3][0]-teka.ord('0'))));
+        this.topdata[i] = this.getNr(grid,d*i+d,0,d);
     }
 
-    this.leftdata = teka.new_array([this.Y],0);
+    this.leftdata = teka.new_array([this.Y],false);
     for (var j=0;j<this.Y;j++) {
-        this.leftdata[j] = grid[1][j+1]==teka.ord(' ')?teka.viewer.starry_sky.Defaults.NO_NUMBER
-            :(grid[0][j+1]==teka.ord(' ')?(grid[1][j+1]-teka.ord('0'))
-              :(10*(grid[0][j+1]-teka.ord('0'))+(grid[1][j+1]-teka.ord('0'))));
+        this.leftdata[j] = this.getNr(grid,0,j+1,d);
+    }
+};
+
+/** Read solution from ascii art. */
+teka.viewer.starry_sky.Starry_skyViewer.prototype.asciiToSolution = function(ascii)
+{
+    if (ascii===false) {
+        return;
     }
 
-    this.solution = teka.new_array([this.X,this.Y],0);
+    var grid = this.asciiToArray(ascii);
+
+    this.solution = teka.new_array([this.X,this.Y],teka.viewer.starry_sky.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.solution[i][j] = grid[2*i+3][j+1]==teka.ord('*')?teka.viewer.starry_sky.Defaults.STAR:teka.viewer.starry_sky.Defaults.NONE;
+            if (grid[i][j]==teka.ord('*')) {
+                this.solution[i][j] = teka.viewer.starry_sky.Defaults.STAR;
+            }
         }
     }
 };
@@ -220,20 +232,30 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
     var X = this.X;
     var Y = this.Y;
 
+    // copy givens
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<Y;j++) {
+            if (this.puzzle[i][j]<0) {
+                this.f[i][j] = -this.puzzle[i][j];
+            } else if (this.puzzle[i][j]>0) {
+                this.f[i][j] = 0;
+            }
+        }
+    }
+
+    // count stars in column
     for (var j=0;j<Y;j++) {
-        if (this.leftdata[j]!=teka.viewer.starry_sky.Defaults.NO_NUMBER) {
+        if (this.leftdata[j]!==false) {
             var c = 0;
             for (var i=0;i<X;i++) {
-                if (this.puzzle[i][j]===0
-                    && this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
                     c++;
                 }
             }
             if (c!=this.leftdata[j]) {
                 this.error_left[j] = true;
                 for (var i=0;i<X;i++) {
-                    if (this.puzzle[i][j]===0
-                        && this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                    if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
                         this.error[i][j] = true;
                     }
                 }
@@ -242,20 +264,19 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
         }
     }
 
+    // count stars in row
     for (var i=0;i<X;i++) {
-        if (this.topdata[i]!=teka.viewer.starry_sky.Defaults.NO_NUMBER) {
+        if (this.topdata[i]!==false) {
             var c = 0;
             for (var j=0;j<Y;j++) {
-                if (this.puzzle[i][j]===0
-                    && this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
                     c++;
                 }
             }
             if (c!=this.topdata[i]) {
                 this.error_top[i] = true;
                 for (var j=0;j<Y;j++) {
-                    if (this.puzzle[i][j]===0
-                        && this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                    if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
                         this.error[i][j] = true;
                     }
                 }
@@ -264,6 +285,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
         }
     }
 
+    // follow all arrows
     var t = teka.new_array([X,Y],false);
 
     var dx = 0;
@@ -287,8 +309,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
                 var ok = false;
                 while (x>=0 && y>=0 && x<X && y<Y) {
                     t[x][y] = true;
-                    if (this.puzzle[x][y]===0
-                        && this.f[x][y]==teka.viewer.starry_sky.Defaults.STAR) {
+                    if (this.f[x][y]==teka.viewer.starry_sky.Defaults.STAR) {
                         ok = true;
                     }
                     x+=dx;
@@ -302,10 +323,10 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
         }
     }
 
+    // are there stars left?
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.puzzle[i][j]===0
-                && this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR && !t[i][j]) {
+            if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR && !t[i][j]) {
                 this.error[i][j] = true;
                 return 'starry_sky_no_pointer';
             }
@@ -390,7 +411,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.paint = function(g)
             teka.strokeOval(g,(i+1)*S+S/2,S/2,S/2);
         }
         g.fillStyle = '#000';
-        if (this.topdata[i]!=teka.viewer.starry_sky.Defaults.NO_NUMBER) {
+        if (this.topdata[i]!==false) {
             g.fillText(this.topdata[i],(i+1)*S+S/2,S/2+this.font.delta);
         }
     }
@@ -403,7 +424,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.paint = function(g)
             teka.strokeOval(g,S/2,(j+1)*S+S/2,S/2);
         }
         g.fillStyle = '#000';
-        if (this.leftdata[j]!=teka.viewer.starry_sky.Defaults.NO_NUMBER) {
+        if (this.leftdata[j]!==false) {
             g.fillText(this.leftdata[j],S/2,(j+1)*S+S/2+this.font.delta);
         }
     }
@@ -418,6 +439,18 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.paint = function(g)
                     teka.drawLine(g,S+i*S+S/2-S/4,S+j*S+S/2-S/4,S+i*S+S/2+S/4,S+j*S+S/2+S/4);
                     teka.drawLine(g,S+i*S+S/2+S/4,S+j*S+S/2-S/4,S+i*S+S/2-S/4,S+j*S+S/2+S/4);
                 }
+                continue;
+            }
+            if (this.puzzle[i][j]==-teka.viewer.starry_sky.Defaults.STAR) {
+                g.fillStyle = '#000';
+                this.drawStar(g,(i+1)*S+S/2,(j+1)*S+S/2);
+                continue;
+            }
+            if (this.puzzle[i][j]==-teka.viewer.starry_sky.Defaults.NONE) {
+                g.strokeStyle = '#000';
+                g.lineWidth = 2;
+                teka.drawLine(g,(i+1)*S+S/4,Math.floor((j+1)*S+S/2)+0.5,(i+2)*S-S/4,Math.floor((j+1)*S+S/2)+0.5);
+                g.lineWidth = 1;
                 continue;
             }
 

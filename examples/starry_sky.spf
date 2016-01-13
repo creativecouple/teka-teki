@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Pages: 1
-%%BoundingBox: 0 0 138 138
-%%CropBox: 0 0 138 138
+%%BoundingBox: 0 0 139 138
+%%CropBox: 0 0 139 138
 %%DocumentData: Clean7Bit
 %%Page: 1 1
 %%EndComments
@@ -11,32 +11,37 @@
 /pgsave save def 200 dict begin
 /sc 22.8 def
 /pt {sc div} def
-sc dup scale 0.5 pt dup translate
+sc dup scale 0.8 pt dup translate
 /duenn { 0.4 pt setlinewidth } def
-/dick { 1 pt setlinewidth } def
+/dick { 1.6 pt setlinewidth } def
 
-% create skyofstars: -s 5
 <<
 /type (starry_sky)
 /sol false
 /X 5
 /Y 5
+/digits 1
 /puzzle [
-(   2 0 0 3 1)
-( 0   y c x y)
-( 2 *     *  )
-( 2       * *)
-( 1       * q)
-( 1 * e     q) ]
-/description [
- (Gr&ouml;&szlig;e 5x5)
-]
+(  1 12)
+( c   *)
+(2d  q )
+(1 d-x )
+(      )
+(0ee   ) ]
+/solution [
+(  * *)
+( **  )
+(    *)
+(  ** )
+(     ) ]
 >> currentdict copy pop
 
 /e { exch def } bind def
 /l { 4 2 roll moveto lineto stroke } def
 /c { dup 4 2 roll moveto
      stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+currentdict /digits known not { /digits 1 def } if
 
 
 /arrow2 {
@@ -62,7 +67,6 @@ sc dup scale 0.5 pt dup translate
   a (y) 0 get eq { x y 5 arrow2 } if
   a (x) 0 get eq { x y 6 arrow2 } if
   a (c) 0 get eq { x y 7 arrow2 } if
-  a (*) 0 get eq sol and { x y star } if
 } def
 
 /zack {
@@ -98,22 +102,42 @@ duenn
 1 1 X 1 add { /i e i 0 i Y l } for
 0 1 Y { /j e 1 j X 1 add j l } for
 
+/getNr {
+  /x e /line e
+  line x digits add 1 sub get ( ) 0 get ne {
+    /val 0 def
+    0 1 digits 1 sub { /ii e
+      line x ii add get /hh e
+      hh ( ) 0 get eq { /hh (0) 0 get def } if
+      /val val 10 mul hh (0) 0 get sub add def
+    } for
+    val
+  } {
+    -1
+  } ifelse
+} def
+
 /Helvetica findfont 0.65 scalefont setfont
 0 1 X { /i e
   0 1 Y { /j e
-    puzzle Y j sub get i 2 mul 1 add get /h e
-    h 48 ge h 57 le and {
-      puzzle Y j sub get i 2 mul get /h2 e
-      h2 32 eq { /h2 48 def } if
-      i j h2 48 sub 10 mul h 48 sub add 5 string cvs c
-    } {
-      h 32 ne {
-        i j h arrow
+    puzzle Y j sub get i digits mul digits 1 sub add get /h e
+    h (*) 0 get eq {
+      i j star
+    } if
+    h (-) 0 get eq {
+      i 0.2 add j 0.5 add i 0.8 add j 0.5 add l
+    } if
+    h (a) 0 get ge h (z) 0 get le and {
+      i j h arrow
+    } if
+    h (0) 0 get ge h (9) 0 get le and {
+      puzzle Y j sub get i digits mul getNr /h e
+      h -1 ne {
+        i j h digits string cvs c
       } if
-    } ifelse
+    } if
   } for
 } for
-
 
 
 end pgsave restore showpage
