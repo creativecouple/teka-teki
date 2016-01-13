@@ -187,10 +187,12 @@ teka.dictionary = {
         +'Links und oben:\n#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
 
     basic: 'Basic',
-    basic_instructions: 'Tragen Sie Ziffern so in das Diagramm ein, dass in jeder Zeile und '
+    basic_instructions: 'Tragen Sie Zahlen so in das Diagramm ein, dass in jeder Zeile und '
         +'jeder Spalte jede der angegebenen '
         +'Zahlen genau einmal vorkommt. Die kleinen Zahlen in den Gebieten '
-        +'geben die Summe der Zahlen in diesem Gebiet an.\n\n'
+        +'geben das Ergebnis der Rechnung an, wenn man den nachfolgenden Operator '
+        +'auf die Zahlen des Gebiets anwendet. Steht kein Operator nach der Zahl, '
+        +'so ist dieser unbekannt, muss aber eine der vier Grundrechenarten sein!\n\n'
         +'Achtung: Innerhalb eines Gebiets können Zahlen doppelt vorkommen!',
     basic_usage: 'Bedienung mit der Maus:\n\n'
         +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
@@ -422,7 +424,7 @@ teka.dictionary = {
     kakuro_wrong_sum: 'Die Summe stimmt in der markierten Zahl nicht.',
 
     killer_sudoku: 'Killer-Sudoku',
-    killer_sudoku_instructions: 'Tragen Sie Ziffern so in das Diagramm ein, dass in jeder Zeile, '
+    killer_sudoku_instructions: 'Tragen Sie Zahlen so in das Diagramm ein, dass in jeder Zeile, '
         +'jeder Spalte und jedem fett umrandeten Gebiet jede der angegebenen '
         +'Zahlen genau einmal vorkommt. Die kleinen Zahlen in den Gebieten '
         +'geben die Summe der Zahlen in diesem Gebiet an. Innerhalb eines '

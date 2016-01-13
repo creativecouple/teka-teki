@@ -620,20 +620,20 @@ teka.viewer.basic.BasicViewer.prototype.paintOperator = function(g, x, y, val, s
     switch (val)
         {
           case teka.ord('+'):
-            teka.drawLine(g,x+2,y+scale/2,x+scale-2,y+scale/2);
-            teka.drawLine(g,x+scale/2,y+2,x+scale/2,y+scale-2);
+            teka.drawLine(g,x+scale/10,y+scale/2,x+scale-scale/10,y+scale/2);
+            teka.drawLine(g,x+scale/2,y+scale/10,x+scale/2,y+scale-scale/10);
             break;
           case teka.ord('-'):
-            teka.drawLine(g,x+2,y+scale/2,x+scale-2,y+scale/2);
+            teka.drawLine(g,x+scale/10,y+scale/2,x+scale-scale/10,y+scale/2);
             break;
           case teka.ord('x'):
-            teka.drawLine(g,x+4,y+4,x+scale-4,y+scale-4);
-            teka.drawLine(g,x+4,y+scale-4,x+scale-4,y+4);
+            teka.drawLine(g,x+scale/5,y+scale/5,x+scale-scale/5,y+scale-scale/5);
+            teka.drawLine(g,x+scale/5,y+scale-scale/5,x+scale-scale/5,y+scale/5);
             break;
           case teka.ord(':'):
             teka.drawLine(g,x+2,y+scale/2,x+scale-2,y+scale/2);
-            teka.fillOval(g,x+scale/2,y+scale/4,2);
-            teka.fillOval(g,x+scale/2,y+scale-scale/4,2);
+            teka.fillOval(g,x+scale/2,y+scale/4,scale/10);
+            teka.fillOval(g,x+scale/2,y+scale-scale/4,scale/10);
             break;
         }
 };
