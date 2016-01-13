@@ -1,0 +1,214 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 0 0 93 93
+%%CropBox: 0 0 93 93
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.5 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1 pt setlinewidth } def
+
+% create killer:CEP -s 4
+<<
+/format 1
+/type (killer_sudoku)
+/sol false
+/size 4
+/puzzle [
+(+-+-+-+-+)
+(|   |   |)
+(+ + + + +)
+(|   |   |)
+(+-+-+-+-+)
+(|   |   |)
+(+ + + + +)
+(|   |   |)
+(+-+-+-+-+) ]
+/smallareas [
+(+--+--+--+--+)
+(|10   | 6   |)
+(+  +  +--+--+)
+(|     |10   |)
+(+--+--+  +--+)
+(| 7|     | 3|)
+(+  +--+--+  +)
+(|  | 4   |  |)
+(+--+--+--+--+) ]
+/solution [
+(1324)
+(2413)
+(3241)
+(4132) ]
+/description [
+ (Gr&ouml;&szlig;e 4x4)
+]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+/tl { 3 1 roll moveto 1.6 pt 0.75 rmoveto show } def
+
+1 setgray
+0 0 size size rectfill
+0 setgray
+
+2 setlinecap
+
+gsave
+  [0.1 0.1] 0.05 setdash
+  duenn
+  0.25 0.25 0.25 setrgbcolor
+
+  1 1 size 1 sub { /i e
+    0 1 size 1 sub { /j e
+      smallareas size j sub 1 sub 2 mul 1 add get i 3 mul get (|) 0 get eq {
+        i 0.1 sub j 0.1 add i 0.1 sub j 0.9 add l
+        i 0.1 add j 0.1 add i 0.1 add j 0.9 add l
+      } {
+        /ok j 0 eq def
+        ok not {
+          smallareas size j sub 1 sub 2 mul 2 add get i 3 mul 1 sub get
+            (-) 0 get eq
+          smallareas size j sub 1 sub 2 mul 2 add get i 3 mul 2 add get
+            (-) 0 get eq or {
+            /ok true def
+          } if
+        } if
+        ok {
+          i 0.1 sub j 0.1 add i 0.1 add j 0.1 add l
+        } if
+
+        /ok j size 1 sub eq def
+        ok not {
+          smallareas size j sub 1 sub 2 mul get i 3 mul 1 sub get
+            (-) 0 get eq
+          smallareas size j sub 1 sub 2 mul get i 3 mul 2 add get
+            (-) 0 get eq or {
+            /ok true def
+          } if
+        } if
+        ok {
+          i 0.1 sub j 0.9 add i 0.1 add j 0.9 add l
+        } if
+      } ifelse
+    } for
+  } for
+
+  0 1 size 1 sub { /i e
+    1 1 size 1 sub { /j e
+      smallareas size j sub 2 mul get i 3 mul 1 add get (-) 0 get eq {
+        i 0.1 add j 0.1 sub i 0.9 add j 0.1 sub l
+        i 0.1 add j 0.1 add i 0.9 add j 0.1 add l
+      } {
+        /ok i 0 eq def
+        ok not {
+          smallareas size j sub 2 mul 1 sub get i 3 mul get
+            (|) 0 get eq
+          smallareas size j sub 2 mul 1 add get i 3 mul get
+            (|) 0 get eq or {
+            /ok true def
+          } if
+        } if
+        ok {
+          i 0.1 add j 0.1 sub i 0.1 add j 0.1 add l
+        } if
+
+        /ok i size 1 sub eq def
+        ok not {
+          smallareas size j sub 2 mul 1 sub get i 1 add 3 mul get
+            (|) 0 get eq
+          smallareas size j sub 2 mul 1 add get i 1 add 3 mul get
+            (|) 0 get eq or {
+            /ok true def
+          } if
+        } if
+        ok {
+          i 0.9 add j 0.1 sub i 0.9 add j 0.1 add l
+        } if
+      } ifelse
+    } for
+  } for
+
+  0 1 size 1 sub { /i e
+    i 0.1 add 0.1 i 0.9 add 0.1 l
+    i 0.1 add size 0.1 sub i 0.9 add size 0.1 sub l
+    0.1 i 0.1 add 0.1 i 0.9 add l
+    size 0.1 sub i 0.1 add size 0.1 sub i 0.9 add l
+  } for
+
+  1 setgray
+  0 1 size 1 sub { /i e
+    0 1 size 1 sub { /j e
+      smallareas j 2 mul 1 add get i 3 mul 1 add get /a e
+      a (#) 0 get eq {
+        i size j sub 1 sub 1 1 rectfill
+      } if
+    } for
+  } for
+grestore
+
+sol not {
+  /Helvetica findfont 0.25 scalefont setfont
+  0 1 size 1 sub { /i e
+    0 1 size 1 sub { /j e
+      smallareas j 2 mul 1 add get i 3 mul 1 add get /a e
+      smallareas j 2 mul 1 add get i 3 mul 2 add get /b e
+      b 32 eq a (#) 0 get eq or {
+      } {
+        a 32 eq { 48 /a e } if
+        1 setgray
+        i size j sub 0.3 sub 0.4 0.3 rectfill
+        0 setgray
+        i size j sub 1 sub a 48 sub 10 mul b 48 sub add 5 string cvs tl
+      } ifelse
+    } for
+  } for
+} if
+
+dick
+0 1 size { /i e
+  0 1 size 1 sub { /j e
+    puzzle size j sub 1 sub 2 mul 1 add get i 2 mul get (|) 0 get eq {
+      i j i j 1 add l
+    } if
+  } for
+} for
+
+0 1 size 1 sub { /i e
+  0 1 size { /j e
+    puzzle size j sub 2 mul get i 2 mul 1 add get (-) 0 get eq {
+      i j i 1 add j l
+    } if
+  } for
+} for
+
+duenn
+0 1 size { /i e i 0 i size l } for
+0 1 size { /j e 0 j size j l } for
+
+/Helvetica findfont 0.65 scalefont setfont
+sol {
+  0 1 size 1 sub { /i e
+    0 1 size 1 sub { /j e
+      i j solution size j sub 1 sub get i get ( ) dup 0 3 index put exch pop c
+    } for
+  } for
+} {
+  0 1 size 1 sub { /i e
+    0 1 size 1 sub { /j e
+      i j puzzle size j sub 1 sub 2 mul 1 add get i 2 mul 1 add get ( ) dup 0 3 index put exch pop c
+    } for
+  } for
+} ifelse
+
+end pgsave restore showpage
+%%EOF

@@ -72,11 +72,12 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.asciiToData = function(a
     this.puzzle = teka.new_array([this.X,this.Y],teka.viewer.abcd_diagonal.Defaults.NONE);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (grid[d*this.MAX+1+i][d*this.MAX+1+j]==teka.ord('#'))
+            if (grid[d*this.MAX+1+i][d*this.MAX+1+j]==teka.ord('#')) {
                 this.puzzle[i][j] = teka.viewer.abcd_diagonal.Defaults.BLACK;
-            else
+            } else {
                 this.puzzle[i][j] = grid[d*this.MAX+1+i][d*this.MAX+1+j]==teka.ord(' ')
                     ?0:(grid[d*this.MAX+1+i][d*this.MAX+1+j]-teka.ord('A')+1);
+            }
         }
     }
 

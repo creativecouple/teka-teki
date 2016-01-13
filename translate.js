@@ -393,6 +393,36 @@ teka.dictionary = {
     kakuro_duplicate: 'Die markierten Ziffern kommen in der Zahl mehrfach vor.',
     kakuro_wrong_sum: 'Die Summe stimmt in der markierten Zahl nicht.',
 
+    killer_sudoku: 'Killer-Sudoku',
+    killer_sudoku_instructions: 'Tragen Sie Ziffern so in das Diagramm ein, dass in jeder Zeile, '
+        +'jeder Spalte und jedem fett umrandeten Gebiet jede der angegebenen '
+        +'Zahlen genau einmal vorkommt. Die kleinen Zahlen in den Gebieten '
+        +'geben die Summe der Zahlen in diesem Gebiet an. Innerhalb eines '
+        +'Gebiets kommt keine Zahl doppelt vor.',
+    killer_sudoku_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
+        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die linke untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die linke untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    killer_sudoku_digits: 'Zahlen von 1 bis {1}.',
+    killer_sudoku_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    killer_sudoku_empty: 'Das markierte Feld ist leer.',
+    killer_sudoku_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
+    killer_sudoku_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
+    killer_sudoku_area_duplicate: 'Die markierten Ziffern kommen in dem Gebiet doppelt vor.',
+    killer_sudoku_sum_duplicate: 'Die markierten Zahlen kommen innerhalb einer Summe doppelt vor.',
+    killer_sudoku_wrong_sum: 'Im markierten Bereich stimmt die Summe nicht.',
+
     kropki: 'Kropki',
     kropki_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
         +'dass jede Zahl in jeder Zeile und jeder Spalte genau einmal vorkommt.\n\n'
