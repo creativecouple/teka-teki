@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Pages: 1
-%%BoundingBox: 14 14 109 109
-%%CropBox: 14 14 109 109
+%%BoundingBox: 0 0 93 93
+%%CropBox: 0 0 93 93
 %%DocumentData: Clean7Bit
 %%Page: 1 1
 %%EndComments
@@ -11,66 +11,108 @@
 /pgsave save def 200 dict begin
 /sc 22.8 def
 /pt {sc div} def
-sc dup scale 0.7 0.7 translate
+sc dup scale 0.7 pt 0.7 pt translate
 /duenn { 0.4 pt setlinewidth } def
 /dick { 1.4 pt setlinewidth } def
 
-% create areasums:CEP -s 4
 <<
 /format 1
 /type (basic)
 /sol false
 /size 4
+/digits 2
 /puzzle [
-(    )
-(    )
-( 2  )
-(    ) ]
-/smallareas [
 (+--+--+--+--+)
-(| 7   | 8| 4|)
-(+--+  +  +--+)
-(| 7|  |     |)
-(+  +  +--+  +)
-(|  |  | 5|  |)
-(+--+--+  +--+)
-(| 6   |  | 3|)
+(|3 | x|     |)
+(|  | 8| 2   |)
+(+  +  +--+--+)
+(|  |   1 | +|)
+(|  |     |10|)
+(+--+--+--+  +)
+(| :   |     |)
+(| 2   |     |)
+(+--+--+--+--+)
+(| +   | -   |)
+(| 4   | 2   |)
 (+--+--+--+--+) ]
 /solution [
-(1324)
-(4132)
-(3241)
-(2413) ]
-/description [
- (Gr&ouml;&szlig;e 4x4)
-]
+(3421)
+(4213)
+(2134)
+(1342) ]
 >> currentdict copy pop
 
 /e { exch def } bind def
 /l { 4 2 roll moveto lineto stroke } def
 /c { dup 4 2 roll moveto
      stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
-/tl { 3 1 roll moveto 1.6 pt 0.75 rmoveto show } def
+/tl { 3 1 roll moveto 1.6 pt 0.7 rmoveto show } def
 
-1 setgray
-0 0 size size rectfill
-0 setgray
+/opval {
+  /y e /x e
+  /op puzzle y get x get def
+  /y y 1 add def
+  /x x 1 add def
+  puzzle y get x 1 sub get ( ) 0 get eq {
+    /val -1 def
+  } {
+    /fak 1 def
+    /val 0 def
+    0 1 digits 1 sub { /k e
+      puzzle y get x k sub 1 sub get /h e
+      h ( ) 0 get ne {
+        /val val h 48 sub fak mul add def
+        /fak fak 10 mul def
+      } if
+    } for
+  } ifelse
+} def
+
+/showop {
+  gsave
+   1.2 1.2 scale
+  /op e
+  0.015 setlinewidth
+  op (+) 0 get eq {
+    0.05 0 rmoveto
+    0 0.1 rlineto
+    -0.05 -0.05 rmoveto
+    0.1 0 rlineto stroke
+  } if
+  op (-) 0 get eq {
+    0 0.05 rmoveto
+    0.1 0 rlineto stroke
+  } if
+  op (x) 0 get eq {
+    0.01 0.01 rmoveto
+    0.08 0.08 rlineto
+    -0.08 0 rmoveto
+    0.08 -0.08 rlineto stroke
+  } if
+  op (:) 0 get eq {
+    currentpoint /y e /x e
+    gsave
+      x y translate
+      0 0.05 moveto
+      0.1 0.05 lineto stroke
+      0.05 0.005 0.015 0 360 arc fill
+      0.05 0.095 0.015 0 360 arc fill
+    grestore
+  } if
+  grestore
+} def
 
 2 setlinecap
 
-/Helvetica findfont 0.25 scalefont setfont
+/Helvetica findfont 0.3 scalefont setfont
 0 1 size 1 sub { /i e
   0 1 size 1 sub { /j e
-    smallareas j 2 mul 1 add get i 3 mul 1 add get /a e
-    smallareas j 2 mul 1 add get i 3 mul 2 add get /b e
-    b 32 eq a (#) 0 get eq or {
-    } {
-      a 32 eq { 48 /a e } if
-      1 setgray
-      i size j sub 0.3 sub 0.4 0.3 rectfill
-      0 setgray
-      i size j sub 1 sub a 48 sub 10 mul b 48 sub add 5 string cvs tl
-    } ifelse
+    i digits 1 add mul digits add j 3 mul 1 add opval
+    val -1 ne {
+      i size j sub 1 sub val 5 string cvs tl
+      0.02 0 rmoveto
+      op showop
+    } if
   } for
 } for
 
@@ -78,7 +120,7 @@ dick
 
 0 1 size { /i e
   0 1 size 1 sub { /j e
-    smallareas size j sub 1 sub 2 mul 1 add get i 3 mul get (|) 0 get eq {
+    puzzle size j sub 1 sub 3 mul 1 add get i digits 1 add mul get (|) 0 get eq {
       i j i j 1 add l
     } if
   } for
@@ -86,7 +128,7 @@ dick
 
 0 1 size 1 sub { /i e
   0 1 size { /j e
-    smallareas size j sub 2 mul get i 3 mul 1 add get (-) 0 get eq {
+    puzzle size j sub 3 mul get i digits 1 add mul 1 add get (-) 0 get eq {
       i j i 1 add j l
     } if
   } for
@@ -106,7 +148,8 @@ sol {
 } {
   0 1 size 1 sub { /i e
     0 1 size 1 sub { /j e
-      i j puzzle size j sub 1 sub get i get ( ) dup 0 3 index put exch pop c
+      puzzle size j sub 1 sub 3 mul 1 add get i digits 1 add mul 1 add get /h e
+      i j ( ) dup 0 h put c
     } for
   } for
 } ifelse

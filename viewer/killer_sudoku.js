@@ -560,18 +560,24 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.paint = function(g)
     // paint the borders of the small areas
     g.lineWidth = 2;
     g.strokeStyle = '#888';
-    for (var i=0;i<X;i++)
-        for (var j=0;j<X;j++)
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<X;j++) {
             if (this.mini[i][j]!=teka.viewer.killer_sudoku.Defaults.NO_MINI) {
-                if (i===0 || this.smallarea[i][j]!=this.smallarea[i-1][j])
+                if (i===0 || this.smallarea[i][j]!=this.smallarea[i-1][j]) {
                     teka.drawLine(g,i*S+3.5,j*S+3.5,i*S+3.5,(j+1)*S-3.5);
-                if (i==X-1 || this.smallarea[i][j]!=this.smallarea[i+1][j])
+                }
+                if (i==X-1 || this.smallarea[i][j]!=this.smallarea[i+1][j]) {
                     teka.drawLine(g,(i+1)*S-3.5,j*S+3.5,(i+1)*S-3.5,(j+1)*S-3.5);
-                if (j===0 || this.smallarea[i][j]!=this.smallarea[i][j-1])
+                }
+                if (j===0 || this.smallarea[i][j]!=this.smallarea[i][j-1]) {
                     teka.drawLine(g,i*S+3.5,j*S+3.5,(i+1)*S-3.5,j*S+3.5);
-                if (j==X-1 || this.smallarea[i][j]!=this.smallarea[i][j+1])
+                }
+                if (j==X-1 || this.smallarea[i][j]!=this.smallarea[i][j+1]) {
                     teka.drawLine(g,i*S+3.5,(j+1)*S-3.5,(i+1)*S-3.5,(j+1)*S-3.5);
+                }
             }
+        }
+    }
 
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {

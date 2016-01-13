@@ -41,8 +41,9 @@ teka.extend(teka.viewer.basic.BasicViewer,teka.viewer.PuzzleViewer);
 teka.viewer.basic.BasicViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('size'),10);
-    this.asciiToData(data.get('puzzle'));
-    this.asciiToArea(data.get('smallareas'));
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
     this.asciiToSolution(data.get('solution'));
 
     this.f = teka.new_array([this.X,this.X],0);
@@ -50,8 +51,8 @@ teka.viewer.basic.BasicViewer.prototype.initData = function(data)
     this.error = teka.new_array([this.X,this.X],false);
 };
 
-/** asciiToPuzzle */
-teka.viewer.basic.BasicViewer.prototype.asciiToData = function(ascii)
+/** Read puzzle from ascii art. */
+teka.viewer.basic.BasicViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -62,14 +63,66 @@ teka.viewer.basic.BasicViewer.prototype.asciiToData = function(ascii)
     this.puzzle = teka.new_array([this.X,this.X],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (grid[i][j]!=teka.ord(' ')) {
-                this.puzzle[i][j] = grid[i][j]-teka.ord('0');
+            if (grid[i*(d+1)+1][3*j+1]!=teka.ord(' ')) {
+                this.puzzle[i][j] = grid[i*(d+1)+1][3*j+1]-teka.ord('0');
+            }
+        }
+    }
+
+    this.area = teka.new_array([this.X,this.X],-1);
+    this.mini = teka.new_array([this.X,this.X],-1);
+    this.op = teka.new_array([this.X,this.X],teka.ord(' '));
+    var c = 0;
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            if (this.area[i][j]==-1) {
+                this.fillArea(grid,i,j,c,d);
+                c++;
             }
         }
     }
 };
 
-/** asciiToPuzzle */
+/** Recursivly determine an area an it's values. */
+teka.viewer.basic.BasicViewer.prototype.fillArea = function(c, x, y, value, d)
+{
+    if (x<0 || x>=this.X || y<0 || y>=this.X) {
+        return;
+    }
+    if (this.area[x][y]!=-1) {
+        return;
+    }
+    this.area[x][y] = value;
+    if (c[(d+1)*x+d][3*y+1]!=teka.ord(' ')) {
+        this.op[x][y] = c[(d+1)*x+d][3*y+1];
+    }
+    if (c[(d+1)*x+d][3*y+2]!=teka.ord(' ')) {
+        this.mini[x][y] = 0;
+        var k = 0;
+        var exp = 1;
+        while (k<d && c[(d+1)*x+d-k][3*y+2]!=teka.ord(' '))
+            {
+                this.mini[x][y] += exp*(c[(d+1)*x+d-k][3*y+2]-teka.ord('0'));
+                exp *= 10;
+                k++;
+            }
+    }
+
+    if (c[(d+1)*x][3*y+1]==teka.ord(' ')) {
+        this.fillArea(c,x-1,y,value,d);
+    }
+    if (c[(d+1)*x+(d+1)][3*y+1]==teka.ord(' ')) {
+        this.fillArea(c,x+1,y,value,d);
+    }
+    if (c[(d+1)*x+1][3*y]==teka.ord(' ')) {
+        this.fillArea(c,x,y-1,value,d);
+    }
+    if (c[(d+1)*x+1][3*y+3]==teka.ord(' ')) {
+        this.fillArea(c,x,y+1,value,d);
+    }
+};
+
+/** Read solution from ascii art. */
 teka.viewer.basic.BasicViewer.prototype.asciiToSolution = function(ascii)
 {
     if (ascii===false) {
@@ -95,47 +148,6 @@ teka.viewer.basic.BasicViewer.prototype.asciiToArea = function(ascii)
         return;
     }
 
-    var grid = this.asciiToArray(ascii);
-
-    this.mini = teka.new_array([this.X,this.X],0);
-    this.area = teka.new_array([this.X,this.X],0);
-    var co = 0;
-    for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.X;j++) {
-            if (grid[3*i+2][2*j+1]!=teka.ord(' ')) {
-                var nr = grid[3*i+2][2*j+1]-teka.ord('0');
-                if (grid[3*i+1][2*j+1]!=teka.ord(' ')) {
-                    nr+=10*(grid[3*i+1][2*j+1]-teka.ord('0'));
-                }
-                this.mini[i][j] = nr;
-                this.fillArea(grid,i,j,++co);
-            }
-        }
-    }
-};
-
-/** fillArea */
-teka.viewer.basic.BasicViewer.prototype.fillArea = function(c, x, y, value)
-{
-    if (x<0 || x>=this.X || y<0 || y>=this.X) {
-        return;
-    }
-    if (this.area[x][y]!=0) {
-        return;
-    }
-    this.area[x][y] = value;
-    if (c[3*x][2*y+1]==teka.ord(' ')) {
-        this.fillArea(c,x-1,y,value);
-    }
-    if (c[3*x+3][2*y+1]==teka.ord(' ')) {
-        this.fillArea(c,x+1,y,value);
-    }
-    if (c[3*x+2][2*y]==teka.ord(' ')) {
-        this.fillArea(c,x,y-1,value);
-    }
-    if (c[3*x+2][2*y+2]==teka.ord(' ')) {
-        this.fillArea(c,x,y+1,value);
-    }
 };
 
 /** Add solution. */
@@ -153,11 +165,11 @@ teka.viewer.basic.BasicViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.basic.BasicViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (basic)\n/sol false\n/size 4\n'
-        +'/puzzle [ (    ) (    ) (    ) (    ) ]\n'
-        +'/smallareas [ (+--+--+--+--+) (| 9   | 8   |) (+  +--+  +  +) (|  |14|     |) '
-        +'(+--+  +--+--+) (| 4|     | 5|) (+  +--+  +  +) (|     |  |  |) (+--+--+--+--+) ]\n'
-        +'/solution [ (3214) (4321) (1432) (2143) ]';
+    return '/format 1\n/type (basic)\n/sol false\n/size 4\n/digits 2\n'
+        +'/puzzle [ (+--+--+--+--+) (|3 | x|     |) (|  | 8| 2   |) '
+        +'(+  +  +--+--+) (|  |   1 | +|) (|  |     |10|) (+--+--+--+  +) '
+        +'(| :   |     |) (| 2   |     |) (+--+--+--+--+) (| +   | -   |) '
+        +'(| 4   | 2   |) (+--+--+--+--+) ]\n/solution [ (3421) (4213) (2134) (1342) ]';
 };
 
 /** Returns a list of automatically generated properties. */
@@ -194,7 +206,7 @@ teka.viewer.basic.BasicViewer.prototype.copyColor = function(color)
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (this.c[i][j]==this.color && this.puzzle[i][j]==0) {
+            if (this.c[i][j]==this.color && this.puzzle[i][j]===0) {
                 this.c[i][j] = color;
             }
         }
@@ -206,7 +218,7 @@ teka.viewer.basic.BasicViewer.prototype.clearColor = function(color)
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            if (this.c[i][j]==color && this.puzzle[i][j]==0) {
+            if (this.c[i][j]==color && this.puzzle[i][j]===0) {
                 this.f[i][j] = teka.viewer.basic.Defaults.NONE;
             }
         }
@@ -351,26 +363,52 @@ teka.viewer.basic.BasicViewer.prototype.checkColumn = function(check, i)
 teka.viewer.basic.BasicViewer.prototype.checkSums = function(check, x, y, mark)
 {
     var sum = 0;
+    var prod = 1;
+    var max = 0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             if (this.area[i][j]==this.area[x][y]) {
                 sum+=check[i][j];
+                prod*=check[i][j];
+                max=Math.max(max,check[i][j]);
                 mark[i][j] = true;
             }
         }
     }
-    if (this.mini[x][y]!==0 && sum!=this.mini[x][y]) {
-        for (var i=0;i<this.X;i++) {
-            for (var j=0;j<this.X;j++) {
-                if (this.area[i][j]==this.area[x][y]) {
-                    this.error[i][j] = true;
-                }
-            }
-        }
-        return 'basic_wrong_sum';
+    if (this.mini[x][y]==-1) {
+        return null;
     }
 
-    return null;
+    if (this.op[x][y]==teka.ord('+') && this.mini[x][y]==sum) {
+        return null;
+    }
+    if (this.op[x][y]==teka.ord('x') && this.mini[x][y]==prod) {
+        return null;
+    }
+    if (this.op[x][y]==teka.ord('-') && this.mini[x][y]==2*max-sum) {
+        return null;
+    }
+    if (this.op[x][y]==teka.ord(':') && prod%max===0 &&
+        max%Math.floor(prod/max)===0 && this.mini[x][y]==max/Math.floor(prod/max)) {
+            return null;
+    }
+    if (this.op[x][y]==teka.ord(' ')) {
+        if (this.mini[x][y]==sum || this.mini[x][y]==prod || this.mini[x][y]==2*max-sum) {
+            return null;
+        }
+        if (prod%max===0 && max%Math.floor(prod/max)===0 && this.mini[x][y]==max/Math.floor(prod/max)) {
+            return null;
+        }
+    }
+
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.X;j++) {
+            if (this.area[i][j]==this.area[x][y]) {
+                this.error[i][j] = true;
+            }
+        }
+    }
+    return 'basic_wrong_result';
 };
 
 //////////////////////////////////////////////////////////////////
@@ -475,14 +513,17 @@ teka.viewer.basic.BasicViewer.prototype.paint = function(g)
     g.textBaseline = 'top';
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.mini[i][j]>0) {
+            if (this.mini[i][j]>=0) {
                 g.fillStyle = this.isBlinking()?
                     this.getBlinkColor(i,j,X,this.f[i][j]):
                     (this.error[i][j]?'#f00':'#fff');
                 g.font = this.smallfont.font;
-                g.fillRect(i*S+2,j*S+2,g.measureText(this.mini[i][j]).width,(S-6)/4-this.smallfont.delta);
+                var t_width = g.measureText(this.mini[i][j]).width;
+                var t_height = (S-6)/4-this.smallfont.delta;
+                g.fillRect(i*S+2,j*S+2,t_width+t_height,t_height);
                 g.fillStyle = '#000';
                 g.fillText(this.mini[i][j],i*S+2,j*S+2);
+                this.paintOperator(g,i*S+2+t_width,j*S+2,this.op[i][j],t_height);
             }
         }
     }
@@ -571,6 +612,30 @@ teka.viewer.basic.BasicViewer.prototype.paint = function(g)
     }
 
     g.restore();
+};
+
+teka.viewer.basic.BasicViewer.prototype.paintOperator = function(g, x, y, val, scale)
+{
+    g.strokeStyle = '#000';
+    switch (val)
+        {
+          case teka.ord('+'):
+            teka.drawLine(g,x+2,y+scale/2,x+scale-2,y+scale/2);
+            teka.drawLine(g,x+scale/2,y+2,x+scale/2,y+scale-2);
+            break;
+          case teka.ord('-'):
+            teka.drawLine(g,x+2,y+scale/2,x+scale-2,y+scale/2);
+            break;
+          case teka.ord('x'):
+            teka.drawLine(g,x+4,y+4,x+scale-4,y+scale-4);
+            teka.drawLine(g,x+4,y+scale-4,x+scale-4,y+4);
+            break;
+          case teka.ord(':'):
+            teka.drawLine(g,x+2,y+scale/2,x+scale-2,y+scale/2);
+            teka.fillOval(g,x+scale/2,y+scale/4,2);
+            teka.fillOval(g,x+scale/2,y+scale-scale/4,2);
+            break;
+        }
 };
 
 //////////////////////////////////////////////////////////////////

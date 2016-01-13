@@ -212,7 +212,7 @@ teka.dictionary = {
     basic_empty: 'Das markierte Feld ist leer.',
     basic_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
     basic_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
-    basic_wrong_sum: 'Im markierten Bereich stimmt die Summe nicht.',
+    basic_wrong_result: 'Im markierten Bereich stimmt das Ergebnis der Rechnung nicht.',
 
     easy_as_abc: 'Buchstabensalat',
     easy_as_abc_instructions: 'Tragen Sie die unter dem Rätsel angegebenen Buchstaben so in das Diagramm ein,'
