@@ -501,6 +501,15 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processMousemoveEvent = functi
         this.y=this.Y-1;
     }
 
+    if (this.startx!=this.x || this.starty!=this.y) {
+        this.moved = true;
+    }
+
+    if (pressed) {
+        this.processMousedraggedEvent(xc,yc);
+        return true;
+    }
+
     return this.x!=oldx || this.y!=oldy;
 };
 
@@ -513,10 +522,110 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processMousedownEvent = functi
         return erg;
     }
 
-    this.set(this.x,this.y,(this.f[this.x][this.y]+1)%3);
+    this.startx = this.x;
+    this.starty = this.y;
+    this.moved = false;
 
     return true;
 };
+
+/** Handles mouseup event. */
+teka.viewer.starry_sky.Starry_skyViewer.prototype.processMouseupEvent = function(xc, yc)
+{
+    this.processMousemoveEvent(xc,yc,false);
+
+    if (!this.moved) {
+        this.set(this.x,this.y,(this.f[this.x][this.y]+1)%3);
+    }
+
+    this.startx = false;
+    this.starty = false;
+    this.moved = false;
+
+    return true;
+};
+
+/**
+ * Handles pseudo event 'mousedragged'
+ * Horizontal and vertical lines are treated separately, as
+ * much faster algorithms can be applied and they should make up the
+ * majority of use cases.
+ */
+teka.viewer.starry_sky.Starry_skyViewer.prototype.processMousedraggedEvent = function(xc, yc)
+{
+    if (this.startx===false || this.starty===false) {
+        this.startx = this.x;
+        this.starty = this.y;
+        this.moved = false;
+        return;
+    }
+
+    var lastx = this.startx;
+    var lasty = this.starty;
+    this.startx = this.x;
+    this.starty = this.y;
+
+    if (this.x==lastx && this.y==lasty) {
+        return;
+    }
+
+    if (this.y==lasty) {
+        if (this.x<lastx) {
+            for (var i=this.x;i<=lastx;i++) {
+                if (this.puzzle[i][this.y]===0) {
+                    this.set(i,this.y,teka.viewer.starry_sky.Defaults.STAR);
+                }
+            }
+        } else {
+            for (var i=lastx;i<=this.x;i++) {
+                if (this.puzzle[i][this.y]===0) {
+                    this.set(i,this.y,teka.viewer.starry_sky.Defaults.STAR);
+                }
+            }
+        }
+        return;
+    }
+
+    if (this.x==lastx) {
+        if (this.y<lasty) {
+            for (var j=this.y;j<=lasty;j++) {
+                if (this.puzzle[this.x][j]===0) {
+                    this.set(this.x,j,teka.viewer.starry_sky.Defaults.STAR);
+                }
+            }
+        } else {
+            for (var j=lasty;j<=this.y;j++) {
+                if (this.puzzle[this.x][j]===0) {
+                    this.set(this.x,j,teka.viewer.starry_sky.Defaults.STAR);
+                }
+            }
+        }
+        return;
+    }
+
+    while (lastx!=this.x && lasty!=this.y)
+        {
+            if (this.puzzle[lastx][lasty]===0) {
+                this.set(lastx,lasty,teka.viewer.starry_sky.Defaults.STAR);
+            }
+            if (Math.abs(this.x-lastx)>Math.abs(this.y-lasty)) {
+                if (this.x>lastx) {
+                    lastx++;
+                } else {
+                    lastx--;
+                }
+            } else {
+                if (this.y>lasty) {
+                    lasty++;
+                } else {
+                    lasty--;
+                }
+            }
+        }
+    if (this.puzzle[this.x][this.y]===0) {
+        this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.STAR);
+    }
+}
 
 /** Handles keydown event. */
 teka.viewer.starry_sky.Starry_skyViewer.prototype.processKeydownEvent = function(e)
@@ -524,24 +633,36 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processKeydownEvent = function
     if (e.key==teka.KEY_DOWN) {
         if (this.y<this.Y-1) {
             this.y++;
+            if (e.shift && this.puzzle[this.x][this.y]===0) {
+                this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.STAR);
+            }
         }
         return true;
     }
     if (e.key==teka.KEY_UP) {
         if (this.y>0) {
             this.y--;
+            if (e.shift && this.puzzle[this.x][this.y]===0) {
+                this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.STAR);
+            }
         }
         return true;
     }
     if (e.key==teka.KEY_RIGHT) {
         if (this.x<this.X-1) {
             this.x++;
+            if (e.shift && this.puzzle[this.x][this.y]===0) {
+                this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.STAR);
+            }
         }
         return true;
     }
     if (e.key==teka.KEY_LEFT) {
         if (this.x>0) {
             this.x--;
+            if (e.shift && this.puzzle[this.x][this.y]===0) {
+                this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.STAR);
+            }
         }
         return true;
     }

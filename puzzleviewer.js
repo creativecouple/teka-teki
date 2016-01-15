@@ -72,7 +72,6 @@ teka.viewer.PuzzleViewer = function(data)
     this.color = 0;
     this.colortool = false;
 
-    this.state = teka.viewer.Defaults.NOTHING;
     this.startx = false;
     this.starty = false;
 };

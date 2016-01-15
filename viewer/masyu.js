@@ -889,13 +889,10 @@ teka.viewer.masyu.MasyuViewer.prototype.processMousedraggedEvent = function(xc, 
 /** Handles keydown event. */
 teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
 {
-    this.state = e.shift?teka.viewer.Defaults.PRESSED:
-        teka.viewer.Defaults.NOTHING;
-
     if (e.key==teka.KEY_DOWN) {
         if (this.y<this.Y-1) {
             if (e.shift) {
-                this.setEdge(this.x,this.y,(this.get(this.x,this.y,false)+1)%3,false);
+                this.setEdge(this.x,this.y,(this.get(this.x,this.y,false)+1)%2,false);
             }
             this.y++;
         }
@@ -904,7 +901,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
     if (e.key==teka.KEY_UP) {
         if (this.y>0) {
             if (e.shift) {
-                this.setEdge(this.x,this.y-1,(this.get(this.x,this.y-1,false)+1)%3,false);
+                this.setEdge(this.x,this.y-1,(this.get(this.x,this.y-1,false)+1)%2,false);
             }
             this.y--;
         }
@@ -913,7 +910,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
     if (e.key==teka.KEY_RIGHT) {
         if (this.x<this.X-1) {
             if (e.shift) {
-                this.setEdge(this.x,this.y,(this.get(this.x,this.y,true)+1)%3,true);
+                this.setEdge(this.x,this.y,(this.get(this.x,this.y,true)+1)%2,true);
             }
             this.x++;
         }
@@ -922,7 +919,7 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
     if (e.key==teka.KEY_LEFT) {
         if (this.x>0) {
             if (e.shift) {
-                this.setEdge(this.x-1,this.y,(this.get(this.x-1,this.y,true)+1)%3,true);
+                this.setEdge(this.x-1,this.y,(this.get(this.x-1,this.y,true)+1)%2,true);
             }
             this.x--;
         }
@@ -949,11 +946,6 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
 /** Handles keyup event. */
 teka.viewer.masyu.MasyuViewer.prototype.processKeyupEvent = function(e)
 {
-    if (e.key==teka.KEY_SHIFT) {
-        this.state = teka.viewer.Defaults.NOTHING;
-        return true;
-    }
-
     return false;
 };
 
