@@ -103,7 +103,7 @@ teka.ButtonTool.prototype.paint = function(g)
 teka.ButtonTool.prototype.processMousemoveEvent = function(xc,yc,pressed)
 {
     this.activeButton = this.getButton(xc,yc);
-    if (this.activeButton===-1) {
+    if (this.activeButton===false) {
         return false;
     }
 
@@ -118,7 +118,7 @@ teka.ButtonTool.prototype.processMousemoveEvent = function(xc,yc,pressed)
 teka.ButtonTool.prototype.processMousedownEvent = function(xc,yc)
 {
     this.activeButton = this.getButton(xc,yc);
-    if (this.activeButton===-1) {
+    if (this.activeButton===false) {
         return false;
     }
 

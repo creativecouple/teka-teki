@@ -793,14 +793,14 @@ teka.viewer.fences.FencesViewer.prototype.check = function()
  */
 teka.viewer.fences.FencesViewer.prototype.setMetrics = function(g)
 {
-    this.scale = Math.floor(Math.min((this.width-7)/this.MAXX,(this.height-7)/this.MAXY));
-    var realwidth = this.MAXX*this.scale+7;
-    var realheight = this.MAXY*this.scale+7;
+    this.scale = Math.floor(Math.min((this.width-17)/this.MAXX,(this.height-17)/this.MAXY));
+    var realwidth = this.MAXX*this.scale+17;
+    var realheight = this.MAXY*this.scale+17;
 
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
-    this.edgeX = 3;
-    this.edgeY = 3;
+    this.edgeX = 8;
+    this.edgeY = 8;
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
 
