@@ -288,11 +288,15 @@ teka.StartScreen.prototype.processKeydownEvent = function(e)
                 this.events[0](true);
             }
         }
-        if (this.activeButton===1) {
-            if (this.events[1]!==false) {
-                this.events[1]();
+
+        for (var i=1;i<this.buttonText.length;i++) {
+            if (this.activeButton===i) {
+                if (this.events[i]!==false) {
+                    this.events[i]();
+                }
             }
         }
+
         return true;
     }
 
