@@ -1200,7 +1200,7 @@ teka.PuzzleApplet.prototype.check = function()
         this.timer_stop = new Date().getTime();
     }
 
-    var duration = Math.floor((this.timer_stop-this.timer_start)/1000);
+    var duration = Math.floor(this.timer_stop/1000)-Math.floor(this.timer_start/1000);
 
     var result = this.createResultMessage(duration,this.failed_attempts);
 
