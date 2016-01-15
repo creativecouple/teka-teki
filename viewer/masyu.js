@@ -926,10 +926,6 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_SHIFT) {
-        return true;
-    }
-
     if (e.key==teka.KEY_SPACE) {
         this.set(this.x,this.y,0);
         return true;
@@ -940,12 +936,6 @@ teka.viewer.masyu.MasyuViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    return false;
-};
-
-/** Handles keyup event. */
-teka.viewer.masyu.MasyuViewer.prototype.processKeyupEvent = function(e)
-{
     return false;
 };
 

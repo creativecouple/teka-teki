@@ -625,7 +625,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processMousedraggedEvent = fun
     if (this.puzzle[this.x][this.y]===0) {
         this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.STAR);
     }
-}
+};
 
 /** Handles keydown event. */
 teka.viewer.starry_sky.Starry_skyViewer.prototype.processKeydownEvent = function(e)
@@ -672,7 +672,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processKeydownEvent = function
     }
 
     if (this.puzzle[this.x][this.y]>0) {
-        if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift)) {
+        if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
             this.set(this.x,this.y,1);
         } else if (this.c==' ') {
             this.set(this.x,this.y,0);
@@ -680,7 +680,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processKeydownEvent = function
         return true;
     }
 
-    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift)) {
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
         this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.STAR);
         return true;
     }

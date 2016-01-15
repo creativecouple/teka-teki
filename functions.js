@@ -60,71 +60,19 @@ teka.buttonPressed = function(e)
 teka.normalizeKeyEvent = function(e)
 {
     var ret = {
-        key: e.keyCode,
+        key: e.charCode,
         shift: e.shiftKey,
         ctrl: e.ctrlKey,
         alt: e.altKey
     };
 
-    // correct nonstandard of firefox:
-    if (ret.key==181) {
-        ret.key = 173;
-    }
-    if (ret.key==182) {
-        ret.key = 174;
-    }
-    if (ret.key==183) {
-        ret.key = 175;
-    }
-    if (ret.key==59) {
-        ret.key = 186;
-    }
-    if (ret.key==61 || ret.key==171) {
-        ret.key = 187;
-    }
-    if (ret.key==173) {
-        ret.key = 189;
+    // map lowercase letters to uppercase letters
+    if (ret.key>=97 && ret.key<=122) {
+        ret.key-=32;
     }
 
-    // keypad numbers should behave like normal numbers:
-    if (ret.key>=96 && ret.key<=105) {
-        ret.key-=48;
-    }
-
-    // keypad del is normal del:
-    if (ret.key==110) {
-        ret.key = 46;
-    }
-
-    // keypad separator = comma
-    if (ret.key==108) {
-        ret.key = 188;
-    }
-
-    // keypad - = minus
-    if (ret.key==109) {
-        ret.key = 189;
-    }
-
-    // keypad + = plus
-    if (ret.key==107) {
-        ret.key = 187;
-    }
-
-    // keypad * = star
-    if (ret.key==106) {
-        ret.key = 187;
-        ret.shift = true;
-    }
-
-    // simulate hash key on some key boards, where it is shift-3:
-    if (ret.key==51 && ret.shift) {
-        ret.shift = false;
-        ret.key = 163;
-    }
-    // simulate star key on some key boards, where it is shift-8:
-    if (ret.key==56 && ret.shift) {
-        ret.key = 187;
+    if (ret.key===0) {
+        ret.key = e.keyCode+256;
     }
 
     return ret;
@@ -331,45 +279,68 @@ teka.getFontData = function(font,size)
 //////////////////////////////////////////////////////////////////
 
 /** Constants to be used in keyboard events */
-teka.KEY_LEFT = 37;
-teka.KEY_RIGHT = 39;
-teka.KEY_UP = 38;
-teka.KEY_DOWN = 40;
+teka.KEY_SPACE = 32;
+teka.KEY_HASH = 35;
+teka.KEY_STAR = 42;
+teka.KEY_PLUS = 43;
+teka.KEY_COMMA = 44;
+teka.KEY_MINUS = 45;
+teka.KEY_DOT = 46;
+teka.KEY_SLASH = 47;
 teka.KEY_0 = 48;
 teka.KEY_1 = 49;
+teka.KEY_2 = 50;
+teka.KEY_3 = 51;
+teka.KEY_4 = 52;
+teka.KEY_5 = 53;
+teka.KEY_6 = 54;
+teka.KEY_7 = 55;
+teka.KEY_8 = 56;
 teka.KEY_9 = 57;
-teka.KEY_SPACE = 32;
-teka.KEY_HASH = 163; // Maybe not browser or keyboard compatible...
-teka.KEY_COMMA = 188;
-teka.KEY_DOT = 190;
-teka.KEY_SLASH = 191;
-teka.KEY_F1 = 112;
-teka.KEY_F2 = 113;
-teka.KEY_F3 = 114;
-teka.KEY_F4 = 115;
-teka.KEY_F5 = 116;
-teka.KEY_F6 = 117;
-teka.KEY_F7 = 118;
-teka.KEY_F8 = 119;
-teka.KEY_F9 = 120;
-teka.KEY_F10 = 121;
-teka.KEY_F11 = 122;
-teka.KEY_F12 = 123;
-teka.KEY_ENTER = 13;
-teka.KEY_PAGE_UP = 33;
-teka.KEY_PAGE_DOWN = 34;
-teka.KEY_PLUS = 187;
-teka.KEY_MINUS = 189;
 teka.KEY_A = 65;
 teka.KEY_B = 66;
+teka.KEY_C = 67;
 teka.KEY_D = 68;
 teka.KEY_E = 69;
+teka.KEY_F = 70;
+teka.KEY_G = 71;
+teka.KEY_H = 72;
+teka.KEY_I = 73;
+teka.KEY_J = 74;
+teka.KEY_K = 75;
+teka.KEY_L = 76;
+teka.KEY_M = 77;
 teka.KEY_N = 78;
 teka.KEY_O = 79;
+teka.KEY_P = 80;
 teka.KEY_Q = 81;
+teka.KEY_R = 82;
 teka.KEY_S = 83;
+teka.KEY_T = 84;
+teka.KEY_U = 85;
+teka.KEY_V = 86;
 teka.KEY_W = 87;
 teka.KEY_X = 88;
+teka.KEY_Y = 89;
 teka.KEY_Z = 90;
-teka.KEY_SHIFT = 16;
-teka.KEY_ESCAPE = 27;
+
+teka.KEY_ENTER = 13+256;
+teka.KEY_ESCAPE = 27+256;
+teka.KEY_PAGE_UP = 33+256;
+teka.KEY_PAGE_DOWN = 34+256;
+teka.KEY_LEFT = 37+256;
+teka.KEY_RIGHT = 39+256;
+teka.KEY_UP = 38+256;
+teka.KEY_DOWN = 40+256;
+teka.KEY_F1 = 112+256;
+teka.KEY_F2 = 113+256;
+teka.KEY_F3 = 114+256;
+teka.KEY_F4 = 115+256;
+teka.KEY_F5 = 116+256;
+teka.KEY_F6 = 117+256;
+teka.KEY_F7 = 118+256;
+teka.KEY_F8 = 119+256;
+teka.KEY_F9 = 120+256;
+teka.KEY_F10 = 121+256;
+teka.KEY_F11 = 122+256;
+teka.KEY_F12 = 123+256;

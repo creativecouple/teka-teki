@@ -346,11 +346,8 @@ teka.PuzzleApplet.prototype.initTools = function()
     this.canvas.addEventListener('mouseup',
                                  this.mouseupListener.bind(this),
                                  false);
-    this.canvas.addEventListener('keydown',
-                                 this.keydownListener.bind(this),
-                                 false);
-    this.canvas.addEventListener('keyup',
-                                 this.keyupListener.bind(this),
+    this.canvas.addEventListener('keypress',
+                                 this.keypressListener.bind(this),
                                  false);
     this.canvas.focus();
 };
@@ -976,8 +973,8 @@ teka.PuzzleApplet.prototype.mousedragListener = function(e)
     this.paint();
 };
 
-/** Eventhandler for keydown events. */
-teka.PuzzleApplet.prototype.keydownListener = function(e)
+/** Eventhandler for keypress events. */
+teka.PuzzleApplet.prototype.keypressListener = function(e)
 {
     if (teka.error) {
         this.paint();
@@ -1087,40 +1084,6 @@ teka.PuzzleApplet.prototype.checkResize = function(e)
     }
 
     return false;
-};
-
-/** Eventhandler for keyup events. */
-teka.PuzzleApplet.prototype.keyupListener = function(e)
-{
-    if (teka.error) {
-        this.paint();
-        return true;
-    }
-
-    this.checkTimeout();
-
-    if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
-        return true;
-    }
-
-    var myEvent = teka.normalizeKeyEvent(e);
-
-    if (this.showInstructions) {
-        return true;
-    }
-
-    if (this.showStart) {
-        return true;
-    }
-
-    if (this.layout!==false && this.layout.processKeyupEvent(myEvent)) {
-        this.paint();
-        teka.stopPropagation(e);
-        return false;
-    }
-
-    this.canvas.focus();
-    return true;
 };
 
 //////////////////////////////////////////////////////////////////

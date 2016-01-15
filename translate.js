@@ -100,7 +100,7 @@ teka.dictionary = {
         +'neunfach verschachtelt sein.\n\n\n'
         +'Rätsel auf Zeit lösen: Wenn Sie in Ihren Einstellungen angegeben haben, '
         +'dass Sie das Überraschungsrätsel auf Zeit lösen wollen, erhalten Sie beim '
-        +'Start des Applets einen Startbildschirm mit drei Button. Was diese Button '
+        +'Start des Applets einen Startbildschirm mit Buttons. Was diese Buttons '
         +'genau bewirken, wird auf dem Startbildschirm erklärt.',
     level: 'Stufe: {1}',
     load_state: 'Kehrt zum zuvor gespeicherten Zustand zurück.',
@@ -234,7 +234,7 @@ teka.dictionary = {
         +'den Expertenmodus.\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
         +'Buchstabentasten: Den entsprechenden Buchstaben in das Feld eintragen\n'
-        +'. oder O: Als Buchstabenfeld markieren (wird als Kreis dargestellt)\n'
+        +'.: Als Buchstabenfeld markieren (wird als Kreis dargestellt)\n'
         +'Leertaste: Feldinhalt löschen\n'
         +'Minustaste: Als Leerfeld markieren\n'
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '

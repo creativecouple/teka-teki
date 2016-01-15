@@ -748,7 +748,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processKeydownEvent = function(e)
     if (this.x<0) {
         if (e.key==teka.KEY_SPACE) {
             this.set_left(this.x+this.MAX,this.y,false);
-        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
+        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
             this.set_left(this.x+this.MAX,this.y,true);
         }
         return true;
@@ -757,7 +757,7 @@ teka.viewer.abcd.AbcdViewer.prototype.processKeydownEvent = function(e)
     if (this.y<0) {
         if (e.key==teka.KEY_SPACE) {
             this.set_top(this.x,this.y+this.MAX,false);
-        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
+        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
             this.set_top(this.x,this.y+this.MAX,true);
         }
         return true;
