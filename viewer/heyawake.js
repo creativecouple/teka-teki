@@ -605,7 +605,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.processKeydownEvent = function(e)
         return false;
     }
 
-    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
         this.set(this.x,this.y,1);
         return true;
     }

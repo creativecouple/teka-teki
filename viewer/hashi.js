@@ -576,7 +576,7 @@ teka.viewer.hashi.HashiViewer.prototype.processKeydownEvent = function(e)
     if (this.puzzle[this.x][this.y]!==0) {
         if (e.key==teka.KEY_SPACE) {
             this.set(this.x,this.y,0);
-        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || (e.key==teka.KEY_PLUS && e.shift===true)) {
+        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
             this.set(this.x,this.y,1);
         }
         return true;

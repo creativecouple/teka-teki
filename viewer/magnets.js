@@ -672,11 +672,6 @@ teka.viewer.magnets.MagnetsViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_DOT || e.key==teka.KEY_HASH || e.key==teka.KEY_S || (e.key==teka.KEY_PLUS && e.shift===true)) {
-        this.set(this.x,this.y,teka.viewer.magnets.Defaults.MAGNET);
-        return true;
-    }
-
     if (e.key==teka.KEY_PLUS || e.key==teka.KEY_Q) {
         this.set(this.x,this.y,teka.viewer.magnets.Defaults.PLUS);
         return true;
@@ -684,6 +679,11 @@ teka.viewer.magnets.MagnetsViewer.prototype.processKeydownEvent = function(e)
 
     if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
         this.set(this.x,this.y,teka.viewer.magnets.Defaults.MINUS);
+        return true;
+    }
+
+    if (e.key==teka.KEY_DOT || e.key==teka.KEY_HASH || e.key==teka.KEY_S || e.key==teka.KEY_STAR) {
+        this.set(this.x,this.y,teka.viewer.magnets.Defaults.MAGNET);
         return true;
     }
 
