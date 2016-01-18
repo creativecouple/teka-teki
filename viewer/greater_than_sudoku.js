@@ -591,16 +591,18 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.paint = func
         }
     }
 
+    // paint greater-than symbols
     g.lineCap="round";
+    g.lineWidth = 2;
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<X;j++) {
             if (this.lr_symbols[i][j]==-1) {
                 if (this.mode<0) {
                     g.strokeStyle = '#fff';
-                    g.lineWidth = 3;
+                    g.lineWidth = 4;
                     teka.drawLine(g,(i+1)*S-S/7,j*S+S/2,(i+1)*S+S/7,j*S+S/2-S/4);
                     teka.drawLine(g,(i+1)*S-S/7,j*S+S/2,(i+1)*S+S/7,j*S+S/2+S/4);
-                    g.lineWidth = 1;
+                    g.lineWidth = 2;
                 }
                 g.strokeStyle = '#000';
                 teka.drawLine(g,(i+1)*S-S/7,j*S+S/2,(i+1)*S+S/7,j*S+S/2-S/4);
@@ -609,10 +611,10 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.paint = func
             if (this.lr_symbols[i][j]==1) {
                 if (this.mode<0) {
                     g.strokeStyle = '#fff';
-                    g.lineWidth = 3;
+                    g.lineWidth = 4;
                     teka.drawLine(g,(i+1)*S+S/7,j*S+S/2,(i+1)*S-S/7,j*S+S/2-S/4);
                     teka.drawLine(g,(i+1)*S+S/7,j*S+S/2,(i+1)*S-S/7,j*S+S/2+S/4);
-                    g.lineWidth = 1;
+                    g.lineWidth = 2;
                 }
                 g.strokeStyle = '#000';
                 teka.drawLine(g,(i+1)*S+S/7,j*S+S/2,(i+1)*S-S/7,j*S+S/2-S/4);
@@ -626,10 +628,10 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.paint = func
             if (this.ud_symbols[i][j]==1) {
                 if (this.mode<0) {
                     g.strokeStyle = '#fff';
-                    g.lineWidth = 3;
+                    g.lineWidth = 4;
                     teka.drawLine(g,i*S+S/2,(j+1)*S-S/7,i*S+S/2-S/4,(j+1)*S+S/7);
                     teka.drawLine(g,i*S+S/2,(j+1)*S-S/7,i*S+S/2+S/4,(j+1)*S+S/7);
-                    g.lineWidth = 1;
+                    g.lineWidth = 2;
                 }
                 g.strokeStyle = '#000';
                 teka.drawLine(g,i*S+S/2,(j+1)*S-S/7,i*S+S/2-S/4,(j+1)*S+S/7);
@@ -638,10 +640,10 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.paint = func
             if (this.ud_symbols[i][j]==-1) {
                 if (this.mode<0) {
                     g.strokeStyle = '#fff';
-                    g.lineWidth = 3;
+                    g.lineWidth = 4;
                     teka.drawLine(g,i*S+S/2,(j+1)*S+S/7,i*S+S/2-S/4,(j+1)*S-S/7);
                     teka.drawLine(g,i*S+S/2,(j+1)*S+S/7,i*S+S/2+S/4,(j+1)*S-S/7);
-                    g.lineWidth = 1;
+                    g.lineWidth = 2;
                 }
                 g.strokeStyle = '#000';
                 teka.drawLine(g,i*S+S/2,(j+1)*S+S/7,i*S+S/2-S/4,(j+1)*S-S/7);
@@ -649,6 +651,7 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.paint = func
             }
         }
     }
+    g.lineWidth = 1;
     g.lineCap="butt";
 
     // paint text below the grid
