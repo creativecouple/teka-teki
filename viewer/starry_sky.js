@@ -625,7 +625,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processMousedraggedEvent = fun
     if (this.puzzle[this.x][this.y]===0) {
         this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.STAR);
     }
-}
+};
 
 /** Handles keydown event. */
 teka.viewer.starry_sky.Starry_skyViewer.prototype.processKeydownEvent = function(e)

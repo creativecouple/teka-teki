@@ -419,7 +419,8 @@ teka.PuzzleApplet.prototype.correctType = function(type)
     var whitelist = ['abcd','abcd_diagonal','basic','easy_as_abc','fences',
                      'greater_than_sudoku','hashi','heyawake','hitori',
                      'japanese_sums','kakuro','killer_sudoku','kropki',
-                     'magnets','masyu','starbattle','starry_sky','sudoku','tapa'];
+                     'magnets','masyu','skyscrapers','skyscrapers_with_parks',
+                     'starbattle','starry_sky','sudoku','tapa'];
 
     for (var i=0;i<whitelist.length;i++) {
         if (whitelist[i]===type) {

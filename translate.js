@@ -537,6 +537,62 @@ teka.dictionary = {
     masyu_not_connected: 'Der markierte Rundweg hängt nicht mit dem Rest des Weges zusammen.',
     masyu_no_line_found: 'Im Diagramm befindet sich kein Wegstück.',
 
+    skyscrapers: 'Hochhäuser',
+    skyscrapers_instructions: 'Tragen Sie in jedes Feld ein Hochhaus der Höhe 1 bis n so ein,'
+        +' dass in jeder Zeile und jeder Spalte jede mögliche Höhe genau'
+        +' einmal vorkommt. Die Zahlen am Rand geben jeweils an, wie viele'
+        +' Häuser in der entsprechenden Zeile oder Spalte aus der'
+        +' entsprechenden Richtung gesehen werden können; niedrigere'
+        +' Hochhäuser werden dabei von höheren verdeckt.',
+    skyscrapers_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
+        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'EMPTYtaste: Feldinhalt löschen\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    skyscrapers_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    skyscrapers_empty: 'Das markierte Feld ist leer.',
+    skyscrapers_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
+    skyscrapers_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
+    skyscrapers_top_wrong: 'In der markierten Spalte ist die Anzahl der von oben sichtbaren Hochhäuser falsch.',
+    skyscrapers_bottom_wrong: 'In der markierten Spalte ist die Anzahl der von unten sichtbaren Hochhäuser falsch.',
+    skyscrapers_left_wrong: 'In der markierten Zeile ist die Anzahl der von links sichtbaren Hochhäuser falsch.',
+    skyscrapers_right_wrong: 'In der markierten Zeile ist die Anzahl der von rechts sichtbaren Hochhäuser falsch.',
+
+    skyscrapers_with_parks_instructions: 'Tragen Sie in jedes Feld ein Hochhaus der Höhe 1 bis n so ein,'
+        +' dass in jeder Zeile und jeder Spalte jede mögliche Höhe genau'
+        +' einmal vorkommt, sowie die angegebene Anzahl an Parks. Die'
+        +' Zahlen am Rand geben jeweils an, wie viele Häuser in der'
+        +' entsprechenden Zeile oder Spalte aus der entsprechende Richtung'
+        +' gesehen werden können; niedrigere Hochhäuser werden dabei von'
+        +' höheren verdeckt. Parks verdecken keine Hochhäuser.',
+    skyscrapers_with_parks_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Nach der letzten Ziffer führt ein weiterer '
+        +'Klick zu einem Minuszeichen. Durch den nächsten Klick wird der '
+        +'Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'EMPTYtaste: Feldinhalt löschen\n'
+        +'X, B oder S: EMPTYfeld markieren\n'
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+
     starbattle: 'Doppelstern',
     starbattle_instructions: 'Tragen Sie in das Diagramm Sterne so ein, dass sich '
         +'in jeder Zeile, jeder Spalte und jedem fettumrandeten Gebiet genau so '
