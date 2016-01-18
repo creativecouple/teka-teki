@@ -15,15 +15,16 @@
  */
 
 /** Add own namespace to avoid conflicts. */
-teka.viewer.skyscrapers = {};
+teka.viewer.skyscrapers_with_parks = {};
 
 /** Some constants. */
-teka.viewer.skyscrapers.Defaults = {
-    EMPTY: 0
+teka.viewer.skyscrapers_with_parks.Defaults = {
+    EMPTY: 0,
+    MINUS: -1
 };
 
 /** Constructor */
-teka.viewer.skyscrapers.SkyscrapersViewer = function(data)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer = function(data)
 {
     teka.viewer.PuzzleViewer.call(this,data);
 
@@ -33,14 +34,15 @@ teka.viewer.skyscrapers.SkyscrapersViewer = function(data)
     this.ym = 0;
     this.exp = false;
 };
-teka.extend(teka.viewer.skyscrapers.SkyscrapersViewer,teka.viewer.PuzzleViewer);
+teka.extend(teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer,teka.viewer.PuzzleViewer);
 
 //////////////////////////////////////////////////////////////////
 
 /** Initialize this viewer width the PSData object provided. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.initData = function(data)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('size'),10);
+    this.parks = parseInt(data.get('parks'),10);
     var digits = data.get('digits');
     digits = digits===false?1:parseInt(data.get('digits'),10);
     this.asciiToData(data.get('puzzle'),digits);
@@ -56,7 +58,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.asciiToData = function(ascii, d)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.asciiToData = function(ascii, d)
 {
     if (ascii===false) {
         return;
@@ -64,9 +66,13 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.asciiToData = function(ascii
 
     var grid = this.asciiToArray(ascii);
 
-    this.puzzle = teka.new_array([this.X,this.X],teka.viewer.skyscrapers.Defaults.EMPTY);
+    this.puzzle = teka.new_array([this.X,this.X],teka.viewer.skyscrapers_with_parks.Defaults.EMPTY);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
+            if (grid[d*(i+1)+d-1][j+1]==teka.ord('-')) {
+                this.puzzle[i][j] = teka.viewer.skyscrapers_with_parks.Defaults.MINUS;
+                continue;
+            }
             var nr = this.getNr(grid,d*(i+1),j+1,d);
             if (nr!==false) {
                 this.puzzle[i][j] = nr;
@@ -99,7 +105,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.asciiToData = function(ascii
 };
 
 /** Read solution from ascii art. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.asciiToSolution = function(ascii, d)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.asciiToSolution = function(ascii, d)
 {
     if (ascii===false) {
         return;
@@ -119,7 +125,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.asciiToSolution = function(a
 };
 
 /** Add solution. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.addSolution = function()
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.addSolution = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -131,15 +137,15 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.addSolution = function()
 //////////////////////////////////////////////////////////////////
 
 /** Returns a small example. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.getExample = function()
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (skyscrapers)\n/sol false\n/size 4\n'
-        +'/puzzle [ ( 3    ) (     2) (     1) (2     ) (     4) (   2  ) ]\n'
-        +'/solution [ (2413) (1234) (3142) (4321) ]';
+    return '/format 1\n/type (skyscrapers_with_parks)\n/sol false\n/size 4\n/parks 1\n'
+        +'/puzzle [ ( 3    )(      ) (2  -  ) (      ) (     1) (   3  ) ]\n'
+        +'/solution [ (1 32) (23 1) (312 ) ( 213) ]';
 };
 
 /** Returns a list of automatically generated properties. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.getProperties = function()
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.getProperties = function()
 {
     return [teka.translate('generic_size',[this.X+'x'+this.X])];
 };
@@ -147,18 +153,18 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.getProperties = function()
 //////////////////////////////////////////////////////////////////
 
 /** Reset the whole diagram. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.reset = function()
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.reset = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
-            this.f[i][j] = teka.viewer.skyscrapers.Defaults.EMPTY;
+            this.f[i][j] = teka.viewer.skyscrapers_with_parks.Defaults.EMPTY;
             this.c[i][j] = 0;
         }
     }
 };
 
 /** Reset the error marks. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.clearError = function()
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.clearError = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -174,7 +180,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.clearError = function()
 };
 
 /** Copy digits colored with this.color to color. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.copyColor = function(color)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.copyColor = function(color)
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -186,19 +192,19 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.copyColor = function(color)
 };
 
 /** Delete all digits with color. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.clearColor = function(color)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.clearColor = function(color)
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             if (this.c[i][j]==color) {
-                this.f[i][j] = teka.viewer.skyscrapers.Defaults.EMPTY;
+                this.f[i][j] = teka.viewer.skyscrapers_with_parks.Defaults.EMPTY;
             }
         }
     }
 };
 
 /** Save current state. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.saveState = function()
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.saveState = function()
 {
     var f = teka.new_array([this.X,this.X],0);
     var c = teka.new_array([this.X,this.X],0);
@@ -213,7 +219,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.saveState = function()
 };
 
 /** Load state. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.loadState = function(state)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.loadState = function(state)
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
@@ -226,14 +232,14 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.loadState = function(state)
 //////////////////////////////////////////////////////////////////
 
 /** Check, if the solution is correct. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.check = function()
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.check = function()
 {
     var X = this.X;
 
     // Overwrite digits, that are allready given
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.puzzle[i][j]!=teka.viewer.skyscrapers.Defaults.EMPTY) {
+            if (this.puzzle[i][j]!=teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
                 this.f[i][j] = this.puzzle[i][j];
             }
         }
@@ -247,7 +253,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.check = function()
                 check[i][j] = this.getExpert(this.f[i][j]);
                 if (check[i][j]<1 || check[i][j]>9) {
                     this.error[i][j] = true;
-                    return 'skyscrapers_not_unique';
+                    return 'skyscrapers_with_parks_not_unique';
                 }
                 continue;
             }
@@ -263,52 +269,73 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.check = function()
                 }
                 if (min!=max) {
                     this.error[i][j] = true;
-                    return 'skyscrapers_not_unique';
+                    return 'skyscrapers_with_parks_not_unique';
                 }
                 check[i][j] = min;
                 continue;
             }
 
             check[i][j] = this.f[i][j];
-
-            if (check[i][j]==teka.viewer.skyscrapers.Defaults.EMPTY) {
-                this.error[i][j] = true;
-                return 'skyscrapers_empty';
-            }
         }
     }
 
     // Check duplicates in row
     for (var j=0;j<X;j++) {
+        var park = 0;
         var da = teka.new_array([X],false);
         for (var i=0;i<X;i++) {
-            if (da[check[i][j]-1]===true) {
+            if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS ||
+                check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
+                park++;
+            } else if (da[check[i][j]-1]===true) {
                 for (var ii=0;ii<X;ii++) {
                     if (check[ii][j]==check[i][j]) {
                         this.error[ii][j] = true;
                     }
                 }
-                return 'skyscrapers_row_duplicate';
+                return 'skyscrapers_with_parks_row_duplicate';
             } else {
                 da[check[i][j]-1] = true;
             }
+        }
+        if (park!==this.parks) {
+            for (var i=0;i<X;i++) {
+                if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS ||
+                    check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
+                    this.error[i][j] = true;
+                }
+            }
+            return 'skyscrapers_with_parks_row_wrong_parks';
         }
     }
 
     // Check duplicates in column
     for (var i=0;i<X;i++) {
+        var park = 0;
         var da = teka.new_array([X],false);
         for (var j=0;j<X;j++) {
-            if (da[check[i][j]-1]===true) {
+            if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS ||
+                check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
+                park++;
+            } else if (da[check[i][j]-1]===true) {
                 for (var jj=0;jj<X;jj++) {
                     if (check[i][jj]==check[i][j]) {
                         this.error[i][jj] = true;
                     }
                 }
-                return 'skyscrapers_column_duplicate';
+                return 'skyscrapers_with_parks_column_duplicate';
             } else {
                 da[check[i][j]-1] = true;
             }
+        }
+        if (park!==this.parks) {
+            for (var j=0;j<X;j++) {
+                if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS ||
+                    check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
+                    this.error[i][j] = true;
+                }
+            }
+            return 'skyscrapers_with_parks_column_wrong_parks';
         }
     }
 
@@ -317,28 +344,28 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.check = function()
             if (this.count(check,i,0,0,1,false)!=this.topdata[i]) {
                 this.count(check,i,0,0,1,true);
                 this.error_top[i] = true;
-                return 'skyscrapers_top_wrong';
+                return 'skyscrapers_with_parks_top_wrong';
             }
         }
         if (this.bottomdata[i]!=-1) {
             if (this.count(check,i,X-1,0,-1,false)!=this.bottomdata[i]) {
                 this.count(check,i,X-1,0,-1,true);
                 this.error_bottom[i] = true;
-                return 'skyscrapers_bottom_wrong';
+                return 'skyscrapers_with_parks_bottom_wrong';
             }
         }
         if (this.leftdata[i]!=-1) {
             if (this.count(check,0,i,1,0,false)!=this.leftdata[i]) {
                 this.count(check,0,i,1,0,true);
                 this.error_left[i] = true;
-                return 'skyscrapers_left_wrong';
+                return 'skyscrapers_with_parks_left_wrong';
             }
         }
         if (this.rightdata[i]!=-1) {
             if (this.count(check,X-1,i,-1,0,false)!=this.rightdata[i]) {
                 this.count(check,X-1,i,-1,0,true);
                 this.error_right[i] = true;
-                return 'skyscrapers_right_wrong';
+                return 'skyscrapers_with_parks_right_wrong';
             }
         }
     }
@@ -346,8 +373,8 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.check = function()
     return true;
 };
 
-/** Count visible skyscrapers, seen from x,y in dir dx,dy */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.count = function(check, x, y, dx, dy, seterror)
+/** Count visible skyscrapers_with_parks, seen from x,y in dir dx,dy */
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.count = function(check, x, y, dx, dy, seterror)
 {
     var c = 0;
     var h = 0;
@@ -383,12 +410,19 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.count = function(check, x, y
  * Return value is an object with width and height of the used space,
  * and, most important, the scale.
  */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.setMetrics = function(g)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.setMetrics = function(g)
 {
     this.scale = Math.floor(Math.min((this.width-1)/(this.X+2),
-                                     (this.height-1)/(this.X+2)));
+                                     (this.height-1-(this.textHeight+2))/(this.X+2)));
     var realwidth = (this.X+2)*this.scale+1;
-    var realheight = (this.X+2)*this.scale+1;
+    var realheight = (this.X+2)*this.scale+1+this.textHeight+2;
+
+    this.bottomText = this.parks==1
+        ?teka.translate('skyscrapers_with_parks_park',[])
+        :teka.translate('skyscrapers_with_parks_parks',[this.parks]);
+    g.font = 'bold '+this.textHeight+'px sans-serif';
+    var textwidth = g.measureText(this.bottomText).width+1;
+    realwidth = Math.max(realwidth,textwidth+this.scale);
 
     this.deltaX = Math.floor((this.width-realwidth)/2)+0.5;
     this.deltaY = Math.floor((this.height-realheight)/2)+0.5;
@@ -407,7 +441,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.setMetrics = function(g)
 };
 
 /** Paints the diagram. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.paint = function(g)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.paint = function(g)
 {
     var X = this.X;
     var S = this.scale;
@@ -487,13 +521,28 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.paint = function(g)
     // paint content of the cells
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.puzzle[i][j]!=teka.viewer.skyscrapers.Defaults.EMPTY) {
+            if (this.puzzle[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS) {
+                g.strokeStyle = '#000';
+                g.lineWidth = 3;
+                teka.drawLine(g,(i+1)*S+S/4,(j+1)*S+Math.floor(S/2),(i+2)*S-S/4,(j+1)*S+Math.floor(S/2));
+                g.lineWidth = 1;
+                continue;
+            }
+            if (this.puzzle[i][j]!=teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
                 g.fillStyle = '#000';
                 g.font = this.boldfont.font;
                 g.fillText(this.puzzle[i][j],(i+1)*S+S/2,(j+1)*S+S/2+this.boldfont.delta);
                 continue;
             }
             if (this.f[i][j]===0) {
+                continue;
+            }
+
+            if (this.f[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS) {
+                g.strokeStyle = this.getColorString(this.c[i][j]);
+                g.lineWidth = 2;
+                teka.drawLine(g,(i+1)*S+S/4,(j+1)*S+Math.floor(S/2)+0.5,(i+2)*S-S/4,(j+1)*S+Math.floor(S/2)+0.5);
+                g.lineWidth = 1;
                 continue;
             }
 
@@ -519,7 +568,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.paint = function(g)
             g.font = this.smallfont.font;
             for (var k=1;k<=9;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
-                    g.fillText(k,
+                    g.fillText(k==1?'-':(k-1),
                                S*(i+1)+((k-1)%3+1)*S/4,
                                S*(j+1)+Math.floor((k-1)/3+1)*S/4+this.smallfont.delta);
                 }
@@ -537,6 +586,13 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.paint = function(g)
             teka.drawLine(g,(i+2)*S-S/8-2,(j+2)*S-2,(i+2)*S-2,(j+2)*S-S/8-2);
         }
     }
+
+    // paint text below the grid
+    g.textAlign = 'left';
+    g.textBaseline = 'top';
+    g.fillStyle = this.textcolor;
+    g.font = 'bold '+this.textHeight+'px sans-serif';
+    g.fillText(this.bottomText,S,(X+2)*S+4);
 
     // paint cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
@@ -560,7 +616,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     xc -= this.deltaX+this.borderX;
     yc -= this.deltaY+this.borderY;
@@ -595,7 +651,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processMousemoveEvent = func
 };
 
 /** Handles mousedown event. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processMousedownEvent = function(xc, yc)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.processMousedownEvent = function(xc, yc)
 {
     var erg = this.processMousemoveEvent(xc,yc);
 
@@ -603,7 +659,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processMousedownEvent = func
         return erg;
     }
 
-    if (this.X<=9) {
+    if (this.X<=8) {
         if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
             if (this.f[this.x][this.y]<1000) {
                 this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
@@ -640,13 +696,19 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processMousedownEvent = func
         return true;
     }
 
-    this.set(this.x,this.y,(this.f[this.x][this.y]+1)%(this.X+1));
+    if (this.f[this.x][this.y]==this.X-this.parks) {
+        this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.MINUS);
+    } else if (this.f[this.x][this.y]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS) {
+        this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.EMPTY);
+    } else {
+        this.set(this.x,this.y,(this.f[this.x][this.y]+1)%(this.X+1-this.parks));
+    }
 
     return true;
 };
 
 /** Handles keydown event. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processKeydownEvent = function(e)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.processKeydownEvent = function(e)
 {
     this.exp = false;
 
@@ -680,13 +742,13 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processKeydownEvent = functi
     }
 
     if (e.key==teka.KEY_SPACE) {
-        this.set(this.x,this.y,teka.viewer.skyscrapers.Defaults.EMPTY);
+        this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.EMPTY);
         return true;
     }
 
     if (e.key>=teka.KEY_0 && e.key<=teka.KEY_9) {
         var val = e.key-teka.KEY_0;
-        if (val>this.X) {
+        if (val>this.X-this.parks) {
             return false;
         }
 
@@ -705,8 +767,10 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processKeydownEvent = functi
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS && this.X<=9) {
-        if (this.f[this.x][this.y]<100 && this.f[this.x][this.y]>=0) {
+    if (e.key==teka.KEY_MINUS) {
+        if (this.f[this.x][this.y]===teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
+            this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.MINUS);
+        } else if (this.f[this.x][this.y]<100 && this.f[this.x][this.y]>=0) {
             this.set(this.x,this.y,100+this.f[this.x][this.y]);
         } else {
             this.set(this.x,this.y,100);
@@ -729,7 +793,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.processKeydownEvent = functi
 //////////////////////////////////////////////////////////////////
 
 /** Sets the value of a cell, if the color fits. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.set = function(x, y, value)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.set = function(x, y, value)
 {
     if (this.f[x][y]!=0 && this.f[x][y]!=1000 && this.c[x][y]!=this.color) {
         return;
@@ -740,18 +804,21 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.set = function(x, y, value)
 };
 
 /** Converts from normal mode to expert mode. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.setExpert = function(h)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.setExpert = function(h)
 {
     if (h===0) {
         return 1000;
     }
+    if (h==teka.viewer.skyscrapers_with_parks.Defaults.MINUS) {
+        return 1002;
+    }
     if (h<10) {
-        return 1000+(1<<h);
+        return 1000+(1<<(h+1));
     }
     var a = (h-100)%10;
-    var b = (h-100)/10;
+    var b = Math.floor((h-100)/10);
     if (b===0) {
-        b=this.X;
+        b=this.X-this.parks;
     }
     if (a>b) {
         var hlp = a;
@@ -760,13 +827,13 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.setExpert = function(h)
     }
     var k=1000;
     for (var i=a;i<=b;i++) {
-        k+=1<<i;
+        k+=1<<(i+1);
     }
     return k;
 };
 
 /** Converts back from expert mode to normal mode. */
-teka.viewer.skyscrapers.SkyscrapersViewer.prototype.getExpert = function(h)
+teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.getExpert = function(h)
 {
     var min = 10;
     var max = 0;
@@ -784,6 +851,11 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.getExpert = function(h)
     if (min==10 && max===0) {
         return 0;
     }
+    if (min==1) {
+        return max==1?teka.viewer.skyscrapers_with_parks.Defaults.MINUS:teka.viewer.skyscrapers_with_parks.Defaults.EMPTY;
+    }
+    min--;
+    max--;
     if (min==max) {
         return min;
     }

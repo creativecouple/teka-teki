@@ -1,0 +1,89 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 2 2 136 136
+%%CropBox: 2 2 136 136
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.5 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1 pt setlinewidth } def
+
+% create skyscrapers_with_parks -s 4
+<<
+/format 1
+/type (skyscrapers_with_parks)
+/sol false
+/author ()
+/size 4
+/parks 1
+/puzzle [
+( 3    )
+(      )
+(2  -  )
+(      )
+(     1)
+(   3  ) ]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+currentdict /digits known not { /digits 1 def } if
+
+1 1 translate
+
+1 setgray
+0 0 size size rectfill
+0 setgray
+
+
+dick
+0 0 size size rectstroke
+
+duenn
+0 1 size { /i e i 0 i size l } for
+0 1 size { /j e 0 j size j l } for
+
+/getNr {
+  /x e /line e
+  /val 0 def
+  0 1 digits 1 sub { /ii e
+    line x ii add get /hh e
+    hh ( ) 0 get eq { /hh (0) 0 get def } if
+    /val val 10 mul hh (0) 0 get sub add def
+  } for
+  val
+} def
+
+/Helvetica findfont 0.65 scalefont setfont
+-1 1 size { /i e
+  -1 1 size { /j e
+    puzzle size j sub get i 1 add digits mul getNr /h e
+    h 0 ne {
+      i j h digits string cvs c
+    } if
+  } for
+} for
+
+sol {
+  0 1 size 1 sub { /i e
+    0 1 size 1 sub { /j e
+      solution size j sub 1 sub get i digits mul get /h e
+      h ( ) 0 get ne {
+        i j h 48 sub 5 string cvs c
+      } if
+    } for
+  } for
+} if
+
+end pgsave restore showpage
+%%EOF

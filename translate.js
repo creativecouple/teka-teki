@@ -568,6 +568,7 @@ teka.dictionary = {
     skyscrapers_left_wrong: 'In der markierten Zeile ist die Anzahl der von links sichtbaren Hochhäuser falsch.',
     skyscrapers_right_wrong: 'In der markierten Zeile ist die Anzahl der von rechts sichtbaren Hochhäuser falsch.',
 
+    skyscrapers_with_parks: 'Hochhäuser mit Parks',
     skyscrapers_with_parks_instructions: 'Tragen Sie in jedes Feld ein Hochhaus der Höhe 1 bis n so ein,'
         +' dass in jeder Zeile und jeder Spalte jede mögliche Höhe genau'
         +' einmal vorkommt, sowie die angegebene Anzahl an Parks. Die'
@@ -592,6 +593,17 @@ teka.dictionary = {
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
         +'und ausschalten.',
+    skyscrapers_with_parks_park: '1 Park',
+    skyscrapers_with_parks_parks: '{1} Parks',
+    skyscrapers_with_parks_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    skyscrapers_with_parks_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
+    skyscrapers_with_parks_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
+    skyscrapers_with_parks_top_wrong: 'In der markierten Spalte ist die Anzahl der von oben sichtbaren Hochhäuser falsch.',
+    skyscrapers_with_parks_bottom_wrong: 'In der markierten Spalte ist die Anzahl der von unten sichtbaren Hochhäuser falsch.',
+    skyscrapers_with_parks_left_wrong: 'In der markierten Zeile ist die Anzahl der von links sichtbaren Hochhäuser falsch.',
+    skyscrapers_with_parks_right_wrong: 'In der markierten Zeile ist die Anzahl der von rechts sichtbaren Hochhäuser falsch.',
+    skyscrapers_with_parks_row_wrong_parks: 'In der markierten Zeile stimmt die Anzahl der Parks nicht.',
+    skyscrapers_with_parks_column_wrong_parks: 'In der markierten Spalte stimmt die Anzahl der Parks nicht.',
 
     starbattle: 'Doppelstern',
     starbattle_instructions: 'Tragen Sie in das Diagramm Sterne so ein, dass sich '
