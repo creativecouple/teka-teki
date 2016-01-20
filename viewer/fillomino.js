@@ -426,6 +426,26 @@ teka.viewer.fillomino.FillominoViewer.prototype.getAngle = function(a,b,c)
     return w;
 };
 
+/** Calculate the angle between the points x1,y1, x2,y2 and x3,y3 */
+teka.viewer.fillomino.FillominoViewer.prototype.getAngleFromCoords = function(x1,y1,x2,y2,x3,y3)
+{
+    var la = teka.sqr(x1-x2)+teka.sqr(y1-y2);
+    var lb = teka.sqr(x3-x2)+teka.sqr(y3-y2);
+    var lc = teka.sqr(x1-x3)+teka.sqr(y1-y3);
+    var h = (la+lb-lc)/(2*Math.sqrt(la*lb));
+    if (h<-0.999999) {
+        return Math.PI;
+    }
+    var w = Math.acos(h);
+
+    var k = (x3-x1)*(y2-y1)-(y3-y1)*(x2-x1);
+
+    if (k<0) {
+        w=2*Math.PI-w;
+    }
+    return w;
+};
+
 /** Calculate the area, that is framed by the given el. */
 teka.viewer.fillomino.FillominoViewer.prototype.getAreaFromNodelist = function(el)
 {
@@ -578,47 +598,122 @@ teka.viewer.fillomino.FillominoViewer.prototype.intersectionPoint = function(g1,
  */
 teka.viewer.fillomino.FillominoViewer.prototype.calculateListsOfNextNeighbours = function()
 {
+    var nb = teka.new_array([this.B],false);
+
+    var l = teka.new_array([this.B],0);
+    var r = teka.new_array([this.B],0);
+    var t = teka.new_array([this.B],0);
+    var b = teka.new_array([this.B],0);
+    var la = teka.new_array([this.B],0);
+    var ra = teka.new_array([this.B],0);
+    var ta = teka.new_array([this.B],0);
+    var ba = teka.new_array([this.B],0);
+
     for (var i=0;i<this.B;i++) {
+        var e1 = this.edge[i].from;
+        var e2 = this.edge[i].to;
+        for (var j=0;j<this.B;j++) {
+            nb[j] = this.edge[j].from==e1 || this.edge[j].from==e2
+                || this.edge[j].to==e1 || this.edge[j].to==e2;
+        }
+
+        if (this.edge[i].l_area!==false) {
+            for (var k=0;k<this.area[this.edge[i].l_area].edgelist.length;k++) {
+                nb[this.area[this.edge[i].l_area].edgelist[k].nr] = true;
+            }
+        }
+        if (this.edge[i].r_area!==false) {
+            for (var k=0;k<this.area[this.edge[i].r_area].edgelist.length;k++) {
+                nb[this.area[this.edge[i].r_area].edgelist[k].nr] = true;
+            }
+        }
+
+        nb[i] = false;
+
+        var xm = (this.node[e1].x+this.node[e2].x)/2;
+        var ym = (this.node[e1].y+this.node[e2].y)/2;
+
+        var lc = 0;
+        var rc = 0;
+        var tc = 0;
+        var bc = 0;
+
+        for (var j=0;j<this.B;j++) {
+            if (nb[j]) {
+                var xm2 = (this.node[this.edge[j].from].x+this.node[this.edge[j].to].x)/2;
+                var ym2 = (this.node[this.edge[j].from].y+this.node[this.edge[j].to].y)/2;
+                var dx = xm-xm2;
+                var dy = ym-ym2;
+
+                if (Math.abs(dx)<=Math.abs(dy)) {
+                    if (dy<0) {
+                        b[bc] = j;
+                        ba[bc] = this.getAngleFromCoords(xm,ym2,xm,ym,xm2,ym2);
+                        bc++;
+                    } else {
+                        t[tc] = j;
+                        ta[tc] = this.getAngleFromCoords(xm,ym2,xm,ym,xm2,ym2);
+                        tc++;
+                    }
+                }
+                if (Math.abs(dx)>=Math.abs(dy)) {
+                    if (dx<=0) {
+                        r[rc] = j;
+                        ra[rc] = this.getAngleFromCoords(xm2,ym,xm,ym,xm2,ym2);
+                        rc++;
+                    } else {
+                        l[lc] = j;
+                        la[lc] = this.getAngleFromCoords(xm2,ym,xm,ym,xm2,ym2);
+                        lc++;
+                    }
+                }
+            }
+        }
+
         this.edge[i].left = [];
         this.edge[i].right = [];
         this.edge[i].top = [];
         this.edge[i].bottom = [];
-    }
+        for (var k=0;k<lc;k++) {
+            this.edge[i].left.push(l[k]);
+        }
+        for (var k=0;k<rc;k++) {
+            this.edge[i].right.push(r[k]);
+        }
+        for (var k=0;k<tc;k++) {
+            this.edge[i].top.push(t[k]);
+        }
+        for (var k=0;k<bc;k++) {
+            this.edge[i].bottom.push(b[k]);
+        }
 
-    for (var i=0;i<this.B;i++) {
-        for (var j=0;j<this.B;j++) {
-            if (i!=j) {
-                if (this.edge[j].from==this.edge[i].from ||
-                    this.edge[j].from==this.edge[i].to) {
-                    if (this.node[this.edge[j].to].x>this.node[this.edge[j].from].x) {
-                        this.edge[i].right.push(j);
-                    }
-                    if (this.node[this.edge[j].to].x<this.node[this.edge[j].from].x) {
-                        this.edge[i].left.push(j);
-                    }
-                    if (this.node[this.edge[j].to].y>this.node[this.edge[j].from].y) {
-                        this.edge[i].bottom.push(j);
-                    }
-                    if (this.node[this.edge[j].to].y<this.node[this.edge[j].from].y) {
-                        this.edge[i].top.push(j);
-                    }
-                }
-                if (this.edge[j].to==this.edge[i].from ||
-                    this.edge[j].to==this.edge[i].to) {
-                    if (this.node[this.edge[j].from].x>this.node[this.edge[j].to].x) {
-                        this.edge[i].right.push(j);
-                    }
-                    if (this.node[this.edge[j].from].x<this.node[this.edge[j].to].x) {
-                        this.edge[i].left.push(j);
-                    }
-                    if (this.node[this.edge[j].from].y>this.node[this.edge[j].to].y) {
-                        this.edge[i].bottom.push(j);
-                    }
-                    if (this.node[this.edge[j].from].y<this.node[this.edge[j].to].y) {
-                        this.edge[i].top.push(j);
-                    }
-                }
+        this.sortNeighbours(this.edge[i].left,la,lc);
+        this.sortNeighbours(this.edge[i].right,ra,rc);
+        this.sortNeighbours(this.edge[i].top,ta,tc);
+        this.sortNeighbours(this.edge[i].bottom,ba,bc);
+    }
+};
+
+/** Sort list of neighbours */
+teka.viewer.fillomino.FillominoViewer.prototype.sortNeighbours = function(a, sa, max)
+{
+    for (var i=0;i<max-1;i++) {
+        var min = sa[i];
+        var minpos = i;
+        for (var j=i+1;j<max;j++) {
+            if (sa[j]<min) {
+                min = sa[j];
+                minpos = j;
             }
+        }
+
+        if (minpos!=i) {
+            var hlp = a[i];
+            a[i] = a[minpos];
+            a[minpos] = hlp;
+            var hlp2 = sa[i];
+            sa[i] = sa[minpos];
+            sa[minpos] = hlp2;
         }
     }
 };
