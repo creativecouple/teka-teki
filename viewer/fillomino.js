@@ -71,11 +71,13 @@ teka.viewer.fillomino.FillominoViewer.prototype.initDataRectangle = function(dat
 {
     var X = parseInt(data.get('X'),10);
     var Y = parseInt(data.get('Y'),10);
-    this.asciiToData(data.get('puzzle'),X,Y);
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),X,Y,digits);
 };
 
 /** Read puzzle from rectangular ascii art. */
-teka.viewer.fillomino.FillominoViewer.prototype.asciiToData = function(ascii, X, Y)
+teka.viewer.fillomino.FillominoViewer.prototype.asciiToData = function(ascii, X, Y, d)
 {
     if (ascii===false) {
         return;
@@ -88,7 +90,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.asciiToData = function(ascii, X,
     var e = [];
     for (var i=0;i<=X;i++) {
         for (var j=0;j<=Y;j++) {
-            if (grid[2*i][2*j]==teka.ord('+')) {
+            if (grid[(d+1)*i][2*j]==teka.ord('+')) {
                 this.node[this.E] = {x:i,y:Y-j};
                 e[i+(X+1)*(Y-j)] = this.E;
                 this.E++;
@@ -101,13 +103,21 @@ teka.viewer.fillomino.FillominoViewer.prototype.asciiToData = function(ascii, X,
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<=Y;j++) {
-            this.edge[this.B] = {from:e[i+(X+1)*(Y-j)],to:e[i+1+(X+1)*(Y-j)]};
+            this.edge[this.B] = {
+                from:e[i+(X+1)*(Y-j)],
+                to:e[i+1+(X+1)*(Y-j)],
+                show:grid[(d+1)*i+d][2*j]==teka.ord('-')
+            };
             this.B++;
         }
     }
     for (var i=0;i<=X;i++) {
         for (var j=0;j<Y;j++) {
-            this.edge[this.B] = {from:e[i+(X+1)*(Y-j)],to:e[i+(X+1)*(Y-(j+1))]};
+            this.edge[this.B] = {
+                from:e[i+(X+1)*(Y-j)],
+                to:e[i+(X+1)*(Y-(j+1))],
+                show:grid[(d+1)*i][2*j+1]==teka.ord('|')
+            };
             this.B++;
         }
     }
@@ -120,7 +130,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.asciiToData = function(ascii, X,
             this.area[this.A] = {
                 x:i+0.5,
                 y:Y-(j+0.5),
-                value:grid[2*i+1][2*j+1]==teka.ord(' ')?false:(grid[2*i+1][2*j+1]-teka.ord('0')),
+                value:this.getNr(grid,(d+1)*i+1,2*j+1,d),
                 style:0
             };
             this.A++;
@@ -173,8 +183,12 @@ teka.viewer.fillomino.FillominoViewer.prototype.listToEdge = function(ascii)
     this.B = 0;
     this.edge = [];
 
-    for (var i=0;i<list.length;i+=2) {
-        this.edge[this.B] = {from:parseInt(list[i],10),to:parseInt(list[i+1],10)};
+    for (var i=0;i<list.length;i+=3) {
+        this.edge[this.B] = {
+            from:parseInt(list[i],10),
+            to:parseInt(list[i+1],10),
+            show:list[i+2]=='true'
+        };
         this.B++;
     }
 };
@@ -619,11 +633,16 @@ teka.viewer.fillomino.FillominoViewer.prototype.getExample = function()
         +'[ 2 1 ] [ 3 1 ] [ 4 1 ] [ 0 2 ] [ 1 2 ] [ 2 2 ] [ 3 2 ] [ 4 2 ] '
         +'[ 0 3 ] [ 1 3 ] [ 2 3 ] [ 3 3 ] [ 4 3 ] [ 0 4 ] [ 1 4 ] [ 2 4 ] '
         +'[ 3 4 ] [ 4 4 ] ]\n/edge [ '
-        +'[ 0 1 ] [ 1 2 ] [ 2 3 ] [ 3 4 ] [ 5 6 ] [ 6 7 ] [ 7 8 ] [ 8 9 ] [ 10 11 ] '
-        +'[ 11 12 ] [ 12 13 ] [ 13 14 ] [ 15 16 ] [ 16 17 ] [ 17 18 ] [ 18 19 ] '
-        +'[ 20 21 ] [ 21 22 ] [ 22 23 ] [ 23 24 ] [ 0 5 ] [ 5 10 ] [ 10 15 ] [ 15 20 ] '
-        +'[ 1 6 ] [ 6 11 ] [ 11 16 ] [ 16 21 ] [ 2 7 ] [ 7 12 ] [ 12 17 ] [ 17 22 ] '
-        +'[ 3 8 ] [ 8 13 ] [ 13 18 ] [ 18 23 ] [ 4 9 ] [ 9 14 ] [ 14 19 ] [ 19 24 ] ]\n'
+        +'[ 0 1 false ] [ 1 2 false ] [ 2 3 false ] [ 3 4 false ] '
+        +'[ 5 6 false ] [ 6 7 false ] [ 7 8 false ] [ 8 9 false ] '
+        +'[ 10 11 false ] [ 11 12 false ] [ 12 13 false ] [ 13 14 false ] '
+        +'[ 15 16 false ] [ 16 17 false ] [ 17 18 false ] [ 18 19 false ] '
+        +'[ 20 21 false ] [ 21 22 false ] [ 22 23 false ] [ 23 24 false ] '
+        +'[ 0 5 false ] [ 5 10 false ] [ 10 15 false ] [ 15 20 false ] '
+        +'[ 1 6 false ] [ 6 11 false ] [ 11 16 false ] [ 16 21 false ] '
+        +'[ 2 7 false ] [ 7 12 false ] [ 12 17 false ] [ 17 22 false ] '
+        +'[ 3 8 false ] [ 8 13 false ] [ 13 18 false ] [ 18 23 false ] '
+        +'[ 4 9 false ] [ 9 14 false ] [ 14 19 false ] [ 19 24 false ] ]\n'
         +'/area [ [ 0.5 0.5 -1 0 2 ] [ 1.5 0.5 1 0 1 ] [ 2.5 0.5 -1 0 2 ] '
         +'[ 3.5 0.5 -1 0 2 ] [ 0.5 1.5 -1 0 2 ] [ 1.5 1.5 3 0 3 ] [ 2.5 1.5 -1 0 3 ] '
         +'[ 3.5 1.5 1 0 1 ] [ 0.5 2.5 4 0 4 ] [ 1.5 2.5 1 0 1 ] [ 2.5 2.5 3 0 3 ] '
@@ -824,7 +843,8 @@ teka.viewer.fillomino.FillominoViewer.prototype.check = function()
 
     // check, if areas of same size touch
     for (var i=0;i<this.B;i++) {
-        if (this.f[i]==teka.viewer.fillomino.Defaults.SET) {
+        if (this.f[i]==teka.viewer.fillomino.Defaults.SET
+           || this.edge[i].show===true) {
             if (this.edge[i].l_area!==false && this.edge[i].r_area!==false &&
                 check[this.edge[i].l_area]==check[this.edge[i].r_area]) {
                 this.area_error[this.edge[i].l_area] = true;
@@ -849,10 +869,10 @@ teka.viewer.fillomino.FillominoViewer.prototype.countArea = function(mark, nr, v
     mark[nr] = c;
 
     var az = 1;
-
     for (var i=0;i<this.area[nr].edgelist.length;i++) {
         var j = this.area[nr].edgelist[i].nr;
-        if (this.f[j]==teka.viewer.fillomino.Defaults.SET) {
+        if (this.f[j]==teka.viewer.fillomino.Defaults.SET
+           || this.edge[j].show===true) {
             continue;
         }
         if (this.edge[j].l_area!==false && this.edge[j].l_area!==nr) {
@@ -879,10 +899,10 @@ teka.viewer.fillomino.FillominoViewer.prototype.findSize = function(mark, nr, ch
     }
 
     var az = 1;
-
     for (var i=0;i<this.area[nr].edgelist.length;i++) {
         var j = this.area[nr].edgelist[i].nr;
-        if (this.f[j]==teka.viewer.fillomino.Defaults.SET) {
+        if (this.f[j]==teka.viewer.fillomino.Defaults.SET
+           || this.edge[j].show===true) {
             continue;
         }
         if (this.edge[j].l_area!==false && this.edge[j].l_area!==nr) {
@@ -1015,8 +1035,21 @@ teka.viewer.fillomino.FillominoViewer.prototype.paint = function(g)
 
     // paint edges
     for (var i=0;i<this.B;i++) {
-        g.strokeStyle = this.getColorString(this.c[i]);
+        if (this.edge[i].show===true) {
+            g.strokeStyle = '#000';
+            g.lineWidth = 5;
+            g.lineCap = 'round';
+            teka.drawLine(g,
+                          this.node[this.edge[i].from].x*S,
+                          this.node[this.edge[i].from].y*S,
+                          this.node[this.edge[i].to].x*S,
+                          this.node[this.edge[i].to].y*S);
+            g.lineCap = 'butt';
+            g.lineWidth = 1;
+            continue;
+        }
 
+        g.strokeStyle = this.getColorString(this.c[i]);
         if (this.f[i]==teka.viewer.fillomino.Defaults.SET) {
             g.lineWidth = 5;
             g.lineCap = 'round';

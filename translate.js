@@ -284,12 +284,11 @@ teka.dictionary = {
         +' eine Zahl befinden. Ausnahme: Ein Gebiet ist vollständig leer und alle umliegenden Gebiete sind komplett angegeben.',
     fillomino_usage: 'Bedienung mit der Maus:\n\n'
         +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
-        +'führt zur nächsten Ziffer, bis zur 9. Der nächste Klick löscht den Feldinhalt.\n\n'
-        +'Sie können auch eine Ziffer durch anklicken und ziehen in ein Nachbarfeld übernehmen.\n\n\n'
+        +'führt zur nächsten Ziffer, bis zur 99. Der nächste Klick löscht den Feldinhalt.\n\n'
         +'Bedienung mit der Tastatur:\n\n'
         +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
-        +'Leertaste: Feldinhalt löschen\n'
-        +'Shift+Cursortasten: Feldinhalt in ein Nachbarfeld ziehen.',
+        +'Minustaste: Markierung von Zahlbereichen\n'
+        +'Leertaste: Feldinhalt löschen\n',
     fillomino_rectangular_size: 'Rechteckgitter der Größe {1}.',
     fillomino_graph_size: 'Mit {1} Feldern.',
     fillomino_empty: 'Das markierte Feld ist leer.',
