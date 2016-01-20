@@ -872,7 +872,7 @@ teka.viewer.fences.FencesViewer.prototype.paint = function(g)
         g.strokeStyle = this.getColorString(this.c[i]);
 
         if (this.f[i]==teka.viewer.fences.Defaults.SET) {
-            g.lineWidth = 4;
+            g.lineWidth = 5;
             g.lineCap = 'round';
             teka.drawLine(g,
                           this.node[this.edge[i].from].x*S,

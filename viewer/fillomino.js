@@ -493,6 +493,72 @@ teka.viewer.fillomino.FillominoViewer.prototype.addSolution = function()
 //////////////////////////////////////////////////////////////////
 
 /**
+ * Calculates for every area a list of points to form a cursor for this list.
+ */
+teka.viewer.fillomino.FillominoViewer.prototype.calculateCursorlists = function()
+{
+    for (var i=0;i<this.A;i++) {
+        this.area[i].cursorlist = this.getCursorlistFromEdgelist(this.area[i].edgelist);
+    }
+};
+
+/**
+ * Calculates a list of points from an ordered list of edges to form a polygon,
+ * that is 4.5 pixel inside of the original polygon.
+ */
+teka.viewer.fillomino.FillominoViewer.prototype.getCursorlistFromEdgelist = function(el)
+{
+    var cl = [];
+
+    for (var k=0;k<el.length;k++) {
+        var node1 = this.node[this.edge[el[k].nr].from];
+        var node2 = this.node[this.edge[el[k].nr].to];
+        if (!el[k].forward) {
+            var tmp = node1;
+            node1 = node2;
+            node2 = tmp;
+        }
+
+        var x1 = node1.x*this.scale;
+        var y1 = node1.y*this.scale;
+        var x2 = node2.x*this.scale;
+        var y2 = node2.y*this.scale;
+        var d = Math.sqrt(teka.sqr(x1-x2)+teka.sqr(y1-y2))/4.5;
+
+        cl.push({
+            x1: x1+(y2-y1)/d,
+            y1: y1-(x2-x1)/d,
+            x2: x2+(y2-y1)/d,
+            y2: y2-(x2-x1)/d
+        });
+    }
+
+    cl.push(cl[0]);
+
+    var nl = [];
+    for (var k=0;k<el.length;k++) {
+        nl.push(this.intersectionPoint(cl[k],cl[k+1]));
+    }
+
+    return nl;
+};
+
+/**
+ * Calculate the intersection point of two lines given by two points.
+ */
+teka.viewer.fillomino.FillominoViewer.prototype.intersectionPoint = function(g1,g2)
+{
+    var nenner = (g2.y2-g2.y1)*(g1.x2-g1.x1)-(g1.y2-g1.y1)*(g2.x2-g2.x1);
+    if (nenner===0) {
+        return false;
+    }
+
+    var xs = ((g2.x2-g2.x1)*(g1.x2*g1.y1-g1.x1*g1.y2)-(g1.x2-g1.x1)*(g2.x2*g2.y1-g2.x1*g2.y2))/nenner;
+    var ys = ((g1.y1-g1.y2)*(g2.x2*g2.y1-g2.x1*g2.y2)-(g2.y1-g2.y2)*(g1.x2*g1.y1-g1.x1*g1.y2))/nenner;
+    return {x:xs,y:ys};
+};
+
+/**
  * For use with keys: For every edge the edges, that can be considered to
  * be left, right, top and bottom, are calculated and saved in lists.
  */
@@ -860,6 +926,8 @@ teka.viewer.fillomino.FillominoViewer.prototype.setMetrics = function(g)
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.mediumfont = teka.getFontData(Math.round(this.scale/3)+'px sans-serif',this.scale);
 
+    this.calculateCursorlists();
+
     if (realwidth>this.width || realheight>this.height) {
         this.scale=false;
     }
@@ -950,7 +1018,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.paint = function(g)
         g.strokeStyle = this.getColorString(this.c[i]);
 
         if (this.f[i]==teka.viewer.fillomino.Defaults.SET) {
-            g.lineWidth = 4;
+            g.lineWidth = 5;
             g.lineCap = 'round';
             teka.drawLine(g,
                           this.node[this.edge[i].from].x*S,
@@ -986,13 +1054,13 @@ teka.viewer.fillomino.FillominoViewer.prototype.paint = function(g)
         }
         if (this.cursor.edge===false && this.cursor.nr!==false) {
             g.strokeStyle = '#f00';
-            g.lineWidth = 3;
+            g.lineWidth = 2;
             g.beginPath();
-            g.moveTo(this.node[this.area[this.cursor.nr].nodelist[0]].x*S,
-                     this.node[this.area[this.cursor.nr].nodelist[0]].y*S);
-            for (var k=1;k<this.area[this.cursor.nr].nodelist.length;k++) {
-                g.lineTo(this.node[this.area[this.cursor.nr].nodelist[k]].x*S,
-                         this.node[this.area[this.cursor.nr].nodelist[k]].y*S);
+            g.moveTo(this.area[this.cursor.nr].cursorlist[0].x,
+                     this.area[this.cursor.nr].cursorlist[0].y);
+            for (var k=1;k<this.area[this.cursor.nr].cursorlist.length;k++) {
+                g.lineTo(this.area[this.cursor.nr].cursorlist[k].x,
+                         this.area[this.cursor.nr].cursorlist[k].y);
             }
             g.closePath();
             g.stroke();
