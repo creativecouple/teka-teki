@@ -592,11 +592,98 @@ teka.viewer.fillomino.FillominoViewer.prototype.intersectionPoint = function(g1,
     return {x:xs,y:ys};
 };
 
+teka.viewer.fillomino.FillominoViewer.prototype.calculateListsOfNextNeighbours = function()
+{
+    this.calculateListsOfNextEdgeNeighbours();
+    this.calculateListsOfNextAreaNeighbours();
+};
+
 /**
  * For use with keys: For every edge the edges, that can be considered to
  * be left, right, top and bottom, are calculated and saved in lists.
  */
-teka.viewer.fillomino.FillominoViewer.prototype.calculateListsOfNextNeighbours = function()
+teka.viewer.fillomino.FillominoViewer.prototype.calculateListsOfNextAreaNeighbours = function()
+{
+    var l = teka.new_array([this.A],0);
+    var r = teka.new_array([this.A],0);
+    var t = teka.new_array([this.A],0);
+    var b = teka.new_array([this.A],0);
+
+    for (var i=0;i<this.A;i++) {
+        var lc = 0;
+        var rc = 0;
+        var tc = 0;
+        var bc = 0;
+
+        if (this.area[i].edgelist===false) {
+            continue;
+        }
+
+        for (var j=0;j<this.area[i].edgelist.length;j++) {
+            var lh = this.edge[this.area[i].edgelist[j].nr].l_area;
+            if (lh!==false && lh!=i) {
+                var dx = this.area[i].x-this.area[lh].x;
+                var dy = this.area[i].y-this.area[lh].y;
+
+                if (Math.abs(dx)<Math.abs(dy)) {
+                    if (dy<0) {
+                        b[bc++] = lh;
+                    } else {
+                        t[tc++] = lh;
+                    }
+                } else {
+                    if (dx<0) {
+                        r[rc++] = lh;
+                    } else {
+                        l[lc++] = lh;
+                    }
+                }
+            }
+            var rh = this.edge[this.area[i].edgelist[j].nr].r_area;
+            if (rh!==false && rh!=i) {
+                var dx = this.area[i].x-this.area[rh].x;
+                var dy = this.area[i].y-this.area[rh].y;
+
+                if (Math.abs(dx)<Math.abs(dy)) {
+                    if (dy<0) {
+                        b[bc++] = rh;
+                    } else {
+                        t[tc++] = rh;
+                    }
+                } else {
+                    if (dx<0) {
+                        r[rc++] = rh;
+                    } else {
+                        l[lc++] = rh;
+                    }
+                }
+            }
+        }
+
+        this.area[i].left = [];
+        this.area[i].right = [];
+        this.area[i].top = [];
+        this.area[i].bottom = [];
+        for (var k=0;k<lc;k++) {
+            this.area[i].left.push(l[k]);
+        }
+        for (var k=0;k<rc;k++) {
+            this.area[i].right.push(r[k]);
+        }
+        for (var k=0;k<tc;k++) {
+            this.area[i].top.push(t[k]);
+        }
+        for (var k=0;k<bc;k++) {
+            this.area[i].bottom.push(b[k]);
+        }
+    }
+};
+
+/**
+ * For use with keys: For every edge the edges, that can be considered to
+ * be left, right, top and bottom, are calculated and saved in lists.
+ */
+teka.viewer.fillomino.FillominoViewer.prototype.calculateListsOfNextEdgeNeighbours = function()
 {
     var nb = teka.new_array([this.B],false);
 
@@ -1198,13 +1285,29 @@ teka.viewer.fillomino.FillominoViewer.prototype.paint = function(g)
 
     if (this.list!==false) {
         g.strokeStyle = '#f00';
-        for (var i=0;i<this.list.length;i++) {
-            if (this.list[i]!=this.cursor.nr) {
-            teka.drawLine(g,
-                          this.node[this.edge[this.list[i]].from].x*S,
-                          this.node[this.edge[this.list[i]].from].y*S,
-                          this.node[this.edge[this.list[i]].to].x*S,
-                          this.node[this.edge[this.list[i]].to].y*S);
+        if (this.cursor.edge===true) {
+            for (var i=0;i<this.list.length;i++) {
+                if (this.list[i]!=this.cursor.nr) {
+                    teka.drawLine(g,
+                                  this.node[this.edge[this.list[i]].from].x*S,
+                                  this.node[this.edge[this.list[i]].from].y*S,
+                                  this.node[this.edge[this.list[i]].to].x*S,
+                                  this.node[this.edge[this.list[i]].to].y*S);
+                }
+            }
+        } else {
+            for (var i=0;i<this.list.length;i++) {
+                if (this.list[i]!=this.cursor.nr) {
+                    g.beginPath();
+                    g.moveTo(this.area[this.list[i]].cursorlist[0].x,
+                             this.area[this.list[i]].cursorlist[0].y);
+                    for (var k=1;k<this.area[this.list[i]].cursorlist.length;k++) {
+                        g.lineTo(this.area[this.list[i]].cursorlist[k].x,
+                                 this.area[this.list[i]].cursorlist[k].y);
+                    }
+                    g.closePath();
+                    g.stroke();
+                }
             }
         }
     }
@@ -1309,6 +1412,36 @@ teka.viewer.fillomino.FillominoViewer.prototype.processKeydownEvent = function(e
     }
 
     if (this.cursor.edge===false) {
+        if (e.key==teka.KEY_ESCAPE && this.list!==false && this.list.length>0) {
+            this.selected = (this.selected+1)%this.list.length;
+            this.cursor.nr = this.list[this.selected];
+            return true;
+        }
+
+        this.list = false;
+        this.selected = false;
+
+        if (e.key==teka.KEY_DOWN && this.area[this.cursor.nr].bottom.length>0) {
+            this.list = this.area[this.cursor.nr].bottom;
+            this.cursor.nr = this.area[this.cursor.nr].bottom[0];
+            return true;
+        }
+        if (e.key==teka.KEY_UP && this.area[this.cursor.nr].top.length>0) {
+            this.list = this.area[this.cursor.nr].top;
+            this.cursor.nr = this.area[this.cursor.nr].top[0];
+            return true;
+        }
+        if (e.key==teka.KEY_LEFT && this.area[this.cursor.nr].left.length>0) {
+            this.list = this.area[this.cursor.nr].left;
+            this.cursor.nr = this.area[this.cursor.nr].left[0];
+            return true;
+        }
+        if (e.key==teka.KEY_RIGHT && this.area[this.cursor.nr].right.length>0) {
+            this.list = this.area[this.cursor.nr].right;
+            this.cursor.nr = this.area[this.cursor.nr].right[0];
+            return true;
+        }
+
         if (e.key==teka.KEY_SPACE) {
             this.setArea(this.cursor.nr,0);
             this.addSomeStrokes();
