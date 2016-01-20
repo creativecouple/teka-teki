@@ -270,6 +270,32 @@ teka.dictionary = {
     fences_number_wrong: 'Bei der markierten Fläche stimmt die Anzahl der Kanten nicht.',
     fences_not_connected: 'Die markierten Kanten hängen nicht mit dem Rest zusammen.',
 
+    fillomino: 'Fillomino',
+    fillomino_instructions: 'Unterteilen Sie das Diagramm in Gebiete und schreiben Sie in jedes Feld'
+        +' eine Zahl. Die Zahlen in einem Gebiet müssen alle gleich sein und die'
+        +' Anzahl der Felder dieses Gebiets angeben. Gebiete gleicher Größe dürfen'
+        +' sich dabei an den Kanten'
+        +' nicht berühren, wohl aber über Eck.\n\n'
+        +'Vorgegebene Zahlen können zum gleichen Gebiet gehören und es kann Gebiete'
+        +' geben, von denen noch keine Zahl bekannt ist - auch mit größeren als den'
+        +' vorgegebenen Zahlen.\n\n'
+        +'Bei den Rätseln, die dieses Applet anzeigen kann, ist keine einzutragende'
+        +' Zahl größer als 9. Für die korrekte Lösung muss sich in jedem Feld'
+        +' eine Zahl befinden. Ausnahme: Ein Gebiet ist vollständig leer und alle umliegenden Gebiete sind komplett angegeben.',
+    fillomino_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer, bis zur 9. Der nächste Klick löscht den Feldinhalt.\n\n'
+        +'Sie können auch eine Ziffer durch anklicken und ziehen in ein Nachbarfeld übernehmen.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Shift+Cursortasten: Feldinhalt in ein Nachbarfeld ziehen.',
+    fillomino_rectangular_size: 'Rechteckgitter der Größe {1}.',
+    fillomino_empty: 'Das markierte Feld ist leer.',
+    fillomino_ambiguous: 'Die Zahlen im markierten Bereich können nicht eindeutig bestimmt werden.',
+    fillomino_area_wrong_size: 'Die Größe des markierten Gebiets stimmt nicht.',
+    fillomino_area_of_same_size: 'An der markierten Stelle berühren sich zwei Gebiete gleicher Größe.',
+
     greater_than_sudoku: 'Vergleichssudoku',
     greater_than_sudoku_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
         +'dass in jeder Zeile, jeder Spalte und jedem fett umrandeten '
