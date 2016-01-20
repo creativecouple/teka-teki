@@ -291,7 +291,9 @@ teka.dictionary = {
         +'Leertaste: Feldinhalt löschen\n'
         +'Shift+Cursortasten: Feldinhalt in ein Nachbarfeld ziehen.',
     fillomino_rectangular_size: 'Rechteckgitter der Größe {1}.',
+    fillomino_graph_size: 'Mit {1} Feldern.',
     fillomino_empty: 'Das markierte Feld ist leer.',
+    fillomino_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     fillomino_ambiguous: 'Die Zahlen im markierten Bereich können nicht eindeutig bestimmt werden.',
     fillomino_area_wrong_size: 'Die Größe des markierten Gebiets stimmt nicht.',
     fillomino_area_of_same_size: 'An der markierten Stelle berühren sich zwei Gebiete gleicher Größe.',
