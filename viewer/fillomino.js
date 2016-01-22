@@ -1360,7 +1360,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.processMousemoveEvent = function
 /** Handles mousedown event. */
 teka.viewer.fillomino.FillominoViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    this.processMousemoveEvent(xc,yc);
+    var erg = this.processMousemoveEvent(xc,yc);
 
     if (this.cursor.nr===false) {
         return erg;
