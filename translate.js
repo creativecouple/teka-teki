@@ -193,25 +193,13 @@ teka.dictionary = {
         +'Bitte beachten Sie: Es kann auch Felder geben, die von keinem '
         +'Buchstaben belegt sind.',
     arukone_usage: 'Bedienung mit der Maus:\n\n'
-        +'Der erste Klick trägt eine A in das Feld ein. Jeder weitere Klick '
-        +'führt zum nächsten Buchstaben. Ist bereits der letzte Buchstabe erreicht, '
-        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
-        +'Alternativ können Sie auch einen Buchstaben aus einem Feld in ein '
-        +'anderes Feld ziehen, indem Sie den Buchstaben anklicken, aber noch '
-        +'nicht los lassen und dann zum neuen Feld ziehen (dragging).\n\n\n'
+        +'Ziehen Sie bei gedrückter Maustaste von einem Feld zum Nachbarfeld, um eine Linie zu zeichnen. '
+        +'Wiederholen Sie diesen Prozess, um zu markieren, dass die entsprechende Linie nicht vorhanden ist (markiert durch ein Kreuz) '
+        +'und wiederholen Sie diesen Prozess erneut, um wieder alles zu löschen.\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
-        +'Buchstabentasten: Den entsprechenden Buchstaben in das Feld eintragen. '
-        +'Sind mehr als 26 Buchstaben im Rätsel vorhanden, so wird zwischen Groß- und '
-        +'Kleinbuchstaben unterschieden. Bewegen Sie den Curser bei gedrückter SHIFT-Taste '
-        +'um einen Buchstaben in das Nachbarfeld zu ziehen.\n'
-        +'Leertaste: Feldinhalt löschen\n\n\n'
-        +'Anonyme Linien: Manchmal möchte man Linien einzeichnen, bei denen man noch '
-        +'nicht weiß zu welchem Buchstaben sie gehören. Benutzen Sie dazu mit der '
-        +'Maus einfach das Dragging mit einem leeren Feld als Startfeld. Mit der '
-        +'Tastatur können Sie die Zifferntasten von 1 bis 9 benutzen. Jede dieser '
-        +'Tasten zeichnet eine eigene Linie. Berühren sich zwei anonyme Linien, '
-        +'oder eine anonyme Linie einen Buchstaben, so werden diese automatisch '
-        +'verschmolzen.',
+        +'Bewegen Sie den Curser bei gedrückter SHIFT-Taste um eine Linie zu zeichnen. '
+        +'Wiederholen Sie diesen Prozess um zu markieren, dass die entsprechende Linie nicht vorhanden ist (markiert durch ein Kreuz) '
+        +'und wiederholen Sie diesen Prozess erneut, um wieder alles zu löschen.',
     arukone_letters: 'Buchstaben von A bis {1}.',
     arukone_deadend: 'Im markierten Feld befindet sich eine Sackgasse.',
     arukone_junction: 'Im markierten Feld stoßen drei Linien zusammen.',

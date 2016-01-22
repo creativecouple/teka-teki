@@ -54,6 +54,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.initData = function(data)
     this.cr = teka.new_array([this.X-1,this.Y],0);
     this.cd = teka.new_array([this.X,this.Y-1],0);
     this.error = teka.new_array([this.X,this.Y],false);
+    this.end = teka.new_array([this.X,this.Y],0);
 };
 
 /** Read puzzle from ascii art. */
@@ -179,6 +180,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.reset = function()
             this.cd[i][j]=0;
         }
     }
+    this.updateEnds();
 };
 
 /** Reset the error marks. */
@@ -241,6 +243,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.clearColor = function(color)
             }
         }
     }
+    this.updateEnds();
 };
 
 /** Save current state. */
@@ -295,6 +298,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.loadState = function(state)
             this.cd[i][j] = state.cd[i][j];
         }
     }
+    this.updateEnds();
 };
 
 //////////////////////////////////////////////////////////////////
@@ -479,6 +483,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.setMetrics = function(g)
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.boldfont = teka.getFontData('bold '+Math.round(this.scale/2)+'px sans-serif',this.scale);
+    this.smallfont = teka.getFontData(Math.round(this.scale/4)+'px sans-serif',this.scale);
 
     if (realwidth>this.width || realheight>this.height) {
         this.scale=false;
@@ -600,6 +605,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.paint = function(g)
                 g.fillRect(i*S,j*S,S,S);
                 continue;
             }
+
             if (this.puzzle[i][j]>0) {
                 g.fillStyle = this.isBlinking()?
                     this.getBlinkColor(i,j,X,this.fr[i%(X-1)][j]):
@@ -611,10 +617,23 @@ teka.viewer.arukone.ArukoneViewer.prototype.paint = function(g)
                            i*S+S/2,j*S+S/2+this.boldfont.delta);
                 continue;
             }
+
             if (this.f[i][j]==1) {
                 g.strokeStyle = this.getColorString(this.c[i][j]);
                 teka.drawLine(g,i*S+S/8,j*S+S/8,(i+1)*S-S/8,(j+1)*S-S/8);
                 teka.drawLine(g,i*S+S/8,(j+1)*S-S/8,(i+1)*S-S/8,j*S+S/8);
+                continue;
+            }
+
+            if (this.end[i][j]>0) {
+                g.save();
+                g.textAlign = 'left';
+                g.textBaseline = 'bottom';
+                g.fillStyle = '#000';
+                g.font = this.smallfont.font;
+                g.fillText(teka.chr(teka.ord('A')+this.end[i][j]-1),
+                           i*S+S/2+2,j*S+S/2-2+this.smallfont.delta);
+                g.restore();
             }
         }
     }
@@ -898,6 +917,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.setEdge = function(x, y, value, vert
     } else {
         this.setHorizontal(x,y,value);
     }
+    this.updateEnds();
 };
 
 /** Sets the value of a vertical edge. */
@@ -957,4 +977,72 @@ teka.viewer.arukone.ArukoneViewer.prototype.set = function(x,y,value)
 
     this.f[x][y] = value;
     this.c[x][y] = this.color;
+};
+
+//////////////////////////////////////////////////////////////////
+
+/** Calculate small letters at the end of a line. */
+teka.viewer.arukone.ArukoneViewer.prototype.updateEnds = function()
+{
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            this.end[i][j] = 0;
+        }
+    }
+
+    var mark = teka.new_array([this.X,this.Y],0);
+
+    var c = 0;
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (this.puzzle[i][j]>0 && mark[i][j]===0) {
+                this.fill(mark,i,j,this.puzzle[i][j],++c);
+            }
+        }
+    }
+};
+
+/** Floodfill connected area and mark ends with letter val. */
+teka.viewer.arukone.ArukoneViewer.prototype.fill = function(mark, x, y, endval, val)
+{
+    if (mark[x][y]!==0) {
+        return;
+    }
+
+    if (this.isDeadEnd(x,y)) {
+        this.end[x][y] = endval;
+    }
+    mark[x][y] = val;
+
+    if (x>0 && (this.fr[x-1][y]==1 || this.pr[x-1][y]==1)) {
+        this.fill(mark,x-1,y,endval,val);
+    }
+    if (x<this.X-1 && (this.fr[x][y]==1 || this.pr[x][y]==1)) {
+        this.fill(mark,x+1,y,endval,val);
+    }
+    if (y>0 && (this.fd[x][y-1]==1 || this.pd[x][y-1]==1)) {
+        this.fill(mark,x,y-1,endval,val);
+    }
+    if (y<this.Y-1 && (this.fd[x][y]==1 || this.pd[x][y]==1)) {
+        this.fill(mark,x,y+1,endval,val);
+    }
+};
+
+/** Check, if a dead end is at position x,y */
+teka.viewer.arukone.ArukoneViewer.prototype.isDeadEnd = function(x, y)
+{
+    var az = 0;
+    if (x>0 && (this.fr[x-1][y]==1 || this.pr[x-1][y]==1)) {
+        az++;
+    }
+    if (x<this.X-1 && (this.fr[x][y]==1 || this.pr[x][y]==1)) {
+        az++;
+    }
+    if (y>0 && (this.fd[x][y-1]==1 || this.pd[x][y-1]==1)) {
+        az++;
+    }
+    if (y<this.Y-1 && (this.fd[x][y]==1 || this.pd[x][y]==1)) {
+        az++;
+    }
+    return az==1;
 };
