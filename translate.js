@@ -186,6 +186,40 @@ teka.dictionary = {
         +'und ausschalten.\n\n'
         +'Links und oben:\n#, * und Q: Markieren\nLeertaste: Feldinhalt löschen',
 
+    arukone: 'Arukone',
+    arukone_instructions: 'Verbinden Sie jeweils gleiche Buchstaben durch einen Linienzug '
+        +'der waagerecht und senkrecht von Feldmittelpunkt zu Feldmittelpunkt '
+        +'verläuft, so dass jedes Feld maximal einmal durchlaufen wird.\n\n'
+        +'Bitte beachten Sie: Es kann auch Felder geben, die von keinem '
+        +'Buchstaben belegt sind.',
+    arukone_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine A in das Feld ein. Jeder weitere Klick '
+        +'führt zum nächsten Buchstaben. Ist bereits der letzte Buchstabe erreicht, '
+        +'so wird durch einen erneuten Klick der Feldinhalt gelöscht.\n\n'
+        +'Alternativ können Sie auch einen Buchstaben aus einem Feld in ein '
+        +'anderes Feld ziehen, indem Sie den Buchstaben anklicken, aber noch '
+        +'nicht los lassen und dann zum neuen Feld ziehen (dragging).\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Buchstabentasten: Den entsprechenden Buchstaben in das Feld eintragen. '
+        +'Sind mehr als 26 Buchstaben im Rätsel vorhanden, so wird zwischen Groß- und '
+        +'Kleinbuchstaben unterschieden. Bewegen Sie den Curser bei gedrückter SHIFT-Taste '
+        +'um einen Buchstaben in das Nachbarfeld zu ziehen.\n'
+        +'Leertaste: Feldinhalt löschen\n\n\n'
+        +'Anonyme Linien: Manchmal möchte man Linien einzeichnen, bei denen man noch '
+        +'nicht weiß zu welchem Buchstaben sie gehören. Benutzen Sie dazu mit der '
+        +'Maus einfach das Dragging mit einem leeren Feld als Startfeld. Mit der '
+        +'Tastatur können Sie die Zifferntasten von 1 bis 9 benutzen. Jede dieser '
+        +'Tasten zeichnet eine eigene Linie. Berühren sich zwei anonyme Linien, '
+        +'oder eine anonyme Linie einen Buchstaben, so werden diese automatisch '
+        +'verschmolzen.',
+    arukone_deadend: 'Im markierten Feld befindet sich eine Sackgasse.',
+    arukone_junction: 'Im markierten Feld stoßen drei Linien zusammen.',
+    arukone_crossing: 'Im markierten Feld befindet sich eine Kreuzung.',
+    arukone_letter_not_connected: 'Vom markierten Buchstaben geht keine Linie weg.',
+    arukone_letter_connected_several_times: 'Vom markierten Buchstaben gehen mehrere Linien weg.',
+    arukone_different_letters: 'Die markierte Linie verbindet unterschiedliche Buchstaben.',
+    arukone_circle: 'Das markierte Feld enthält eine Linie, ist aber mit keinem Buchstaben verbunden.',
+
     basic: 'Basic',
     basic_instructions: 'Tragen Sie Zahlen so in das Diagramm ein, dass in jeder Zeile und '
         +'jeder Spalte jede der angegebenen '
