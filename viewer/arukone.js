@@ -44,8 +44,11 @@ teka.viewer.arukone.ArukoneViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
-    this.asciiToData(data.get('puzzle'));
-    this.asciiToSolution(data.get('solution'));
+    var digits = data.get('digits');
+    this.letters = digits===false;
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
+    this.asciiToSolution(data.get('solution'),digits);
 
     this.f = teka.new_array([this.X,this.Y],false);
     this.c = teka.new_array([this.X,this.Y],0);
@@ -58,7 +61,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.arukone.ArukoneViewer.prototype.asciiToData = function(ascii)
+teka.viewer.arukone.ArukoneViewer.prototype.asciiToData = function(ascii, d)
 {
     if (ascii===false) {
         return;
@@ -70,12 +73,19 @@ teka.viewer.arukone.ArukoneViewer.prototype.asciiToData = function(ascii)
     this.MAX = 0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (grid[2*i+1][2*j+1]>=teka.ord('A')
+            if (this.letters===true
+                && grid[2*i+1][2*j+1]>=teka.ord('A')
                 && grid[2*i+1][2*j+1]<=teka.ord('Z')) {
                 this.puzzle[i][j] = grid[2*i+1][2*j+1]-teka.ord('A')+1;
-                this.MAX = Math.max(this.MAX,grid[2*i+1][2*j+1]-teka.ord('A')+1);
-            } else if (grid[2*i+1][2*j+1]==teka.ord('#')) {
+                this.MAX = Math.max(this.MAX,this.puzzle[i][j]);
+            } else if (grid[(d+1)*i+1][2*j+1]==teka.ord('#')) {
                 this.puzzle[i][j] = teka.viewer.arukone.Defaults.BLACK;
+            } else if (this.letters===false) {
+                this.puzzle[i][j] = this.getNr(grid,(d+1)*i+1,2*j+1,d);
+                if (this.puzzle[i][j]===false) {
+                    this.puzzle[i][j] = 0;
+                }
+                this.MAX = Math.max(this.MAX,this.puzzle[i][j]);
             }
         }
     }
@@ -83,7 +93,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.asciiToData = function(ascii)
     this.pr = teka.new_array([this.X-1,this.Y],0);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (grid[2*i+2][2*j+1]==teka.ord('-')) {
+            if (grid[(d+1)*i+(d+1)][2*j+1]==teka.ord('-')) {
                 this.pr[i][j]=1;
             }
         }
@@ -92,7 +102,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.asciiToData = function(ascii)
     this.pd = teka.new_array([this.X,this.Y-1],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            if (grid[2*i+1][2*j+2]==teka.ord('|')) {
+            if (grid[(d+1)*i+Math.floor((d+2)/2)][2*j+2]==teka.ord('|')) {
                 this.pd[i][j]=1;
             }
         }
@@ -100,7 +110,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.asciiToData = function(ascii)
 };
 
 /** Read solution from ascii art. */
-teka.viewer.arukone.ArukoneViewer.prototype.asciiToSolution = function(ascii)
+teka.viewer.arukone.ArukoneViewer.prototype.asciiToSolution = function(ascii, d)
 {
     if (ascii===false) {
         return;
@@ -111,14 +121,14 @@ teka.viewer.arukone.ArukoneViewer.prototype.asciiToSolution = function(ascii)
     this.sr = teka.new_array([this.X-1,this.Y],0);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.sr[i][j] = grid[2*i+2][2*j+1]==teka.ord('-')?1:0;
+            this.sr[i][j] = grid[(d+1)*i+(d+1)][2*j+1]==teka.ord('-')?1:0;
         }
     }
 
     this.sd = teka.new_array([this.X,this.Y-1],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.sd[i][j] = grid[2*i+1][2*j+2]==teka.ord('|')?1:0;
+            this.sd[i][j] = grid[(d+1)*i+Math.floor((d+2)/2)][2*j+2]==teka.ord('|')?1:0;
         }
     }
 };
@@ -613,8 +623,13 @@ teka.viewer.arukone.ArukoneViewer.prototype.paint = function(g)
                 teka.fillOval(g,i*S+S/2,j*S+S/2,S/2-S/6);
                 g.fillStyle = '#000';
                 g.font = this.boldfont.font;
-                g.fillText(teka.chr(teka.ord('A')+this.puzzle[i][j]-1),
-                           i*S+S/2,j*S+S/2+this.boldfont.delta);
+                if (this.letters===true) {
+                    g.fillText(teka.chr(teka.ord('A')+this.puzzle[i][j]-1),
+                               i*S+S/2,j*S+S/2+this.boldfont.delta);
+                } else {
+                    g.fillText(this.puzzle[i][j],
+                               i*S+S/2,j*S+S/2+this.boldfont.delta);
+                }
                 continue;
             }
 
@@ -631,8 +646,13 @@ teka.viewer.arukone.ArukoneViewer.prototype.paint = function(g)
                 g.textBaseline = 'bottom';
                 g.fillStyle = '#000';
                 g.font = this.smallfont.font;
-                g.fillText(teka.chr(teka.ord('A')+this.end[i][j]-1),
-                           i*S+S/2+2,j*S+S/2-2+this.smallfont.delta);
+                if (this.letters===true) {
+                    g.fillText(teka.chr(teka.ord('A')+this.end[i][j]-1),
+                               i*S+S/2+2,j*S+S/2-2+this.smallfont.delta);
+                } else {
+                    g.fillText(this.end[i][j],
+                               i*S+S/2+2,j*S+S/2-2+this.smallfont.delta);
+                }
                 g.restore();
             }
         }
