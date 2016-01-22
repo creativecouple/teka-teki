@@ -212,6 +212,7 @@ teka.dictionary = {
         +'Tasten zeichnet eine eigene Linie. Berühren sich zwei anonyme Linien, '
         +'oder eine anonyme Linie einen Buchstaben, so werden diese automatisch '
         +'verschmolzen.',
+    arukone_letters: 'Buchstaben von A bis {1}.',
     arukone_deadend: 'Im markierten Feld befindet sich eine Sackgasse.',
     arukone_junction: 'Im markierten Feld stoßen drei Linien zusammen.',
     arukone_crossing: 'Im markierten Feld befindet sich eine Kreuzung.',

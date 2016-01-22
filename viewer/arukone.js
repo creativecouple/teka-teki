@@ -19,6 +19,8 @@ teka.viewer.arukone = {};
 
 /** Some constants. */
 teka.viewer.arukone.Defaults = {
+    BLACK: -1,
+
     CELL: 0,
     H_EDGE: 1,
     V_EDGE: 2
@@ -43,7 +45,10 @@ teka.viewer.arukone.ArukoneViewer.prototype.initData = function(data)
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
     this.asciiToData(data.get('puzzle'));
+    this.asciiToSolution(data.get('solution'));
 
+    this.f = teka.new_array([this.X,this.Y],false);
+    this.c = teka.new_array([this.X,this.Y],0);
     this.fr = teka.new_array([this.X-1,this.Y],0);
     this.fd = teka.new_array([this.X,this.Y-1],0);
     this.cr = teka.new_array([this.X-1,this.Y],0);
@@ -54,21 +59,67 @@ teka.viewer.arukone.ArukoneViewer.prototype.initData = function(data)
 /** Read puzzle from ascii art. */
 teka.viewer.arukone.ArukoneViewer.prototype.asciiToData = function(ascii)
 {
+    if (ascii===false) {
+        return;
+    }
+
     var grid = this.asciiToArray(ascii);
 
     this.puzzle = teka.new_array([this.X,this.Y],0);
     this.MAX = 0;
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (grid[2*i+1][2*j+1]>=teka.ord('A')) {
+            if (grid[2*i+1][2*j+1]>=teka.ord('A')
+                && grid[2*i+1][2*j+1]<=teka.ord('Z')) {
                 this.puzzle[i][j] = grid[2*i+1][2*j+1]-teka.ord('A')+1;
+                this.MAX = Math.max(this.MAX,grid[2*i+1][2*j+1]-teka.ord('A')+1);
+            } else if (grid[2*i+1][2*j+1]==teka.ord('#')) {
+                this.puzzle[i][j] = teka.viewer.arukone.Defaults.BLACK;
             }
-            this.MAX = Math.max(this.MAX,grid[2*i+1][2*j+1]-teka.ord('A')+1);
         }
     }
 
     this.pr = teka.new_array([this.X-1,this.Y],0);
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (grid[2*i+2][2*j+1]==teka.ord('-')) {
+                this.pr[i][j]=1;
+            }
+        }
+    }
+
     this.pd = teka.new_array([this.X,this.Y-1],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            if (grid[2*i+1][2*j+2]==teka.ord('|')) {
+                this.pd[i][j]=1;
+            }
+        }
+    }
+};
+
+/** Read solution from ascii art. */
+teka.viewer.arukone.ArukoneViewer.prototype.asciiToSolution = function(ascii)
+{
+    if (ascii===false) {
+        return;
+    }
+
+    var grid = this.asciiToArray(ascii);
+
+    this.sr = teka.new_array([this.X-1,this.Y],0);
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            this.sr[i][j] = grid[2*i+2][2*j+1]==teka.ord('-')?1:0;
+        }
+    }
+
+    this.sd = teka.new_array([this.X,this.Y-1],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            this.sd[i][j] = grid[2*i+1][2*j+2]==teka.ord('|')?1:0;
+        }
+    }
 };
 
 /** Add solution. */
@@ -91,15 +142,18 @@ teka.viewer.arukone.ArukoneViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.arukone.ArukoneViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (arukone)\n/sol false\n/X 4\n/Y 4\n'
-        +'/puzzle [ (+-+-+-+-+) (| - - |B|) (+|+-+|+|+) (| |C| | |) (+|+|+|+|+) '
-        +'(|A| | |B|) (+-+|+|+-+) (|C- |A| |) (+-+-+-+-+) ]';
+    return '/type (arukone)\n/sol false\n/X 4\n/Y 4\n/puzzle [ '
+        +'(+-+-+-+-+) (|C     C|) (+ + + + +) (|       |) (+ + + + +) '
+        +'(|  B   A|) (+ + + + +) (|  A B  |) (+-+-+-+-+) ]\n/solution [ '
+        +'(+-+-+-+-+) (|C- - -C|) (+ + + + +) (| - - - |) (+|+ + +|+) '
+        +'(|  B-  A|) (+|+ +|+ +) (| -A B  |) (+-+-+-+-+) ]';
 };
 
 /** Returns a list of automatically generated properties. */
 teka.viewer.arukone.ArukoneViewer.prototype.getProperties = function()
 {
-    return [teka.translate('generic_size',[this.X+'x'+this.Y])];
+    return [teka.translate('generic_size',[this.X+'x'+this.Y]),
+            teka.translate('arukone_letters',[teka.chr(teka.ord('A')+this.MAX-1)])];
 };
 
 //////////////////////////////////////////////////////////////////
@@ -107,6 +161,12 @@ teka.viewer.arukone.ArukoneViewer.prototype.getProperties = function()
 /** Reset the whole diagram. */
 teka.viewer.arukone.ArukoneViewer.prototype.reset = function()
 {
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            this.f[i][j] = false;
+            this.c[i][j] = 0;
+        }
+    }
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
             this.fr[i][j]=0;
@@ -160,6 +220,13 @@ teka.viewer.arukone.ArukoneViewer.prototype.copyColor = function(color)
 /** Delete all digits with color. */
 teka.viewer.arukone.ArukoneViewer.prototype.clearColor = function(color)
 {
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (this.c[i][j]==color) {
+                this.f[i][j] = false;
+            }
+        }
+    }
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
             if (this.cr[i][j]==color) {
@@ -179,10 +246,18 @@ teka.viewer.arukone.ArukoneViewer.prototype.clearColor = function(color)
 /** Save current state. */
 teka.viewer.arukone.ArukoneViewer.prototype.saveState = function()
 {
+    var f = teka.new_array([this.X,this.Y],false);
+    var c = teka.new_array([this.X,this.Y],0);
     var fr = teka.new_array([this.X-1,this.Y],0);
     var fd = teka.new_array([this.X,this.Y-1],0);
     var cr = teka.new_array([this.X-1,this.Y],0);
     var cd = teka.new_array([this.X,this.Y-1],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            f[i][j] = this.f[i][j];
+            c[i][j] = this.c[i][j];
+        }
+    }
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
             fr[i][j] = this.fr[i][j];
@@ -196,12 +271,18 @@ teka.viewer.arukone.ArukoneViewer.prototype.saveState = function()
         }
     }
 
-    return { fr:fr, fd:fd, cr:cr, cd:cd };
+    return { f:f, c:c, fr:fr, fd:fd, cr:cr, cd:cd };
 };
 
 /** Load state. */
 teka.viewer.arukone.ArukoneViewer.prototype.loadState = function(state)
 {
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            this.f[i][j] = state.f[i][j];
+            this.c[i][j] = state.c[i][j];
+        }
+    }
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
             this.fr[i][j] = state.fr[i][j];
@@ -224,9 +305,38 @@ teka.viewer.arukone.ArukoneViewer.prototype.check = function()
     var X = this.X;
     var Y = this.Y;
 
+    // create a clean solution from user input and givens
+    var checkr = teka.new_array([this.X-1,this.Y],0);
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            checkr[i][j] = this.fr[i][j]==1?1:0;
+            if (this.pr[i][j]===1) {
+                checkr[i][j] = 1;
+            }
+            if (this.puzzle[i][j]==teka.viewer.arukone.Defaults.BLACK ||
+                this.puzzle[i+1][j]==teka.viewer.arukone.Defaults.BLACK) {
+                checkr[i][j] = 0;
+            }
+        }
+    }
+
+    var checkd = teka.new_array([this.X,this.Y-1],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            checkd[i][j] = this.fd[i][j]==1?1:0;
+            if (this.pd[i][j]===1) {
+                checkd[i][j] = 1;
+            }
+            if (this.puzzle[i][j]==teka.viewer.arukone.Defaults.BLACK ||
+                this.puzzle[i][j+1]==teka.viewer.arukone.Defaults.BLACK) {
+                checkd[i][j] = 0;
+            }
+        }
+    }
+
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            var h = this.countLines(i,j,this.fr,this.fd);
+            var h = this.countLines(i,j,checkr,checkd);
             if (this.puzzle[i][j]===0) {
                 if (h!=0 && h!=2) {
                     this.error[i][j] = true;
@@ -237,6 +347,10 @@ teka.viewer.arukone.ArukoneViewer.prototype.check = function()
                     }
                     return '???'; // should never happen...
                 }
+                continue;
+            }
+
+            if (this.puzzle[i][j]==teka.viewer.arukone.Defaults.BLACK) {
                 continue;
             }
 
@@ -256,7 +370,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.check = function()
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]>0 && mark[i][j]===0) {
-                var erg = this.followLine(mark,i,j,++c);
+                var erg = this.followLine(mark,i,j,++c,checkr,checkd);
                 if (erg!==this.puzzle[i][j]) {
                     for (var ii=0;ii<X;ii++) {
                         for (var jj=0;jj<Y;jj++) {
@@ -273,7 +387,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.check = function()
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (mark[i][j]===0 && this.countLines(i,j,this.fr,this.fd)>0) {
+            if (mark[i][j]===0 && this.countLines(i,j,checkr,checkd)>0) {
                 this.error[i][j] = true;
                 return 'arukone_circle';
             }
@@ -303,7 +417,7 @@ teka.viewer.arukone.ArukoneViewer.prototype.countLines = function(x, y, checkr, 
 };
 
 /** Find the letter at the other end of a line. */
-teka.viewer.arukone.ArukoneViewer.prototype.followLine = function(mark, x, y, val)
+teka.viewer.arukone.ArukoneViewer.prototype.followLine = function(mark, x, y, val, checkr, checkd)
 {
     mark[x][y] = val;
 
@@ -313,13 +427,13 @@ teka.viewer.arukone.ArukoneViewer.prototype.followLine = function(mark, x, y, va
             break; // emergency exit
         }
 
-        if (x>0 && this.fr[x-1][y]==1 && mark[x-1][y]===0) {
+        if (x>0 && checkr[x-1][y]==1 && mark[x-1][y]===0) {
             x--;
-        } else if (x<this.X-1 && this.fr[x][y]==1 && mark[x+1][y]===0) {
+        } else if (x<this.X-1 && checkr[x][y]==1 && mark[x+1][y]===0) {
             x++;
-        } else if (y>0 && this.fd[x][y-1]==1 && mark[x][y-1]===0) {
+        } else if (y>0 && checkd[x][y-1]==1 && mark[x][y-1]===0) {
             y--;
-        } else if (y<this.Y-1 && this.fd[x][y]==1 && mark[x][y+1]===0) {
+        } else if (y<this.Y-1 && checkd[x][y]==1 && mark[x][y+1]===0) {
             y++;
         } else {
             return false;
@@ -420,6 +534,10 @@ teka.viewer.arukone.ArukoneViewer.prototype.paint = function(g)
                 g.lineWidth = 1;
                 continue;
             }
+            if (this.puzzle[i][j]==teka.viewer.arukone.Defaults.BLACK ||
+                this.puzzle[i+1][j]==teka.viewer.arukone.Defaults.BLACK) {
+                continue;
+            }
             g.strokeStyle = this.getColorString(this.cr[i][j]);
             switch (this.fr[i][j]) {
               case 1:
@@ -449,6 +567,10 @@ teka.viewer.arukone.ArukoneViewer.prototype.paint = function(g)
                 g.lineWidth = 1;
                 continue;
             }
+            if (this.puzzle[i][j]==teka.viewer.arukone.Defaults.BLACK ||
+                this.puzzle[i][j+1]==teka.viewer.arukone.Defaults.BLACK) {
+                continue;
+            }
             g.strokeStyle = this.getColorString(this.cd[i][j]);
             switch (this.fd[i][j]) {
               case 1:
@@ -473,6 +595,11 @@ teka.viewer.arukone.ArukoneViewer.prototype.paint = function(g)
     g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
+            if (this.puzzle[i][j]==teka.viewer.arukone.Defaults.BLACK) {
+                g.fillStyle = '#000';
+                g.fillRect(i*S,j*S,S,S);
+                continue;
+            }
             if (this.puzzle[i][j]>0) {
                 g.fillStyle = this.isBlinking()?
                     this.getBlinkColor(i,j,X,this.fr[i%(X-1)][j]):
@@ -483,6 +610,11 @@ teka.viewer.arukone.ArukoneViewer.prototype.paint = function(g)
                 g.fillText(teka.chr(teka.ord('A')+this.puzzle[i][j]-1),
                            i*S+S/2,j*S+S/2+this.boldfont.delta);
                 continue;
+            }
+            if (this.f[i][j]==1) {
+                g.strokeStyle = this.getColorString(this.c[i][j]);
+                teka.drawLine(g,i*S+S/8,j*S+S/8,(i+1)*S-S/8,(j+1)*S-S/8);
+                teka.drawLine(g,i*S+S/8,(j+1)*S-S/8,(i+1)*S-S/8,j*S+S/8);
             }
         }
     }
@@ -573,6 +705,9 @@ teka.viewer.arukone.ArukoneViewer.prototype.processMouseupEvent = function(xc, y
                 this.start.right==this.coord.right &&
                 this.cursor_mode==teka.viewer.arukone.Defaults.V_EDGE) {
                 this.setEdge(this.x,this.y,this.get(this.x,this.y,true)==2?0:2,true);
+            }
+            if (this.cursor_mode==teka.viewer.arukone.Defaults.CELL) {
+                this.set(this.x,this.y,!this.f[this.x][this.y]);
             }
         }
 
@@ -665,6 +800,53 @@ teka.viewer.arukone.ArukoneViewer.prototype.processMousedraggedEvent = function(
 /** Handles keydown event. */
 teka.viewer.arukone.ArukoneViewer.prototype.processKeydownEvent = function(e)
 {
+    if (e.key==teka.KEY_DOWN) {
+        if (this.y<this.Y-1) {
+            if (e.shift) {
+                this.setEdge(this.x,this.y,(this.get(this.x,this.y,false)+1)%2,false);
+            }
+            this.y++;
+        }
+        return true;
+    }
+    if (e.key==teka.KEY_UP) {
+        if (this.y>0) {
+            if (e.shift) {
+                this.setEdge(this.x,this.y-1,(this.get(this.x,this.y-1,false)+1)%2,false);
+            }
+            this.y--;
+        }
+        return true;
+    }
+    if (e.key==teka.KEY_RIGHT) {
+        if (this.x<this.X-1) {
+            if (e.shift) {
+                this.setEdge(this.x,this.y,(this.get(this.x,this.y,true)+1)%2,true);
+            }
+            this.x++;
+        }
+        return true;
+    }
+    if (e.key==teka.KEY_LEFT) {
+        if (this.x>0) {
+            if (e.shift) {
+                this.setEdge(this.x-1,this.y,(this.get(this.x-1,this.y,true)+1)%2,true);
+            }
+            this.x--;
+        }
+        return true;
+    }
+
+    if (e.key==teka.KEY_SPACE) {
+        this.set(this.x,this.y,0);
+        return true;
+    }
+
+    if (e.key==teka.KEY_HASH || e.key==teka.KEY_X) {
+        this.set(this.x,this.y,1);
+        return true;
+    }
+
     return false;
 };
 
@@ -764,4 +946,15 @@ teka.viewer.arukone.ArukoneViewer.prototype.get = function(x, y, vertical)
     }
 
     return this.fd[x][y];
+};
+
+/** Sets the value of a cell, if the color fits. */
+teka.viewer.arukone.ArukoneViewer.prototype.set = function(x,y,value)
+{
+    if (this.f[x][y]!=0 && this.c[x][y]!=this.color) {
+        return;
+    }
+
+    this.f[x][y] = value;
+    this.c[x][y] = this.color;
 };

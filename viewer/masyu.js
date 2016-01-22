@@ -258,9 +258,9 @@ teka.viewer.masyu.MasyuViewer.prototype.saveState = function()
     var f = teka.new_array([this.X,this.Y],false);
     var c = teka.new_array([this.X,this.Y],0);
     var fr = teka.new_array([this.X-1,this.Y],0);
-    var fu = teka.new_array([this.X,this.Y-1],0);
+    var fd = teka.new_array([this.X,this.Y-1],0);
     var cr = teka.new_array([this.X-1,this.Y],0);
-    var cu = teka.new_array([this.X,this.Y-1],0);
+    var cd = teka.new_array([this.X,this.Y-1],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
             f[i][j] = this.f[i][j];
@@ -275,12 +275,12 @@ teka.viewer.masyu.MasyuViewer.prototype.saveState = function()
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            fu[i][j] = this.fd[i][j];
-            cu[i][j] = this.cd[i][j];
+            fd[i][j] = this.fd[i][j];
+            cd[i][j] = this.cd[i][j];
         }
     }
 
-    return { f:f, c:c, fr:fr, fu:fu, cr:cr, cu:cu };
+    return { f:f, c:c, fr:fr, fd:fd, cr:cr, cd:cd };
 };
 
 /** Load state. */
@@ -300,8 +300,8 @@ teka.viewer.masyu.MasyuViewer.prototype.loadState = function(state)
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.fd[i][j] = state.fu[i][j];
-            this.cd[i][j] = state.cu[i][j];
+            this.fd[i][j] = state.fd[i][j];
+            this.cd[i][j] = state.cd[i][j];
         }
     }
 };
