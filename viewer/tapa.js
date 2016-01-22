@@ -518,7 +518,7 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
     g.lineWidth = 1;
 
     // paint grid
-    g.fillStyle = '#000';
+    g.strokeStyle = '#000';
     for (var i=0;i<=X;i++) {
         teka.drawLine(g,i*S,0,i*S,Y*S);
     }
