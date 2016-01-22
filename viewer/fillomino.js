@@ -58,6 +58,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.initData = function(data)
     this.fa = teka.new_array([this.A],0);
     this.ca = teka.new_array([this.A],0);
     this.area_error = teka.new_array([this.A],false);
+    this.auto = teka.new_array([this.B],false);
 
     if (this.node!==undefined) {
         this.moveToFirstQuadrant();
@@ -935,7 +936,17 @@ teka.viewer.fillomino.FillominoViewer.prototype.loadState = function(state)
 /** Check, if the solution is correct. */
 teka.viewer.fillomino.FillominoViewer.prototype.check = function()
 {
-    // Copy to array check
+    // Copy borders to array bcheck
+    var bcheck = teka.new_array([this.B],0);
+    for (var i=0;i<this.B;i++) {
+        if (this.edge[i].show===true
+            || (this.auto[i] && this.f[i]===0)
+            || this.f[i]==teka.viewer.fillomino.Defaults.SET) {
+            bcheck[i] = teka.viewer.fillomino.Defaults.SET;
+        }
+    }
+
+    // Copy areas to array check
     var check = teka.new_array([this.A],0);
     for (var i=0;i<this.A;i++) {
         if (this.area[i].value!==false) {
@@ -972,7 +983,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.check = function()
 
         var mark = teka.new_array([this.A],false);
 
-        var erg = this.findSize(mark,i,check);
+        var erg = this.findSize(mark,i,check, bcheck);
 
         var gut = true;
         for (var k=0;k<this.A;k++) {
@@ -1023,22 +1034,10 @@ teka.viewer.fillomino.FillominoViewer.prototype.check = function()
         }
     }
 
-    // check, if areas of same size touch
-    for (var i=0;i<this.B;i++) {
-        if (this.f[i]==teka.viewer.fillomino.Defaults.SET
-           || this.edge[i].show===true) {
-            if (this.edge[i].l_area!==false && this.edge[i].r_area!==false &&
-                check[this.edge[i].l_area]==check[this.edge[i].r_area]) {
-                this.area_error[this.edge[i].l_area] = true;
-                this.area_error[this.edge[i].r_area] = true;
-                return 'fillomino_area_of_same_size';
-            }
-        }
-    }
-
     return true;
 };
 
+/** Calculate recursively the size of an area. */
 teka.viewer.fillomino.FillominoViewer.prototype.countArea = function(mark, nr, val, c, check)
 {
     if (mark[nr]!==0) {
@@ -1053,10 +1052,6 @@ teka.viewer.fillomino.FillominoViewer.prototype.countArea = function(mark, nr, v
     var az = 1;
     for (var i=0;i<this.area[nr].edgelist.length;i++) {
         var j = this.area[nr].edgelist[i].nr;
-        if (this.f[j]==teka.viewer.fillomino.Defaults.SET
-           || this.edge[j].show===true) {
-            continue;
-        }
         if (this.edge[j].l_area!==false && this.edge[j].l_area!==nr) {
             az += this.countArea(mark,this.edge[j].l_area,val,c,check);
         }
@@ -1068,7 +1063,8 @@ teka.viewer.fillomino.FillominoViewer.prototype.countArea = function(mark, nr, v
     return az;
 };
 
-teka.viewer.fillomino.FillominoViewer.prototype.findSize = function(mark, nr, check)
+/** Try to findout the intended size of an area containing an empty cell. */
+teka.viewer.fillomino.FillominoViewer.prototype.findSize = function(mark, nr, check, bcheck)
 {
     if (mark[nr]!==false) {
         return 0;
@@ -1083,15 +1079,14 @@ teka.viewer.fillomino.FillominoViewer.prototype.findSize = function(mark, nr, ch
     var az = 1;
     for (var i=0;i<this.area[nr].edgelist.length;i++) {
         var j = this.area[nr].edgelist[i].nr;
-        if (this.f[j]==teka.viewer.fillomino.Defaults.SET
-           || this.edge[j].show===true) {
+        if (bcheck[j]==teka.viewer.fillomino.Defaults.SET) {
             continue;
         }
         if (this.edge[j].l_area!==false && this.edge[j].l_area!==nr) {
-            az += this.findSize(mark,this.edge[j].l_area,check);
+            az += this.findSize(mark,this.edge[j].l_area,check,bcheck);
         }
         if (this.edge[j].r_area!==false && this.edge[j].r_area!==nr) {
-            az += this.findSize(mark,this.edge[j].r_area,check);
+            az += this.findSize(mark,this.edge[j].r_area,check,bcheck);
         }
     }
 
@@ -1217,7 +1212,8 @@ teka.viewer.fillomino.FillominoViewer.prototype.paint = function(g)
 
     // paint edges
     for (var i=0;i<this.B;i++) {
-        if (this.edge[i].show===true) {
+        if (this.edge[i].show===true
+            || (this.auto[i] && this.f[i]===0)) {
             g.strokeStyle = '#000';
             g.lineWidth = 5;
             g.lineCap = 'round';
@@ -1569,6 +1565,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.addSomeStrokes = function()
             this.c[i] = 0;
             continue;
         }
+        this.auto[i] = false;
 
         var a = this.area[this.edge[i].l_area].value;
         if (a===false) {
@@ -1585,13 +1582,11 @@ teka.viewer.fillomino.FillominoViewer.prototype.addSomeStrokes = function()
 
         if (a!=0 && b!=0 && a!=b) {
             if (this.f[i]!=teka.viewer.fillomino.Defaults.SET) {
-                this.f[i] = teka.viewer.fillomino.Defaults.SET;
-                this.c[i] = this.color==undefined?0:this.color;
+                this.auto[i] = teka.viewer.fillomino.Defaults.SET;
             }
         }
         if (a!=0 && b!=0 && a==b) {
-            this.f[i] = teka.viewer.fillomino.Defaults.NONE;
-            this.c[i] = 0;
+            this.auto[i] = teka.viewer.fillomino.Defaults.NONE;
         }
     }
 };

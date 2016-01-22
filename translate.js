@@ -302,9 +302,8 @@ teka.dictionary = {
         +'Vorgegebene Zahlen können zum gleichen Gebiet gehören und es kann Gebiete'
         +' geben, von denen noch keine Zahl bekannt ist - auch mit größeren als den'
         +' vorgegebenen Zahlen.\n\n'
-        +'Bei den Rätseln, die dieses Applet anzeigen kann, ist keine einzutragende'
-        +' Zahl größer als 9. Für die korrekte Lösung muss sich in jedem Feld'
-        +' eine Zahl befinden. Ausnahme: Ein Gebiet ist vollständig leer und alle umliegenden Gebiete sind komplett angegeben.',
+        +'Beim Prüfen werden nur die eingetragenen Zahlen beachtet. Kanten werden'
+        +' dort nur benutzt, um die Zahlen in Leerfeldern zu bestimmen.',
     fillomino_usage: 'Bedienung mit der Maus:\n\n'
         +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
         +'führt zur nächsten Ziffer, bis zur 99. Der nächste Klick löscht den Feldinhalt.\n\n'
@@ -318,7 +317,6 @@ teka.dictionary = {
     fillomino_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     fillomino_ambiguous: 'Die Zahlen im markierten Bereich können nicht eindeutig bestimmt werden.',
     fillomino_area_wrong_size: 'Die Größe des markierten Gebiets stimmt nicht.',
-    fillomino_area_of_same_size: 'An der markierten Stelle berühren sich zwei Gebiete gleicher Größe.',
 
     greater_than_sudoku: 'Vergleichssudoku',
     greater_than_sudoku_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
