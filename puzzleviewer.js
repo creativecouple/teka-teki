@@ -74,6 +74,7 @@ teka.viewer.PuzzleViewer = function(data)
 
     this.startx = false;
     this.starty = false;
+    this.start = false;
 };
 teka.extend(teka.viewer.PuzzleViewer,teka.Display);
 

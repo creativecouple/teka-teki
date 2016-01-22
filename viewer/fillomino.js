@@ -32,6 +32,7 @@ teka.viewer.fillomino.FillominoViewer = function(data)
     this.cursor = {edge:false,nr:false};
     this.list = false;
     this.selected = false;
+    this.old = 0;
 };
 teka.extend(teka.viewer.fillomino.FillominoViewer,teka.viewer.PuzzleViewer);
 
@@ -1336,12 +1337,21 @@ teka.viewer.fillomino.FillominoViewer.prototype.processMousemoveEvent = function
     var oldcursor = this.cursor;
 
     this.cursor = {edge:true, nr:this.getEdge(xc/this.scale,yc/this.scale)};
-    if (this.cursor.nr===false) {
+    if (this.cursor.nr===false || this.start!==false) {
         this.cursor = {edge:false, nr:this.getArea(xc/this.scale,yc/this.scale)};
     }
 
     if (this.cursor.nr===false) {
         this.cursor = oldcursor;
+    }
+
+    if (this.start!=this.cursor.nr) {
+        this.moved = true;
+    }
+
+    if (pressed && this.cursor.edge===false) {
+        this.processMousedraggedEvent(xc,yc);
+        return true;
     }
 
     return this.cursor.nr!=oldcursor.nr || this.cursor.edge!=oldcursor.edge;
@@ -1350,7 +1360,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.processMousemoveEvent = function
 /** Handles mousedown event. */
 teka.viewer.fillomino.FillominoViewer.prototype.processMousedownEvent = function(xc, yc)
 {
-    var erg = this.processMousemoveEvent(xc,yc);
+    this.processMousemoveEvent(xc,yc);
 
     if (this.cursor.nr===false) {
         return erg;
@@ -1358,12 +1368,55 @@ teka.viewer.fillomino.FillominoViewer.prototype.processMousedownEvent = function
 
     if (this.cursor.edge===true) {
         this.set(this.cursor.nr,(this.f[this.cursor.nr]+1)%3);
+        this.addSomeStrokes();
     } else {
-        this.setArea(this.cursor.nr,(this.fa[this.cursor.nr]+1)%100);
+        this.start = this.cursor.nr;
+        this.moved = false;
     }
-    this.addSomeStrokes();
 
     return true;
+};
+
+/** Handles mouseup event. */
+teka.viewer.fillomino.FillominoViewer.prototype.processMouseupEvent = function(xc, yc)
+{
+    this.processMousemoveEvent(xc,yc);
+
+    if (this.cursor.edge===true) {
+        return false;
+    }
+
+    if (!this.moved) {
+        this.setArea(this.cursor.nr,(this.fa[this.cursor.nr]+1)%100);
+        this.addSomeStrokes();
+    }
+
+    this.start = false;
+
+    return true;
+};
+
+/**
+ * Handles pseudo event 'mousedragged'
+ * Horizontal and vertical lines are treated separately, as
+ * much faster algorithms can be applied and they should make up the
+ * majority of use cases.
+ */
+teka.viewer.fillomino.FillominoViewer.prototype.processMousedraggedEvent = function(xc, yc)
+{
+    if (this.start===false) {
+        this.start = this.cursor.nr;
+        this.moved = false;
+        return;
+    }
+
+    var last = this.start;
+    this.start = this.cursor.nr;
+
+    this.setArea(this.cursor.nr,this.area[last].value>0
+                    ?this.area[last].value
+                    :this.fa[last]);
+    this.addSomeStrokes();
 };
 
 /** Handles keydown event. */
@@ -1377,7 +1430,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.processKeydownEvent = function(e
         }
 
         this.list = false;
-        this.selected = false;
+        this.selected = 0;
 
         if (e.key==teka.KEY_DOWN && this.edge[this.cursor.nr].bottom.length>0) {
             this.list = this.edge[this.cursor.nr].bottom;
@@ -1421,30 +1474,69 @@ teka.viewer.fillomino.FillominoViewer.prototype.processKeydownEvent = function(e
 
     if (this.cursor.edge===false) {
         if (e.key==teka.KEY_ESCAPE && this.list!==false && this.list.length>0) {
+            if (e.shift) {
+                var tmp = this.fa[this.list[this.selected]];
+                this.setArea(this.list[this.selected],this.old);
+                this.old = this.fa[this.list[(this.selected+1)%this.list.length]];
+                this.setArea(this.list[(this.selected+1)%this.list.length],tmp);
+                this.addSomeStrokes();
+            }
             this.selected = (this.selected+1)%this.list.length;
             this.cursor.nr = this.list[this.selected];
             return true;
         }
 
         this.list = false;
-        this.selected = false;
+        this.selected = 0;
 
         if (e.key==teka.KEY_DOWN && this.area[this.cursor.nr].bottom.length>0) {
+            if (e.shift) {
+                this.old = this.fa[this.area[this.cursor.nr].bottom[0]];
+                this.setArea(this.area[this.cursor.nr].bottom[0],
+                    this.area[this.cursor.nr].value>0
+                    ?this.area[this.cursor.nr].value
+                    :this.fa[this.cursor.nr]);
+                this.addSomeStrokes();
+            }
             this.list = this.area[this.cursor.nr].bottom;
             this.cursor.nr = this.area[this.cursor.nr].bottom[0];
             return true;
         }
         if (e.key==teka.KEY_UP && this.area[this.cursor.nr].top.length>0) {
+            if (e.shift) {
+                this.old = this.fa[this.area[this.cursor.nr].top[0]];
+                this.setArea(this.area[this.cursor.nr].top[0],
+                    this.area[this.cursor.nr].value>0
+                    ?this.area[this.cursor.nr].value
+                    :this.fa[this.cursor.nr]);
+                this.addSomeStrokes();
+            }
             this.list = this.area[this.cursor.nr].top;
             this.cursor.nr = this.area[this.cursor.nr].top[0];
             return true;
         }
         if (e.key==teka.KEY_LEFT && this.area[this.cursor.nr].left.length>0) {
+            if (e.shift) {
+                this.old = this.fa[this.area[this.cursor.nr].left[0]];
+                this.setArea(this.area[this.cursor.nr].left[0],
+                    this.area[this.cursor.nr].value>0
+                    ?this.area[this.cursor.nr].value
+                    :this.fa[this.cursor.nr]);
+                this.addSomeStrokes();
+            }
             this.list = this.area[this.cursor.nr].left;
             this.cursor.nr = this.area[this.cursor.nr].left[0];
             return true;
         }
         if (e.key==teka.KEY_RIGHT && this.area[this.cursor.nr].right.length>0) {
+            if (e.shift) {
+                this.old = this.fa[this.area[this.cursor.nr].right[0]];
+                this.setArea(this.area[this.cursor.nr].right[0],
+                    this.area[this.cursor.nr].value>0
+                    ?this.area[this.cursor.nr].value
+                    :this.fa[this.cursor.nr]);
+                this.addSomeStrokes();
+            }
             this.list = this.area[this.cursor.nr].right;
             this.cursor.nr = this.area[this.cursor.nr].right[0];
             return true;
