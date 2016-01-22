@@ -1034,6 +1034,18 @@ teka.viewer.fillomino.FillominoViewer.prototype.check = function()
         }
     }
 
+    // check, if areas of same size touch
+    for (var i=0;i<this.B;i++) {
+        if (this.edge[i].show===true) {
+            if (this.edge[i].l_area!==false && this.edge[i].r_area!==false &&
+                check[this.edge[i].l_area]==check[this.edge[i].r_area]) {
+                this.area_error[this.edge[i].l_area] = true;
+                this.area_error[this.edge[i].r_area] = true;
+                return 'fillomino_edge_between_same';
+            }
+        }
+    }
+
     return true;
 };
 

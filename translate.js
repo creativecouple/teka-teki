@@ -316,7 +316,8 @@ teka.dictionary = {
     fillomino_empty: 'Das markierte Feld ist leer.',
     fillomino_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     fillomino_ambiguous: 'Die Zahlen im markierten Bereich können nicht eindeutig bestimmt werden.',
-    fillomino_area_wrong_size: 'Die Größe des markierten Gebiets stimmt nicht.',
+    fillomino_area_wrong_size: 'Die Größe des markierten Gebiets stimmt nicht oder es berühren sich hier Gebiete mit gleichen Zahlen.',
+    fillomino_edge_between_same: 'Zwischen den beiden markierten Feldern mit gleicher Zahl befindet sich eine vorgegebene Kante.',
 
     greater_than_sudoku: 'Vergleichssudoku',
     greater_than_sudoku_instructions: 'Tragen Sie die angegebenen Zahlen so in das Diagramm ein, '
