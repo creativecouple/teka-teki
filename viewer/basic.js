@@ -43,6 +43,9 @@ teka.viewer.basic.BasicViewer.prototype.initData = function(data)
     this.X = parseInt(data.get('size'),10);
     var digits = data.get('digits');
     digits = digits===false?1:parseInt(data.get('digits'),10);
+    if (digits<2) {
+        digits = 2;
+    }
     this.asciiToData(data.get('puzzle'),digits);
     this.asciiToSolution(data.get('solution'));
 
