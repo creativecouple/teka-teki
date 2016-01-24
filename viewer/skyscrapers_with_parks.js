@@ -753,7 +753,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.proces
         }
 
         if (this.f[this.x][this.y]>=1000) {
-            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<val))+1000);
+            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<(val+1)))+1000);
         } else if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<110) {
             this.set(this.x,this.y,this.f[this.x][this.y]+10*val);
         } else {
@@ -768,7 +768,9 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.proces
     }
 
     if (e.key==teka.KEY_MINUS) {
-        if (this.f[this.x][this.y]===teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
+        if (this.f[this.x][this.y]>=1000) {
+            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<1))+1000);
+        } else if (this.f[this.x][this.y]===teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
             this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.MINUS);
         } else if (this.f[this.x][this.y]<100 && this.f[this.x][this.y]>=0) {
             this.set(this.x,this.y,100+this.f[this.x][this.y]);
