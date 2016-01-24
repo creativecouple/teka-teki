@@ -107,6 +107,10 @@ teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.fillArea = function(c, x
 /** Read small areas from ascii art */
 teka.viewer.killer_sudoku.Killer_sudokuViewer.prototype.asciiToSmallAreas = function(ascii)
 {
+    if (ascii===false) {
+        return;
+    }
+
     var grid = this.asciiToArray(ascii);
 
     this.mini = teka.new_array([this.X,this.X],0);
