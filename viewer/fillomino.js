@@ -1453,6 +1453,14 @@ teka.viewer.fillomino.FillominoViewer.prototype.processKeydownEvent = function(e
             return true;
         }
 
+        if (e.key==teka.KEY_ESCAPE ||
+            e.key==teka.KEY_DOWN ||
+            e.key==teka.KEY_UP ||
+            e.key==teka.KEY_LEFT ||
+            e.key==teka.KEY_RIGHT) {
+            return true;
+        }
+
         if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
             this.set(this.cursor.nr,teka.viewer.fillomino.Defaults.SET);
             this.addSomeStrokes();
@@ -1539,6 +1547,14 @@ teka.viewer.fillomino.FillominoViewer.prototype.processKeydownEvent = function(e
             }
             this.list = this.area[this.cursor.nr].right;
             this.cursor.nr = this.area[this.cursor.nr].right[0];
+            return true;
+        }
+
+        if (e.key==teka.KEY_ESCAPE ||
+            e.key==teka.KEY_DOWN ||
+            e.key==teka.KEY_UP ||
+            e.key==teka.KEY_LEFT ||
+            e.key==teka.KEY_RIGHT) {
             return true;
         }
 
