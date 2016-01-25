@@ -346,6 +346,9 @@ teka.PuzzleApplet.prototype.initTools = function()
     this.canvas.addEventListener('mouseup',
                                  this.mouseupListener.bind(this),
                                  false);
+    this.canvas.addEventListener('keydown',
+                                 this.keydownListener.bind(this),
+                                 false);
     this.canvas.addEventListener('keypress',
                                  this.keypressListener.bind(this),
                                  false);
@@ -974,9 +977,25 @@ teka.PuzzleApplet.prototype.mousedragListener = function(e)
     this.paint();
 };
 
+/** Eventhandler for keydown events. */
+teka.PuzzleApplet.prototype.keydownListener = function(e)
+{
+    this.keyListener(e,teka.normalizeKeyDownEvent(e));
+};
+
 /** Eventhandler for keypress events. */
 teka.PuzzleApplet.prototype.keypressListener = function(e)
 {
+    this.keyListener(e,teka.normalizeKeyPressEvent(e));
+};
+
+/** Eventhandler for normalized key events. */
+teka.PuzzleApplet.prototype.keyListener = function(e, myEvent)
+{
+    if (myEvent===false) {
+        return false;
+    }
+
     if (teka.error) {
         this.paint();
         return true;
@@ -996,8 +1015,6 @@ teka.PuzzleApplet.prototype.keypressListener = function(e)
     if (this.puzzleViewer.getMode()!=teka.viewer.Defaults.NORMAL) {
         return true;
     }
-
-    var myEvent = teka.normalizeKeyEvent(e);
 
     if (this.checkResize(myEvent)) {
         this.initHead();

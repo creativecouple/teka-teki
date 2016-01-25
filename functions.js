@@ -54,10 +54,10 @@ teka.buttonPressed = function(e)
 };
 
 /**
- * Calculates the value of the key.
+ * Calculates the value of the key of an keypress event.
  * Should work in all supported browsers.
  */
-teka.normalizeKeyEvent = function(e)
+teka.normalizeKeyPressEvent = function(e)
 {
     var ret = {
         key: e.charCode,
@@ -66,16 +66,45 @@ teka.normalizeKeyEvent = function(e)
         alt: e.altKey
     };
 
+    if (ret.key===0) {
+        return false;
+    }
+
     // map lowercase letters to uppercase letters
     if (ret.key>=97 && ret.key<=122) {
         ret.key-=32;
     }
 
-    if (ret.key===0) {
-        ret.key = e.keyCode+256;
+    return ret;
+};
+
+/**
+ * Calculates the value of the key.
+ * Should work in all supported browsers.
+ */
+teka.normalizeKeyDownEvent = function(e)
+{
+    var ret = {
+        key: e.keyCode+256,
+        shift: e.shiftKey,
+        ctrl: e.ctrlKey,
+        alt: e.altKey
+    };
+
+    if (ret.key==teka.KEY_BACKSPACE ||
+        ret.key==teka.KEY_ENTER ||
+        ret.key==teka.KEY_ESCAPE ||
+        ret.key==teka.KEY_PAGE_UP ||
+        ret.key==teka.KEY_PAGE_DOWN ||
+        ret.key==teka.KEY_LEFT ||
+        ret.key==teka.KEY_RIGHT ||
+        ret.key==teka.KEY_UP ||
+        ret.key==teka.KEY_DOWN ||
+        (ret.key>=teka.KEY_F1 && ret.key<=teka.KEY_F12)) {
+        return ret;
     }
 
-    return ret;
+    return false;
 };
 
 /** Stops propagation of an event. */
@@ -324,6 +353,7 @@ teka.KEY_X = 88;
 teka.KEY_Y = 89;
 teka.KEY_Z = 90;
 
+teka.KEY_BACKSPACE = 8+256;
 teka.KEY_ENTER = 13+256;
 teka.KEY_ESCAPE = 27+256;
 teka.KEY_PAGE_UP = 33+256;
