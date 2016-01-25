@@ -134,9 +134,10 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.starry_sky.Starry_skyViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (starry_sky)\n/sol false\n/X 5\n/Y 5'
-        +'\n/puzzle [ (   1 2 1 1 4) ( 3 *     * *) ( 2   q * y *) ( 2   *     *)'
-        +' ( 2 e *     *) ( 0         w) ]';
+    return '/format 1\n/type (starry_sky)\n/sol false\n/X 5\n/Y 5\n/digits 2\n'
+        +'/puzzle [ (   1 1 3 2 2) (         a y) (            ) (            ) '
+        +'( 1       e a) ( 2     d    ) ]\n/solution [ (***  ) (   * ) (  * *) '
+        +'(  *  ) (   **) ]';
 };
 
 /** Returns a list of automatically generated properties. */
@@ -433,6 +434,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.paint = function(g)
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]>0) {
                 g.fillStyle = '#000';
+                g.strokeStyle = '#000';
                 this.drawArrow(g,(i+1)*S+S/2,(j+1)*S+S/2,this.puzzle[i][j]);
                 if (this.f[i][j]==1) {
                     g.strokeStyle = this.getColorString(this.c[i][j]);
@@ -535,7 +537,11 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processMouseupEvent = function
     this.processMousemoveEvent(xc,yc,false);
 
     if (!this.moved) {
-        this.set(this.x,this.y,(this.f[this.x][this.y]+1)%3);
+        if (this.puzzle[this.x][this.y]>0) {
+            this.set(this.x,this.y,(this.f[this.x][this.y]+1)%2);
+        } else {
+            this.set(this.x,this.y,(this.f[this.x][this.y]+1)%3);
+        }
     }
 
     this.startx = false;
@@ -674,7 +680,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processKeydownEvent = function
     if (this.puzzle[this.x][this.y]>0) {
         if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
             this.set(this.x,this.y,1);
-        } else if (this.c==' ') {
+        } else if (e.key==teka.KEY_SPACE) {
             this.set(this.x,this.y,0);
         }
         return true;
