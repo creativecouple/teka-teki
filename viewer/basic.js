@@ -144,15 +144,6 @@ teka.viewer.basic.BasicViewer.prototype.asciiToSolution = function(ascii)
     }
 };
 
-/** asciiToArea */
-teka.viewer.basic.BasicViewer.prototype.asciiToArea = function(ascii)
-{
-    if (ascii===false) {
-        return;
-    }
-
-};
-
 /** Add solution. */
 teka.viewer.basic.BasicViewer.prototype.addSolution = function()
 {
