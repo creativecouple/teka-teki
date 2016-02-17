@@ -1647,7 +1647,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.getEdge = function(x, y)
         var ny = ay+(by-ay)*k;
         var d = teka.sqr(x-nx)+teka.sqr(y-ny);
 
-        if (64*d>1) {
+        if (d*this.scale>1 && 64*d>1) {
             continue;
         }
 
