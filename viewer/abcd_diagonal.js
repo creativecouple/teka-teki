@@ -596,7 +596,7 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.paint = function(g)
                                    S*(i+L)+k%2*S/2+S/4,S*(j+L)+Math.floor(k/2)*S/2+S/4+this.mediumfont.delta);
                     }
                 }
-                g.fillStyle = '#888';
+                g.strokeStyle = '#888';
                 teka.drawLine(g,S*(i+L)+3,S*(j+L)+S/2,S*(i+L)+S-3,S*(j+L)+S/2);
                 teka.drawLine(g,S*(i+L)+S/2,S*(j+L)+3,S*(i+L)+S/2,S*(j+L)+S-3);
                 teka.drawLine(g,(L+i+1)*S-S/8-2,(L+j+1)*S-S/8-2,(L+i+1)*S-2,(L+j+1)*S-2);
@@ -613,7 +613,7 @@ teka.viewer.abcd_diagonal.Abcd_diagonalViewer.prototype.paint = function(g)
                                    S*(i+L)+k%3*S/3+S/6,S*(j+L)+Math.floor(k/3)*S/3+S/6+this.smallfont.delta);
                     }
                 }
-                g.fillStyle = '#888';
+                g.strokeStyle = '#888';
                 teka.drawLine(g,S*(i+L)+3,S*(j+L)+S/3,S*(i+L)+S-3,S*(j+L)+S/3);
                 teka.drawLine(g,S*(i+L)+3,S*(j+L)+2*S/3,S*(i+L)+S-3,S*(j+L)+2*S/3);
                 teka.drawLine(g,S*(i+L)+S/3,S*(j+L)+3,S*(i+L)+S/3,S*(j+L)+S-3);
