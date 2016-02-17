@@ -635,10 +635,8 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
                 continue;
             }
 
-            g.fillStyle = this.getColorString(this.c[i][j]);
-            g.strokeStyle = this.getColorString(this.c[i][j]);
-
             if (this.f[i][j]>0 && this.f[i][j]<10) {
+                g.fillStyle = this.getColorString(this.c[i][j]);
                 g.font = this.font.font;
                 g.fillText(this.f[i][j],(i+L)*S+S/2,(j+T)*S+S/2+this.font.delta);
                 continue;
@@ -646,12 +644,14 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
 
             if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.BLOCK) {
                 if (!this.error[i][j]) {
+                    g.fillStyle = this.getColorString(this.c[i][j]);
                     g.fillRect((L+i)*S,(T+j)*S,S,S);
                 }
                 continue;
             }
 
             if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.DIGIT) {
+                g.strokeStyle = this.getColorString(this.c[i][j]);
                 teka.strokeOval(g,(L+i)*S+S/2,(T+j)*S+S/2,S/2);
                 continue;
             }
@@ -672,6 +672,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
 
             // numbers in expert mode
             g.font = this.smallfont.font;
+            g.fillStyle = this.getColorString(this.c[i][j]);
             for (var k=1;k<=9;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
                     g.fillText(k,
@@ -681,7 +682,7 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.paint = function(g)
             }
 
             // expert grid
-            g.strokeStyle = '#000';
+            g.strokeStyle = '#888';
             teka.drawLine(g,S*i+3*S/8,S*j+S/8,S*i+3*S/8,S*(j+1)-S/8);
             teka.drawLine(g,S*(i+1)-3*S/8,S*j+S/8,S*(i+1)-3*S/8,S*(j+1)-S/8);
             teka.drawLine(g,S*i+S/8,S*j+3*S/8,S*(i+1)-S/8,S*j+3*S/8);
@@ -953,9 +954,6 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.getExpert = function(h)
     }
     if (min===max) {
         return min;
-    }
-    if (min===1 && max===this.MAX) {
-        return teka.viewer.japanese_sums.Defaults.DIGIT;
     }
     return 100+10*max+min;
 };
