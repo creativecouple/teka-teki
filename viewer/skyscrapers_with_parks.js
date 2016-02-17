@@ -20,7 +20,7 @@ teka.viewer.skyscrapers_with_parks = {};
 /** Some constants. */
 teka.viewer.skyscrapers_with_parks.Defaults = {
     EMPTY: 0,
-    MINUS: -1
+    PARK: -1
 };
 
 /** Constructor */
@@ -70,7 +70,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.asciiT
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             if (grid[d*(i+1)+d-1][j+1]==teka.ord('-')) {
-                this.puzzle[i][j] = teka.viewer.skyscrapers_with_parks.Defaults.MINUS;
+                this.puzzle[i][j] = teka.viewer.skyscrapers_with_parks.Defaults.PARK;
                 continue;
             }
             var nr = this.getNr(grid,d*(i+1),j+1,d);
@@ -284,7 +284,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.check 
         var park = 0;
         var da = teka.new_array([X],false);
         for (var i=0;i<X;i++) {
-            if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS ||
+            if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.PARK ||
                 check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
                 park++;
             } else if (da[check[i][j]-1]===true) {
@@ -300,7 +300,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.check 
         }
         if (park!==this.parks) {
             for (var i=0;i<X;i++) {
-                if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS ||
+                if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.PARK ||
                     check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
                     this.error[i][j] = true;
                 }
@@ -314,7 +314,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.check 
         var park = 0;
         var da = teka.new_array([X],false);
         for (var j=0;j<X;j++) {
-            if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS ||
+            if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.PARK ||
                 check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
                 park++;
             } else if (da[check[i][j]-1]===true) {
@@ -330,7 +330,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.check 
         }
         if (park!==this.parks) {
             for (var j=0;j<X;j++) {
-                if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS ||
+                if (check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.PARK ||
                     check[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
                     this.error[i][j] = true;
                 }
@@ -473,47 +473,46 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.paint 
     // paint outside clues
     g.textAlign = 'center';
     g.textBaseline = 'middle';
-    g.fillStyle = '#000';
     g.font = this.font.font;
     for (var i=0;i<X;i++) {
         if (this.topdata[i]!=-1) {
             if (this.error_top[i]===true) {
                 g.fillStyle = '#f00';
                 teka.fillOval(g,(i+1)*S+S/2,S/2,S/3);
-                g.fillStyle = '#000';
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,(i+1)*S+S/2,S/2,S/3);
             }
+            g.fillStyle = '#000';
             g.fillText(this.topdata[i],(i+1)*S+S/2,S/2+this.font.delta);
         }
         if (this.bottomdata[i]!=-1) {
             if (this.error_bottom[i]===true) {
                 g.fillStyle = '#f00';
                 teka.fillOval(g,(i+1)*S+S/2,(X+1)*S+S/2,S/3);
-                g.fillStyle = '#000';
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,(i+1)*S+S/2,(X+1)*S+S/2,S/3);
             }
+            g.fillStyle = '#000';
             g.fillText(this.bottomdata[i],(i+1)*S+S/2,(X+1)*S+S/2+this.font.delta);
         }
         if (this.leftdata[i]!=-1) {
             if (this.error_left[i]===true) {
                 g.fillStyle = '#f00';
                 teka.fillOval(g,S/2,(i+1)*S+S/2,S/3);
-                g.fillStyle = '#000';
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,S/2,(i+1)*S+S/2,S/3);
             }
+            g.fillStyle = '#000';
             g.fillText(this.leftdata[i],S/2,(i+1)*S+S/2+this.font.delta);
         }
         if (this.rightdata[i]!=-1) {
             if (this.error_right[i]===true) {
                 g.fillStyle = '#f00';
                 teka.fillOval(g,(X+1)*S+S/2,(i+1)*S+S/2,S/3);
-                g.fillStyle = '#000';
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,(X+1)*S+S/2,(i+1)*S+S/2,S/3);
             }
+            g.fillStyle = '#000';
             g.fillText(this.rightdata[i],(X+1)*S+S/2,(i+1)*S+S/2+this.font.delta);
         }
     }
@@ -521,10 +520,11 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.paint 
     // paint content of the cells
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
-            if (this.puzzle[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS) {
+            if (this.puzzle[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.PARK) {
                 g.strokeStyle = '#000';
                 g.lineWidth = 3;
-                teka.drawLine(g,(i+1)*S+S/4,(j+1)*S+Math.floor(S/2),(i+2)*S-S/4,(j+1)*S+Math.floor(S/2));
+                teka.drawLine(g,(i+1)*S+S/8,(j+1)*S+S/8,(i+2)*S-S/8,(j+2)*S-S/8);
+                teka.drawLine(g,(i+1)*S+S/8,(j+2)*S-S/8,(i+2)*S-S/8,(j+1)*S+S/8);
                 g.lineWidth = 1;
                 continue;
             }
@@ -538,10 +538,11 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.paint 
                 continue;
             }
 
-            if (this.f[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS) {
+            if (this.f[i][j]==teka.viewer.skyscrapers_with_parks.Defaults.PARK) {
                 g.strokeStyle = this.getColorString(this.c[i][j]);
                 g.lineWidth = 2;
-                teka.drawLine(g,(i+1)*S+S/4,(j+1)*S+Math.floor(S/2)+0.5,(i+2)*S-S/4,(j+1)*S+Math.floor(S/2)+0.5);
+                teka.drawLine(g,(i+1)*S+S/8,(j+1)*S+S/8,(i+2)*S-S/8,(j+2)*S-S/8);
+                teka.drawLine(g,(i+1)*S+S/8,(j+2)*S-S/8,(i+2)*S-S/8,(j+1)*S+S/8);
                 g.lineWidth = 1;
                 continue;
             }
@@ -565,6 +566,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.paint 
             }
 
             // numbers in expert mode
+            g.fillStyle = this.getColorString(this.c[i][j]);
             g.font = this.smallfont.font;
             for (var k=1;k<=9;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
@@ -575,7 +577,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.paint 
             }
 
             // expert grid
-            g.strokeStyle = '#000';
+            g.strokeStyle = '#888';
             teka.drawLine(g,S*(i+1)+3*S/8,S*(j+1)+S/8,S*(i+1)+3*S/8,S*(j+2)-S/8);
             teka.drawLine(g,S*(i+2)-3*S/8,S*(j+1)+S/8,S*(i+2)-3*S/8,S*(j+2)-S/8);
             teka.drawLine(g,S*(i+1)+S/8,S*(j+1)+3*S/8,S*(i+2)-S/8,S*(j+1)+3*S/8);
@@ -674,11 +676,11 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.proces
         if (this.f[this.x][this.y]>=100 && this.f[this.x][this.y]<1000) {
             if (this.xm<this.scale/2) {
                 this.set(this.x,this.y,
-                         (((this.f[this.x][this.y]-100)%10)+1)%(this.X+1)+
+                         (((this.f[this.x][this.y]-100)%10)+1)%(this.X-this.parks+1)+
                          (Math.floor((this.f[this.x][this.y]-100)/10)*10)+100);
             } else {
                 this.set(this.x,this.y,
-                         ((Math.floor((this.f[this.x][this.y]-100)/10)+1)%(this.X+1))*10+
+                         ((Math.floor((this.f[this.x][this.y]-100)/10)+1)%(this.X-this.parks+1))*10+
                          ((this.f[this.x][this.y]-100)%10)+100);
             }
             return true;
@@ -697,8 +699,8 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.proces
     }
 
     if (this.f[this.x][this.y]==this.X-this.parks) {
-        this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.MINUS);
-    } else if (this.f[this.x][this.y]==teka.viewer.skyscrapers_with_parks.Defaults.MINUS) {
+        this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.PARK);
+    } else if (this.f[this.x][this.y]==teka.viewer.skyscrapers_with_parks.Defaults.PARK) {
         this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.EMPTY);
     } else {
         this.set(this.x,this.y,(this.f[this.x][this.y]+1)%(this.X+1-this.parks));
@@ -767,12 +769,17 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.proces
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS) {
+    if (e.key==teka.KEY_X || e.key==teka.KEY_B || e.key==teka.KEY_S) {
         if (this.f[this.x][this.y]>=1000) {
             this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<1))+1000);
-        } else if (this.f[this.x][this.y]===teka.viewer.skyscrapers_with_parks.Defaults.EMPTY) {
-            this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.MINUS);
-        } else if (this.f[this.x][this.y]<100 && this.f[this.x][this.y]>=0) {
+        } else {
+            this.set(this.x,this.y,teka.viewer.skyscrapers_with_parks.Defaults.PARK);
+        }
+        return true;
+    }
+
+    if (e.key==teka.KEY_MINUS) {
+        if (this.f[this.x][this.y]<100 && this.f[this.x][this.y]>=0) {
             this.set(this.x,this.y,100+this.f[this.x][this.y]);
         } else {
             this.set(this.x,this.y,100);
@@ -811,7 +818,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.setExp
     if (h===0) {
         return 1000;
     }
-    if (h==teka.viewer.skyscrapers_with_parks.Defaults.MINUS) {
+    if (h==teka.viewer.skyscrapers_with_parks.Defaults.PARK) {
         return 1002;
     }
     if (h<10) {
@@ -827,6 +834,10 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.setExp
         a = b;
         b = hlp;
     }
+    if (a==0 && b>0) {
+        a++;
+    }
+
     var k=1000;
     for (var i=a;i<=b;i++) {
         k+=1<<(i+1);
@@ -854,7 +865,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.getExp
         return 0;
     }
     if (min==1) {
-        return max==1?teka.viewer.skyscrapers_with_parks.Defaults.MINUS:teka.viewer.skyscrapers_with_parks.Defaults.EMPTY;
+        return max==1?teka.viewer.skyscrapers_with_parks.Defaults.PARK:teka.viewer.skyscrapers_with_parks.Defaults.EMPTY;
     }
     min--;
     max--;

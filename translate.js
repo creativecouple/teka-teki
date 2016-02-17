@@ -685,17 +685,24 @@ teka.dictionary = {
         +'Klick zu einem Minuszeichen. Durch den nächsten Klick wird der '
         +'Feldinhalt gelöscht.\n\n'
         +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
-        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer, sowie Parks, einzeln ein- '
         +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
-        +'den Expertenmodus.\n\n\n'
+        +'den Expertenmodus.\n\n'
+        +'Werden Bereiche angezeigt, können die beiden Zahlen des Bereichs '
+        +'einzeln angeklickt werden um die entsprechende Zahl zu erhöhen. '
+        +'Ein Klick auf die höchstmögliche Zahl führt zu einem Fragezeichen. '
+        +'Ein Klick auf ein Fragezeichen zur kleinstmöglichen Zahl.\n\n'
+        +'Sie können einen Bereich anzeigen lassen, indem Sie im Expertenmodus '
+        +'die kleinste und die größte Zahl des Bereichs angeben und dann den '
+        +'Expertenmodus wieder verlassen.\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
         +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
-        +'EMPTYtaste: Feldinhalt löschen\n'
-        +'X, B oder S: EMPTYfeld markieren\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'X, B oder S: Leerfeld markieren\n'
         +'Minustaste: Markierung von Zahlbereichen\n'
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
-        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
-        +'und ausschalten.',
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer, '
+        +'und mit X, B und S die Parks, einzeln ein- und ausschalten.',
     skyscrapers_with_parks_park: '1 Park',
     skyscrapers_with_parks_parks: '{1} Parks',
     skyscrapers_with_parks_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
