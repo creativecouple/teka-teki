@@ -1001,6 +1001,11 @@ teka.PuzzleApplet.prototype.keyListener = function(e, myEvent)
         return true;
     }
 
+    if (myEvent.key==teka.KEY_BACKSPACE) {
+        teka.stopPropagation(e);
+        return false;
+    }
+
     this.checkTimeout();
 
     if (this.puzzleViewer.getMode()==teka.viewer.Defaults.WAIT ||
