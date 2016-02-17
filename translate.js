@@ -320,6 +320,7 @@ teka.dictionary = {
     fillomino_usage: 'Bedienung mit der Maus:\n\n'
         +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
         +'führt zur nächsten Ziffer, bis zur 99. Der nächste Klick löscht den Feldinhalt.\n\n'
+        +'Zahlbereiche können mit der Maus nicht benutzt werden.\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
         +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
         +'Minustaste: Markierung von Zahlbereichen\n'
