@@ -541,8 +541,8 @@ teka.viewer.basic.BasicViewer.prototype.paint = function(g)
             }
 
             // normal numbers
-            g.fillStyle = this.getColorString(this.c[i][j]);
             if (this.f[i][j]<100) {
+                g.fillStyle = this.getColorString(this.c[i][j]);
                 g.font = this.font.font;
                 g.fillText(this.f[i][j],i*S+S/2,j*S+S/2+this.font.delta);
                 continue;
@@ -560,6 +560,7 @@ teka.viewer.basic.BasicViewer.prototype.paint = function(g)
             }
 
             // numbers in expert mode
+            g.fillStyle = this.getColorString(this.c[i][j]);
             g.font = this.smallfont.font;
             for (var k=1;k<=9;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
