@@ -1258,7 +1258,6 @@ teka.viewer.fillomino.FillominoViewer.prototype.paint = function(g)
             var y = (this.node[this.edge[i].from].y+this.node[this.edge[i].to].y)/2*S;
 
             g.lineWidth = 2;
-            g.strokeStyle = '#000';
             teka.drawLine(g,x-3,y-3,x+3,y+3);
             teka.drawLine(g,x-3,y+3,x+3,y-3);
             g.lineWidth = 1;
