@@ -1116,7 +1116,7 @@ teka.viewer.fences.FencesViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
+    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W || e.key==teka.KEY_SLASH) {
         this.set(this.cursor,teka.viewer.fences.Defaults.EMPTY);
         return true;
     }
