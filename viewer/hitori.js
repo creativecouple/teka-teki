@@ -400,10 +400,11 @@ teka.viewer.hitori.HitoriViewer.prototype.paint = function(g)
                 g.fillText(this.puzzle[i][j],i*S+S/2,j*S+S/2+this.font.delta);
             }
 
-            g.fillStyle = this.getColorString(this.c[i][j]);
             if (this.f[i][j]==teka.viewer.hitori.Defaults.WHITE) {
+                g.strokeStyle = this.getColorString(this.c[i][j]);
                 teka.strokeOval(g,i*S+S/2,j*S+S/2,S/2);
             } else if (this.f[i][j]==teka.viewer.hitori.Defaults.BLACK && !this.error[i][j]) {
+                g.fillStyle = this.getColorString(this.c[i][j]);
                 g.fillRect(i*S,j*S,S,S);
             }
         }
