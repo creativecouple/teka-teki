@@ -439,47 +439,46 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.paint = function(g)
     // paint outside clues
     g.textAlign = 'center';
     g.textBaseline = 'middle';
-    g.fillStyle = '#000';
     g.font = this.font.font;
     for (var i=0;i<X;i++) {
         if (this.topdata[i]!=-1) {
             if (this.error_top[i]===true) {
                 g.fillStyle = '#f00';
                 teka.fillOval(g,(i+1)*S+S/2,S/2,S/3);
-                g.fillStyle = '#000';
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,(i+1)*S+S/2,S/2,S/3);
             }
+            g.fillStyle = '#000';
             g.fillText(this.topdata[i],(i+1)*S+S/2,S/2+this.font.delta);
         }
         if (this.bottomdata[i]!=-1) {
             if (this.error_bottom[i]===true) {
                 g.fillStyle = '#f00';
                 teka.fillOval(g,(i+1)*S+S/2,(X+1)*S+S/2,S/3);
-                g.fillStyle = '#000';
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,(i+1)*S+S/2,(X+1)*S+S/2,S/3);
             }
+            g.fillStyle = '#000';
             g.fillText(this.bottomdata[i],(i+1)*S+S/2,(X+1)*S+S/2+this.font.delta);
         }
         if (this.leftdata[i]!=-1) {
             if (this.error_left[i]===true) {
                 g.fillStyle = '#f00';
                 teka.fillOval(g,S/2,(i+1)*S+S/2,S/3);
-                g.fillStyle = '#000';
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,S/2,(i+1)*S+S/2,S/3);
             }
+            g.fillStyle = '#000';
             g.fillText(this.leftdata[i],S/2,(i+1)*S+S/2+this.font.delta);
         }
         if (this.rightdata[i]!=-1) {
             if (this.error_right[i]===true) {
                 g.fillStyle = '#f00';
                 teka.fillOval(g,(X+1)*S+S/2,(i+1)*S+S/2,S/3);
-                g.fillStyle = '#000';
                 g.strokeStyle = '#000';
                 teka.strokeOval(g,(X+1)*S+S/2,(i+1)*S+S/2,S/3);
             }
+            g.fillStyle = '#000';
             g.fillText(this.rightdata[i],(X+1)*S+S/2,(i+1)*S+S/2+this.font.delta);
         }
     }
@@ -516,6 +515,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.paint = function(g)
             }
 
             // numbers in expert mode
+            g.fillStyle = this.getColorString(this.c[i][j]);
             g.font = this.smallfont.font;
             for (var k=1;k<=9;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
@@ -526,7 +526,7 @@ teka.viewer.skyscrapers.SkyscrapersViewer.prototype.paint = function(g)
             }
 
             // expert grid
-            g.strokeStyle = '#000';
+            g.strokeStyle = '#888';
             teka.drawLine(g,S*(i+1)+3*S/8,S*(j+1)+S/8,S*(i+1)+3*S/8,S*(j+2)-S/8);
             teka.drawLine(g,S*(i+2)-3*S/8,S*(j+1)+S/8,S*(i+2)-3*S/8,S*(j+2)-S/8);
             teka.drawLine(g,S*(i+1)+S/8,S*(j+1)+3*S/8,S*(i+2)-S/8,S*(j+1)+3*S/8);
