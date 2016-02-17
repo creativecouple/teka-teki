@@ -459,13 +459,14 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.paint = function(g)
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.puzzle[i][j]!=teka.viewer.easy_as_abc.Defaults.NONE) {
-                g.fillStyle = '#000';
                 if (this.puzzle[i][j]==teka.viewer.easy_as_abc.Defaults.EMPTY) {
+                    g.strokeStyle = '#000';
                     g.lineWidth = 2;
                     teka.drawLine(g,S*(i+1)+S/3,S*(j+1)+Math.floor(S/2)+0.5,
                                   S*(i+1)+2*S/3,S*(j+1)+Math.floor(S/2)+0.5);
                     g.lineWidth = 1;
                 } else {
+                    g.fillStyle = '#000';
                     g.font = this.font.font;
                     g.fillText(teka.chr(teka.ord('A')+this.puzzle[i][j]-1),
                                (i+1)*S+S/2,(j+1)*S+S/2+this.font.delta);

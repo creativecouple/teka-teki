@@ -264,17 +264,18 @@ teka.dictionary = {
         +'in das Feld ein. Dieser bedeutet, dass es sich um ein Zahlenfeld handelt.'
         +'Durch einen weiteren Klick wird der Feldinhalt gelöscht.\n\n'
         +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
-        +'für dieses Feld. Im Expertenmodus können Sie jeden Buchstaben einzeln ein- '
+        +'für dieses Feld. Im Expertenmodus können Sie Leerfelder und jeden '
+        +'Buchstaben einzeln ein- '
         +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
         +'den Expertenmodus.\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
         +'Buchstabentasten: Den entsprechenden Buchstaben in das Feld eintragen\n'
         +'.: Als Buchstabenfeld markieren (wird als Kreis dargestellt)\n'
-        +'Leertaste: Feldinhalt löschen\n'
         +'Minustaste: Als Leerfeld markieren\n'
+        +'Leertaste: Feldinhalt löschen\n'
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
-        +'Im Expertenmodus können Sie mit den Buchstabentasten jeden Buchstaben einzeln ein- '
-        +'und ausschalten.',
+        +'Im Expertenmodus können Sie mit der Minustaste und den Buchstabentasten '
+        +'das Leersymbol und jeden Buchstaben einzeln ein- und ausschalten.',
     easy_as_abc_letters: 'Buchstaben von A bis {1}.',
     easy_as_abc_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     easy_as_abc_column_duplicate: 'Die markierten Buchstaben kommen in der Spalte doppelt vor.',
