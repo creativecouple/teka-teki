@@ -550,8 +550,8 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.paint = func
             }
 
             // normal numbers
-            g.fillStyle = this.getColorString(this.c[i][j]);
             if (this.f[i][j]<100) {
+                g.fillStyle = this.getColorString(this.c[i][j]);
                 g.font = this.font.font;
                 g.fillText(this.f[i][j],i*S+S/2,j*S+S/2+this.font.delta);
                 continue;
@@ -569,6 +569,7 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.paint = func
             }
 
             // numbers in expert mode
+            g.fillStyle = this.getColorString(this.c[i][j]);
             g.font = this.smallfont.font;
             for (var k=1;k<=9;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
@@ -579,7 +580,7 @@ teka.viewer.greater_than_sudoku.Greater_than_sudokuViewer.prototype.paint = func
             }
 
             // expert grid
-            g.strokeStyle = '#000';
+            g.strokeStyle = '#888';
             teka.drawLine(g,S*i+3*S/8,S*j+S/8,S*i+3*S/8,S*(j+1)-S/8);
             teka.drawLine(g,S*(i+1)-3*S/8,S*j+S/8,S*(i+1)-3*S/8,S*(j+1)-S/8);
             teka.drawLine(g,S*i+S/8,S*j+3*S/8,S*(i+1)-S/8,S*j+3*S/8);
