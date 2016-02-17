@@ -234,12 +234,15 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
     var Y = this.Y;
 
     // copy givens
+    var check = teka.new_array([X,Y],0);
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]<0) {
-                this.f[i][j] = -this.puzzle[i][j];
+                check[i][j] = -this.puzzle[i][j];
             } else if (this.puzzle[i][j]>0) {
-                this.f[i][j] = 0;
+                check[i][j] = 0;
+            } else {
+                check[i][j] = this.f[i][j];
             }
         }
     }
@@ -249,14 +252,14 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
         if (this.leftdata[j]!==false) {
             var c = 0;
             for (var i=0;i<X;i++) {
-                if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                if (check[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
                     c++;
                 }
             }
             if (c!=this.leftdata[j]) {
                 this.error_left[j] = true;
                 for (var i=0;i<X;i++) {
-                    if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                    if (check[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
                         this.error[i][j] = true;
                     }
                 }
@@ -270,14 +273,14 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
         if (this.topdata[i]!==false) {
             var c = 0;
             for (var j=0;j<Y;j++) {
-                if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                if (check[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
                     c++;
                 }
             }
             if (c!=this.topdata[i]) {
                 this.error_top[i] = true;
                 for (var j=0;j<Y;j++) {
-                    if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                    if (check[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
                         this.error[i][j] = true;
                     }
                 }
@@ -310,7 +313,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
                 var ok = false;
                 while (x>=0 && y>=0 && x<X && y<Y) {
                     t[x][y] = true;
-                    if (this.f[x][y]==teka.viewer.starry_sky.Defaults.STAR) {
+                    if (check[x][y]==teka.viewer.starry_sky.Defaults.STAR) {
                         ok = true;
                     }
                     x+=dx;
@@ -327,7 +330,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.check = function()
     // are there stars left?
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR && !t[i][j]) {
+            if (check[i][j]==teka.viewer.starry_sky.Defaults.STAR && !t[i][j]) {
                 this.error[i][j] = true;
                 return 'starry_sky_no_pointer';
             }
@@ -456,11 +459,11 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.paint = function(g)
                 continue;
             }
 
-            g.strokeStyle = this.getColorString(this.c[i][j]);
-            g.fillStyle = this.getColorString(this.c[i][j]);
             if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
+                g.fillStyle = this.getColorString(this.c[i][j]);
                 this.fillStar(g,(i+1)*S+S/2,(j+1)*S+S/2+S/15);
             } else if (this.f[i][j]==teka.viewer.starry_sky.Defaults.NONE) {
+                g.strokeStyle = this.getColorString(this.c[i][j]);
                 teka.drawLine(g,(i+1)*S+S/4,(j+1)*S+S/2,(i+2)*S-S/4,(j+1)*S+S/2);
             }
         }
@@ -691,7 +694,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.processKeydownEvent = function
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
+    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W || e.key==teka.KEY_SLASH) {
         this.set(this.x,this.y,teka.viewer.starry_sky.Defaults.NONE);
         return true;
     }
