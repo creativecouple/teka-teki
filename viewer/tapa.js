@@ -467,16 +467,17 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
                 continue;
             }
 
-            g.fillStyle = '#000';
-            g.strokeStyle = '#000';
             if (this.puzzle[i][j][1]===0) {
+                g.fillStyle = '#000';
                 g.font = this.font.font;
                 g.fillText(this.puzzle[i][j][0],i*S+S/2,j*S+S/2+this.font.delta);
                 continue;
             }
 
             if (this.puzzle[i][j][2]===0) {
+                g.strokeStyle = '#000';
                 teka.drawLine(g,i*S+S,j*S,i*S,j*S+S);
+                g.fillStyle = '#000';
                 g.font = this.smallfont.font;
                 g.fillText(this.puzzle[i][j][0],i*S+S/2-S/4,j*S+S/2-S/4+this.font.delta);
                 g.fillText(this.puzzle[i][j][1],i*S+S/2+S/4,j*S+S/2+S/4+this.font.delta);
@@ -484,9 +485,11 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
             }
 
             if (this.puzzle[i][j][3]===0) {
+                g.strokeStyle = '#000';
                 teka.drawLine(g,i*S,j*S,i*S+S/2,j*S+S/2);
                 teka.drawLine(g,i*S+S,j*S,i*S+S/2,j*S+S/2);
                 teka.drawLine(g,i*S+S/2,j*S+S,i*S+S/2,j*S+S/2);
+                g.fillStyle = '#000';
                 g.font = this.smallfont.font;
                 g.fillText(this.puzzle[i][j][0],i*S+S/2,j*S+S/2-S/4-S/16+this.font.delta);
                 g.fillText(this.puzzle[i][j][1],i*S+S/2-S/4,j*S+S/2+S/4-S/8+this.font.delta);
@@ -494,8 +497,10 @@ teka.viewer.tapa.TapaViewer.prototype.paint = function(g)
                 continue;
             }
 
+            g.strokeStyle = '#000';
             teka.drawLine(g,i*S,j*S,(i+1)*S,(j+1)*S);
             teka.drawLine(g,(i+1)*S,j*S,i*S,(j+1)*S);
+            g.fillStyle = '#000';
             g.font = this.smallfont.font;
             g.fillText(this.puzzle[i][j][0],i*S+S/2-S/4-S/16,j*S+S/2+this.font.delta);
             g.fillText(this.puzzle[i][j][1],i*S+S/2,j*S+S/2-S/4-S/16+this.font.delta);
@@ -622,7 +627,7 @@ teka.viewer.tapa.TapaViewer.prototype.processKeydownEvent = function(e)
     }
 
     if (this.puzzle[this.x][this.y][0]!=0) {
-        if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q) {
+        if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
             this.set(this.x,this.y,1);
             return true;
         }
@@ -643,7 +648,7 @@ teka.viewer.tapa.TapaViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
+    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W || e.key==teka.KEY_SLASH) {
         this.set(this.x,this.y,teka.viewer.tapa.Defaults.EMPTY);
         return true;
     }
