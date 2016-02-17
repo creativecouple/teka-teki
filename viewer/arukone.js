@@ -839,6 +839,10 @@ teka.viewer.arukone.ArukoneViewer.prototype.processMousedraggedEvent = function(
 /** Handles keydown event. */
 teka.viewer.arukone.ArukoneViewer.prototype.processKeydownEvent = function(e)
 {
+    if (this.cursor_mode!=teka.viewer.arukone.Defaults.CELL) {
+        return false;
+    }
+
     if (e.key==teka.KEY_DOWN) {
         if (this.y<this.Y-1) {
             if (e.shift) {
