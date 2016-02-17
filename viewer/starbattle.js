@@ -422,6 +422,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
 
     // paint areas
     g.lineWidth = 3;
+    g.strokeStyle = '#000';
     g.strokeRect(0,0,X*S,X*S);
 
     g.lineCap = 'square';
@@ -448,7 +449,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
         for (var j=0;j<X;j++) {
             if (this.cells[i][j]==teka.viewer.starbattle.Defaults.STAR) {
                 g.fillStyle = '#000';
-                this.drawStar(g,i*S+S/2,j*S+S/2+S/15);
+                this.fillStar(g,i*S+S/2,j*S+S/2+S/15);
                 continue;
             }
 
@@ -463,7 +464,7 @@ teka.viewer.starbattle.StarbattleViewer.prototype.paint = function(g)
 
             if (this.f[i][j]==teka.viewer.starbattle.Defaults.STAR) {
                 g.fillStyle = this.getColorString(this.c[i][j]);
-                this.drawStar(g,i*S+S/2,j*S+S/2+S/15);
+                this.fillStar(g,i*S+S/2,j*S+S/2+S/15);
                 continue;
             }
 
@@ -571,12 +572,12 @@ teka.viewer.starbattle.StarbattleViewer.prototype.processKeydownEvent = function
     }
 
     if (e.key==teka.KEY_HASH || e.key==teka.KEY_Q || e.key==teka.KEY_STAR) {
-        this.set(this.x,this.y,1);
+        this.set(this.x,this.y,teka.viewer.starbattle.Defaults.STAR);
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
-        this.set(this.x,this.y,2);
+    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W || e.key==teka.KEY_SLASH) {
+        this.set(this.x,this.y,teka.viewer.starbattle.Defaults.EMPTY);
         return true;
     }
 

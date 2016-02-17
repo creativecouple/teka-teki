@@ -445,7 +445,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.paint = function(g)
             }
             if (this.puzzle[i][j]==-teka.viewer.starry_sky.Defaults.STAR) {
                 g.fillStyle = '#000';
-                this.drawStar(g,(i+1)*S+S/2,(j+1)*S+S/2);
+                this.fillStar(g,(i+1)*S+S/2,(j+1)*S+S/2);
                 continue;
             }
             if (this.puzzle[i][j]==-teka.viewer.starry_sky.Defaults.NONE) {
@@ -459,7 +459,7 @@ teka.viewer.starry_sky.Starry_skyViewer.prototype.paint = function(g)
             g.strokeStyle = this.getColorString(this.c[i][j]);
             g.fillStyle = this.getColorString(this.c[i][j]);
             if (this.f[i][j]==teka.viewer.starry_sky.Defaults.STAR) {
-                this.drawStar(g,(i+1)*S+S/2,(j+1)*S+S/2+S/15);
+                this.fillStar(g,(i+1)*S+S/2,(j+1)*S+S/2+S/15);
             } else if (this.f[i][j]==teka.viewer.starry_sky.Defaults.NONE) {
                 teka.drawLine(g,(i+1)*S+S/4,(j+1)*S+S/2,(i+2)*S-S/4,(j+1)*S+S/2);
             }

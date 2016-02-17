@@ -313,7 +313,7 @@ teka.viewer.PuzzleViewer.prototype.getVNr = function(c,x,y,d)
 /**
  * Draw a star at position x,y.
  */
-teka.viewer.PuzzleViewer.prototype.drawStar = function(g, x, y)
+teka.viewer.PuzzleViewer.prototype.fillStar = function(g, x, y)
 {
     g.save();
     g.translate(x,y);
