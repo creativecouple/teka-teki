@@ -989,7 +989,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.check = function()
         var gut = true;
         for (var k=0;k<this.A;k++) {
             if (mark[k]===true && check[k]>0) {
-                if (gut===true) {
+                if (gut===true || gut===check[k]) {
                     gut = check[k];
                 } else {
                     gut = false;
