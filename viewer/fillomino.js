@@ -1227,7 +1227,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.paint = function(g)
     for (var i=0;i<this.B;i++) {
         if (this.edge[i].show===true
             || (this.auto[i] && this.f[i]===0)) {
-            g.strokeStyle = '#000';
+            g.strokeStyle = this.edge[i].show===true?'#000':'#888';
             g.lineWidth = 5;
             g.lineCap = 'round';
             teka.drawLine(g,
@@ -1258,6 +1258,7 @@ teka.viewer.fillomino.FillominoViewer.prototype.paint = function(g)
             var y = (this.node[this.edge[i].from].y+this.node[this.edge[i].to].y)/2*S;
 
             g.lineWidth = 2;
+            g.strokeStyle = '#000';
             teka.drawLine(g,x-3,y-3,x+3,y+3);
             teka.drawLine(g,x-3,y+3,x+3,y-3);
             g.lineWidth = 1;
@@ -1709,4 +1710,57 @@ teka.viewer.fillomino.FillominoViewer.prototype.addSomeStrokes = function()
             this.auto[i] = teka.viewer.fillomino.Defaults.NONE;
         }
     }
+
+    var c = 0;
+    var mark = teka.new_array([this.A],0);
+    for (var i=0;i<this.A;i++) {
+        if (mark[i]===0) {
+            c++;
+
+            var val = this.area[i].value===false?this.fa[i]:this.area[i].value;
+            if (val===0 || val>=100) {
+                continue;
+            }
+
+            var az = this.countAutoArea(mark,i,val,c);
+            if (az==val) {
+                for (var k=0;k<this.B;k++) {
+                    if (this.edge[k].l_area===false || this.edge[k].r_area===false) {
+                        continue;
+                    }
+                    var m1 = mark[this.edge[k].l_area];
+                    var m2 = mark[this.edge[k].r_area];
+                    if ((m1==c && m2!=c) || (m2==c && m1!=c)) {
+                        this.auto[k] = teka.viewer.fillomino.Defaults.SET;
+                    }
+                }
+            }
+        }
+    }
+};
+
+/** Calculate recursively the size of an area. */
+teka.viewer.fillomino.FillominoViewer.prototype.countAutoArea = function(mark, nr, val, c)
+{
+    if (mark[nr]!==0) {
+        return 0;
+    }
+    if ((this.area[nr].value===false?this.fa[nr]:this.area[nr].value)!==val) {
+        return 0;
+    }
+
+    mark[nr] = c;
+
+    var az = 1;
+    for (var i=0;i<this.area[nr].edgelist.length;i++) {
+        var j = this.area[nr].edgelist[i].nr;
+        if (this.edge[j].l_area!==false && this.edge[j].l_area!==nr) {
+            az += this.countAutoArea(mark,this.edge[j].l_area,val,c);
+        }
+        if (this.edge[j].r_area!==false && this.edge[j].r_area!==nr) {
+            az += this.countAutoArea(mark,this.edge[j].r_area,val,c);
+        }
+    }
+
+    return az;
 };
