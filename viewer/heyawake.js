@@ -610,7 +610,7 @@ teka.viewer.heyawake.HeyawakeViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W) {
+    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_W || e.key==teka.KEY_SLASH) {
         this.set(this.x,this.y,2);
         return true;
     }
