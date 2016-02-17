@@ -202,7 +202,7 @@ teka.dictionary = {
         +'Bedienung mit der Tastatur:\n\n'
         +'Bewegen Sie den Curser bei gedrückter SHIFT-Taste um eine Linie zu zeichnen. '
         +'Wiederholen Sie diesen Prozess um die Linie wieder zu löschen.\n\n'
-        +'# und X: Markiert das Feld durch ein X.'
+        +'# und X: Markiert das Feld durch ein X.\n'
         +'Leertaste: Löscht das X im Feld.\n\n'
         +'Kreuze auf Linien können derzeit mit der Tastatur nicht eingetragen werden.',
     arukone_letters: 'Buchstaben von A bis {1}.',
@@ -613,12 +613,17 @@ teka.dictionary = {
         +' 90°-Winkel abbiegen.',
     masyu_usage: 'Bedienung mit der Maus:\n\n'
         +'Ziehen Sie bei gedrückter Maustaste von einem Feld zum Nachbarfeld, um eine Linie zu zeichnen. '
-        +'Wiederholen Sie diesen Prozess, um zu markieren, dass die entsprechende Linie nicht vorhanden ist (markiert durch ein Kreuz) '
-        +'und wiederholen Sie diesen Prozess erneut, um wieder alles zu löschen.\n\n\n'
+        +'Wiederholen Sie diesen Prozess, um die entsprechende Linie zu löschen.\n\n'
+        +'Klicken Sie auf eine Kante, um diese Kante durch ein Kreuz zu markieren. '
+        +'Klicken Sie erneut auf die Kante, um das Kreuz wieder zu entfernen.\n\n'
+        +'Klicken Sie in ein Feld um ein Kreuz in dieses Feld zu setzen. '
+        +'Klicken Sie erneut in das Feld um das Kreuz wieder zu entfernen.\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
         +'Bewegen Sie den Curser bei gedrückter SHIFT-Taste um eine Linie zu zeichnen. '
-        +'Wiederholen Sie diesen Prozess um zu markieren, dass die entsprechende Linie nicht vorhanden ist (markiert durch ein Kreuz) '
-        +'und wiederholen Sie diesen Prozess erneut, um wieder alles zu löschen.',
+        +'Wiederholen Sie diesen Prozess um die Linie wieder zu löschen.\n\n'
+        +'# und X: Markiert das Feld durch ein X.\n'
+        +'Leertaste: Löscht das X im Feld.\n\n'
+        +'Kreuze auf Linien können derzeit mit der Tastatur nicht eingetragen werden.',
     masyu_deadend: 'Im markierten Feld befindet sich eine Sackgasse.',
     masyu_junction: 'Im markierten Feld stoßen drei Linien zusammen.',
     masyu_crossing: 'Im markierten Feld befindet sich eine Kreuzung.',
