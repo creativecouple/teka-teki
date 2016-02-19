@@ -834,7 +834,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.setExp
         a = b;
         b = hlp;
     }
-    if (a==0 && b>0) {
+    if (a===0 && b>0) {
         a++;
     }
 
