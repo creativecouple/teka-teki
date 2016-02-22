@@ -690,7 +690,7 @@ teka.viewer.skyscrapers_with_parks.Skyscrapers_with_parksViewer.prototype.proces
     if (this.f[this.x][this.y]>=1000) {
         var nr = ((this.xm<3*this.scale/8)?0:(this.xm>this.scale-3*this.scale/8)?2:1)+
             3*((this.ym<3*this.scale/8)?0:(this.ym>this.scale-3*this.scale/8)?2:1)+1;
-        if (nr<1 || nr>this.X) {
+        if (nr<1 || nr>this.X-this.parks+1) {
             return erg;
         }
 
