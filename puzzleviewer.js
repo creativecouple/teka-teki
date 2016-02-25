@@ -406,16 +406,16 @@ teka.viewer.PuzzleViewer.prototype.normalizeCoordinates = function(xc,yc)
     var bottomright = false;
     var topleft = false;
     var topright = false;
-    if (xm<this.scale/8 && ym<this.scale/8) {
+    if (xm<this.scale/4 && ym<this.scale/4) {
         topleft = true;
     }
-    if (xm>this.scale-this.scale/8 && ym<this.scale/8) {
+    if (xm>this.scale-this.scale/4 && ym<this.scale/4) {
         topright = true;
     }
-    if (xm<this.scale/8 && ym>this.scale-this.scale/8) {
+    if (xm<this.scale/4 && ym>this.scale-this.scale/4) {
         bottomleft = true;
     }
-    if (xm>this.scale-this.scale/8 && ym>this.scale-this.scale/8) {
+    if (xm>this.scale-this.scale/4 && ym>this.scale-this.scale/4) {
         bottomright = true;
     }
 

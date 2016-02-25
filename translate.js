@@ -580,6 +580,41 @@ teka.dictionary = {
     kropki_not_twice: 'Keines der beiden markierten Felder enthält das Doppelte des anderen.',
     kropki_digits: 'Ziffern von 1 bis {1}.',
 
+    laser: 'Laser',
+    laser_instructions: 'Zeichnen Sie einen Laserstrahl in das Diagramm, der nur diagonal '
+        +'verläuft und das Diagramm an den mit Pfeilen markierten Stellen '
+        +'betritt und verlässt. Platzieren Sie an einigen Gitterpunkten '
+        +'Spiegel, sodass jeder Spiegel vom Laserstrahl auf genau einer '
+        +'Seite getroffen wird. Die Zahlen links und oben geben an, wie '
+        +'viele Felder der Strahl in der entsprechenden Zeile oder Spalte '
+        +'durchläuft und die Zahlen rechts und unten geben die Anzahl der '
+        +'entlang der entsprechenden Linie zu platzierenden Spiegel an. '
+        +'Alle Kreuzungen sind bereits vorgegeben.\n\n'
+        +'Für eine korrekte Lösung sind nur die Laserstrahlen relevant; '
+        +'alle anderen Symbole, insbesondere auch falsche Spiegelsymbole '
+        +'werden dabei ignoriert.',
+    laser_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Laserstrahl oder Spiegel\n'
+        +'2. Klick: Leeres Feld (markiert durch ein Minus) oder kein Spiegel (markiert durch einen leeren Kreis)\n'
+        +'3. Klick: Feldinhalt löschen\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Laserstrahl oder Spiegel\n'
+        +'-, / und W: Leeres Feld (markiert durch ein Minus) oder kein Spiegel (markiert durch einen leeren Kreis)\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'Escape: Wechsel zwischen Feld- und Spiegelcursor\n\n\n'
+        +'Der Laserstrahl wird in jedem Feld automatisch in der richtigen Orientierung '
+        +'eingezeichnet.',
+    laser_no_crossing: 'An der markierten Stelle kreuzt sich der Laserstrahl nicht.',
+    laser_start_end_count: 'An der markierten Stelle stimmt die Anzahl der Laserstrahlen nicht.',
+    laser_wrong_start_angle: 'Der Strahl betritt das Gitter im falschen Winkel.',
+    laser_wrong_finish_angle: 'Der Strahl verlässt das Gitter im falschen Winkel.',
+    laser_wrong_count: 'An der markierten Stelle stimmt die Anzahl der Laserstrahlen nicht.',
+    laser_top_wrong: 'In der markierten Spalte stimmt die Anzahl der Laserstrahlen nicht.',
+    laser_left_wrong: 'In der markierten Zeile stimmt die Anzahl der Laserstrahlen nicht.',
+    laser_bottom_wrong: 'In der markierten Spalte stimmt die Anzahl der Spiegel nicht.',
+    laser_right_wrong: 'In der markierten Zeile stimmt die Anzahl der Spiegel nicht.',
+    laser_not_connected: 'Die markierten Laserstrahlen hängen nicht mit dem Rest zusammen.',
+
     magnets: 'Magnetplatten',
     magnets_instructions: 'Füllen Sie das Diagramm mit magnetischen und neutralen '
         +'(=schwarzen) Platten. Jede Magnetplatte hat zwei Pole (+ und -). '

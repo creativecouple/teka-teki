@@ -1,0 +1,180 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Pages: 1
+%%BoundingBox: 0 0 229 229
+%%CropBox: 0 0 229 229
+%%DocumentData: Clean7Bit
+%%Page: 1 1
+%%EndComments
+%----------------------------------------------
+% This file is in Standard Puzzle Format (SPF)
+%----------------------------------------------
+/pgsave save def 200 dict begin
+/sc 22.8 def
+/pt {sc div} def
+sc dup scale 0.5 pt dup translate
+/duenn { 0.4 pt setlinewidth } def
+/dick { 1 pt setlinewidth } def
+
+% create laser:CEP -s 8
+<<
+/format 1
+/type (laser)
+/sol false
+/X 8
+/Y 8
+/puzzle [
+(                   )
+( +---+-+-+-+-+---+ )
+( |/ N         / N| )
+( / + + + + + | + |2)
+( |    N       N /| )
+( + + + + + - + X + )
+(5|      N / N / N| )
+( + + - + - + X + | )
+( |  / N     / N /| )
+( + | + + + | + - + )
+( |  N   N   N    | )
+( + + + + + + | + + )
+(3|    N   N /    | )
+( + + + + + - + + + )
+( |      N        | )
+( + + + + + + - + + )
+( |        N / N  | )
+( +-+-+-+-+---+-n-+ )
+(       0     3     ) ]
+/description [
+ (Gr&ouml;&szlig;e 8x8)
+]
+>> currentdict copy pop
+
+/e { exch def } bind def
+/l { 4 2 roll moveto lineto stroke } def
+/c { dup 4 2 roll moveto
+     stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+1 1 translate
+
+1 setgray
+0 0 X Y rectfill
+0 setgray
+
+/arrow {
+  gsave
+    /r e
+    translate
+    r 45 mul rotate
+    -0.3 0 0.3 0 l
+    0.5 0 translate
+    0 0 moveto
+    0.32 neg 0.135 neg rlineto
+    0 0.135 0.135 add rlineto
+    0.32 0.135 neg rlineto
+    fill
+  grestore
+} def
+
+dick
+0 0 X Y rectstroke
+
+duenn
+0 1 X { /i e i 0 i Y l } for
+0 1 Y { /j e 0 j X j l } for
+
+dick
+/Helvetica-Bold findfont 0.65 scalefont setfont
+0 1 X 1 sub { /i e
+  puzzle 0 get i 2 mul 2 add get /h e
+  h (A) 0 get ge { /h h 7 sub def } if
+  h ( ) 0 get ne {
+    i Y h 48 sub 5 string cvs c
+  } if
+} for
+
+0 1 X { /i e
+  puzzle Y 2 mul 2 add get i 2 mul 1 add get /h e
+  h (A) 0 get ge { /h h 7 sub def } if
+  h ( ) 0 get ne {
+    i 0.5 sub -1 h 48 sub 5 string cvs c
+  } if
+} for
+
+0 1 Y 1 sub { /j e
+  puzzle Y j sub 1 sub 2 mul 2 add get 0 get /h e
+  h (A) 0 get ge { /h h 7 sub def } if
+  h ( ) 0 get ne {
+    -1 j h 48 sub 5 string cvs c
+  } if
+} for
+
+0 1 Y { /j e
+  puzzle Y j sub 2 mul 1 add get X 2 mul 2 add get /h e
+  h (A) 0 get ge { /h h 7 sub def } if
+  h ( ) 0 get ne {
+    X j 0.5 sub h 48 sub 5 string cvs c
+  } if
+} for
+
+sol {
+  0 1 X 1 sub { /i e
+    0 1 Y 1 sub { /j e
+      puzzle Y j sub 1 sub 2 mul 2 add get i 2 mul 2 add get /h e
+      h (/) 0 get eq {
+        i j i 1 add j 1 add l
+      } if
+      h (N) 0 get eq {
+        i 1 add j i j 1 add l
+      } if
+    } for
+  } for
+} if
+
+0 1 X { /i e
+  0 1 Y { /j e
+    puzzle Y j sub 2 mul 1 add get i 2 mul 1 add get /h e
+    h (X) 0 get eq {
+      i 0.2 sub j 0.2 sub i 0.2 add j 0.2 add l
+      i 0.2 sub j 0.2 add i 0.2 add j 0.2 sub l
+    } if
+    h (-) 0 get eq sol and {
+      i 0.2 sub j 0.05 sub 0.4 0.1 rectfill
+    } if
+    h (|) 0 get eq sol and {
+      i 0.05 sub j 0.2 sub 0.1 0.4 rectfill
+    } if
+  } for
+} for
+
+0 1 X 1 sub { /i e
+  puzzle 1 get i 2 mul 1 add get /h e
+  h (/) 0 get eq { i Y 1 arrow } if
+  h (N) 0 get eq { i Y 3 arrow } if
+  h (7) 0 get eq { i Y 5 arrow } if
+  h (n) 0 get eq { i Y 7 arrow } if
+} for
+
+1 1 Y { /j e
+  puzzle Y j sub 2 mul 1 add get X 2 mul 1 add get /h e
+  h (/) 0 get eq { X j 1 arrow } if
+  h (n) 0 get eq { X j 3 arrow } if
+  h (7) 0 get eq { X j 5 arrow } if
+  h (N) 0 get eq { X j 7 arrow } if
+} for
+
+1 1 X { /i e
+  puzzle Y 2 mul 1 add get i 2 mul 1 add get /h e
+  h (7) 0 get eq { i 0 1 arrow } if
+  h (n) 0 get eq { i 0 3 arrow } if
+  h (/) 0 get eq { i 0 5 arrow } if
+  h (N) 0 get eq { i 0 7 arrow } if
+} for
+
+0 1 Y 1 sub { /j e
+  puzzle Y j sub 2 mul 1 add get 1 get /h e
+  h (7) 0 get eq { 0 j 1 arrow } if
+  h (N) 0 get eq { 0 j 3 arrow } if
+  h (/) 0 get eq { 0 j 5 arrow } if
+  h (n) 0 get eq { 0 j 7 arrow } if
+} for
+
+end pgsave restore showpage
+%%EOF
