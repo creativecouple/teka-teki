@@ -618,6 +618,35 @@ teka.dictionary = {
     laser_not_connected: 'Die markierten Laserstrahlen hängen nicht mit dem Rest zusammen.',
     laser_mirror_not_reflecting: 'Am markierten vorgegebenen Spiegel wird der Laserstrahl nicht reflektiert.',
 
+    magic_labyrinth: 'Magisches Labyrinth',
+    magic_labyrinth_instructions: 'Tragen Sie die angegebenen Ziffern so in das Diagramm ein, dass jede '
+        +'Ziffer in jeder Zeile und jeder Spalte genau einmal vorkommt. Folgt '
+        +'man dem Labyrinth von aussen nach innen, so muss sich die Zahlenfolge '
+        +'1, 2, ..., N ständig wiederholen. Dabei steht N für die größte Ziffer.',
+    magic_labyrinth_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
+        +'so führt der nächste Klick zu einem Minuszeichen (Feld bleibt leer) und '
+        +'der nächste Klick danach löscht den Feldinhalt.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'Minustaste: Leerfeld (markiert durch ein Minuszeichen)\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.',
+    magic_labyrinth_digits: 'Ziffern von 1 bis {1}.',
+    magic_labyrinth_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    magic_labyrinth_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',
+    magic_labyrinth_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
+    magic_labyrinth_row_missing: 'In der markierten Zeile fehlt die Zahl {1}.',
+    magic_labyrinth_column_missing: 'In der markierten Spalte fehlt die Zahl {1}.',
+    magic_labyrinth_wrong_number: 'Entlang des Labyrinths müsste hier eine {1} kommen.',
+
     magnets: 'Magnetplatten',
     magnets_instructions: 'Füllen Sie das Diagramm mit magnetischen und neutralen '
         +'(=schwarzen) Platten. Jede Magnetplatte hat zwei Pole (+ und -). '
