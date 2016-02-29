@@ -697,7 +697,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.processKeydownEvent = functi
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS) {
+    if (e.key==teka.KEY_MINUS || (this.MAX<16 && (e.key==teka.KEY_Q || e.key==teka.KEY_X))) {
         if (this.f[this.x][this.y]>=1000) {
             this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<0))+1000);
         } else {
@@ -706,7 +706,7 @@ teka.viewer.easy_as_abc.Easy_as_abcViewer.prototype.processKeydownEvent = functi
         return true;
     }
 
-    if (e.key==teka.KEY_DOT) {
+    if (e.key==teka.KEY_DOT || (this.MAX<16 && e.key==teka.KEY_W)) {
         this.set(this.x,this.y,teka.viewer.easy_as_abc.Defaults.LETTER);
         return true;
     }

@@ -275,7 +275,11 @@ teka.dictionary = {
         +'Leertaste: Feldinhalt löschen\n'
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit der Minustaste und den Buchstabentasten '
-        +'das Leersymbol und jeden Buchstaben einzeln ein- und ausschalten.',
+        +'das Leersymbol und jeden Buchstaben einzeln ein- und ausschalten.\n\n'
+        +'Wenn weniger als 17 verschiedene Buchstaben einzutragen sind, können auch '
+        +'folgende Tasten verwendet werden:\n\n'
+        +'X oder Q: Als Leerfeld markieren\n'
+        +'W: Als Buchstabenfeld markieren',
     easy_as_abc_letters: 'Buchstaben von A bis {1}.',
     easy_as_abc_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     easy_as_abc_column_duplicate: 'Die markierten Buchstaben kommen in der Spalte doppelt vor.',
