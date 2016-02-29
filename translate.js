@@ -444,8 +444,7 @@ teka.dictionary = {
         +'Auch einzelne Ziffern werden hier angegeben. Ein Fragezeichen steht '
         +'für eine unbekannte Zahl. Steht am Rand nichts, so ist über die '
         +'entsprechenden Zeile oder Spalte nichts bekannt.\n\n'
-        +'Für eine korrekte Lösung müssen zusätzlich zu allen Zahlen auch '
-        +'alle Schwarzfelder eingezeichnet sein.',
+        +'Zu schwärzende Felder können auch leer bleiben.',
     japanese_sums_usage: 'Bedienung mit der Maus:\n\n'
         +'Der erste Klick zeichnet einen Kreis in das Feld ein. Dieser bedeutet, '
         +'dass es sich um ein Zahlenfeld handelt. Der nächste Klick trägt ein '
@@ -472,7 +471,6 @@ teka.dictionary = {
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
         +'und ausschalten.',
     japanese_sums_digits: 'Zahlen von 1 bis {1}.',
-    japanese_sums_empty: 'Das markierte Feld ist leer.',
     japanese_sums_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     japanese_sums_row_duplicate: 'Die markierten Zahlen kommen in der Zeile doppelt vor.',
     japanese_sums_column_duplicate: 'Die markierten Zahlen kommen in der Spalte doppelt vor.',

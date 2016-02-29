@@ -281,7 +281,8 @@ teka.viewer.japanese_sums.Japanese_sumsViewer.prototype.check = function()
 
             if (this.f[i][j]===0 || this.f[i][j]==1000) {
                 this.error[i][j] = true;
-                return 'japanese_sums_empty';
+                check[i][j] = teka.viewer.japanese_sums.Defaults.BLOCK;
+                continue;
             }
 
             if (this.f[i][j]==teka.viewer.japanese_sums.Defaults.BLOCK
