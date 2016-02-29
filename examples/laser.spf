@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Pages: 1
-%%BoundingBox: 0 0 229 229
-%%CropBox: 0 0 229 229
+%%BoundingBox: 0 0 161 161
+%%CropBox: 0 0 161 161
 %%DocumentData: Clean7Bit
 %%Page: 1 1
 %%EndComments
@@ -11,46 +11,48 @@
 /pgsave save def 200 dict begin
 /sc 22.8 def
 /pt {sc div} def
-sc dup scale 0.5 pt dup translate
+sc dup scale 0.8 pt dup translate
 /duenn { 0.4 pt setlinewidth } def
 /dick { 1 pt setlinewidth } def
 
-% create laser:CEP -s 8
 <<
 /format 1
 /type (laser)
 /sol false
-/X 8
-/Y 8
+/author ()
+/X 5
+/Y 5
+/digits 2
 /puzzle [
-(                   )
-( +---+-+-+-+-+---+ )
-( |/ N         / N| )
-( / + + + + + | + |2)
-( |    N       N /| )
-( + + + + + - + X + )
-(5|      N / N / N| )
-( + + - + - + X + | )
-( |  / N     / N /| )
-( + | + + + | + - + )
-( |  N   N   N    | )
-( + + + + + + | + + )
-(3|    N   N /    | )
-( + + + + + - + + + )
-( |      N        | )
-( + + + + + + - + + )
-( |        N / N  | )
-( +-+-+-+-+---+-n-+ )
-(       0     3     ) ]
-/description [
- (Gr&ouml;&szlig;e 8x8)
-]
+(               )
+(         4     )
+(  +-+-+-+-+-+  )
+( 2|    /    |  )
+(  N + + + + +  )
+(  |         |  )
+(  + X + | + +  )
+(  |         |  )
+(  7 + + + + +  )
+(  |#   N    |  )
+(  + + + + + + 1)
+(  |         |  )
+(  +-+-+-+---+  )
+(               )
+(            1  ) ]
+/solution [
+(  /N )
+(N/ / )
+(/N N )
+(  N N)
+(   N/) ]
 >> currentdict copy pop
 
 /e { exch def } bind def
 /l { 4 2 roll moveto lineto stroke } def
 /c { dup 4 2 roll moveto
      stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
+
+currentdict /digits known not { /digits 1 def } if
 
 1 1 translate
 
@@ -73,6 +75,36 @@ sc dup scale 0.5 pt dup translate
   grestore
 } def
 
+/getNr {
+  /x e /line e
+  line x digits add 1 sub get ( ) 0 get ne {
+    /val 0 def
+    0 1 digits 1 sub { /ii e
+      line x ii add get /hh e
+      hh ( ) 0 get eq { /hh (0) 0 get def } if
+      /val val 10 mul hh (0) 0 get sub add def
+    } for
+    val
+  } {
+    -1
+  } ifelse
+} def
+
+/getSNr {
+  /y e /x e /grid e
+  grid y digits add 1 sub get x get ( ) 0 get ne {
+    /val 0 def
+    0 1 digits 1 sub { /ii e
+      grid y ii add get x get /hh e
+      hh ( ) 0 get eq { /hh (0) 0 get def } if
+      /val val 10 mul hh (0) 0 get sub add def
+    } for
+    val
+  } {
+    -1
+  } ifelse
+} def
+
 dick
 0 0 X Y rectstroke
 
@@ -80,44 +112,117 @@ duenn
 0 1 X { /i e i 0 i Y l } for
 0 1 Y { /j e 0 j X j l } for
 
-dick
 /Helvetica-Bold findfont 0.65 scalefont setfont
 0 1 X 1 sub { /i e
-  puzzle 0 get i 2 mul 2 add get /h e
-  h (A) 0 get ge { /h h 7 sub def } if
-  h ( ) 0 get ne {
-    i Y h 48 sub 5 string cvs c
+  puzzle i 2 mul 1 add digits add 0 getSNr /h e
+  h -1 ne {
+    i Y h digits string cvs c
   } if
 } for
 
 0 1 X { /i e
-  puzzle Y 2 mul 2 add get i 2 mul 1 add get /h e
-  h (A) 0 get ge { /h h 7 sub def } if
-  h ( ) 0 get ne {
-    i 0.5 sub -1 h 48 sub 5 string cvs c
+  puzzle i 2 mul digits add Y 2 mul 1 add digits add getSNr /h e
+  h -1 ne {
+    i 0.5 sub -1 h digits string cvs c
   } if
 } for
 
 0 1 Y 1 sub { /j e
-  puzzle Y j sub 1 sub 2 mul 2 add get 0 get /h e
-  h (A) 0 get ge { /h h 7 sub def } if
-  h ( ) 0 get ne {
-    -1 j h 48 sub 5 string cvs c
+  puzzle Y j sub 1 sub 2 mul 1 add digits add get 0 getNr /h e
+  h -1 ne {
+    -1 j h digits string cvs c
   } if
 } for
 
 0 1 Y { /j e
-  puzzle Y j sub 2 mul 1 add get X 2 mul 2 add get /h e
-  h (A) 0 get ge { /h h 7 sub def } if
-  h ( ) 0 get ne {
-    X j 0.5 sub h 48 sub 5 string cvs c
+  puzzle Y j sub 2 mul digits add get X 2 mul 1 add digits add getNr /h e
+  h -1 ne {
+    X j 0.5 sub h digits string cvs c
   } if
 } for
+
+0 1 X 1 sub { /i e
+  0 1 Y 1 sub { /j e
+    puzzle Y j sub 1 sub 2 mul 1 add digits add get i 2 mul 1 add digits add get /h e
+    h (/) 0 get eq {
+      i j i 1 add j 1 add l
+    } if
+    h (N) 0 get eq {
+      i 1 add j i j 1 add l
+    } if
+    h (#) 0 get eq {
+      i j 1 1 rectfill
+    } if
+  } for
+} for
+
+/par -1 def
+
+dick
+0 1 X { /i e
+  0 1 Y { /j e
+    puzzle Y j sub 2 mul digits add get i 2 mul digits add get /h e
+    h (X) 0 get eq {
+      i 0.2 sub j 0.2 sub i 0.2 add j 0.2 add l
+      i 0.2 sub j 0.2 add i 0.2 add j 0.2 sub l
+    } if
+    h (-) 0 get eq {
+      i 0.2 sub j 0.05 sub 0.4 0.1 rectfill
+    } if
+    h (|) 0 get eq {
+      i 0.05 sub j 0.2 sub 0.1 0.4 rectfill
+    } if
+    h (7) 0 get eq h (n) 0 get eq or {
+      /par i j add 2 mod def
+    } if
+  } for
+} for
+
+0 1 X 1 sub { /i e
+  puzzle digits get i 2 mul digits add get /h e
+  h (/) 0 get eq { i Y 1 arrow } if
+  h (N) 0 get eq { i Y 3 arrow } if
+  h (7) 0 get eq { i Y 5 arrow } if
+  h (n) 0 get eq { i Y 7 arrow } if
+} for
+
+1 1 Y { /j e
+  puzzle Y j sub 2 mul digits add get X 2 mul digits add get /h e
+  h (/) 0 get eq { X j 1 arrow } if
+  h (n) 0 get eq { X j 3 arrow } if
+  h (7) 0 get eq { X j 5 arrow } if
+  h (N) 0 get eq { X j 7 arrow } if
+} for
+
+1 1 X { /i e
+  puzzle Y 2 mul digits add get i 2 mul digits add get /h e
+  h (7) 0 get eq { i 0 1 arrow } if
+  h (n) 0 get eq { i 0 3 arrow } if
+  h (/) 0 get eq { i 0 5 arrow } if
+  h (N) 0 get eq { i 0 7 arrow } if
+} for
+
+0 1 Y 1 sub { /j e
+  puzzle Y j sub 2 mul digits add get digits get /h e
+  h (7) 0 get eq { 0 j 1 arrow } if
+  h (N) 0 get eq { 0 j 3 arrow } if
+  h (/) 0 get eq { 0 j 5 arrow } if
+  h (n) 0 get eq { 0 j 7 arrow } if
+} for
+
+/sget {
+  /y e /x e
+  x -1 ne y -1 ne x X ne y Y ne and and and {
+    solution Y y sub 1 sub get x get ( ) 0 get ne
+  } {
+    false
+  } ifelse
+} def
 
 sol {
   0 1 X 1 sub { /i e
     0 1 Y 1 sub { /j e
-      puzzle Y j sub 1 sub 2 mul 2 add get i 2 mul 2 add get /h e
+      solution Y j sub 1 sub get i get /h e
       h (/) 0 get eq {
         i j i 1 add j 1 add l
       } if
@@ -126,55 +231,27 @@ sol {
       } if
     } for
   } for
-} if
 
-0 1 X { /i e
-  0 1 Y { /j e
-    puzzle Y j sub 2 mul 1 add get i 2 mul 1 add get /h e
-    h (X) 0 get eq {
-      i 0.2 sub j 0.2 sub i 0.2 add j 0.2 add l
-      i 0.2 sub j 0.2 add i 0.2 add j 0.2 sub l
-    } if
-    h (-) 0 get eq sol and {
-      i 0.2 sub j 0.05 sub 0.4 0.1 rectfill
-    } if
-    h (|) 0 get eq sol and {
-      i 0.05 sub j 0.2 sub 0.1 0.4 rectfill
-    } if
+  0 1 X { /i e
+    0 1 Y { /j e
+      i j add par add 2 mod 0 eq {
+        i 1 sub j sget /lol e
+        i 1 sub j 1 sub sget /lul e
+        i j sget /lor e
+        i j 1 sub sget /lur e
+        lol lul lor lur and and and not {
+          lol lor and lul lur and or {
+            i 0.2 sub j 0.05 sub 0.4 0.1 rectfill
+          } if
+          lol lul and lor lur and or {
+            i 0.05 sub j 0.2 sub 0.1 0.4 rectfill
+          } if
+        } if
+      } if
+    } for
   } for
-} for
 
-0 1 X 1 sub { /i e
-  puzzle 1 get i 2 mul 1 add get /h e
-  h (/) 0 get eq { i Y 1 arrow } if
-  h (N) 0 get eq { i Y 3 arrow } if
-  h (7) 0 get eq { i Y 5 arrow } if
-  h (n) 0 get eq { i Y 7 arrow } if
-} for
-
-1 1 Y { /j e
-  puzzle Y j sub 2 mul 1 add get X 2 mul 1 add get /h e
-  h (/) 0 get eq { X j 1 arrow } if
-  h (n) 0 get eq { X j 3 arrow } if
-  h (7) 0 get eq { X j 5 arrow } if
-  h (N) 0 get eq { X j 7 arrow } if
-} for
-
-1 1 X { /i e
-  puzzle Y 2 mul 1 add get i 2 mul 1 add get /h e
-  h (7) 0 get eq { i 0 1 arrow } if
-  h (n) 0 get eq { i 0 3 arrow } if
-  h (/) 0 get eq { i 0 5 arrow } if
-  h (N) 0 get eq { i 0 7 arrow } if
-} for
-
-0 1 Y 1 sub { /j e
-  puzzle Y j sub 2 mul 1 add get 1 get /h e
-  h (7) 0 get eq { 0 j 1 arrow } if
-  h (N) 0 get eq { 0 j 3 arrow } if
-  h (/) 0 get eq { 0 j 5 arrow } if
-  h (n) 0 get eq { 0 j 7 arrow } if
-} for
+} if
 
 end pgsave restore showpage
 %%EOF

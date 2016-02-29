@@ -44,7 +44,10 @@ teka.viewer.laser.LaserViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
-    this.asciiToData(data.get('puzzle'));
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
+    this.asciiToSolution(data.get('solution'));
 
     this.f = teka.new_array([this.X,this.Y],0);
     this.c = teka.new_array([this.X,this.Y],0);
@@ -59,7 +62,7 @@ teka.viewer.laser.LaserViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.laser.LaserViewer.prototype.asciiToData = function(ascii)
+teka.viewer.laser.LaserViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -67,40 +70,35 @@ teka.viewer.laser.LaserViewer.prototype.asciiToData = function(ascii)
 
     var grid = this.asciiToArray(ascii);
 
-    this.crossing = teka.new_array([this.X+1,this.Y+1],false);
-    for (var i=0;i<this.X+1;i++) {
-        for (var j=0;j<this.Y+1;j++) {
-            this.crossing[i][j] = grid[2*i+1][2*j+1]==teka.ord('X');
-        }
-    }
-
     this.topdata = teka.new_array([this.X],-1);
     for (var i=0;i<this.X;i++) {
-        this.topdata[i] = grid[2*i+2][0]==teka.ord(' ')?-1
-            :(grid[2*i+2][0]>=teka.ord('A')?(grid[2*i+2][0]-teka.ord('A')+10):(grid[2*i+2][0]-teka.ord('0')));
+        this.topdata[i] = this.getVNr(grid,2*i+1+d,0,d);
     }
 
     this.leftdata = teka.new_array([this.Y],0);
     for (var j=0;j<this.Y;j++) {
-        this.leftdata[j] = grid[0][2*j+2]==teka.ord(' ')?-1
-            :(grid[0][2*j+2]>=teka.ord('A')?(grid[0][2*j+2]-teka.ord('A')+10):(grid[0][2*j+2]-teka.ord('0')));
+        this.leftdata[j] = this.getNr(grid,0,2*j+1+d,d);
     }
 
     this.bottom = teka.new_array([this.X+1],0);
     for (var i=0;i<=this.X;i++) {
-        this.bottom[i] = grid[2*i+1][2*this.Y+2]==teka.ord(' ')?-1
-            :(grid[2*i+1][2*this.Y+2]>=teka.ord('A')?(grid[2*i+1][2*this.Y+2]-teka.ord('A')+10):(grid[2*i+1][2*this.Y+2]-teka.ord('0')));
+        this.bottom[i] = this.getVNr(grid,2*i+d,2*this.Y+1+d,d);
     }
 
     this.right = teka.new_array([this.Y+1],0);
     for (var j=0;j<=this.Y;j++) {
-        this.right[j] = grid[2*this.X+2][2*j+1]==teka.ord(' ')?-1
-            :(grid[2*this.X+2][2*j+1]>=teka.ord('A')?(grid[2*this.X+2][2*j+1]-teka.ord('A')+10):(grid[2*this.X+2][2*j+1]-teka.ord('0')));
+        this.right[j] = this.getNr(grid,2*this.X+1+d,2*j+d,d);
     }
 
+    this.crossing = teka.new_array([this.X+1,this.Y+1],false);
+    this.v_mirror = teka.new_array([this.X+1,this.Y+1],false);
+    this.h_mirror = teka.new_array([this.X+1,this.Y+1],false);
     for (var i=0;i<=this.X;i++) {
         for (var j=0;j<=this.Y;j++) {
-            switch (grid[2*i+1][2*j+1]) {
+            this.crossing[i][j] = grid[2*i+d][2*j+d]==teka.ord('X');
+            this.v_mirror[i][j] = grid[2*i+d][2*j+d]==teka.ord('|');
+            this.h_mirror[i][j] = grid[2*i+d][2*j+d]==teka.ord('-');
+            switch (grid[2*i+d][2*j+d]) {
               case teka.ord('n'):
                 this.arrowstartx = i;
                 this.arrowstarty = j;
@@ -126,54 +124,64 @@ teka.viewer.laser.LaserViewer.prototype.asciiToData = function(ascii)
     }
     this.parity = (this.arrowstartx+this.arrowstarty)%2;
 
-    /*
-    this.solution = teka.new_array([this.X,this.Y],0);
+    this.puzzle = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.solution[i][j]=grid[2*i+2][2*j+2]==' '?0:1;
+            if (grid[2*i+d+1][2*j+d+1]==teka.ord('N') ||
+                grid[2*i+d+1][2*j+d+1]==teka.ord('/')) {
+                this.puzzle[i][j] = 1;
+            }
+            if (grid[2*i+d+1][2*j+d+1]==teka.ord('#')) {
+                this.puzzle[i][j] = 2;
+            }
         }
+    }
+};
+
+/** Read puzzle from ascii art. */
+teka.viewer.laser.LaserViewer.prototype.asciiToSolution = function(ascii)
+{
+    if (ascii===false) {
+        return;
     }
 
-    mirror_solution = teka.new_array([this.X+1,this.Y+1],0);
-    for (var i=0;i<this.X-1;i++) {
-        for (var j=0;j<this.Y;j++) {
-            if (this.solution[i][j]==1 && this.solution[i+1][j]==1) {
-                mirror_solution[i+1][j+1-(i+j+this.parity)%2] = teka.viewer.laser.Defaults.MIRROR;
-            }
-        }
-    }
+    var grid = this.asciiToArray(ascii);
+
+    this.solution = teka.new_array([this.X,this.Y],false);
     for (var i=0;i<this.X;i++) {
-        for (var j=0;j<this.Y-1;j++) {
-            if (this.solution[i][j]==1 && this.solution[i][j+1]==1) {
-                mirror_solution[i+1-(i+j+this.parity)%2][j+1] = teka.viewer.laser.Defaults.MIRROR;
+        for (var j=0;j<this.Y;j++) {
+            if (grid[i][j]==teka.ord('N') ||
+                grid[i][j]==teka.ord('/')) {
+                this.solution[i][j] = true;
             }
         }
     }
-    for (var i=0;i<=this.X;i++) {
-        for (var j=0;j<=this.Y;j++) {
-            if (this.crossing[i][j]) {
-                mirror_solution[i][j] = teka.viewer.laser.Defaults.EMPTY;
-            }
-        }
-    }
-     */
 };
 
 /** Add solution. */
 teka.viewer.laser.LaserViewer.prototype.addSolution = function()
 {
-    /*
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.f[i][j] = this.solution[i][j];
+            this.f[i][j] = this.solution[i][j]?1:0;
         }
     }
+
     for (var i=0;i<=this.X;i++) {
         for (var j=0;j<=this.Y;j++) {
-            this.mirror_f[i][j] = mirror_solution[i][j];
+            if ((i+j+this.parity)%2==0) {
+                var tl = i>0 && j>0 && this.f[i-1][j-1]==1;
+                var tr = i>0 && j<this.Y && this.f[i-1][j]==1;
+                var bl = i<this.X && j>0 && this.f[i][j-1]==1;
+                var br = i<this.X && j<this.Y && this.f[i][j]==1;
+                if (!(tl && tr && bl && br)) {
+                    if ((tl && tr) || (bl && br) || (tl && bl) || (tr && br)) {
+                        this.mirror_f[i][j] = teka.viewer.laser.Defaults.MIRROR;
+                    }
+                }
+            }
         }
     }
-     */
 };
 
 //////////////////////////////////////////////////////////////////
@@ -181,11 +189,12 @@ teka.viewer.laser.LaserViewer.prototype.addSolution = function()
 /** Returns a small example. */
 teka.viewer.laser.LaserViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (laser)\n/sol false\n/X 5\n/Y 5'
-        +'\n/puzzle [ (          2  ) ( n-+---+-+-+ ) ( |N / N    | ) ( + X + + + + )'
-        +' ( |/ N   N  | ) ( | + | + + + ) ( |N /     N| ) ( + - + - + |3)'
-        +' ( |    / N /| ) ( + + | + - + ) (1|    N    | ) ( +-+-+-N-+-+ )'
-        +' (       1     ) ]';
+    return '/format 1\n/type (laser)\n/sol false\n/X 5\n/Y 5\n'
+        +'/puzzle [ (          2  ) ( n-+-+-+-+-+ ) ( |         | ) '
+        +'( + X + + + + ) ( |         | ) ( + + + + + + ) ( |         | ) '
+        +'( + + + + + +3) ( |         | ) ( + + + + + + ) (1|         | ) '
+        +'( +-+-+-N-+-+ ) (       1     ) ]\n/solution [ (N/N  ) (/N N ) '
+        +'(N/  N) (  /N/) (  N  ) ]';
 };
 
 /** Returns a list of automatically generated properties. */
@@ -335,9 +344,19 @@ teka.viewer.laser.LaserViewer.prototype.check = function()
     var X = this.X;
     var Y = this.Y;
 
+    // copy given pieces of the laser beam to the input array
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<Y;j++) {
+            if (this.puzzle[i][j]==1)
+                this.f[i][j] = 1;
+            if (this.puzzle[i][j]==2)
+                this.f[i][j] = 2;
+        }
+    }
+
+    // check number of rays at each point
     for (var i=0;i<=X;i++) {
         for (var j=0;j<=Y;j++) {
-
             var h = this.countRays(i,j);
             if (this.crossing[i][j]) {
                 if (h!=4) {
@@ -381,6 +400,33 @@ teka.viewer.laser.LaserViewer.prototype.check = function()
                 continue;
             }
 
+            var tl = i>0 && j>0 && this.f[i-1][j-1]==1;
+            var tr = i>0 && j<this.Y && this.f[i-1][j]==1;
+            var bl = i<this.X && j>0 && this.f[i][j-1]==1;
+            var br = i<this.X && j<this.Y && this.f[i][j]==1;
+
+            if (this.h_mirror[i][j]) {
+                if (h!=2) {
+                    this.mirror_error[i][j] = true;
+                    return 'laser_wrong_count';
+                }
+                if (tl!=bl || tr!=br) {
+                    this.mirror_error[i][j] = true;
+                    return 'laser_mirror_not_reflecting';
+                }
+            }
+
+            if (this.v_mirror[i][j]) {
+                if (h!=2) {
+                    this.mirror_error[i][j] = true;
+                    return 'laser_wrong_count';
+                }
+                if (tl!=tr || bl!=br) {
+                    this.mirror_error[i][j] = true;
+                    return 'laser_mirror_not_reflecting';
+                }
+            }
+
             if (h!=0 && h!=2) {
                 this.mirror_error[i][j] = true;
                 return 'laser_wrong_count';
@@ -388,8 +434,9 @@ teka.viewer.laser.LaserViewer.prototype.check = function()
         }
     }
 
+    // check numbers at the top
     for (var i=0;i<X;i++) {
-        if (this.topdata[i]!=-1) {
+        if (this.topdata[i]!==false) {
             var sum = 0;
             for (var j=0;j<Y;j++) {
                 if (this.f[i][j]==1) {
@@ -403,8 +450,9 @@ teka.viewer.laser.LaserViewer.prototype.check = function()
         }
     }
 
+    // check numbers at the left
     for (var j=0;j<Y;j++) {
-        if (this.leftdata[j]!=-1) {
+        if (this.leftdata[j]!==false) {
             var sum = 0;
             for (var i=0;i<X;i++) {
                 if (this.f[i][j]==1) {
@@ -418,8 +466,9 @@ teka.viewer.laser.LaserViewer.prototype.check = function()
         }
     }
 
+    // check numbers at the bottom
     for (var i=0;i<=X;i++) {
-        if (this.bottom[i]!=-1) {
+        if (this.bottom[i]!==false) {
             var sum = 0;
             for (var j=0;j<=Y;j++) {
                 if (this.isMirror(i,j)) {
@@ -434,8 +483,9 @@ teka.viewer.laser.LaserViewer.prototype.check = function()
         }
     }
 
+    // check numbers at the right
     for (var j=0;j<=Y;j++) {
-        if (this.right[j]!=-1) {
+        if (this.right[j]!==false) {
             var sum = 0;
             for (var i=0;i<=X;i++) {
                 if (this.isMirror(i,j)) {
@@ -450,6 +500,7 @@ teka.viewer.laser.LaserViewer.prototype.check = function()
         }
     }
 
+    // check, if the laserbeam is connected
     var sx = false;
     var sy = false;
     outer: for (var i=0;i<X;i++) {
@@ -620,7 +671,7 @@ teka.viewer.laser.LaserViewer.prototype.paint = function(g)
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     for (var i=0;i<X;i++) {
-        if (this.topdata[i]!=-1) {
+        if (this.topdata[i]!==false) {
             g.fillStyle = this.top_error[i]?'#f00':'#000';
             g.font = this.font.font;
             g.fillText(this.topdata[i],i*S+S/2,-S/2+this.font.delta);
@@ -628,7 +679,7 @@ teka.viewer.laser.LaserViewer.prototype.paint = function(g)
     }
 
     for (var j=0;j<Y;j++) {
-        if (this.leftdata[j]!=-1) {
+        if (this.leftdata[j]!==false) {
             g.fillStyle = this.left_error[j]?'#f00':'#000';
             g.font = this.font.font;
             g.fillText(this.leftdata[j],-S/2,j*S+S/2+this.font.delta);
@@ -636,7 +687,7 @@ teka.viewer.laser.LaserViewer.prototype.paint = function(g)
     }
 
     for (var i=0;i<=X;i++) {
-        if (this.bottom[i]!=-1) {
+        if (this.bottom[i]!==false) {
             g.fillStyle = this.bottom_error[i]?'#f00':'#000';
             g.font = this.font.font;
             g.fillText(this.bottom[i],i*S,Y*S+S/2+this.font.delta);
@@ -644,7 +695,7 @@ teka.viewer.laser.LaserViewer.prototype.paint = function(g)
     }
 
     for (var j=0;j<=Y;j++) {
-        if (this.right[j]!=-1) {
+        if (this.right[j]!==false) {
             g.fillStyle = this.right_error[j]?'#f00':'#000';
             g.font = this.font.font;
             g.fillText(this.right[j],X*S+S/2,j*S+this.font.delta);
@@ -654,6 +705,24 @@ teka.viewer.laser.LaserViewer.prototype.paint = function(g)
     g.strokeStyle = '#000';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
+            if (this.puzzle[i][j]==1) {
+                g.strokeStyle = '#000';
+                g.lineWidth = 3;
+                g.lineCap = 'round';
+                if ((this.parity+i+j)%2===0) {
+                    teka.drawLine(g,i*S,j*S,(i+1)*S,(j+1)*S);
+                } else {
+                    teka.drawLine(g,i*S,(j+1)*S,(i+1)*S,j*S);
+                }
+                g.lineCap = 'butt';
+                g.lineWidth = 1;
+                continue;
+            }
+            if (this.puzzle[i][j]==2) {
+                g.fillStyle = '#000';
+                g.fillRect(i*S,j*S,S,S);
+                continue;
+            }
             g.strokeStyle = this.error[i][j]?'#f00':this.getColorString(this.c[i][j]);
             if (this.f[i][j]==1) {
                 g.lineWidth = 3;
@@ -682,6 +751,20 @@ teka.viewer.laser.LaserViewer.prototype.paint = function(g)
                 g.lineWidth = 2;
                 teka.drawLine(g,i*S-S/4,j*S-S/4,i*S+S/4,j*S+S/4);
                 teka.drawLine(g,i*S-S/4,j*S+S/4,i*S+S/4,j*S-S/4);
+                g.lineWidth = 1;
+                continue;
+            }
+            if (this.v_mirror[i][j]===true) {
+                g.strokeStyle = '#000';
+                g.lineWidth = 3;
+                teka.drawLine(g,i*S,j*S-S/6,i*S,j*S+S/6);
+                g.lineWidth = 1;
+                continue;
+            }
+            if (this.h_mirror[i][j]===true) {
+                g.strokeStyle = '#000';
+                g.lineWidth = 3;
+                teka.drawLine(g,i*S-S/6,j*S,i*S+S/6,j*S);
                 g.lineWidth = 1;
                 continue;
             }

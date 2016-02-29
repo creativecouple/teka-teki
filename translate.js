@@ -614,6 +614,7 @@ teka.dictionary = {
     laser_bottom_wrong: 'In der markierten Spalte stimmt die Anzahl der Spiegel nicht.',
     laser_right_wrong: 'In der markierten Zeile stimmt die Anzahl der Spiegel nicht.',
     laser_not_connected: 'Die markierten Laserstrahlen hängen nicht mit dem Rest zusammen.',
+    laser_mirror_not_reflecting: 'Am markierten vorgegebenen Spiegel wird der Laserstrahl nicht reflektiert.',
 
     magnets: 'Magnetplatten',
     magnets_instructions: 'Füllen Sie das Diagramm mit magnetischen und neutralen '
