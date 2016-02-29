@@ -169,7 +169,7 @@ teka.viewer.laser.LaserViewer.prototype.addSolution = function()
 
     for (var i=0;i<=this.X;i++) {
         for (var j=0;j<=this.Y;j++) {
-            if ((i+j+this.parity)%2==0) {
+            if ((i+j+this.parity)%2===0) {
                 var tl = i>0 && j>0 && this.f[i-1][j-1]==1;
                 var tr = i>0 && j<this.Y && this.f[i-1][j]==1;
                 var bl = i<this.X && j>0 && this.f[i][j-1]==1;
@@ -347,10 +347,12 @@ teka.viewer.laser.LaserViewer.prototype.check = function()
     // copy given pieces of the laser beam to the input array
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
-            if (this.puzzle[i][j]==1)
+            if (this.puzzle[i][j]==1) {
                 this.f[i][j] = 1;
-            if (this.puzzle[i][j]==2)
+            }
+            if (this.puzzle[i][j]==2) {
                 this.f[i][j] = 2;
+            }
         }
     }
 
