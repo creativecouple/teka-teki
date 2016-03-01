@@ -62,7 +62,9 @@ teka.viewer.pyramid.PyramidViewer.prototype.asciiToData = function(ascii)
     this.puzzle = teka.new_array([this.X,this.X],0);
     for (var j=0;j<this.X;j++) {
         for (var i=0;i<=j;i++) {
-            this.puzzle[i][j] = grid[2*i+(this.X-j-1)+1][j]==teka.ord(' ')?0:(grid[2*i+(this.X-j-1)+1][j]-teka.ord('0'));
+            this.puzzle[i][j] = grid[2*i+(this.X-j-1)+1][j]==teka.ord(' ') ||
+                grid[2*i+(this.X-j-1)+1][j]==teka.ord('.l')?0:
+                (grid[2*i+(this.X-j-1)+1][j]-teka.ord('0'));
         }
     }
 
