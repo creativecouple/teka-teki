@@ -702,6 +702,24 @@ teka.dictionary = {
     masyu_not_connected: 'Der markierte Rundweg hängt nicht mit dem Rest des Weges zusammen.',
     masyu_no_line_found: 'Im Diagramm befindet sich kein Wegstück.',
 
+    pills: 'Pillenrätsel',
+    pills_instructions: 'Tragen Sie in das Diagramm die Pillen mit den angegebenen Werten ein, '
+        +'wobei jeder Wert genau einmal vorkommt. Die Pillen sind genau drei '
+        +'Felder lang und liegen waagerecht oder senkrecht. Die Summe der drei '
+        +'Zahlen in der Pille ergibt deren Wert. Die Zahlen am Rand geben die '
+        +'Summe aller Zahlen in Pillenfeldern in der entsprechenden Zeile oder '
+        +'Spalte an.\n\n'
+        +'Für eine korrekte Lösung werden nur die langen Pillen ausgewertet; '
+        +'andere Markierungen, insbesondere auch kleine Pillen werden dabei ignoriert.',
+    pills_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: waagerechte Pille\n2. Klick: senkrechte Pille\n3. Klick: Leerfeld (markiert durch ein Quadrat)\n4. Klick: Kleine Pille\n5. Klick: Feldinhalt löschen\n\n'
+        +'Sie können auch durch anklicken, die Pillen unter dem Diagramm abstreichen.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'w: waagerechte Pille\ns: senkrechte Pille\n'
+        +'#, * und Q: Kleine Pille\n-, / und A: Leerfeld (markiert durch ein Quadrat)\nLeertaste: Feldinhalt löschen\n\n'
+        +'Bei den Pillen:\n#, * und Q: Abstreichen\nLeertaste: Markierung löschen.',
+    pills_pills: 'Pillen von 1 bis {1}.',
+
     skyscrapers: 'Hochhäuser',
     skyscrapers_instructions: 'Tragen Sie in jedes Feld ein Hochhaus der Höhe 1 bis n so ein,'
         +' dass in jeder Zeile und jeder Spalte jede mögliche Höhe genau'
