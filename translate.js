@@ -727,6 +727,33 @@ teka.dictionary = {
     pills_same_sum: 'Die beiden markierten Pillen haben die selbe Summe.',
     pills_pill_missing: 'Die Pille mit der Summe {1} fehlt.',
 
+    pyramid: 'Pyramidenrätsel',
+    pyramid_instructions: 'Tragen Sie Ziffern von 1 bis 9 so in die Felder der Pyramide ein, '
+        +'dass jedes Feld die Summe oder die Differenz der beiden darunter '
+        +'liegenden Felder enthält. In grau gefärbten Zeilen kommt keine Ziffer '
+        +'doppelt vor und in weiß gefärbten Zeilen muss mindestens eine Ziffer mindestens doppelt vorkommen.',
+    pyramid_usage: 'Bedienung mit der Maus:\n\n'
+        +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
+        +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
+        +'so wird durch einen erneuten Klick ein G (Gerade Zahl) und dann ein '
+        +'U (Ungerade Zahl) ausgewählt. Durch einen weiteren Klick wird der Feldinhalt gelöscht.\n\n'
+        +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
+        +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
+        +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
+        +'den Expertenmodus.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
+        +'Leertaste: Feldinhalt löschen\n'
+        +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
+        +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
+        +'und ausschalten.\n'
+        +'G und U: Feld als gerade oder ungerade markieren.',
+    pyramid_empty: 'Das markierte Feld ist leer.',
+    pyramid_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
+    pyramid_wrong_calculation: 'Im oberen markierten Feld ist weder die Summe noch die Differenz der beiden unteren markierten Felder.',
+    pyramid_row_duplicate: 'Die markierten Zahlen kommen in einer grauen Zeile doppelt vor.',
+    pyramid_row_not_duplicate: 'In der markierten Zeile kommt keine Zahl doppelt vor.',
+
     skyscrapers: 'Hochhäuser',
     skyscrapers_instructions: 'Tragen Sie in jedes Feld ein Hochhaus der Höhe 1 bis n so ein,'
         +' dass in jeder Zeile und jeder Spalte jede mögliche Höhe genau'
