@@ -358,7 +358,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.check = function()
 teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.setMetrics = function(g)
 {
     this.scale = Math.floor(Math.min((this.width-3)/this.X,
-                                     (this.height-3-this.textHeight+2)/this.X));
+                                     (this.height-3-(this.textHeight+2))/this.X));
     var realwidth = this.X*this.scale+3;
     var realheight = this.X*this.scale+3+this.textHeight+2;
 
@@ -374,6 +374,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.setMetrics = functio
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.boldfont = teka.getFontData('bold '+Math.round(this.scale/2)+'px sans-serif',this.scale);
+    this.mediumfont = teka.getFontData(Math.round(this.scale/3)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round((this.scale-6)/4)+'px sans-serif',this.scale);
 
     if (realwidth>this.width || realheight>this.height) {
@@ -458,6 +459,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.paint = function(g)
                 continue;
             }
 
+            // minus
             if (this.f[i][j]==100) {
                 g.strokeStyle = this.getColorString(this.c[i][j]);
                 teka.drawLine(g,S*i+S/3,S*j+Math.floor(S/2),S*i+2*S/3,S*j+Math.floor(S/2));
@@ -472,14 +474,35 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.paint = function(g)
                 continue;
             }
 
+            if (this.MAX<=3) {
+                g.fillStyle = this.getColorString(this.c[i][j]);
+                g.font = this.mediumfont.font;
+                for (var k=0;k<4;k++) {
+                    if (((this.f[i][j]-1000)&(1<<k))!=0) {
+                        g.fillText(k===0?'-':k,
+                                   S*i+(k%2)*S/2+S/4,
+                                   S*j+Math.floor(k/2)*S/2+S/4+this.mediumfont.delta);
+                    }
+                }
+
+                g.strokeStyle = '#888';
+                teka.drawLine(g,i*S+S/8,j*S+S/2,i*S+S-S/8,j*S+S/2);
+                teka.drawLine(g,i*S+S/2,j*S+S/8,i*S+S/2,j*S+S-S/8);
+
+                // little x
+                teka.drawLine(g,(i+1)*S-S/8-2,(j+1)*S-S/8-2,(i+1)*S-2,(j+1)*S-2);
+                teka.drawLine(g,(i+1)*S-S/8-2,(j+1)*S-2,(i+1)*S-2,(j+1)*S-S/8-2);
+                continue;
+            }
+
             // numbers in expert mode
             g.fillStyle = this.getColorString(this.c[i][j]);
             g.font = this.smallfont.font;
-            for (var k=1;k<=9;k++) {
+            for (var k=0;k<=8;k++) {
                 if (((this.f[i][j]-1000)&(1<<k))!=0) {
-                    g.fillText(k,
-                               S*i+((k-1)%3+1)*S/4,
-                               S*j+Math.floor((k-1)/3+1)*S/4+this.smallfont.delta);
+                    g.fillText(k===0?'-':k,
+                               S*i+(k%3+1)*S/4,
+                               S*j+Math.floor(k/3+1)*S/4+this.smallfont.delta);
                 }
             }
 
@@ -506,7 +529,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.paint = function(g)
     // paint cursor
     if (this.mode==teka.viewer.Defaults.NORMAL) {
         g.strokeStyle='#f00';
-        if (this.exp) {
+        if (this.exp && this.MAX<=8) {
             teka.drawLine(g,
                           (this.x+1)*S-S/8-2,(this.y+1)*S-S/8-2,
                           (this.x+1)*S-2,(this.y+1)*S-2);
@@ -567,7 +590,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.processMousedownEven
         return erg;
     }
 
-    if (this.X<=9) {
+    if (this.MAX<=8) {
         if (this.xm>this.scale-this.scale/8 && this.ym>this.scale-this.scale/8) {
             if (this.f[this.x][this.y]<1000) {
                 this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
@@ -579,9 +602,19 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.processMousedownEven
     }
 
     if (this.f[this.x][this.y]>=1000) {
+        if (this.MAX<=3) {
+            var nr = ((this.xm<2*this.scale/4)?0:1)+2*((this.ym<2*this.scale/4)?0:1);
+            if (nr<0 || nr>this.MAX) {
+                return erg;
+            }
+
+            this.set(this.x,this.y,((this.f[this.x][this.y]-1000)^(1<<nr))+1000);
+            return true;
+        }
+
         var nr = ((this.xm<3*this.scale/8)?0:(this.xm>this.scale-3*this.scale/8)?2:1)+
-            3*((this.ym<3*this.scale/8)?0:(this.ym>this.scale-3*this.scale/8)?2:1)+1;
-        if (nr<1 || nr>this.X) {
+            3*((this.ym<3*this.scale/8)?0:(this.ym>this.scale-3*this.scale/8)?2:1);
+        if (nr<0 || nr>this.MAX) {
             return erg;
         }
 
@@ -639,7 +672,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.processKeydownEvent 
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS) {
+    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_Q || e.key==teka.KEY_X) {
         if (this.f[this.x][this.y]<1000) {
             this.set(this.x,this.y,100);
         } else {
@@ -669,7 +702,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.processKeydownEvent 
     }
 
     if (e.key==teka.KEY_HASH || e.key==teka.KEY_COMMA) {
-        if (this.X<=9) {
+        if (this.MAX<=8) {
             if (this.f[this.x][this.y]<1000) {
                 this.set(this.x,this.y,this.setExpert(this.f[this.x][this.y]));
             } else {

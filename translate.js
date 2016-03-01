@@ -634,11 +634,13 @@ teka.dictionary = {
         +'den Expertenmodus.\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
         +'Zifferntasten: Die entsprechende Ziffer in das Feld eintragen\n'
-        +'Minustaste: Leerfeld (markiert durch ein Minuszeichen)\n'
+        +'Minustaste oder Q oder X: Leerfeld (markiert durch ein Minuszeichen)\n'
         +'Leertaste: Feldinhalt löschen\n'
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
-        +'und ausschalten.',
+        +'und ausschalten.'
+        +'Hinweis: Der Expertenmodus kann nur genutzt werden, wenn die Zahlen bis'
+        +'maximal 8 gehen.',
     magic_labyrinth_digits: 'Ziffern von 1 bis {1}.',
     magic_labyrinth_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     magic_labyrinth_row_duplicate: 'Die markierten Ziffern kommen in der Zeile doppelt vor.',

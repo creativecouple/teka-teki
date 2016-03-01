@@ -20,7 +20,7 @@ sc dup scale 0.5 pt dup translate
 /type (magic_labyrinth)
 /sol false
 /size 5
-/max  3
+/max 3
 /puzzle [
 (+-+-+-+-+-+)
 ( 1        |)
