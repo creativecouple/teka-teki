@@ -719,6 +719,13 @@ teka.dictionary = {
         +'#, * und Q: Kleine Pille\n-, / und A: Leerfeld (markiert durch ein Quadrat)\nLeertaste: Feldinhalt löschen\n\n'
         +'Bei den Pillen:\n#, * und Q: Abstreichen\nLeertaste: Markierung löschen.',
     pills_pills: 'Pillen von 1 bis {1}.',
+    pills_cut_pill: 'Die markierte Pille ragt über den Rand hinaus.',
+    pills_overlap_pill: 'Die markierte Pille überlappt mit einer anderen Pille.',
+    pills_top: 'Die Summe in der markierten Spalte stimmt nicht.',
+    pills_left: 'Die Summe in der markierten Zeile stimmt nicht.',
+    pills_wrong_pill: 'Die Summe der markierten Pille stimmt nicht.',
+    pills_same_sum: 'Die beiden markierten Pillen haben die selbe Summe.',
+    pills_pill_missing: 'Die Pille mit der Summe {1} fehlt.',
 
     skyscrapers: 'Hochhäuser',
     skyscrapers_instructions: 'Tragen Sie in jedes Feld ein Hochhaus der Höhe 1 bis n so ein,'

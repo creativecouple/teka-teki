@@ -158,6 +158,7 @@ teka.viewer.pills.PillsViewer.prototype.reset = function()
     for (var i=0;i<this.MAX;i++) {
         this.f_pills[i]=false;
     }
+    this.checkOverlap();
 };
 
 /** Reset the error marks. */
@@ -191,6 +192,7 @@ teka.viewer.pills.PillsViewer.prototype.copyColor = function(color)
             this.c_pills[i]=color;
         }
     }
+    this.checkOverlap();
 };
 
 /** Delete all digits with color. */
@@ -208,6 +210,7 @@ teka.viewer.pills.PillsViewer.prototype.clearColor = function(color)
             this.f_pills[i]=false;
         }
     }
+    this.checkOverlap();
 };
 
 /** Save current state. */
@@ -245,6 +248,7 @@ teka.viewer.pills.PillsViewer.prototype.loadState = function(state)
         this.f_pills[i] = state.f_pills[i];
         this.c_pills[i] = state.c_pills[i];
     }
+    this.checkOverlap();
 };
 
 //////////////////////////////////////////////////////////////////
@@ -255,19 +259,18 @@ teka.viewer.pills.PillsViewer.prototype.check = function()
     var X = this.X;
     var Y = this.Y;
 
-    /*
     var used = teka.new_array([X,Y],false);
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.f[i][j]==teka.viewer.pills.Defaults.HORIZ) {
-                if (i==0 || i==X-1) {
+                if (i===0 || i==X-1) {
                     this.error[i][j] = true;
-                    return 'Die markierte Pille ragt über den Rand hinaus.';
+                    return 'pills_cut_pill';
                 }
                 for (var k=-1;k<=1;k++) {
                     if (used[i+k][j]) {
                         this.error[i][j] = true;
-                        return 'Die markierte Pille überlappt mit einer anderen Pille.';
+                        return 'pills_overlap_pill';
                     }
                 }
                 for (var k=-1;k<=1;k++) {
@@ -275,14 +278,14 @@ teka.viewer.pills.PillsViewer.prototype.check = function()
                 }
             }
             if (this.f[i][j]==teka.viewer.pills.Defaults.VERT) {
-                if (j==0 || j==Y-1) {
+                if (j===0 || j==Y-1) {
                     this.error[i][j] = true;
-                    return 'Die markierte Pille ragt über den Rand hinaus.';
+                    return 'pills_cut_pill';
                 }
                 for (var k=-1;k<=1;k++) {
                     if (used[i][j+k]) {
                         this.error[i][j] = true;
-                        return 'Die markierte Pille überlappt mit einer anderen Pille.';
+                        return 'pills_overlap_pill';
                     }
                 }
                 for (var k=-1;k<=1;k++) {
@@ -304,7 +307,7 @@ teka.viewer.pills.PillsViewer.prototype.check = function()
         }
         if (sum!=this.topdata[i]) {
             this.error_top[i] = true;
-            return 'Die Summe in der markierten Spalte stimmt nicht. (Minipillen zählen nicht!)';
+            return 'pills_top';
         }
     }
 
@@ -320,26 +323,24 @@ teka.viewer.pills.PillsViewer.prototype.check = function()
         }
         if (sum!=this.leftdata[j]) {
             this.error_left[j] = true;
-            return 'Die Summe in der markierten Zeile stimmt nicht. (Minipillen zählen nicht!)';
+            return 'pills_left';
         }
     }
 
-    var da = teka.new_array([this.MAX+1],0);
-    for (var i=1;i<=this.MAX;i++) {
-        da[i] = -1;
-    }
+    var da = teka.new_array([this.MAX],-1);
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.f[i][j]==teka.viewer.pills.Defaults.HORIZ) {
                 var val = this.puzzle[i-1][j]+this.puzzle[i][j]+this.puzzle[i+1][j];
                 if (val<1 || val>this.MAX) {
                     this.error[i][j] = true;
-                    return 'Die Summe der markierten Pille stimmt nicht.';
+                    return 'pills_wrong_pill';
                 }
+                val--;
                 if (da[val]!=-1) {
                     this.error[i][j] = true;
-                    this.error[da[val]%X][da[val]/X] = true;
-                    return 'Die beiden markierten Pillen haben die selbe Summe.';
+                    this.error[da[val]%X][Math.floor(da[val]/X)] = true;
+                    return 'pills_same_sum';
                 }
                 da[val] = i+X*j;
             }
@@ -347,18 +348,24 @@ teka.viewer.pills.PillsViewer.prototype.check = function()
                 var val = this.puzzle[i][j-1]+this.puzzle[i][j]+this.puzzle[i][j+1];
                 if (val<1 || val>this.MAX) {
                     this.error[i][j] = true;
-                    return 'Die Summe der markierten Pille stimmt nicht.';
+                    return 'pills_wrong_pill';
                 }
+                val--;
                 if (da[val]!=-1) {
                     this.error[i][j] = true;
-                    this.error[da[val]%X][da[val]/X] = true;
-                    return 'Die beiden markierten Pillen haben die selbe Summe.';
+                    this.error[da[val]%X][Math.floor(da[val]/X)] = true;
+                    return 'pills_same_sum';
                 }
                 da[val] = i+X*j;
             }
         }
     }
-     */
+
+    for (var i=0;i<this.MAX;i++) {
+        if (da[i]==-1) {
+            return {text:'pills_pill_missing',param:[i+1]};
+        }
+    }
 
     return true;
 };
@@ -494,9 +501,9 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
         }
         if (this.error_top[i]) {
             g.fillStyle = '#f00';
-            teka.fillOval(g,(i+1)*S+S/4,S/4,S/2);
+            teka.fillOval(g,(i+1)*S+S/2,S/2,S/4);
             g.strokeStyle = '#000';
-            teka.strokeOval(g,(i+1)*S+S/4,S/4,S/2);
+            teka.strokeOval(g,(i+1)*S+S/2,S/2,S/4);
         }
         g.fillStyle = '#000';
         g.fillText(this.topdata[i],(i+1)*S+S/2,S/2+this.font.delta);
