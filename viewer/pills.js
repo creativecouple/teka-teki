@@ -677,8 +677,8 @@ teka.viewer.pills.PillsViewer.prototype.processMousemoveEvent = function(xc, yc,
         if (this.x>this.X-1) {
             this.x=this.X-1;
         }
-        if (this.y>this.X-1) {
-            this.y=this.X-1;
+        if (this.y>this.Y-1) {
+            this.y=this.Y-1;
         }
         this.pills = false;
     }
