@@ -32,10 +32,10 @@ sc dup scale 0.5 pt dup translate
 ( 2 0 2 0 1 1) ]
 /solution [
 (     )
-(SS   )
+(||   )
 (     )
-(   W )
-(   W ) ]
+(   - )
+(   - ) ]
 /description [
  (Gr&ouml;&szlig;e 5x5)
  (Pillen von 1 bis 4)

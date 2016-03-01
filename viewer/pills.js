@@ -45,7 +45,9 @@ teka.viewer.pills.PillsViewer.prototype.initData = function(data)
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
     this.MAX = parseInt(data.get('max'),10);
-    this.asciiToData(data.get('puzzle'));
+    var digits = data.get('digits');
+    digits = digits===false?2:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
     this.asciiToSolution(data.get('solution'));
 
     this.f = teka.new_array([this.X,this.Y],0);
@@ -59,7 +61,7 @@ teka.viewer.pills.PillsViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.pills.PillsViewer.prototype.asciiToData = function(ascii)
+teka.viewer.pills.PillsViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -70,29 +72,18 @@ teka.viewer.pills.PillsViewer.prototype.asciiToData = function(ascii)
     this.puzzle = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.puzzle[i][j] = grid[2*i+2][j+1]==teka.ord(' ')?(grid[2*i+3][j+1]-teka.ord('0'))
-                :(10*(grid[2*i+2][j+1]-teka.ord('0'))+(grid[2*i+3][j+1]-teka.ord('0')));
+            this.puzzle[i][j] = this.getNr(grid,d*(i+1),j+1,d);
         }
     }
 
     this.topdata = teka.new_array([this.X],0);
     for (var i=0;i<this.X;i++) {
-        if (grid[2*i+2][0]==teka.ord(' ') && grid[2*i+3][0]==teka.ord(' ')) {
-            this.topdata[i] = -1;
-        } else {
-            this.topdata[i] = grid[2*i+2][0]==teka.ord(' ')?(grid[2*i+3][0]-teka.ord('0'))
-                :(10*(grid[2*i+2][0]-teka.ord('0'))+(grid[2*i+3][0]-teka.ord('0')));
-        }
+        this.topdata[i] = this.getNr(grid,d*(i+1),0,d);
     }
 
     this.leftdata = teka.new_array([this.Y],0);
     for (var j=0;j<this.Y;j++) {
-        if (grid[0][j+1]==teka.ord(' ') && grid[1][j+1]==teka.ord(' ')) {
-            this.leftdata[j] = -1;
-        } else {
-            this.leftdata[j] = grid[0][j+1]==teka.ord(' ')?(grid[1][j+1]-teka.ord('0'))
-                :(10*(grid[0][j+1]-teka.ord('0'))+(grid[1][j+1]-teka.ord('0')));
-        }
+        this.leftdata[j] = this.getNr(grid,0,j+1,d);
     }
 };
 
@@ -108,10 +99,10 @@ teka.viewer.pills.PillsViewer.prototype.asciiToSolution = function(ascii)
     this.solution = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (grid[i][j]==teka.ord('W')) {
+            if (grid[i][j]==teka.ord('-')) {
                 this.solution[i][j] = teka.viewer.pills.Defaults.HORIZ;
             }
-            if (grid[i][j]==teka.ord('S')) {
+            if (grid[i][j]==teka.ord('|')) {
                 this.solution[i][j] = teka.viewer.pills.Defaults.VERT;
             }
         }
@@ -136,7 +127,7 @@ teka.viewer.pills.PillsViewer.prototype.getExample = function()
     return '/format 1\n/type (pills)\n/sol false\n/X 5\n/Y 5\n/max 4'
         +'\n/puzzle [ (   2 1 2 2 3) ( 2 1 2 2 1 2) ( 1 1 0 2 0 1) ( 1 0 0 1 0 0)'
         +' ( 2 0 2 3 2 2) ( 4 2 1 1 1 2) ]'
-        +'\n/solution [ (     ) (    S) ( W S ) (     ) ( W   ) ]';
+        +'\n/solution [ (     ) (    |) ( - | ) (     ) ( -   ) ]';
 };
 
 /** Returns a list of automatically generated properties. */
@@ -409,7 +400,7 @@ teka.viewer.pills.PillsViewer.prototype.setMetrics = function(g)
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.smallfont = teka.getFontData(Math.round((this.scale-6)/4)+'px sans-serif',this.scale);
 
-    if (realwidth>this.width || realheight>this.height || (this.scale-6)/4<6) {
+    if (realwidth>this.width || realheight>this.height) {
         this.scale=false;
     }
     return {width:realwidth,height:realheight,scale:this.scale};
