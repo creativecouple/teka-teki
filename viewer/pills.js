@@ -23,7 +23,11 @@ teka.viewer.pills.Defaults = {
     HORIZ: 1,
     VERT: 2,
     NONE: 3,
-    CIRC: 4
+    CIRC: 4,
+
+    CELL: 0,
+    H_EDGE: 1,
+    V_EDGE: 2
 };
 
 /** Constructor */
@@ -34,6 +38,7 @@ teka.viewer.pills.PillsViewer = function(data)
     this.x = 0;
     this.y = 0;
     this.pills = false;
+    this.cursor_mode = teka.viewer.pills.Defaults.CELL;
 };
 teka.extend(teka.viewer.pills.PillsViewer,teka.viewer.PuzzleViewer);
 
@@ -52,6 +57,10 @@ teka.viewer.pills.PillsViewer.prototype.initData = function(data)
 
     this.f = teka.new_array([this.X,this.Y],0);
     this.c = teka.new_array([this.X,this.Y],0);
+    this.fr = teka.new_array([this.X-1,this.Y],0);
+    this.fd = teka.new_array([this.X,this.Y-1],0);
+    this.cr = teka.new_array([this.X-1,this.Y],0);
+    this.cd = teka.new_array([this.X,this.Y-1],0);
     this.f_pills = teka.new_array([this.MAX],false);
     this.c_pills = teka.new_array([this.MAX],0);
     this.error = teka.new_array([this.X,this.Y],false);
@@ -146,6 +155,18 @@ teka.viewer.pills.PillsViewer.prototype.reset = function()
             this.f[i][j]=0;
         }
     }
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            this.fr[i][j]=0;
+            this.cr[i][j]=0;
+        }
+    }
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            this.fd[i][j]=0;
+            this.cd[i][j]=0;
+        }
+    }
     for (var i=0;i<this.MAX;i++) {
         this.f_pills[i]=false;
     }
@@ -178,6 +199,20 @@ teka.viewer.pills.PillsViewer.prototype.copyColor = function(color)
             }
         }
     }
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (this.cr[i][j]==this.color) {
+                this.cr[i][j] = color;
+            }
+        }
+    }
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            if (this.cd[i][j]==this.color) {
+                this.cd[i][j] = color;
+            }
+        }
+    }
     for (var i=0;i<this.MAX;i++) {
         if (this.c_pills[i]==this.color) {
             this.c_pills[i]=color;
@@ -196,6 +231,20 @@ teka.viewer.pills.PillsViewer.prototype.clearColor = function(color)
             }
         }
     }
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (this.cr[i][j]==color) {
+                this.fr[i][j] = 0;
+            }
+        }
+    }
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            if (this.cd[i][j]==color) {
+                this.fd[i][j] = 0;
+            }
+        }
+    }
     for (var i=0;i<this.MAX;i++) {
         if (this.c_pills[i]==color) {
             this.f_pills[i]=false;
@@ -209,6 +258,10 @@ teka.viewer.pills.PillsViewer.prototype.saveState = function()
 {
     var f = teka.new_array([this.X,this.X],0);
     var c = teka.new_array([this.X,this.X],0);
+    var fr = teka.new_array([this.X-1,this.Y],0);
+    var fd = teka.new_array([this.X,this.Y-1],0);
+    var cr = teka.new_array([this.X-1,this.Y],0);
+    var cd = teka.new_array([this.X,this.Y-1],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.X;j++) {
             f[i][j] = this.f[i][j];
@@ -221,8 +274,20 @@ teka.viewer.pills.PillsViewer.prototype.saveState = function()
         f_pills[i] = this.f_pills[i];
         c_pills[i] = this.c_pills[i];
     }
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            fr[i][j] = this.fr[i][j];
+            cr[i][j] = this.cr[i][j];
+        }
+    }
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            fd[i][j] = this.fd[i][j];
+            cd[i][j] = this.cd[i][j];
+        }
+    }
 
-    return { f:f, c:c, f_pills:f_pills, c_pills:c_pills };
+    return { f:f, c:c, f_pills:f_pills, c_pills:c_pills, fr:fr, fd:fd, cr:cr, cd:cd };
 };
 
 /** Load state. */
@@ -232,6 +297,19 @@ teka.viewer.pills.PillsViewer.prototype.loadState = function(state)
         for (var j=0;j<this.X;j++) {
             this.f[i][j] = state.f[i][j];
             this.c[i][j] = state.c[i][j];
+        }
+    }
+
+    for (var i=0;i<this.X-1;i++) {
+        for (var j=0;j<this.Y;j++) {
+            this.fr[i][j] = state.fr[i][j];
+            this.cr[i][j] = state.cr[i][j];
+        }
+    }
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y-1;j++) {
+            this.fd[i][j] = state.fd[i][j];
+            this.cd[i][j] = state.cd[i][j];
         }
     }
 
@@ -287,7 +365,7 @@ teka.viewer.pills.PillsViewer.prototype.check = function()
     }
 
     for (var i=0;i<X;i++) {
-        if (this.topdata[i]==-1) {
+        if (this.topdata[i]===false) {
             continue;
         }
         var sum=0;
@@ -303,7 +381,7 @@ teka.viewer.pills.PillsViewer.prototype.check = function()
     }
 
     for (var j=0;j<Y;j++) {
-        if (this.leftdata[j]==-1) {
+        if (this.leftdata[j]===false) {
             continue;
         }
         var sum=0;
@@ -442,6 +520,26 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
         teka.drawLine(g,S,j*S,(X+1)*S,j*S);
     }
 
+    for (var i=0;i<X-1;i++) {
+        for (var j=0;j<Y;j++) {
+            if (this.fr[i][j]==1) {
+                g.lineWidth = 5;
+                teka.drawLine(g,(i+2)*S,(j+1)*S,(i+2)*S,(j+2)*S);
+                g.lineWidth = 1;
+            }
+        }
+    }
+
+    for (var i=0;i<X;i++) {
+        for (var j=0;j<Y-1;j++) {
+            if (this.fd[i][j]==1) {
+                g.lineWidth = 5;
+                teka.drawLine(g,(i+1)*S,(j+2)*S,(i+2)*S,(j+2)*S);
+                g.lineWidth = 1;
+            }
+        }
+    }
+
     // paint the background of the pills
     g.save();
     g.beginPath();
@@ -487,7 +585,7 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
 
     // paint the numbers at the top
     for (var i=0;i<X;i++) {
-        if (this.topdata[i]==-1) {
+        if (this.topdata[i]===false) {
             continue;
         }
         if (this.error_top[i]) {
@@ -502,7 +600,7 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
 
     // paint the numbers at the left
     for (var j=0;j<Y;j++) {
-        if (this.leftdata[j]==-1) {
+        if (this.leftdata[j]===false) {
             continue;
         }
         if (this.error_left[j]) {
@@ -613,9 +711,17 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
             teka.strokeOval(g,0,0,S/6-2);
             g.restore();
         }
-        else {
+        else if (this.cursor_mode==teka.viewer.pills.Defaults.CELL) {
             g.lineWidth = 2;
             g.strokeRect(S*(this.x+1)+3.5,S*(this.y+1)+3.5,S-7,S-7);
+        } else if (this.cursor_mode==teka.viewer.pills.Defaults.V_EDGE) {
+            g.strokeStyle = '#f00';
+            g.lineWidth = 3;
+            teka.drawLine(g,(this.x+2)*S,(this.y+1)*S,(this.x+2)*S,(this.y+2)*S);
+        } else {
+            g.strokeStyle = '#f00';
+            g.lineWidth = 3;
+            teka.drawLine(g,(this.x+1)*S,(this.y+2)*S,(this.x+2)*S,(this.y+2)*S);
         }
     }
 
@@ -627,14 +733,15 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
 /** Handles mousemove event. */
 teka.viewer.pills.PillsViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
-    xc -= this.deltaX+this.borderX;
-    yc -= this.deltaY+this.borderY;
-
     var oldx = this.x;
     var oldy = this.y;
     var oldpills = this.pills;
+    var oldmode = this.cursor_mode;
 
-    if (yc>this.Y*this.scale+this.textHeight+6) {
+    if (yc>this.Y*this.scale+this.textHeight+6+this.deltaY+this.borderY) {
+        xc -= this.deltaX+this.borderX;
+        yc -= this.deltaY+this.borderY;
+
         yc -= this.Y*this.scale+this.textHeight+6;
 
         this.x = Math.floor(xc/this.scale);
@@ -654,10 +761,11 @@ teka.viewer.pills.PillsViewer.prototype.processMousemoveEvent = function(xc, yc,
             this.x = this.MAX-1;
         }
         this.pills = true;
-    }
-    else {
-        this.x = Math.floor(xc/this.scale);
-        this.y = Math.floor(yc/this.scale);
+    } else {
+        this.coord = this.normalizeCoordinates(xc,yc);
+
+        this.x = this.coord.x;
+        this.y = this.coord.y;
 
         if (this.x<0) {
             this.x=0;
@@ -672,9 +780,11 @@ teka.viewer.pills.PillsViewer.prototype.processMousemoveEvent = function(xc, yc,
             this.y=this.Y-1;
         }
         this.pills = false;
+
+        this.checkCloseToEdge(this.coord);
     }
 
-    return this.x!=oldx || this.y!=oldy || this.pills!=oldpills;
+    return this.x!=oldx || this.y!=oldy || this.pills!=oldpills || this.cursor_mode!=oldmode;
 };
 
 /** Handles mousedown event. */
@@ -687,8 +797,17 @@ teka.viewer.pills.PillsViewer.prototype.processMousedownEvent = function(xc, yc)
         return true;
     }
 
-    this.set(this.x,this.y,(this.f[this.x][this.y]+1)%5);
+    if (this.cursor_mode==teka.viewer.pills.Defaults.H_EDGE) {
+        this.setEdge(this.x,this.y,1-this.fd[this.x][this.y],false);
+        return true;
+    }
 
+    if (this.cursor_mode==teka.viewer.pills.Defaults.V_EDGE) {
+        this.setEdge(this.x,this.y,1-this.fr[this.x][this.y],true);
+        return true;
+    }
+
+    this.set(this.x,this.y,(this.f[this.x][this.y]+1)%5);
     return true;
 };
 
@@ -806,6 +925,82 @@ teka.viewer.pills.PillsViewer.prototype.processKeydownEvent = function(e)
 };
 
 //////////////////////////////////////////////////////////////////
+
+/**
+ * If mouse is close to an edge, replace the normal cursor by an
+ * edge cursor.
+ */
+teka.viewer.pills.PillsViewer.prototype.checkCloseToEdge = function(coord)
+{
+    if (coord.center) {
+        this.cursor_mode = teka.viewer.pills.Defaults.CELL;
+        return;
+    }
+
+    if (coord.left && coord.x>0) {
+        this.cursor_mode = teka.viewer.pills.Defaults.V_EDGE;
+        this.x--;
+        return;
+    }
+
+    if (coord.right && coord.x<this.X-1) {
+        this.cursor_mode = teka.viewer.pills.Defaults.V_EDGE;
+        return;
+    }
+
+    if (coord.top && coord.y>0) {
+        this.cursor_mode = teka.viewer.pills.Defaults.H_EDGE;
+        this.y--;
+        return;
+    }
+
+    if (coord.bottom && coord.y<this.Y-1) {
+        this.cursor_mode = teka.viewer.pills.Defaults.H_EDGE;
+        return;
+    }
+
+    this.cursor_mode = teka.viewer.pills.Defaults.CELL;
+};
+
+/** Sets the value of an edge, if the color fits. */
+teka.viewer.pills.PillsViewer.prototype.setEdge = function(x, y, value, vertical)
+{
+    if (vertical) {
+        this.setVertical(x,y,value);
+    } else {
+        this.setHorizontal(x,y,value);
+    }
+};
+
+/** Sets the value of a vertical edge. */
+teka.viewer.pills.PillsViewer.prototype.setVertical = function(x, y, value)
+{
+    if (x<0 || x>=this.X-1 || y<0 || y>=this.Y) {
+        return;
+    }
+
+    if (this.fr[x][y]!=0 && this.cr[x][y]!=this.color) {
+        return;
+    }
+
+    this.fr[x][y] = value;
+    this.cr[x][y] = this.color;
+};
+
+/** Sets the value of a horizontal edge. */
+teka.viewer.pills.PillsViewer.prototype.setHorizontal = function(x, y, value)
+{
+    if (x<0 || x>=this.X || y<0 || y>=this.Y-1) {
+        return;
+    }
+
+    if (this.fd[x][y]!=0 && this.cd[x][y]!=this.color) {
+        return;
+    }
+
+    this.fd[x][y] = value;
+    this.cd[x][y] = this.color;
+};
 
 /** Sets the value of a cell, if the color fits. */
 teka.viewer.pills.PillsViewer.prototype.set = function(x, y, value)
