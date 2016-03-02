@@ -15,10 +15,10 @@
  */
 
 /** Add own namespace to avoid conflicts. */
-teka.viewer.domino = {};
+teka.viewer.domino_hunt = {};
 
 /** Some constants. */
-teka.viewer.domino.Defaults = {
+teka.viewer.domino_hunt.Defaults = {
     EMPTY: 0,
     LINE: 1,
     CROSS: 2,
@@ -29,21 +29,21 @@ teka.viewer.domino.Defaults = {
 };
 
 /** Constructor */
-teka.viewer.domino.DominoViewer = function(data)
+teka.viewer.domino_hunt.Domino_huntViewer = function(data)
 {
     teka.viewer.PuzzleViewer.call(this,data);
 
     this.x = 0;
     this.y = 0;
-    this.cursor_mode = teka.viewer.domino.Defaults.H_EDGE;
+    this.cursor_mode = teka.viewer.domino_hunt.Defaults.H_EDGE;
     this.domino = false;
 };
-teka.extend(teka.viewer.domino.DominoViewer,teka.viewer.PuzzleViewer);
+teka.extend(teka.viewer.domino_hunt.Domino_huntViewer,teka.viewer.PuzzleViewer);
 
 //////////////////////////////////////////////////////////////////
 
 /** Initialize this viewer width the PSData object provided. */
-teka.viewer.domino.DominoViewer.prototype.initData = function(data)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.initData = function(data)
 {
     this.X = parseInt(data.get('X'),10);
     this.Y = parseInt(data.get('Y'),10);
@@ -64,7 +64,7 @@ teka.viewer.domino.DominoViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.domino.DominoViewer.prototype.asciiToData = function(ascii)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.asciiToData = function(ascii)
 {
     if (ascii===false) {
         return;
@@ -96,7 +96,7 @@ teka.viewer.domino.DominoViewer.prototype.asciiToData = function(ascii)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.domino.DominoViewer.prototype.asciiToSolution = function(ascii)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.asciiToSolution = function(ascii)
 {
     if (ascii===false) {
         return;
@@ -120,17 +120,17 @@ teka.viewer.domino.DominoViewer.prototype.asciiToSolution = function(ascii)
 };
 
 /** Add solution. */
-teka.viewer.domino.DominoViewer.prototype.addSolution = function()
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.addSolution = function()
 {
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.fr[i][j] = this.sr[i][j]?teka.viewer.domino.Defaults.LINE:teka.viewer.domino.Defaults.EMPTY;
+            this.fr[i][j] = this.sr[i][j]?teka.viewer.domino_hunt.Defaults.LINE:teka.viewer.domino_hunt.Defaults.EMPTY;
         }
     }
 
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.fd[i][j] = this.sd[i][j]?teka.viewer.domino.Defaults.LINE:teka.viewer.domino.Defaults.EMPTY;
+            this.fd[i][j] = this.sd[i][j]?teka.viewer.domino_hunt.Defaults.LINE:teka.viewer.domino_hunt.Defaults.EMPTY;
         }
     }
 };
@@ -138,15 +138,15 @@ teka.viewer.domino.DominoViewer.prototype.addSolution = function()
 //////////////////////////////////////////////////////////////////
 
 /** Returns a small example. */
-teka.viewer.domino.DominoViewer.prototype.getExample = function()
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.getExample = function()
 {
-    return '/format 1\n/type (domino)\n/sol false\n/X 4\n/Y 3\n/min 0\n/max 2\n'
+    return '/format 1\n/type (domino_hunt)\n/sol false\n/X 4\n/Y 3\n/min 0\n/max 2\n'
         +'/puzzle [ (+-+-+-+-+) (|1 2 2 1|) (+ + + + +) (|0 2 0 1|) (+ + + + +) (|0 2 1 0|) (+-+-+-+-+) ]\n'
         +'/solution [ (+-+-+-+-+) (|1 2|2|1|) (+-+-+ + +) (|0|2|0|1|) (+ + +-+-+) (|0|2|1 0|) (+-+-+-+-+) ]';
 };
 
 /** Returns a list of automatically generated properties. */
-teka.viewer.domino.DominoViewer.prototype.getProperties = function()
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.getProperties = function()
 {
     return [teka.translate('generic_size',[this.X+'x'+this.Y])];
 };
@@ -154,17 +154,17 @@ teka.viewer.domino.DominoViewer.prototype.getProperties = function()
 //////////////////////////////////////////////////////////////////
 
 /** Reset the whole diagram. */
-teka.viewer.domino.DominoViewer.prototype.reset = function()
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.reset = function()
 {
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.fr[i][j] = teka.viewer.domino.Defaults.EMPTY;
+            this.fr[i][j] = teka.viewer.domino_hunt.Defaults.EMPTY;
             this.cr[i][j] = 0;
         }
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.fd[i][j] = teka.viewer.domino.Defaults.EMPTY;
+            this.fd[i][j] = teka.viewer.domino_hunt.Defaults.EMPTY;
             this.cd[i][j] = 0;
         }
     }
@@ -177,7 +177,7 @@ teka.viewer.domino.DominoViewer.prototype.reset = function()
 };
 
 /** Reset the error marks. */
-teka.viewer.domino.DominoViewer.prototype.clearError = function()
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.clearError = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -187,7 +187,7 @@ teka.viewer.domino.DominoViewer.prototype.clearError = function()
 };
 
 /** Copy digits colored with this.color to color. */
-teka.viewer.domino.DominoViewer.prototype.copyColor = function(color)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.copyColor = function(color)
 {
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -215,19 +215,19 @@ teka.viewer.domino.DominoViewer.prototype.copyColor = function(color)
 };
 
 /** Delete all digits with color. */
-teka.viewer.domino.DominoViewer.prototype.clearColor = function(color)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.clearColor = function(color)
 {
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
             if (this.cr[i][j]==color) {
-                this.fr[i][j] = teka.viewer.domino.Defaults.EMPTY;
+                this.fr[i][j] = teka.viewer.domino_hunt.Defaults.EMPTY;
             }
         }
     }
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
             if (this.cd[i][j]==color) {
-                this.fd[i][j] = teka.viewer.domino.Defaults.EMPTY;
+                this.fd[i][j] = teka.viewer.domino_hunt.Defaults.EMPTY;
             }
         }
     }
@@ -242,7 +242,7 @@ teka.viewer.domino.DominoViewer.prototype.clearColor = function(color)
 };
 
 /** Save current state. */
-teka.viewer.domino.DominoViewer.prototype.saveState = function()
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.saveState = function()
 {
     var fr = teka.new_array([this.X-1,this.Y],0);
     var fd = teka.new_array([this.X,this.Y-1],0);
@@ -274,7 +274,7 @@ teka.viewer.domino.DominoViewer.prototype.saveState = function()
 };
 
 /** Load state. */
-teka.viewer.domino.DominoViewer.prototype.loadState = function(state)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.loadState = function(state)
 {
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -300,7 +300,7 @@ teka.viewer.domino.DominoViewer.prototype.loadState = function(state)
 //////////////////////////////////////////////////////////////////
 
 /** Check, if the solution is correct. */
-teka.viewer.domino.DominoViewer.prototype.check = function()
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.check = function()
 {
     var X = this.X;
     var Y = this.Y;
@@ -309,8 +309,8 @@ teka.viewer.domino.DominoViewer.prototype.check = function()
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
             check_r[i][j] = this.fr[i][j];
-            if (check_r[i][j]==teka.viewer.domino.Defaults.EMPTY && this.auto_r[i][j]) {
-                check_r[i][j] = teka.viewer.domino.Defaults.LINE;
+            if (check_r[i][j]==teka.viewer.domino_hunt.Defaults.EMPTY && this.auto_r[i][j]) {
+                check_r[i][j] = teka.viewer.domino_hunt.Defaults.LINE;
             }
         }
     }
@@ -319,8 +319,8 @@ teka.viewer.domino.DominoViewer.prototype.check = function()
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
             check_d[i][j] = this.fd[i][j];
-            if (check_d[i][j]==teka.viewer.domino.Defaults.EMPTY && this.auto_d[i][j]) {
-                check_d[i][j] = teka.viewer.domino.Defaults.LINE;
+            if (check_d[i][j]==teka.viewer.domino_hunt.Defaults.EMPTY && this.auto_d[i][j]) {
+                check_d[i][j] = teka.viewer.domino_hunt.Defaults.LINE;
             }
         }
     }
@@ -343,7 +343,7 @@ teka.viewer.domino.DominoViewer.prototype.check = function()
                             }
                         }
                     }
-                    return 'domino_no_domino';
+                    return 'domino_hunt_no_domino';
                 }
             }
         }
@@ -382,7 +382,7 @@ teka.viewer.domino.DominoViewer.prototype.check = function()
                         }
                     }
                 }
-                return 'domino_double';
+                return 'domino_hunt_double';
             }
             used[a][b] = mark[i][j];
         }
@@ -392,7 +392,7 @@ teka.viewer.domino.DominoViewer.prototype.check = function()
 };
 
 /** floodfill starting at x,y and count the number of cells. */
-teka.viewer.domino.DominoViewer.prototype.fill = function(mark, x, y, value, check_r, check_d)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.fill = function(mark, x, y, value, check_r, check_d)
 {
     if (x<0 || y<0 || x>=this.X || y>=this.Y) {
         return 0;
@@ -409,16 +409,16 @@ teka.viewer.domino.DominoViewer.prototype.fill = function(mark, x, y, value, che
     mark[x][y]=value;
 
     var az = 1;
-    if (x<this.X-1 && check_r[x][y]!=teka.viewer.domino.Defaults.LINE) {
+    if (x<this.X-1 && check_r[x][y]!=teka.viewer.domino_hunt.Defaults.LINE) {
         az += this.fill(mark,x+1,y,value,check_r,check_d);
     }
-    if (y<this.Y-1 && check_d[x][y]!=teka.viewer.domino.Defaults.LINE) {
+    if (y<this.Y-1 && check_d[x][y]!=teka.viewer.domino_hunt.Defaults.LINE) {
         az += this.fill(mark,x,y+1,value,check_r,check_d);
     }
-    if (x>0 && check_r[x-1][y]!=teka.viewer.domino.Defaults.LINE) {
+    if (x>0 && check_r[x-1][y]!=teka.viewer.domino_hunt.Defaults.LINE) {
         az += this.fill(mark,x-1,y,value,check_r,check_d);
     }
-    if (y>0 && check_d[x][y-1]!=teka.viewer.domino.Defaults.LINE) {
+    if (y>0 && check_d[x][y-1]!=teka.viewer.domino_hunt.Defaults.LINE) {
         az += this.fill(mark,x,y-1,value,check_r,check_d);
     }
 
@@ -441,7 +441,7 @@ teka.viewer.domino.DominoViewer.prototype.fill = function(mark, x, y, value, che
  * Return value is an object with width and height of the used space,
  * and, most important, the scale.
  */
-teka.viewer.domino.DominoViewer.prototype.setMetrics = function(g)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.setMetrics = function(g)
 {
     var h = this.MAX-this.MIN+1;
     this.scale = Math.floor(Math.min(Math.min((this.width-6)/this.X,
@@ -450,7 +450,7 @@ teka.viewer.domino.DominoViewer.prototype.setMetrics = function(g)
     var realwidth = Math.max(this.X*this.scale+6,h*this.scale+6);
     var realheight = this.Y*this.scale+6+this.textHeight+2+5+h*this.scale/3;
 
-    this.bottomText = teka.translate('domino_range',[this.MIN,this.MIN,this.MAX,this.MAX]);
+    this.bottomText = teka.translate('domino_hunt_range',[this.MIN,this.MIN,this.MAX,this.MAX]);
     g.font = 'bold '+this.textHeight+'px sans-serif';
     var textwidth = g.measureText(this.bottomText).width+1;
     realwidth = Math.max(realwidth,textwidth+this.scale);
@@ -470,7 +470,7 @@ teka.viewer.domino.DominoViewer.prototype.setMetrics = function(g)
 };
 
 /** Paints the diagram. */
-teka.viewer.domino.DominoViewer.prototype.paint = function(g)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.paint = function(g)
 {
     var X = this.X;
     var Y = this.Y;
@@ -518,13 +518,13 @@ teka.viewer.domino.DominoViewer.prototype.paint = function(g)
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
             g.strokeStyle = this.getColorString(this.cr[i][j]);
-            if (this.fr[i][j]==teka.viewer.domino.Defaults.LINE) {
+            if (this.fr[i][j]==teka.viewer.domino_hunt.Defaults.LINE) {
                 g.lineWidth=5;
                 teka.drawLine(g,(i+1)*S,j*S,(i+1)*S,(j+1)*S);
                 g.lineWidth=1;
                 continue;
             }
-            if (this.fr[i][j]==teka.viewer.domino.Defaults.CROSS) {
+            if (this.fr[i][j]==teka.viewer.domino_hunt.Defaults.CROSS) {
                 g.lineWidth=2;
                 teka.drawLine(g,(i+1)*S-S/10,j*S+S/2-S/10,(i+1)*S+S/10,j*S+S/2+S/10);
                 teka.drawLine(g,(i+1)*S-S/10,j*S+S/2+S/10,(i+1)*S+S/10,j*S+S/2-S/10);
@@ -544,13 +544,13 @@ teka.viewer.domino.DominoViewer.prototype.paint = function(g)
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
             g.strokeStyle = this.getColorString(this.cd[i][j]);
-            if (this.fd[i][j]==teka.viewer.domino.Defaults.LINE) {
+            if (this.fd[i][j]==teka.viewer.domino_hunt.Defaults.LINE) {
                 g.lineWidth=5;
                 teka.drawLine(g,i*S,(j+1)*S,(i+1)*S,(j+1)*S);
                 g.lineWidth=1;
                 continue;
             }
-            if (this.fd[i][j]==teka.viewer.domino.Defaults.CROSS) {
+            if (this.fd[i][j]==teka.viewer.domino_hunt.Defaults.CROSS) {
                 g.lineWidth=2;
                 teka.drawLine(g,i*S+S/2-S/10,(j+1)*S-S/10,i*S+S/2+S/10,(j+1)*S+S/10);
                 teka.drawLine(g,i*S+S/2-S/10,(j+1)*S+S/10,i*S+S/2+S/10,(j+1)*S-S/10);
@@ -625,9 +625,9 @@ teka.viewer.domino.DominoViewer.prototype.paint = function(g)
             g.strokeRect(this.x*S+Math.floor(S/6)+6,
                        Y*S+this.textHeight+this.y*Math.ceil(S/3)+14,
                        2*Math.ceil(S/3)-8,Math.ceil(S/3)-6);
-        } else if (this.cursor_mode==teka.viewer.domino.Defaults.V_EDGE) {
+        } else if (this.cursor_mode==teka.viewer.domino_hunt.Defaults.V_EDGE) {
             teka.drawLine(g,(this.x+1)*S,this.y*S,(this.x+1)*S,(this.y+1)*S);
-        } else if (this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE) {
+        } else if (this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE) {
             teka.drawLine(g,this.x*S,(this.y+1)*S,(this.x+1)*S,(this.y+1)*S);
         }
     }
@@ -638,7 +638,7 @@ teka.viewer.domino.DominoViewer.prototype.paint = function(g)
 //////////////////////////////////////////////////////////////////
 
 /** Handles mousemove event. */
-teka.viewer.domino.DominoViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.processMousemoveEvent = function(xc, yc, pressed)
 {
     var oldx = this.x;
     var oldy = this.y;
@@ -672,33 +672,33 @@ teka.viewer.domino.DominoViewer.prototype.processMousemoveEvent = function(xc, y
         var coord = this.normalizeCoordinates(xc,yc);
 
         if (coord.left) {
-            this.cursor_mode = teka.viewer.domino.Defaults.V_EDGE;
+            this.cursor_mode = teka.viewer.domino_hunt.Defaults.V_EDGE;
             this.x = coord.x-1;
             this.y = coord.y;
         }
 
         if (coord.right) {
-            this.cursor_mode = teka.viewer.domino.Defaults.V_EDGE;
+            this.cursor_mode = teka.viewer.domino_hunt.Defaults.V_EDGE;
             this.x = coord.x;
             this.y = coord.y;
         }
 
         if (coord.top) {
-            this.cursor_mode = teka.viewer.domino.Defaults.H_EDGE;
+            this.cursor_mode = teka.viewer.domino_hunt.Defaults.H_EDGE;
             this.x = coord.x;
             this.y = coord.y-1;
         }
 
         if (coord.bottom) {
-            this.cursor_mode = teka.viewer.domino.Defaults.H_EDGE;
+            this.cursor_mode = teka.viewer.domino_hunt.Defaults.H_EDGE;
             this.x = coord.x;
             this.y = coord.y;
         }
 
         if (this.x<0 || this.y<0 || this.x>=this.X || this.y>=this.Y ||
-            (this.x==this.X-1 && this.cursor_mode==teka.viewer.domino.Defaults.V_EDGE) ||
-            (this.y==this.Y-1 && this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE)) {
-            this.cursor_mode = teka.viewer.domino.Defaults.NO_MODE;
+            (this.x==this.X-1 && this.cursor_mode==teka.viewer.domino_hunt.Defaults.V_EDGE) ||
+            (this.y==this.Y-1 && this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE)) {
+            this.cursor_mode = teka.viewer.domino_hunt.Defaults.NO_MODE;
         }
         this.domino = false;
     }
@@ -707,7 +707,7 @@ teka.viewer.domino.DominoViewer.prototype.processMousemoveEvent = function(xc, y
 };
 
 /** Handles mousedown event. */
-teka.viewer.domino.DominoViewer.prototype.processMousedownEvent = function(xc, yc)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.processMousedownEvent = function(xc, yc)
 {
     var erg = this.processMousemoveEvent(xc,yc);
 
@@ -716,18 +716,18 @@ teka.viewer.domino.DominoViewer.prototype.processMousedownEvent = function(xc, y
         return true;
     }
 
-    if (this.cursor_mode==teka.viewer.domino.Defaults.NO_MODE) {
+    if (this.cursor_mode==teka.viewer.domino_hunt.Defaults.NO_MODE) {
         return erg;
     }
 
-    this.setEdge(this.x,this.y,this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE,
-                 ((this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE?this.fd[this.x][this.y]:this.fr[this.x][this.y])+1)%3);
+    this.setEdge(this.x,this.y,this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE,
+                 ((this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE?this.fd[this.x][this.y]:this.fr[this.x][this.y])+1)%3);
 
     return true;
 };
 
 /** Handles keydown event. */
-teka.viewer.domino.DominoViewer.prototype.processKeydownEvent = function(e)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.processKeydownEvent = function(e)
 {
     if (this.domino) {
         if (e.key==teka.KEY_LEFT) {
@@ -753,7 +753,7 @@ teka.viewer.domino.DominoViewer.prototype.processKeydownEvent = function(e)
 
         if (e.key==teka.KEY_UP) {
             if (this.y==this.x && this.x<this.X) {
-                this.cursor_mode=teka.viewer.domino.Defaults.H_EDGE;
+                this.cursor_mode=teka.viewer.domino_hunt.Defaults.H_EDGE;
                 this.domino = false;
                 this.y = this.Y-2;
                 return true;
@@ -778,13 +778,13 @@ teka.viewer.domino.DominoViewer.prototype.processKeydownEvent = function(e)
     }
 
     if (e.key==teka.KEY_ESCAPE) {
-        if (this.cursor_mode==teka.viewer.domino.Defaults.V_EDGE) {
-            this.cursor_mode=teka.viewer.domino.Defaults.H_EDGE;
+        if (this.cursor_mode==teka.viewer.domino_hunt.Defaults.V_EDGE) {
+            this.cursor_mode=teka.viewer.domino_hunt.Defaults.H_EDGE;
             if (this.y==this.Y-1) {
                 this.y--;
             }
         } else {
-            this.cursor_mode=teka.viewer.domino.Defaults.V_EDGE;
+            this.cursor_mode=teka.viewer.domino_hunt.Defaults.V_EDGE;
             if (this.x==this.X-1) {
                 this.x--;
             }
@@ -793,8 +793,8 @@ teka.viewer.domino.DominoViewer.prototype.processKeydownEvent = function(e)
     }
 
     if (e.key==teka.KEY_DOWN) {
-        if ((this.cursor_mode==teka.viewer.domino.Defaults.V_EDGE && this.y==this.Y-1)
-            || (this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE && this.y==this.Y-2)) {
+        if ((this.cursor_mode==teka.viewer.domino_hunt.Defaults.V_EDGE && this.y==this.Y-1)
+            || (this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE && this.y==this.Y-2)) {
                 if (this.x<=this.MAX-this.MIN) {
                     this.y = this.x;
                     this.domino = true;
@@ -803,7 +803,7 @@ teka.viewer.domino.DominoViewer.prototype.processKeydownEvent = function(e)
         }
 
         if (this.y<this.Y-1 &&
-           (this.cursor_mode==teka.viewer.domino.Defaults.V_EDGE || this.y<this.Y-2)) {
+           (this.cursor_mode==teka.viewer.domino_hunt.Defaults.V_EDGE || this.y<this.Y-2)) {
             this.y++;
         }
         return true;
@@ -816,7 +816,7 @@ teka.viewer.domino.DominoViewer.prototype.processKeydownEvent = function(e)
     }
     if (e.key==teka.KEY_RIGHT) {
         if (this.x<this.X-1 &&
-            (this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE || this.x<this.X-2)) {
+            (this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE || this.x<this.X-2)) {
             this.x++;
         }
         return true;
@@ -830,23 +830,23 @@ teka.viewer.domino.DominoViewer.prototype.processKeydownEvent = function(e)
 
     if (e.key==teka.KEY_SPACE) {
         this.setEdge(this.x,this.y,
-                     this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE,
-                     teka.viewer.domino.Defaults.EMPTY);
+                     this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE,
+                     teka.viewer.domino_hunt.Defaults.EMPTY);
         return true;
     }
 
     if (e.key==teka.KEY_HASH || e.key==teka.KEY_STAR || e.key==teka.KEY_Q) {
         this.setEdge(this.x,this.y,
-                     this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE,
-                     teka.viewer.domino.Defaults.LINE);
+                     this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE,
+                     teka.viewer.domino_hunt.Defaults.LINE);
         return true;
     }
 
     if (e.key==teka.KEY_MINUS || e.key==teka.KEY_SLASH || e.key==teka.KEY_Q
         || e.key==teka.KEY_D || e.key==teka.KEY_X) {
         this.setEdge(this.x,this.y,
-                     this.cursor_mode==teka.viewer.domino.Defaults.H_EDGE,
-                     teka.viewer.domino.Defaults.CROSS);
+                     this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE,
+                     teka.viewer.domino_hunt.Defaults.CROSS);
         return true;
     }
 
@@ -856,7 +856,7 @@ teka.viewer.domino.DominoViewer.prototype.processKeydownEvent = function(e)
 //////////////////////////////////////////////////////////////////
 
 /** Sets the value of a domino, if the color fits. */
-teka.viewer.domino.DominoViewer.prototype.setDomino = function(x, y, value)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.setDomino = function(x, y, value)
 {
     if (this.f_domino[x][y] && this.c_domino[x][y]!=this.color) {
         return;
@@ -866,10 +866,10 @@ teka.viewer.domino.DominoViewer.prototype.setDomino = function(x, y, value)
 };
 
 /** Sets the value of an edge, if the color fits. */
-teka.viewer.domino.DominoViewer.prototype.setEdge = function(x, y, horiz, value)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.setEdge = function(x, y, horiz, value)
 {
     if (horiz) {
-        if (this.fd[x][y]!=teka.viewer.domino.Defaults.EMPTY &&
+        if (this.fd[x][y]!=teka.viewer.domino_hunt.Defaults.EMPTY &&
             this.cd[x][y]!=this.color) {
             return;
         }
@@ -880,7 +880,7 @@ teka.viewer.domino.DominoViewer.prototype.setEdge = function(x, y, horiz, value)
         return;
     }
 
-    if (this.fr[x][y]!=teka.viewer.domino.Defaults.EMPTY &&
+    if (this.fr[x][y]!=teka.viewer.domino_hunt.Defaults.EMPTY &&
         this.cr[x][y]!=this.color) {
         return;
     }
@@ -891,7 +891,7 @@ teka.viewer.domino.DominoViewer.prototype.setEdge = function(x, y, horiz, value)
 };
 
 /** Add strokes around crosses. */
-teka.viewer.domino.DominoViewer.prototype.addSomeStrokes = function()
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.addSomeStrokes = function()
 {
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
@@ -906,7 +906,7 @@ teka.viewer.domino.DominoViewer.prototype.addSomeStrokes = function()
 
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            if (this.fr[i][j]==teka.viewer.domino.Defaults.CROSS) {
+            if (this.fr[i][j]==teka.viewer.domino_hunt.Defaults.CROSS) {
                 if (i>0) {
                     this.auto_r[i-1][j] = true;
                 }
@@ -927,7 +927,7 @@ teka.viewer.domino.DominoViewer.prototype.addSomeStrokes = function()
 
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            if (this.fd[i][j]==teka.viewer.domino.Defaults.CROSS) {
+            if (this.fd[i][j]==teka.viewer.domino_hunt.Defaults.CROSS) {
                 if (j>0) {
                     this.auto_d[i][j-1] = true;
                 }
