@@ -251,6 +251,20 @@ teka.dictionary = {
     basic_column_duplicate: 'Die markierten Ziffern kommen in der Spalte doppelt vor.',
     basic_wrong_result: 'Im markierten Bereich stimmt das Ergebnis der Rechnung nicht.',
 
+    domino: 'Dominosuche',
+    domino_instructions: 'Zerlegen Sie das Diagramm in die angegebenen Dominosteine. Jeder Dominostein '
+        +'muss genau einmal vorwendet werden.',
+    domino_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Linie \n2. Klick: Keine Linie (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n'
+        +'Sie können auch durch anklicken, die Dominos unter dem Diagramm abstreichen.\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Linie\n-, /, W, X und D: Keine Linie (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n'
+        +'Bei den Dominosteinen:\n#, * und Q: Abstreichen\nLeertaste: Markierung löschen.\n\n'
+        +'Mit Escape kann zwischen waagerechtem und senkrechtem Cursor hin- und hergeschaltet werden.',
+    domino_range: 'Dominos von {1}-{2} bis {3}-{4}.',
+    domino_no_domino: 'Der markierte Bereich hat nicht die Form eines Dominosteins.',
+    domino_double: 'Die beiden markierten Dominosteine kommen doppelt vor.',
+
     easy_as_abc: 'Buchstabensalat',
     easy_as_abc_instructions: 'Tragen Sie die unter dem Rätsel angegebenen Buchstaben so in das Diagramm ein,'
         +' dass in jeder Zeile und jeder Spalte jeder Buchstabe genau einmal vorkommt.'
