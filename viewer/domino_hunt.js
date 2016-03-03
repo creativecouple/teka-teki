@@ -49,8 +49,10 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.initData = function(data)
     this.Y = parseInt(data.get('Y'),10);
     this.MIN = parseInt(data.get('min'),10);
     this.MAX = parseInt(data.get('max'),10);
-    this.asciiToData(data.get('puzzle'));
-    this.asciiToSolution(data.get('solution'));
+    var digits = data.get('digits');
+    digits = digits===false?1:parseInt(data.get('digits'),10);
+    this.asciiToData(data.get('puzzle'),digits);
+    this.asciiToSolution(data.get('solution'),digits);
 
     this.fr = teka.new_array([this.X-1,this.Y],0);
     this.fd = teka.new_array([this.X,this.Y-1],0);
@@ -64,7 +66,7 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.initData = function(data)
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.domino_hunt.Domino_huntViewer.prototype.asciiToData = function(ascii)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.asciiToData = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -75,28 +77,28 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.asciiToData = function(ascii
     this.puzzle = teka.new_array([this.X,this.Y],0);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.puzzle[i][j] = grid[2*i+1][2*j+1]==teka.ord('#')?-1:
-                (grid[2*i+1][2*j+1]-teka.ord('0'));
+            this.puzzle[i][j] = grid[(d+1)*i+1][2*j+1]==teka.ord('#')?-1:
+                this.getNr(grid,(d+1)*i+1,2*j+1,d);
         }
     }
 
     this.pr = teka.new_array([this.X-1,this.Y],false);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.pr[i][j] = grid[2*i+2][2*j+1]==teka.ord('|');
+            this.pr[i][j] = grid[(d+1)*i+(d+1)][2*j+1]==teka.ord('|');
         }
     }
 
     this.pd = teka.new_array([this.X,this.Y-1],false);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.pd[i][j] = grid[2*i+1][2*j+2]==teka.ord('-');
+            this.pd[i][j] = grid[(d+1)*i+1][2*j+2]==teka.ord('-');
         }
     }
 };
 
 /** Read puzzle from ascii art. */
-teka.viewer.domino_hunt.Domino_huntViewer.prototype.asciiToSolution = function(ascii)
+teka.viewer.domino_hunt.Domino_huntViewer.prototype.asciiToSolution = function(ascii,d)
 {
     if (ascii===false) {
         return;
@@ -107,14 +109,14 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.asciiToSolution = function(a
     this.sr = teka.new_array([this.X-1,this.Y],false);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.sr[i][j] = grid[2*i+2][2*j+1]==teka.ord('|');
+            this.sr[i][j] = grid[(d+1)*i+(d+1)][2*j+1]==teka.ord('|');
         }
     }
 
     this.sd = teka.new_array([this.X,this.Y-1],false);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
-            this.sd[i][j] = grid[2*i+1][2*j+2]==teka.ord('-');
+            this.sd[i][j] = grid[(d+1)*i+1][2*j+2]==teka.ord('-');
         }
     }
 };
@@ -308,6 +310,10 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.check = function()
     var check_r = teka.new_array([this.X-1,this.Y],false);
     for (var i=0;i<this.X-1;i++) {
         for (var j=0;j<this.Y;j++) {
+            if (this.pr[i][j]===true) {
+                check_r[i][j] = teka.viewer.domino_hunt.Defaults.LINE;
+                continue;
+            }
             check_r[i][j] = this.fr[i][j];
             if (check_r[i][j]==teka.viewer.domino_hunt.Defaults.EMPTY && this.auto_r[i][j]) {
                 check_r[i][j] = teka.viewer.domino_hunt.Defaults.LINE;
@@ -318,6 +324,10 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.check = function()
     var check_d = teka.new_array([this.X,this.Y-1],false);
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y-1;j++) {
+            if (this.pd[i][j]===true) {
+                check_d[i][j] = teka.viewer.domino_hunt.Defaults.LINE;
+                continue;
+            }
             check_d[i][j] = this.fd[i][j];
             if (check_d[i][j]==teka.viewer.domino_hunt.Defaults.EMPTY && this.auto_d[i][j]) {
                 check_d[i][j] = teka.viewer.domino_hunt.Defaults.LINE;
@@ -517,6 +527,13 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.paint = function(g)
     g.lineCap = 'square';
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
+            if (this.pr[i][j]===true) {
+                g.strokeStyle = '#000';
+                g.lineWidth=5;
+                teka.drawLine(g,(i+1)*S,j*S,(i+1)*S,(j+1)*S);
+                g.lineWidth=1;
+                continue;
+            }
             g.strokeStyle = this.getColorString(this.cr[i][j]);
             if (this.fr[i][j]==teka.viewer.domino_hunt.Defaults.LINE) {
                 g.lineWidth=5;
@@ -543,6 +560,13 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.paint = function(g)
 
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
+            if (this.pd[i][j]===true) {
+                g.strokeStyle = '#000';
+                g.lineWidth=5;
+                teka.drawLine(g,i*S,(j+1)*S,(i+1)*S,(j+1)*S);
+                g.lineWidth=1;
+                continue;
+            }
             g.strokeStyle = this.getColorString(this.cd[i][j]);
             if (this.fd[i][j]==teka.viewer.domino_hunt.Defaults.LINE) {
                 g.lineWidth=5;
