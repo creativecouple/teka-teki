@@ -854,8 +854,7 @@ teka.dictionary = {
     snake_instructions: 'Zeichnen Sie eine Schlange so in das Rätsel ein, dass diese sich nirgends selbst berührt,'
         +' auch nicht diagonal. Die Zahlen am Rand geben dabei an, wie viele Felder in der entsprechenden'
         +' Zeile oder Spalte von der Schlange belegt sind. Die von der Schlange belegten Felder sind'
-        +' durchnummeriert - beginnend beim Kopf mit der Zahl 1. Einige Zahlen sind bereits vorgegeben,'
-        +' nicht notwendigerweise Anfang und Ende der Schlange.',
+        +' durchnummeriert - beginnend beim Kopf mit der Zahl 1. Vorgegebene Zahlen müssen nicht unbedingt Kopf oder Schwanz der Schlange sein.',
     snake_usage: 'Bedienung mit der Maus:\n\n'
         +'1. Klick: Schlangensegment (Kreis)\n2. Klick: Leerfeld (markiert durch einen Strich)\n3. Klick: Feldinhalt löschen\n\n'
         +'Alternativ können Sie auch mit der Maus über mehrere Felder ziehen, '

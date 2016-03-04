@@ -54,7 +54,7 @@ teka.viewer.snake.SnakeViewer.prototype.initData = function(data)
     this.error_top = teka.new_array([this.X],false);
     this.error_left = teka.new_array([this.Y],false);
     this.nr = teka.new_array([this.X,this.Y],0);
-    this.auto_nr = teka.new_array([this.X,this.Y],0);
+    this.auto_nr = teka.new_array([this.X,this.Y,0],false);
 };
 
 /** Read puzzle from ascii art. */
@@ -114,7 +114,13 @@ teka.viewer.snake.SnakeViewer.prototype.addSolution = function()
 {
     for (var i=0;i<this.X;i++) {
         for (var j=0;j<this.Y;j++) {
-            this.f[i][j] = this.solution[i][j];
+            if (this.solution[i][j]!==teka.viewer.snake.Defaults.NONE) {
+                this.f[i][j] = teka.viewer.snake.Defaults.FULL;
+                this.nr[i][j] = this.solution[i][j];
+            }
+            else {
+                this.f[i][j] = teka.viewer.snake.Defaults.NONE;
+            }
         }
     }
 };
@@ -285,9 +291,9 @@ teka.viewer.snake.SnakeViewer.prototype.check = function()
                 }
 
                 if (az==1) {
-                    head[head.length] = {x:i,y:j};
+                    head.push({x:i,y:j});
                 } else if (az===0) {
-                    single[single.length] = {x:i,y:j};
+                    single.push({x:i,y:j});
                 } else if (az!=2) {
                     this.error[i][j] = true;
                     return 'snake_branch';
@@ -469,7 +475,7 @@ teka.viewer.snake.SnakeViewer.prototype.fillSnake = function(check, x, y)
 teka.viewer.snake.SnakeViewer.prototype.setMetrics = function(g)
 {
     this.scale = Math.floor(Math.min((this.width-2)/(this.X+1),
-                                     (this.height-2-this.textHeight+2)/(this.Y+1)));
+                                     (this.height-2-(this.textHeight+2))/(this.Y+1)));
     var realwidth = (this.X+1)*this.scale+2;
     var realheight = (this.Y+1)*this.scale+2+this.textHeight+2;
 
@@ -487,6 +493,7 @@ teka.viewer.snake.SnakeViewer.prototype.setMetrics = function(g)
 
     this.font = teka.getFontData(Math.round(this.scale/2)+'px sans-serif',this.scale);
     this.boldfont = teka.getFontData('bold '+Math.round(this.scale/2)+'px sans-serif',this.scale);
+    this.smallfont = teka.getFontData(Math.round(this.scale/3)+'px sans-serif',this.scale);
 
     if (realwidth>this.width || realheight>this.height) {
         this.scale=false;
@@ -589,10 +596,25 @@ teka.viewer.snake.SnakeViewer.prototype.paint = function(g)
                     g.fillText(this.nr[i][j],(i+1)*S+S/2,(j+1)*S+S/2+this.font.delta);
                     continue;
                 }
-                if (this.auto_nr[i][j]>0) {
+                if (this.auto_nr[i][j].length==1) {
                     g.fillStyle = '#888';
                     g.font = this.font.font;
-                    g.fillText(this.nr[i][j],(i+1)*S+S/2,(j+1)*S+S/2+this.font.delta);
+                    g.fillText(this.auto_nr[i][j][0],(i+1)*S+S/2,(j+1)*S+S/2+this.font.delta);
+                    continue;
+                }
+                if (this.auto_nr[i][j].length==2) {
+                    var a = this.auto_nr[i][j][0];
+                    var b = this.auto_nr[i][j][1];
+                    if (b<a) {
+                        a = this.auto_nr[i][j][1];
+                        b = this.auto_nr[i][j][0];
+                    }
+                    g.fillStyle = '#888';
+                    g.font = this.smallfont.font;
+                    g.fillText(a,(i+1)*S+S/2,(j+1)*S+S/4+this.smallfont.delta);
+                    g.fillText(b,(i+1)*S+S/2,(j+2)*S-S/4+this.smallfont.delta);
+                    g.strokeStyle = '#888';
+                    teka.drawLine(g,(i+1)*S+2,(j+1)*S+S/2,(i+2)*S-2,(j+1)*S+S/2);
                     continue;
                 }
                 continue;
@@ -883,21 +905,141 @@ teka.viewer.snake.SnakeViewer.prototype.setNr = function(x, y, value)
 /** Tries to add automatic calculated numbers. */
 teka.viewer.snake.SnakeViewer.prototype.calculateNumbers = function()
 {
-    // auto_nr:
-    //
-    // 0 = nix
-    // 1-n = Zahl
-    // array (1-n, 1-n) = 2 Zahlen
-    //
-    // Algorithmus:
-    //
-    // Fülle ausgehend von jeder Zahl mit +n und -n.
-    //
-    // Falls -n <= 0 => streice halle -n
-    // Falls n > MAX => streiche alle +n
-    // Falls neue Zahl:
-    // = -n => streiche alle +n
-    // = +n => streiche alle -n
-    // sonst: => streiche alle.
-    //
+    this.auto_nr = teka.new_array([this.X,this.Y,0],false);
+
+    var check = teka.new_array([this.X,this.Y],false);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (this.puzzle[i][j]>0) {
+                check[i][j] = true;
+            } else {
+                check[i][j] = this.f[i][j]==teka.viewer.snake.Defaults.FULL;
+            }
+        }
+    }
+
+    var count = teka.new_array([this.X,this.Y],0);
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (check[i][j]) {
+                if (i>0 && check[i-1][j]) {
+                    count[i][j]++;
+                }
+                if (i<this.X-1 && check[i+1][j]) {
+                    count[i][j]++;
+                }
+                if (j>0 && check[i][j-1]) {
+                    count[i][j]++;
+                }
+                if (j<this.Y-1 && check[i][j+1]) {
+                    count[i][j]++;
+                }
+            }
+        }
+    }
+
+    var mark = teka.new_array([this.X,this.Y],false);
+    var c = 0;
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (check[i][j] && mark[i][j]===false) {
+                var erg = this.fill(check,mark,count,i,j,++c);
+                if (erg[0]>0 || erg[3]>0 || erg[4]>0 || erg[1]!=2) {
+                    continue;
+                }
+
+                this.addSnake(check,mark,erg[5][0].x,erg[5][0].y,c);
+                this.addSnake(check,mark,erg[5][1].x,erg[5][1].y,c);
+            }
+        }
+    }
+};
+
+teka.viewer.snake.SnakeViewer.prototype.fill = function(check, mark, count, x, y, value)
+{
+    if (x<0 || x>=this.X || y<0 || y>=this.Y) {
+        return [0,0,0,0,0,[]];
+    }
+    if (!check[x][y]) {
+        return [0,0,0,0,0,[]];
+    }
+    if (mark[x][y]!==false) {
+        return [0,0,0,0,0,[]];
+    }
+
+    mark[x][y] = value;
+
+    var e1 = this.fill(check,mark,count,x-1,y,value);
+    var e2 = this.fill(check,mark,count,x+1,y,value);
+    var e3 = this.fill(check,mark,count,x,y-1,value);
+    var e4 = this.fill(check,mark,count,x,y+1,value);
+
+    var erg = [0,0,0,0,0,[]];
+
+    erg[count[x][y]]++;
+    if (count[x][y]==1) {
+        erg[5].push({x:x,y:y});
+    }
+
+    for (var k=0;k<5;k++) {
+        erg[k]+=e1[k];
+        erg[k]+=e2[k];
+        erg[k]+=e3[k];
+        erg[k]+=e4[k];
+    }
+
+    erg[5] = erg[5].concat(e1[5]);
+    erg[5] = erg[5].concat(e2[5]);
+    erg[5] = erg[5].concat(e3[5]);
+    erg[5] = erg[5].concat(e4[5]);
+
+    return erg;
+};
+
+teka.viewer.snake.SnakeViewer.prototype.addSnake = function(check, mark, x, y, value)
+{
+    var s = this.fillSnake(check,x,y);
+
+    var delta = [];
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (mark[i][j]==value) {
+                if (this.puzzle[i][j]>0) {
+                    delta.push(this.puzzle[i][j]-s[i][j]);
+                } else if (this.nr[i][j]>0) {
+                    delta.push(this.nr[i][j]-s[i][j]);
+                }
+            }
+        }
+    }
+
+    if (delta.length===0) {
+        return;
+    }
+
+    var tmp = delta[0];
+    for (var k=1;k<delta.length;k++) {
+        if (delta[k]!=tmp) {
+            return;
+        }
+    }
+
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (mark[i][j]==value) {
+                s[i][j]+=tmp;
+                if (s[i][j]<1 || (this.MAX!==false && s[i][j]>this.MAX)) {
+                    return;
+                }
+            }
+        }
+    }
+
+    for (var i=0;i<this.X;i++) {
+        for (var j=0;j<this.Y;j++) {
+            if (mark[i][j]==value) {
+                this.auto_nr[i][j].push(s[i][j]);
+            }
+        }
+    }
 };
