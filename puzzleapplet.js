@@ -421,7 +421,7 @@ teka.PuzzleApplet.prototype.correctType = function(type)
                      'fillomino','greater_than_sudoku','hashi','heyawake','hitori',
                      'japanese_sums','kakuro','killer_sudoku','kropki','laser',
                      'magic_labyrinth','magnets','masyu','pills','pyramid',
-                     'skyscrapers','skyscrapers_with_parks','starbattle',
+                     'skyscrapers','skyscrapers_with_parks','snake','starbattle',
                      'starry_sky','sudoku','tapa'];
 
     for (var i=0;i<whitelist.length;i++) {

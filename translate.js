@@ -850,6 +850,29 @@ teka.dictionary = {
     skyscrapers_with_parks_row_wrong_parks: 'In der markierten Zeile stimmt die Anzahl der Parks nicht.',
     skyscrapers_with_parks_column_wrong_parks: 'In der markierten Spalte stimmt die Anzahl der Parks nicht.',
 
+    snake: 'Schlangenrätsel',
+    snake_instructions: 'Zeichnen Sie eine Schlange so in das Rätsel ein, dass diese sich nirgends selbst berührt,'
+        +' auch nicht diagonal. Die Zahlen am Rand geben dabei an, wie viele Felder in der entsprechenden'
+        +' Zeile oder Spalte von der Schlange belegt sind. Die von der Schlange belegten Felder sind'
+        +' durchnummeriert - beginnend beim Kopf mit der Zahl 1. Einige Zahlen sind bereits vorgegeben,'
+        +' nicht notwendigerweise Anfang und Ende der Schlange.',
+    snake_usage: 'Bedienung mit der Maus:\n\n'
+        +'1. Klick: Schlangensegment (Kreis)\n2. Klick: Leerfeld (markiert durch einen Strich)\n3. Klick: Feldinhalt löschen\n\n'
+        +'Alternativ können Sie auch mit der Maus über mehrere Felder ziehen, '
+        +'in all diesen Feldern wird dann ein Schlangensegment gesetzt (dragging).\n\n\n'
+        +'Bedienung mit der Tastatur:\n\n'
+        +'#, * und Q: Schlangensegment (Kreis)\n-, / und W: Leerfeld (markiert durch einen Strich)\nLeertaste: Feldinhalt löschen',
+    snake_length: 'Länge: {1}',
+    snake_length_unknown: 'Länge: unbekannt',
+    snake_touch: 'Die Schlange berührt sich an der markierten Stelle selber.',
+    snake_branch: 'An der markierten Stelle verzweigt die Schlange.',
+    snake_too_much_heads: 'Die Schlange hat zu viele Anfänge.',
+    snake_no_head: 'Die Schlange hat keinen Anfang.',
+    snake_row_count: 'In der markierten Zeile stimmt die Anzahl der Schlangensegmente nicht.',
+    snake_column_count: 'In der markierten Spalte stimmt die Anzahl der Schlangensegmente nicht.',
+    snake_length_wrong: 'Die Länge der Schlange ({1}) stimmt nicht mit der Vorgabe ({2}) überein.',
+    snake_numbers_wrong: 'An den markierten Stellen passen die Vorgabezahlen nicht.',
+
     starbattle: 'Doppelstern',
     starbattle_instructions: 'Tragen Sie in das Diagramm Sterne so ein, dass sich '
         +'in jeder Zeile, jeder Spalte und jedem fettumrandeten Gebiet genau so '
