@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Pages: 1
-%%BoundingBox: 0 0 161 161
-%%CropBox: 0 0 161 161
+%%BoundingBox: 0 0 139 138
+%%CropBox: 0 0 139 138
 %%DocumentData: Clean7Bit
 %%Page: 1 1
 %%EndComments
@@ -11,36 +11,32 @@
 /pgsave save def 200 dict begin
 /sc 22.8 def
 /pt {sc div} def
-sc dup scale 0.5 pt dup translate
+sc dup scale 0.8 pt dup translate
 /duenn { 0.4 pt setlinewidth } def
-/dick { 1 pt setlinewidth } def
+/dick { 1.6 pt setlinewidth } def
 
-% create snake:CEP -s 6
 <<
 /format 1
 /type (snake)
 /sol false
-/X 6
-/Y 6
+/author ()
+/X 5
+/Y 5
+/max 11
+/digits 3
 /puzzle [
-(     3   3   3)
-( 3            )
-( 5            )
-(              )
-(              )
-( 1            )
-( 4      18    ) ]
+(              1   )
+(                  )
+(      ###  7      )
+(                  )
+(  3               )
+(     2            ) ]
 /solution [
-(  101112    )
-( 8 9  131415)
-( 7        16)
-( 6      1817)
-( 5          )
-( 4 3 2 1    ) ]
-/description [
- (Gr&ouml;&szlig;e 6x6)
- (Länge 18)
-]
+(               )
+(   ###  7  8  9)
+(        6    10)
+(  1     5    11)
+(  2  3  4      ) ]
 >> currentdict copy pop
 
 /e { exch def } bind def
@@ -48,24 +44,32 @@ sc dup scale 0.5 pt dup translate
 /c { dup 4 2 roll moveto
      stringwidth pop 2 div neg 0.5 add 0.25 rmoveto show } def
 
+currentdict /digits known not { /digits 1 def } if
+
+/getNr {
+  /x e /line e
+  line x digits add 1 sub get (#) 0 get eq {
+    -2
+  } {
+    line x digits add 1 sub get ( ) 0 get ne {
+      /val 0 def
+      0 1 digits 1 sub { /ii e
+        line x ii add get /hh e
+        hh ( ) 0 get eq { /hh (0) 0 get def } if
+        /val val 10 mul hh (0) 0 get sub add def
+      } for
+      val
+    } {
+      -1
+    } ifelse
+  } ifelse
+} def
+
 1 0 translate
 
 1 setgray
 0 0 X Y rectfill
 0 setgray
-
-/zwodigit {
-  /b e /a e
-  b ( ) 0 get eq {
-    -1
-  } {
-    a ( ) 0 get eq {
-      b 48 sub
-    } {
-      b 48 sub a 48 sub 10 mul add
-    } ifelse
-  } ifelse
-} def
 
 
 dick
@@ -79,16 +83,15 @@ duenn
 -1 1 X 1 sub { /i e
   0 1 Y { /j e
     sol i -1 ne j Y ne and and {
-      solution Y j sub 1 sub get i 2 mul get
-      solution Y j sub 1 sub get i 2 mul 1 add get
-      zwodigit /h e
+      solution Y j sub 1 sub get i digits mul getNr /h e
     } {
-      puzzle Y j sub get i 2 mul 2 add get
-      puzzle Y j sub get i 2 mul 3 add get
-      zwodigit /h e
+      puzzle Y j sub get i 1 add digits mul getNr /h e
     } ifelse
-    h -1 ne {
-      i j h 5 string cvs c
+    h -1 ne h -2 ne and {
+      i j h digits string cvs c
+    } if
+    h -2 eq {
+      i j 1 1 rectfill
     } if
   } for
 } for
