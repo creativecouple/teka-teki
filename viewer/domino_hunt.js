@@ -456,7 +456,7 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.setMetrics = function(g)
     var h = this.MAX-this.MIN+1;
     this.scale = Math.floor(Math.min(Math.min((this.width-6)/this.X,
                                               (this.width-6)/h),
-                                     3*(this.height-6-(this.textHeight+2)-5)/(3*this.Y+h)));
+                                     3*(this.height-6-(this.textHeight+2)-6)/(3*this.Y+h)));
     var realwidth = Math.max(this.X*this.scale+6,h*this.scale+6);
     var realheight = this.Y*this.scale+6+this.textHeight+2+5+h*this.scale/3;
 
