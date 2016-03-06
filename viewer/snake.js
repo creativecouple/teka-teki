@@ -537,7 +537,7 @@ teka.viewer.snake.SnakeViewer.prototype.paint = function(g)
         }
     }
 
-    g.fillStyle = '#000';
+    g.strokeStyle = '#000';
     g.lineWidth = 3;
     g.strokeRect(S,S,X*S,Y*S);
     g.lineWidth = 1;

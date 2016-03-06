@@ -523,6 +523,7 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
     for (var i=0;i<X-1;i++) {
         for (var j=0;j<Y;j++) {
             if (this.fr[i][j]==1) {
+                g.strokeStyle = this.getColorString(this.cr[i][j]);
                 g.lineWidth = 5;
                 teka.drawLine(g,(i+2)*S,(j+1)*S,(i+2)*S,(j+2)*S);
                 g.lineWidth = 1;
@@ -533,6 +534,7 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y-1;j++) {
             if (this.fd[i][j]==1) {
+                g.strokeStyle = this.getColorString(this.cd[i][j]);
                 g.lineWidth = 5;
                 teka.drawLine(g,(i+1)*S,(j+2)*S,(i+2)*S,(j+2)*S);
                 g.lineWidth = 1;
@@ -560,8 +562,7 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
                 g.arc((i+2)*S+S/2,(j+1)*S+S/2,S/2-2,3*Math.PI/2,Math.PI/2);
                 g.closePath();
                 g.fill();
-            }
-            if (this.f[i][j]==teka.viewer.pills.Defaults.VERT) {
+            } else if (this.f[i][j]==teka.viewer.pills.Defaults.VERT) {
                 g.beginPath();
                 g.arc((i+1)*S+S/2,j*S+S/2,S/2-2,Math.PI,0);
                 g.arc((i+1)*S+S/2,(j+2)*S+S/2,S/2-2,0,Math.PI);
@@ -815,7 +816,6 @@ teka.viewer.pills.PillsViewer.prototype.processMousedownEvent = function(xc, yc)
 teka.viewer.pills.PillsViewer.prototype.processKeydownEvent = function(e)
 {
     if (this.pills) {
-
         if (e.key==teka.KEY_DOWN) {
             if (this.y<this.Y-1 && this.x+(this.y+1)*this.X<this.MAX) {
                 this.y++;
@@ -825,6 +825,15 @@ teka.viewer.pills.PillsViewer.prototype.processKeydownEvent = function(e)
         if (e.key==teka.KEY_UP) {
             if (this.y===0) {
                 this.y = this.Y-1;
+                if (this.cursor_mode==teka.viewer.pills.Defaults.H_EDGE) {
+                    this.y--;
+                }
+                if (this.x>=this.X) {
+                    this.x = this.X-1;
+                }
+                if (this.x>=this.X-1 && this.cursor_mode==teka.viewer.pills.Defaults.V_EDGE) {
+                    this.x = this.X-2;
+                }
                 this.pills = false;
                 return true;
             }
@@ -860,7 +869,8 @@ teka.viewer.pills.PillsViewer.prototype.processKeydownEvent = function(e)
     }
 
     if (e.key==teka.KEY_DOWN) {
-        if (this.y==this.Y-1) {
+        if (this.y==this.Y-1 ||
+            (this.y==this.Y-2 && this.cursor_mode==teka.viewer.pills.Defaults.H_EDGE)) {
             this.y=0;
             this.pills = true;
             if (this.x>=this.MAX) {
@@ -880,7 +890,8 @@ teka.viewer.pills.PillsViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
     if (e.key==teka.KEY_RIGHT) {
-        if (this.x<this.Y-1) {
+        if (this.x<this.Y-1 &&
+            (this.x<this.Y-2 || this.cursor_mode!=teka.viewer.pills.Defaults.V_EDGE)) {
             this.x++;
         }
         return true;
@@ -892,33 +903,80 @@ teka.viewer.pills.PillsViewer.prototype.processKeydownEvent = function(e)
         return true;
     }
 
-    if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.Y) {
+    if (e.key==teka.KEY_ESCAPE) {
+        if (this.cursor_mode==teka.viewer.pills.Defaults.CELL) {
+            this.cursor_mode = teka.viewer.pills.Defaults.H_EDGE;
+            if (this.y==this.Y-1) {
+                this.y--;
+            }
+        } else if (this.cursor_mode==teka.viewer.pills.Defaults.H_EDGE) {
+            this.cursor_mode = teka.viewer.pills.Defaults.V_EDGE;
+            if (this.x==this.X-1) {
+                this.x--;
+            }
+        } else {
+            this.cursor_mode = teka.viewer.pills.Defaults.CELL;
+        }
+        return true;
+    }
+
+    if (this.cursor_mode==teka.viewer.pills.Defaults.CELL) {
+        if (this.x<0 || this.x>=this.X || this.y<0 || this.y>=this.Y) {
+            return false;
+        }
+
+        if (e.key==teka.KEY_SPACE) {
+            this.set(this.x,this.y,teka.viewer.pills.Defaults.EMPTY);
+            return true;
+        }
+
+        if (e.key==teka.KEY_S) {
+            this.set(this.x,this.y,teka.viewer.pills.Defaults.VERT);
+            return true;
+        }
+
+        if (e.key==teka.KEY_W) {
+            this.set(this.x,this.y,teka.viewer.pills.Defaults.HORIZ);
+            return true;
+        }
+
+        if (e.key==teka.KEY_MINUS || e.key==teka.KEY_SLASH || e.key==teka.KEY_A) {
+            this.set(this.x,this.y,teka.viewer.pills.Defaults.NONE);
+            return true;
+        }
+
+        if (e.key==teka.KEY_HASH || e.key==teka.KEY_STAR || e.key==teka.KEY_Q) {
+            this.set(this.x,this.y,teka.viewer.pills.Defaults.CIRC);
+            return true;
+        }
+
         return false;
     }
 
-    if (e.key==teka.KEY_SPACE) {
-        this.set(this.x,this.y,teka.viewer.pills.Defaults.EMPTY);
-        return true;
+    if (this.cursor_mode==teka.viewer.pills.Defaults.H_EDGE) {
+        if (e.key==teka.KEY_SPACE) {
+            this.setEdge(this.x,this.y,0,false);
+            return true;
+        }
+        if (e.key==teka.KEY_HASH || e.key==teka.KEY_STAR || e.key==teka.KEY_Q) {
+            this.setEdge(this.x,this.y,1,false);
+            return true;
+        }
+
+        return false;
     }
 
-    if (e.key==teka.KEY_S) {
-        this.set(this.x,this.y,teka.viewer.pills.Defaults.VERT);
-        return true;
-    }
+    if (this.cursor_mode==teka.viewer.pills.Defaults.V_EDGE) {
+        if (e.key==teka.KEY_SPACE) {
+            this.setEdge(this.x,this.y,0,true);
+            return true;
+        }
+        if (e.key==teka.KEY_HASH || e.key==teka.KEY_STAR || e.key==teka.KEY_Q) {
+            this.setEdge(this.x,this.y,1,true);
+            return true;
+        }
 
-    if (e.key==teka.KEY_W) {
-        this.set(this.x,this.y,teka.viewer.pills.Defaults.HORIZ);
-        return true;
-    }
-
-    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_SLASH || e.key==teka.KEY_A) {
-        this.set(this.x,this.y,teka.viewer.pills.Defaults.NONE);
-        return true;
-    }
-
-    if (e.key==teka.KEY_HASH || e.key==teka.KEY_STAR || e.key==teka.KEY_Q) {
-        this.set(this.x,this.y,teka.viewer.pills.Defaults.CIRC);
-        return true;
+        return false;
     }
 
     return false;

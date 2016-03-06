@@ -866,7 +866,7 @@ teka.viewer.domino_hunt.Domino_huntViewer.prototype.processKeydownEvent = functi
         return true;
     }
 
-    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_SLASH || e.key==teka.KEY_Q
+    if (e.key==teka.KEY_MINUS || e.key==teka.KEY_SLASH || e.key==teka.KEY_W
         || e.key==teka.KEY_D || e.key==teka.KEY_X) {
         this.setEdge(this.x,this.y,
                      this.cursor_mode==teka.viewer.domino_hunt.Defaults.H_EDGE,

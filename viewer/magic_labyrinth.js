@@ -362,7 +362,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.setMetrics = functio
     var realwidth = this.X*this.scale+3;
     var realheight = this.X*this.scale+3+this.textHeight+2;
 
-    this.bottomText = teka.translate('magic_labyrinth_digits',[this.X]);
+    this.bottomText = teka.translate('magic_labyrinth_digits',[this.MAX]);
     g.font = 'bold '+this.textHeight+'px sans-serif';
     var textwidth = g.measureText(this.bottomText).width+1;
     realwidth = Math.max(realwidth,textwidth);
@@ -440,6 +440,7 @@ teka.viewer.magic_labyrinth.Magic_labyrinthViewer.prototype.paint = function(g)
     for (var i=0;i<X;i++) {
         for (var j=0;j<X;j++) {
             if (this.puzzle[i][j]==-1) {
+                g.strokeStyle = '#000';
                 g.lineWidth = 2;
                 teka.drawLine(g,S*i+S/3,S*j+S/2,S*i+2*S/3,S*j+S/2);
                 g.lineWidth = 1;

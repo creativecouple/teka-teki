@@ -704,7 +704,6 @@ teka.viewer.laser.LaserViewer.prototype.paint = function(g)
         }
     }
 
-    g.strokeStyle = '#000';
     for (var i=0;i<X;i++) {
         for (var j=0;j<Y;j++) {
             if (this.puzzle[i][j]==1) {
@@ -959,7 +958,7 @@ teka.viewer.laser.LaserViewer.prototype.processKeydownEvent = function(e)
     if (this.cursor_mode==teka.viewer.laser.Defaults.CELL) {
         if (e.key==teka.KEY_SPACE) {
             this.set(this.x,this.y,0);
-        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_STAR || e.key==teka.KEY_q) {
+        } else if (e.key==teka.KEY_HASH || e.key==teka.KEY_STAR || e.key==teka.KEY_Q) {
             this.set(this.x,this.y,1);
         } else if (e.key==teka.KEY_MINUS || e.key==teka.KEY_SLASH || e.key==teka.KEY_W) {
             this.set(this.x,this.y,2);

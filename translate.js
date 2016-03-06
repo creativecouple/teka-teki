@@ -253,13 +253,17 @@ teka.dictionary = {
 
     domino_hunt: 'Dominosuche',
     domino_hunt_instructions: 'Zerlegen Sie das Diagramm in die angegebenen Dominosteine. Jeder Dominostein '
-        +'muss genau einmal vorwendet werden.',
+        +'muss genau einmal verwendet werden.',
     domino_hunt_usage: 'Bedienung mit der Maus:\n\n'
-        +'1. Klick: Linie \n2. Klick: Keine Linie (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n'
-        +'Sie können auch durch anklicken, die Dominos unter dem Diagramm abstreichen.\n\n\n'
+        +'Cursor auf einer Linie:\n'
+        +'1. Klick: Linie\n2. Klick: Keine Linie (markiert durch ein Kreuz)\n3. Klick: Feldinhalt löschen\n\n'
+        +'Cursor bei den Dominos unterhalb des Gitters:\n'
+        +'1. Klick: Domino durchstreichen\n2. Klick: Markierung löschen\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
-        +'#, * und Q: Linie\n-, /, W, X und D: Keine Linie (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n'
-        +'Bei den Dominosteinen:\n#, * und Q: Abstreichen\nLeertaste: Markierung löschen.\n\n'
+        +'Cursor auf einer Linie:\n'
+        +'#, * und Q: Linie\n-, /, W, X und D: Keine Linie (markiert durch ein Kreuz)\nLeertaste: Feldinhalt löschen\n\n'
+        +'Cursor bei den Dominos unterhalb des Gitters:\n'
+        +'#, * und Q: Abstreichen\nLeertaste: Markierung löschen.\n\n'
         +'Mit Escape kann zwischen waagerechtem und senkrechtem Cursor hin- und hergeschaltet werden.',
     domino_hunt_range: 'Dominos von {1}-{2} bis {3}-{4}.',
     domino_hunt_no_domino: 'Der markierte Bereich hat nicht die Form eines Dominosteins.',
@@ -608,7 +612,8 @@ teka.dictionary = {
         +'Alle Kreuzungen sind bereits vorgegeben.\n\n'
         +'Für eine korrekte Lösung sind nur die Laserstrahlen relevant; '
         +'alle anderen Symbole, insbesondere auch falsche Spiegelsymbole '
-        +'werden dabei ignoriert.',
+        +'werden dabei ignoriert. Dies gilt allerdings nicht für bereits '
+        +'vorgegebene Spiegel.',
     laser_usage: 'Bedienung mit der Maus:\n\n'
         +'1. Klick: Laserstrahl oder Spiegel\n'
         +'2. Klick: Leeres Feld (markiert durch ein Minus) oder kein Spiegel (markiert durch einen leeren Kreis)\n'
@@ -652,8 +657,9 @@ teka.dictionary = {
         +'Leertaste: Feldinhalt löschen\n'
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
-        +'und ausschalten.'
-        +'Hinweis: Der Expertenmodus kann nur genutzt werden, wenn die Zahlen bis'
+        +'und ausschalten. Sie können auch die Minustaste, Q oder X benutzen, um das '
+        +'Leerfeld einzeln ein- und auszuschalten.\n\n'
+        +'Hinweis: Der Expertenmodus kann nur genutzt werden, wenn die Zahlen bis '
         +'maximal 8 gehen.',
     magic_labyrinth_digits: 'Ziffern von 1 bis {1}.',
     magic_labyrinth_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
@@ -723,15 +729,23 @@ teka.dictionary = {
         +'Zahlen in der Pille ergibt deren Wert. Die Zahlen am Rand geben die '
         +'Summe aller Zahlen in Pillenfeldern in der entsprechenden Zeile oder '
         +'Spalte an.\n\n'
-        +'Für eine korrekte Lösung werden nur die langen Pillen ausgewertet; '
-        +'andere Markierungen, insbesondere auch kleine Pillen werden dabei ignoriert.',
+        +'Für eine korrekte Lösung werden nur die Pillen ausgewertet, die drei Felder lang sind; '
+        +'andere Markierungen, insbesondere auch Minipillen, die nur ein Feld belegen, werden dabei ignoriert.',
     pills_usage: 'Bedienung mit der Maus:\n\n'
-        +'1. Klick: waagerechte Pille\n2. Klick: senkrechte Pille\n3. Klick: Leerfeld (markiert durch ein Quadrat)\n4. Klick: Kleine Pille\n5. Klick: Feldinhalt löschen\n\n'
-        +'Sie können auch durch anklicken, die Pillen unter dem Diagramm abstreichen.\n\n\n'
+        +'Cursor im Feld:\n'
+        +'1. Klick: waagerechte Pille\n2. Klick: senkrechte Pille\n3. Klick: Schwarzfeld\n4. Klick: Kleine Pille\n5. Klick: Feldinhalt löschen\n\n'
+        +'Cursor auf der Kante:\n'
+        +'1. Klick: Begrenzung setzen\n2. Klick: Begrenzung löschen\n\n'
+        +'Cursor bei den Pillen unterhalb des Gitters:\n'
+        +'1. Klick: Pille durchstreichen\n2. Klick: Markierung löschen\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
-        +'w: waagerechte Pille\ns: senkrechte Pille\n'
-        +'#, * und Q: Kleine Pille\n-, / und A: Leerfeld (markiert durch ein Quadrat)\nLeertaste: Feldinhalt löschen\n\n'
-        +'Bei den Pillen:\n#, * und Q: Abstreichen\nLeertaste: Markierung löschen.',
+        +'Cursor im Feld:\n'
+        +'W: waagerechte Pille\nS: senkrechte Pille\n'
+        +'#, * und Q: Kleine Pille\n-, / und A: Schwarzfeld\nLeertaste: Feldinhalt löschen\n\n'
+        +'Cursor auf der Kante:\n'
+        +'#, * und Q: Begrenzung setzen\nLeertaste: Begrenzung löschen\n\n'
+        +'Cursor bei den Pillen unterhalb des Gitters:\n'
+        +'#, * und Q: Abstreichen\nLeertaste: Markierung löschen.',
     pills_pills: 'Pillen von 1 bis {1}.',
     pills_cut_pill: 'Die markierte Pille ragt über den Rand hinaus.',
     pills_overlap_pill: 'Die markierte Pille überlappt mit einer anderen Pille.',
@@ -749,8 +763,8 @@ teka.dictionary = {
     pyramid_usage: 'Bedienung mit der Maus:\n\n'
         +'Der erste Klick trägt eine 1 in das Feld ein. Jeder weitere Klick '
         +'führt zur nächsten Ziffer. Ist bereits die letzte Ziffer erreicht, '
-        +'so wird durch einen erneuten Klick ein G (Gerade Zahl) und dann ein '
-        +'U (Ungerade Zahl) ausgewählt. Durch einen weiteren Klick wird der Feldinhalt gelöscht.\n\n'
+        +'so werden durch einen erneuten Klick alle geraden Zahlen und dann alle '
+        +'ungeraden Zahlen ausgewählt. Durch einen weiteren Klick wird der Feldinhalt gelöscht.\n\n'
         +'Ein Klick in die rechte untere Ecke des Feldes startet den Expertenmodus '
         +'für dieses Feld. Im Expertenmodus können Sie jede Ziffer einzeln ein- '
         +'und ausschalten. Ein erneuter Klick in die rechte untere Ecke beendet '
@@ -761,7 +775,7 @@ teka.dictionary = {
         +'# und ,: Zwischen dem Expertenmodus und dem Normalmodus hin- und herschalten. '
         +'Im Expertenmodus können Sie mit den Zifferntasten jede Ziffer einzeln ein- '
         +'und ausschalten.\n'
-        +'G und U: Feld als gerade oder ungerade markieren.',
+        +'+ und -: Feld als gerade oder ungerade markieren.',
     pyramid_empty: 'Das markierte Feld ist leer.',
     pyramid_not_unique: 'Das markierte Feld enthält kein eindeutiges Symbol.',
     pyramid_wrong_calculation: 'Im oberen markierten Feld ist weder die Summe noch die Differenz der beiden unteren markierten Felder.',
@@ -860,7 +874,11 @@ teka.dictionary = {
         +'Alternativ können Sie auch mit der Maus über mehrere Felder ziehen, '
         +'in all diesen Feldern wird dann ein Schlangensegment gesetzt (dragging).\n\n\n'
         +'Bedienung mit der Tastatur:\n\n'
-        +'#, * und Q: Schlangensegment (Kreis)\n-, / und W: Leerfeld (markiert durch einen Strich)\nLeertaste: Feldinhalt löschen',
+        +'#, * und Q: Schlangensegment (Kreis)\n-, / und W: Leerfeld (markiert durch einen Strich)\nLeertaste: Feldinhalt löschen\n'
+        +'Zahlentasten: Zahl eingeben\n\n'
+        +'Wenn sie beim Bewegen mit den Cursortasten die Shift-Taste gedrückt halten, wird im '
+        +'Zielfeld ein Schlangensegment (Kreis) gezeichnet.\n\n\n'
+        +'Das Applet versucht automatisch Zahlen in die Kreise einzutragen. Automatisch eingetragene Zahlen sind grau.',
     snake_length: 'Länge: {1}',
     snake_length_unknown: 'Länge: unbekannt',
     snake_touch: 'Die Schlange berührt sich an der markierten Stelle selber.',
