@@ -499,7 +499,7 @@ teka.viewer.pills.PillsViewer.prototype.paint = function(g)
 
     // paint the background of the cells
     for (var i=0;i<X;i++) {
-        for (var j=0;j<X;j++) {
+        for (var j=0;j<Y;j++) {
             g.fillStyle = this.isBlinking()?
                 this.getBlinkColor(i,j,X,this.f[i][j]):
                 (this.error[i][j]?'#f00':'#fff');
