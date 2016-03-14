@@ -127,8 +127,28 @@ teka.Defaults.TAKE_TIME = false;
 /**
  * Maximum time (in seconds) allowed to use until the puzzle is solved.
  * Set to false, if no time limit should be applied.
+ * Implies TAKE_TIME = true.
  */
 teka.Defaults.MAX_TIME = false;
+
+/**
+ * Set to true, if a counter should be displayed.
+ * Implies TAKE_TIME = true.
+ */
+teka.Defaults.DISPLAY_COUNTER = false;
+
+/**
+ * If a counter is displayed an a maximum time is given, specifies, if
+ * the counter should count backward or not.
+ */
+teka.Defaults.COUNT_BACKWARD = true;
+
+/**
+ * The number of seconds before the timeout, when the counter should be
+ * highlighted. Is only useful, if MAX_TIME is not false.
+ * Set to -1 if no highlighting should occur.
+ */
+teka.Defaults.COUNTER_LIMIT = 30;
 
 /**
  * Set to true, if failed attempts should be counted.
@@ -168,7 +188,7 @@ teka.PuzzleApplet = function(options)
         this.setOptions(options);
     }
 
-    if (this.values_.MAX_TIME!==false) {
+    if (this.values_.MAX_TIME!==false || this.values_.DISPLAY_COUNTER!==false) {
         this.values_.TAKE_TIME = true;
     }
 
@@ -313,6 +333,9 @@ teka.PuzzleApplet.prototype.initTools = function()
     this.colorTool = new teka.ColorTool();
     this.casesTool = new teka.CasesTool();
     this.textTool = new teka.TextTool();
+    if (this.values_.DISPLAY_COUNTER===true) {
+        this.counterTool = new teka.CounterTool();
+    }
     this.instructions = new teka.Instructions();
     if (this.values_.TAKE_TIME===true) {
         this.start_screen = new teka.StartScreen();
@@ -324,6 +347,9 @@ teka.PuzzleApplet.prototype.initTools = function()
     this.initColorTool();
     this.initCasesTool();
     this.initTextTool();
+    if (this.values_.DISPLAY_COUNTER===true) {
+        this.initCounterTool();
+    }
     this.initInstructions();
     if (this.values_.TAKE_TIME===true) {
         this.initStartScreen();
@@ -333,7 +359,8 @@ teka.PuzzleApplet.prototype.initTools = function()
                     this.buttonTool,
                     this.colorTool,
                     this.casesTool,
-                    this.textTool]);
+                    this.textTool,
+                    this.counterTool]);
 
     this.paint();
 
@@ -548,6 +575,18 @@ teka.PuzzleApplet.prototype.initTextTool = function()
     this.textTool.setTextParameter(this.values_.TEXT_COLOR,
                                    this.values_.TEXT_HEIGHT);
     this.textTool.setHighlightColor(this.values_.TEXT_HIGHLIGHT_COLOR);
+};
+
+/** Initializes the counter tool. */
+teka.PuzzleApplet.prototype.initCounterTool = function()
+{
+    this.counterTool.setTextParameter(this.values_.TEXT_COLOR,
+                                   this.values_.TEXT_HEIGHT);
+    this.counterTool.setHighlightColor(this.values_.TEXT_HIGHLIGHT_COLOR);
+
+    if (this.values_.MAX_TIME!==false && this.values_.COUNT_BACKWARD===true) {
+        this.counterTool.setCounter(this.values_.MAX_TIME);
+    }
 };
 
 /** Initializes the instructions. */
@@ -973,7 +1012,8 @@ teka.PuzzleApplet.prototype.mousedragListener = function(e)
                     this.buttonTool,
                     this.colorTool,
                     this.casesTool,
-                    this.textTool]);
+                    this.textTool,
+                    this.counterTool]);
 
     this.setText('',false);
     this.paint();
@@ -1033,7 +1073,8 @@ teka.PuzzleApplet.prototype.keyListener = function(e, myEvent)
                         this.buttonTool,
                         this.colorTool,
                         this.casesTool,
-                        this.textTool]);
+                        this.textTool,
+                        this.counterTool]);
 
         this.setText('',false);
         this.paint();
@@ -1138,6 +1179,9 @@ teka.PuzzleApplet.prototype.start = function()
     this.failed_attempts = 0;
     this.timer_stop = false;
     this.timer_start = new Date().getTime();
+    if (this.values_.DISPLAY_COUNTER===true) {
+        setTimeout(this.updateCounter.bind(this),1000);
+    }
 
     this.startHook();
 };
@@ -1157,6 +1201,38 @@ teka.PuzzleApplet.prototype.checkTimeout = function()
     }
 
     this.timeout = true;
+};
+
+/** Updates the counterTool once a second. */
+teka.PuzzleApplet.prototype.updateCounter = function()
+{
+    var value = Math.floor(new Date().getTime()/1000)-Math.floor(this.timer_start/1000);
+    var highlight = false;
+
+    if (this.timer_stop!==false) {
+        value = Math.floor(this.timer_stop/1000)-Math.floor(this.timer_start/1000);
+        return;
+    }
+
+    if (this.values_.MAX_TIME!==false) {
+        if (value>=this.values_.MAX_TIME-this.values_.COUNTER_LIMIT) {
+            highlight = true;
+        }
+        if (value>=this.values_.MAX_TIME) {
+            this.checkTimeout();
+        }
+
+        if (this.values_.COUNT_BACKWARD===true) {
+            value = this.values_.MAX_TIME-value;
+        }
+    }
+
+    if (this.counterTool.setCounter(value,highlight)) {
+        this.paint();
+    }
+    if (this.timer_stop===false) {
+        setTimeout(this.updateCounter.bind(this),1000);
+    }
 };
 
 /**
@@ -1205,7 +1281,7 @@ teka.PuzzleApplet.prototype.createResultMessage = function(duration, failed_atte
 {
     var result = teka.translate('congratulations');
     if (this.values_.TAKE_TIME===true) {
-        result += '\n'+this.niceTime(duration);
+        result += '\n'+teka.niceTime(duration);
 
         if (this.values_.COUNT_FAILED_ATTEMPTS===true && failed_attempts>0) {
             result += ' '+
@@ -1216,27 +1292,6 @@ teka.PuzzleApplet.prototype.createResultMessage = function(duration, failed_atte
     }
 
     return result;
-};
-
-/** Converts duration d, given in seconds, into a human readable format. */
-teka.PuzzleApplet.prototype.niceTime = function(d)
-{
-    if (d<60) {
-        return teka.translate('duration_seconds',[d]);
-    }
-    var sec = d%60;
-    d = Math.floor(d/60);
-    if (d<60) {
-        return teka.translate('duration_minutes',[d,sec]);
-    }
-    var min = d%60;
-    d = Math.floor(d/60);
-    if (d<24) {
-        return teka.translate('duration_hours',[d,min,sec]);
-    }
-    var hrs = d%24;
-    d = Math.floor(d/24);
-    return teka.translate('duration_days',[d,hrs,min,sec]);
 };
 
 /**

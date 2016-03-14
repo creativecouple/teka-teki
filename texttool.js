@@ -24,6 +24,7 @@ teka.TextTool = function()
     teka.Tool.call(this);
 
     this.text = '';
+    this.highlight = false;
     this.textcolor = '#000';
     this.texthighlightcolor = '#f00';
     this.wrapped_text = false;

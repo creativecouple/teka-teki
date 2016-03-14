@@ -28,9 +28,18 @@ teka.Layout = function()
 };
 teka.extend(teka.Layout,teka.Display);
 
-/** Sets the tools that will be layouted. */
+/**
+ * Sets the tools that will be layouted.
+ * If a tool is undefined, it will be removed.
+ */
 teka.Layout.prototype.setTools = function(tools) {
-    this.tools = tools;
+    var tmp = [];
+    for(var i in tools) {
+        if (tools[i]!==undefined) {
+            tmp.push(tools[i]);
+        }
+    }
+    this.tools = tmp;
 };
 
 /** Sets the gap between the tools. */

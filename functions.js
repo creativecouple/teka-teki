@@ -24,6 +24,37 @@
  */
 teka.error = false;
 
+/** Converts duration d, given in seconds, into a human readable format. */
+teka.niceTime = function(d,brief)
+{
+    if (brief!==true) {
+        brief = false;
+    }
+
+    var sec = d%60;
+    d = Math.floor(d/60);
+    var min = d%60;
+    d = Math.floor(d/60);
+
+    if (brief) {
+        return (d<10?'0':'')+d+":"+(min<10?'0':'')+min+":"+(sec<10?'0':'')+sec;
+    }
+
+    var hrs = d%24;
+    d = Math.floor(d/24);
+
+    if (d===0 && hrs===0 && min===0) {
+        return teka.translate('duration_seconds',[sec]);
+    }
+    if (d===0 && hrs===0) {
+        return teka.translate('duration_minutes',[min,sec]);
+    }
+    if (d===0) {
+        return teka.translate('duration_hours',[hrs,min,sec]);
+    }
+    return teka.translate('duration_days',[d,hrs,min,sec]);
+};
+
 /**
  * Calculates the position of the mouse relative to the canvas.
  * pageX/Y works in most browsers although it's still in the draft status.

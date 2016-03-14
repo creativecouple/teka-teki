@@ -38,12 +38,6 @@ teka.LRLayout.prototype.arrangeTools = function(g) {
         return false;
     }
 
-    for (var i=1;i<this.tools.length;i++) {
-        if (this.tools[i]===undefined) {
-            return false;
-        }
-    }
-
     var mindim = [];
     for (var i=1;i<this.tools.length;i++) {
         mindim[i] = this.tools[i].getMinDim(g);
